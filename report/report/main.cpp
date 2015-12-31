@@ -37,18 +37,13 @@ int main(int argc, char **argv) {
 	HANDLE keyboard = GetStdHandle(STD_INPUT_HANDLE);
 	HANDLE screen = GetStdHandle(STD_OUTPUT_HANDLE);
 	DWORD mode;
-	char port_name[128] = "COM18";// "\\\\.\\COM4";
+	char port_name[128] = "COM4";// "\\\\.\\COM4";
 	char init[] = "AT"; // e.g., "ATZ" to completely reset a modem.
-
-	printf(port_name);
-
-	if (argc > 2)
-		sprintf_s(port_name, "\\\\.\\COM%c", argv[1][0]);
 
 	// open the comm port.
 
 	file = CreateFile(
-		"\\\\.\\COM19",     // address of name of the communications device
+		"\\\\.\\COM4",     // address of name of the communications device
 		GENERIC_READ | GENERIC_WRITE,         // access (read-write) mode
 		0,                  // share mode
 		NULL,               // address of security descriptor
@@ -111,6 +106,7 @@ int main(int argc, char **argv) {
 		if (_kbhit()) {
 			ch = _getch();
 			WriteFile(file, &ch, 1, &written, NULL);
+			WriteFile(screen, &ch, 1, &written, NULL);
 		}
 		// until user hits ctrl-backspace.
 	} while (ch != 127);

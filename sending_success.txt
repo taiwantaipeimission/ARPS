@@ -1,6 +1,6 @@
 COM18AT at
 OK
-at+cmgf=11
+at+cmgf=1
 OK
 at+cmgs="+886972576566"
 > This is a text message.?
