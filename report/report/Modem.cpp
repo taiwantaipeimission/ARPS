@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <iostream>
 
 #define STRICT
 #define WIN32_LEAN_AND_MEAN
@@ -22,7 +22,7 @@ void Modem::system_error(char *name) {
 		1024,
 		NULL);
 
-	fprintf(stderr, "\nError %s: %s\n", name, ptr);
+	std::cout<<"\nError "<< name << ptr <<std::endl;
 	LocalFree(ptr);
 }
 
@@ -31,7 +31,7 @@ Modem::Modem()
 	// open the comm port.
 
 	file = CreateFile(
-		"\\\\.\\COM4",     // address of name of the communications device
+		"\\\\.\\COM1",     // address of name of the communications device
 		GENERIC_READ | GENERIC_WRITE,         // access (read-write) mode
 		0,                  // share mode
 		NULL,               // address of security descriptor
@@ -72,12 +72,6 @@ Modem::Modem()
 	Sleep(200);
 	if (!EscapeCommFunction(file, SETDTR))
 		system_error("setting DTR");
-
-	if (!WriteFile(file, init, sizeof(init), &written, NULL))
-		system_error("writing data to port");
-
-	if (written != sizeof(init))
-		system_error("not all data written to port");
 }
 
 

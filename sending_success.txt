@@ -14,3 +14,264 @@ OK
 
 
 
+Select a device:
+   0: Communications cable between two computers
+   1: Communications cable between two computers #2
+   2: COM3
+   3: COM1
+   > 3
+  Selected device: COM1
+Enter baudrate (enter 0 to use default baudrate):
+   > 0
+Open, Result: (0, Success)
+Enter command (enter QUIT to stop the program):
+  > AT
+  <- AT
+  <- >
+Enter command (enter QUIT to stop the program):
+  > ^Z
+  <- P~+?
+  <- >
+Enter command (enter QUIT to stop the program):
+  > ^D
+  <- ?
+  <- >
+Enter command (enter QUIT to stop the program):
+  > QUIT
+Ready.
+
+C:\Users\2019353\Downloads>"Query Device.exe"
+ActiveXperts Serial Port Component 3.2
+Build: 3.2.1.50902 (64bit)
+Module: AxSerial64.dll
+License Status: Expires 01/27/2016
+License Key:
+
+Select a device:
+   0: Communications cable between two computers
+   1: Communications cable between two computers #2
+   2: COM3
+   3: COM1
+   > 3
+  Selected device: COM1
+Enter baudrate (enter 0 to use default baudrate):
+   > 0
+Open, Result: (0, Success)
+Enter command (enter QUIT to stop the program):
+  > AT
+  <- AT
+  <- >
+Enter command (enter QUIT to stop the program):
+  > TEST^Z^D
+
+  <- TEST?
+Enter command (enter QUIT to stop the program):
+  > at+cmgs="+886910358944"
+  <- +CMGS: 31
+  <- OK
+  <- at+cmgs="+886910358944"
+  <- >
+Enter command (enter QUIT to stop the program):
+  > TEST^Z
+
+  <- TEST?
+  <- +CMGS: 32
+  <- OK
+Enter command (enter QUIT to stop the program):
+  > AT+CMGS="0972576500"
+  <- AT+CMGS="0972576500"
+  <- >
+Enter command (enter QUIT to stop the program):
+  > DINGLEBERRY BRICKLEBERRY CHEESE SANDWICH^Z
+  <- DINGLEBERRY
+  <- >
+Enter command (enter QUIT to stop the program):
+  >   <- BRICKLEBERRY
+  <- >
+Enter command (enter QUIT to stop the program):
+  >   <- CHEESE
+  <- >
+Enter command (enter QUIT to stop the program):
+  > ^D
+  <- SANDWICH??
+Enter command (enter QUIT to stop the program):
+  > AT+CMGL=?
+  <- +CMGS: 33
+  <- OK
+  <- AT+CMGL=?
+  <- +CMGL: ("REC UNREAD","REC READ","STO UNSENT","STO SENT","ALL")
+  <- OK
+Enter command (enter QUIT to stop the program):
+  > AT+CMGR=?
+  <- AT+CMGR=?
+  <- OK
+Enter command (enter QUIT to stop the program):
+  > AT+CMGR=1
+  <- AT+CMGR=1
+  <- ERROR
+Enter command (enter QUIT to stop the program):
+  > QUIT
+Ready.
+
+C:\Users\2019353\Downloads>"Query Device.exe"
+ActiveXperts Serial Port Component 3.2
+Build: 3.2.1.50902 (64bit)
+Module: AxSerial64.dll
+License Status: Expires 01/27/2016
+License Key:
+
+Select a device:
+   0: Communications cable between two computers
+   1: Communications cable between two computers #2
+   2: COM3
+   3: COM1
+   > 3
+  Selected device: COM1
+Enter baudrate (enter 0 to use default baudrate):
+   > 0
+Open, Result: (0, Success)
+Enter command (enter QUIT to stop the program):
+  > AT
+  <- AT
+  <- OK
+Enter command (enter QUIT to stop the program):
+  > AT+CMGF=1
+  <- AT+CMGF=1
+  <- ERROR
+Enter command (enter QUIT to stop the program):
+  > AT
+  <- AT
+  <- OK
+Enter command (enter QUIT to stop the program):
+  > at+cmgs="+886910358944"
+  <- at+cmgs="+886910358944"
+  <- >
+  <- ERROR
+Enter command (enter QUIT to stop the program):
+  > AT+CPIN="0120"
+  <- AT+CPIN="0120"
+  <- OK
+Enter command (enter QUIT to stop the program):
+  > AT+CMGF=1
+  <- AT+CMGF=1
+  <- ERROR
+Enter command (enter QUIT to stop the program):
+  > at+cmgs="+886910358944"
+  <- at+cmgs="+886910358944"
+  <- >
+Enter command (enter QUIT to stop the program):
+  > Yo dawg, I be testin' this system.^D
+  <- Yo
+  <- >
+Enter command (enter QUIT to stop the program):
+  >   <- dawg,
+  <- >
+Enter command (enter QUIT to stop the program):
+  >   <- I
+  <- >
+Enter command (enter QUIT to stop the program):
+  >   <- be
+  <- >
+Enter command (enter QUIT to stop the program):
+  >   <- testin'
+  <- >
+Enter command (enter QUIT to stop the program):
+  >   <- this
+  <- >
+Enter command (enter QUIT to stop the program):
+  >   <- system.?
+  <- >
+Enter command (enter QUIT to stop the program):
+  > ^Z
+  <- ü
+  <- >
+Enter command (enter QUIT to stop the program):
+  >
+^Z
+  <- ü
+  <- >
+Enter command (enter QUIT to stop the program):
+  > ^D
+  <- ?
+  <- >
+Enter command (enter QUIT to stop the program):
+  > ^Z^D
+  <- ü
+  <- >
+Enter command (enter QUIT to stop the program):
+  > ^D^Z
+
+  <- ??
+Enter command (enter QUIT to stop the program):
+  > at+cmgf=1
+  <- +CMGS: 46
+  <- OK
+  <- at+cmgf=1
+  <- OK
+Enter command (enter QUIT to stop the program):
+  > at+cpms=?
+  <- at+cpms=?
+  <- +CPMS: (("SM","BM","SR"),("SM"))
+  <- OK
+Enter command (enter QUIT to stop the program):
+  > at+cpms="sm"
+  <- at+cpms="sm"
+  <- ERROR
+Enter command (enter QUIT to stop the program):
+  > at+cpms=<read>
+  <- at+cpms=<read>
+  <- ERROR
+Enter command (enter QUIT to stop the program):
+  > at+cpms="SM"
+  <- at+cpms="SM"
+  <- +CPMS: 0,30,0,30
+  <- OK
+Enter command (enter QUIT to stop the program):
+  > AT+CMGL="ALL"
+  <- AT+CMGL="ALL"
+  <- OK
+Enter command (enter QUIT to stop the program):
+  > AT+CMGR=1
+  <- AT+CMGR=1
+  <- ERROR
+Enter command (enter QUIT to stop the program):
+  > AT+CPMS="SM"
+  <- AT+CPMS="SM"
+  <- +CPMS: 0,30,0,30
+  <- OK
+Enter command (enter QUIT to stop the program):
+  > AT+CPMS="BM"
+  <- AT+CPMS="BM"
+  <- +CPMS: 0,20,0,30
+  <- OK
+Enter command (enter QUIT to stop the program):
+  > AT+CPMS="SR"
+  <- AT+CPMS="SR"
+  <- +CPMS: 0,3,0,30
+  <- OK
+Enter command (enter QUIT to stop the program):
+  > AT+CMGL="ALL"
+  <- AT+CMGL="ALL"
+  <- OK
+Enter command (enter QUIT to stop the program):
+  > AT+CPMS=?
+  <- AT+CPMS=?
+  <- +CPMS: (("SM","BM","SR"),("SM"))
+  <- OK
+Enter command (enter QUIT to stop the program):
+  > AT+CPMS="SM"
+  <- AT+CPMS="SM"
+  <- +CPMS: 0,30,0,30
+  <- OK
+Enter command (enter QUIT to stop the program):
+  > AT+CPMS="SM"
+  <- +CMTI: "SM",1
+  <- AT+CPMS="SM"
+  <- +CPMS: 1,30,1,30
+  <- OK
+Enter command (enter QUIT to stop the program):
+  > AT+CMGL="ALL"
+  <- AT+CMGL="ALL"
+  <- +CMGL: 1,"REC UNREAD","+886910358944",,"16/01/02,14:31:11+32"
+  <- Yo. This is a mph.
+  <- OK
