@@ -21,9 +21,15 @@
     <ClCompile Include="Modem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ReportRegular.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Modem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ReportRegular.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
