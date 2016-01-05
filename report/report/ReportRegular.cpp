@@ -3,7 +3,7 @@
 
 ReportRegular::ReportRegular()
 {
-	key_list = { "A", "B", "C", "D", "NWBAP" };
+	key_list = { "A", "B", "C", "D", "NWBAP", "BAP", "CONF", "BD", "SAC", "PK", "OL", "NI", };
 }
 
 

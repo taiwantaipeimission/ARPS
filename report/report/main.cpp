@@ -106,14 +106,20 @@ int main(int argc, char **argv)
 	if (mode == MODE_COMMAND_ECHO)
 	{
 		// process string
+		output_file << text_data;
 
-		int msg_start_pos = text_data.find("TYPE", 0);
-		int msg_end_pos = text_data.find("TYPE", msg_start_pos + 1);
+		int msg_start_pos = text_data.find("+CMGL:", 0);
+		int msg_end_pos = text_data.find("+CMGL:", msg_start_pos + 1);
 		std::string extracted_msg;
 		while (msg_start_pos != std::string::npos)
 		{
 
 			ReportRegular report;
+			int ph_start_pos = text_data.find("+886", msg_start_pos);
+			if (ph_start_pos != std::string::npos)
+				report.sender_number = text_data.substr(ph_start_pos, 13);
+			processed_output_file << report.sender_number << std::endl;
+
 			for (unsigned int i = 0; i < report.key_list.size(); i++)
 			{
 				std::string key = report.key_list[i];
