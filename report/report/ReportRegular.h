@@ -3,6 +3,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <fstream>
 
 class ReportRegular
 {
@@ -12,6 +13,7 @@ public:
 
 	void add_field(std::string key, std::string value);
 	void remove_field(std::string key);
+	void print(std::ofstream& output);
 
 	std::string sender_number;
 	std::string sender_name;

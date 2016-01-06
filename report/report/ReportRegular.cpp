@@ -20,3 +20,13 @@ void ReportRegular::remove_field(std::string key)
 {
 	report_values.erase(key);
 }
+
+void ReportRegular::print(std::ofstream& output)
+{
+	output << sender_name << ":" << sender_number << ":";
+	for (std::map<std::string, std::string>::iterator it = report_values.begin(); it != report_values.end(); ++it)
+	{
+		output << it->second << "\t";
+	}
+	output << std::endl;
+}

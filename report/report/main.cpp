@@ -118,7 +118,6 @@ int main(int argc, char **argv)
 			int ph_start_pos = text_data.find("+886", msg_start_pos);
 			if (ph_start_pos != std::string::npos)
 				report.sender_number = text_data.substr(ph_start_pos, 13);
-			processed_output_file << report.sender_number << std::endl;
 
 			for (unsigned int i = 0; i < report.key_list.size(); i++)
 			{
@@ -130,9 +129,9 @@ int main(int argc, char **argv)
 
 				value = text_data.substr(value_start_pos, value_end_pos - value_start_pos);
 				report.add_field(key, value);
-				std::cout << key << "\t" << value << std::endl;
-				processed_output_file << key << "\t" << value << std::endl;
 			}
+
+			report.print(processed_output_file);
 
 			msg_start_pos = msg_end_pos;
 			msg_end_pos = text_data.find("TYPE", msg_start_pos + 1);
