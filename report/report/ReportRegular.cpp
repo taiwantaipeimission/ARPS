@@ -3,7 +3,7 @@
 
 ReportRegular::ReportRegular()
 {
-	key_list = { "A", "B", "C", "D", "NWBAP", "BAP", "CONF", "BD", "SAC", "PK", "OL", "NI", };
+	key_list = { "A", "B", "C", "D", "NWBAP", "BAP", "CONF", "BD", "SAC", "PK", "OL", "NI", "RCLA", "LAC", "RCT" };
 }
 
 
@@ -23,10 +23,12 @@ void ReportRegular::remove_field(std::string key)
 
 void ReportRegular::print(std::ofstream& output)
 {
-	output << sender_name << ":" << sender_number << ":";
-	for (std::map<std::string, std::string>::iterator it = report_values.begin(); it != report_values.end(); ++it)
+	output << sender_name << "\t" << sender_number << "\t";
+	for (std::vector< std::string >::iterator it = key_list.begin(); it != key_list.end(); )
 	{
-		output << it->second << "\t";
+		output << report_values[*it];
+		if (++it != key_list.end())
+			output << "\t";
 	}
 	output << std::endl;
 }

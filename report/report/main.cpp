@@ -85,7 +85,7 @@ int main(int argc, char **argv)
 						WriteFile(modem.file, "\r\n", 3, &written, NULL);
 					else if (ch == ';')
 						WriteFile(modem.file, "\u001A", 1, &written, NULL);
-					else
+					else if (ch != '~')
 						WriteFile(modem.file, &ch, 1, &written, NULL);
 					command_index++;
 					received_response = false;
@@ -100,7 +100,7 @@ int main(int argc, char **argv)
 				}
 			}
 			Sleep(1);
-		} while (mode == MODE_USER_INPUT || ch != '\0');
+		} while (mode == MODE_USER_INPUT || ch != '~');
 	}
 
 	if (mode == MODE_COMMAND_ECHO)
@@ -134,7 +134,7 @@ int main(int argc, char **argv)
 			report.print(processed_output_file);
 
 			msg_start_pos = msg_end_pos;
-			msg_end_pos = text_data.find("TYPE", msg_start_pos + 1);
+			msg_end_pos = text_data.find("+CMGL:", msg_start_pos + 1);
 		}
 	}
 
