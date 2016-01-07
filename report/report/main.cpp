@@ -29,16 +29,22 @@ int main(int argc, char **argv)
 	std::ofstream processed_output_file;
 	std::ifstream input_file;
 	std::ifstream config_file;
+	std::ifstream phone_list_file;
 
 	output_file.open("output.txt");
-	processed_output_file.open("processed_output.txt");
+	processed_output_file.open("processed_output.txt", std::ios_base::out | std::ios_base::app);
 	input_file.open("input.txt");
 	config_file.open("config.txt");
+	phone_list_file.open("phone_list.txt");
 	
 	char config_data[1000];
 	char commands[1000];
 
 	std::string text_data;
+
+	std::string year = "2016";
+	std::string month = "1";
+	std::string week = "1";
 
 	if(config_file.is_open())
 	{
@@ -107,6 +113,22 @@ int main(int argc, char **argv)
 	{
 		// process string
 		output_file << text_data;
+		std::map<std::string, std::string> phone_list_data;
+		char all_text[1000] = "";
+		char ph_number[64] = "";
+		char comp_name[64] = "";
+		
+		phone_list_file.getline(ph_number, 64, '\t');
+		phone_list_file.getline(comp_name, 64, '\n');
+
+		while (phone_list_file.good() )
+		{
+			phone_list_data[ph_number] = comp_name;
+
+			phone_list_file.getline(ph_number, 64, '\t');
+			phone_list_file.getline(comp_name, 64, '\n');
+		}
+
 
 		int msg_start_pos = text_data.find("+CMGL:", 0);
 		int msg_end_pos = text_data.find("+CMGL:", msg_start_pos + 1);
@@ -117,7 +139,10 @@ int main(int argc, char **argv)
 			ReportRegular report;
 			int ph_start_pos = text_data.find("+886", msg_start_pos);
 			if (ph_start_pos != std::string::npos)
+			{
 				report.sender_number = text_data.substr(ph_start_pos, 13);
+				report.sender_name = phone_list_data[report.sender_number];
+			}
 
 			for (unsigned int i = 0; i < report.key_list.size(); i++)
 			{
@@ -131,6 +156,7 @@ int main(int argc, char **argv)
 				report.add_field(key, value);
 			}
 
+			processed_output_file << year << ":" << month << ":" << week << "\t";
 			report.print(processed_output_file);
 
 			msg_start_pos = msg_end_pos;
@@ -159,6 +185,7 @@ int main(int argc, char **argv)
 	processed_output_file.close();
 	input_file.close();
 	config_file.close();
+	phone_list_file.close();
 
 	return 0;
 }
