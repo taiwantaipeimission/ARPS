@@ -21,7 +21,7 @@ public:
 	virtual ~ReportSheet();
 
 	void add_report(ReportRegular report);
-	void read_unprocessed(std::istream& input);
+	void read_unprocessed(std::istream& input, CompList* comp_list = NULL);
 	void read_processed(std::istream& input);
 	void print(std::ofstream& output);
 };

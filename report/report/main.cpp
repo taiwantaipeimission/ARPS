@@ -11,16 +11,19 @@
 #include "Modem.h"
 #include "ReportRegular.h"
 #include "ReportSheet.h"
+#include "CompList.h"
 
 enum TerminalMode
 {
 	MODE_COMMAND_ECHO = 0,
-	MODE_USER_INPUT
+	MODE_USER_INPUT,
+	MODE_MENU,
+	MODE_QUIT
 };
 
 int main(int argc, char **argv)
 {
-	TerminalMode mode = MODE_COMMAND_ECHO;
+	TerminalMode mode = MODE_MENU;
 
 	Modem modem;
 
@@ -46,7 +49,8 @@ int main(int argc, char **argv)
 	std::string week = "1";
 	std::string day = "7";
 
-	ReportSheet report_sheet("2016", "1", "2", "7");
+	ReportSheet report_sheet(year, month, week, day);
+	CompList comp_list;
 
 	if(config_file.is_open())
 	{
@@ -58,111 +62,107 @@ int main(int argc, char **argv)
 	}
 
 	report_sheet.read_processed(processed_output_file);
-
+	comp_list.load(phone_list_file);
 	// process string
-	std::map<std::string, std::string> comp_list;
-	char all_text[1000] = "";
-	char ph_number[64] = "";
-	char comp_name[64] = "";
-
-	phone_list_file.getline(ph_number, 64, '\t');
-	phone_list_file.getline(comp_name, 64, '\n');
-
-	while (phone_list_file.good() )
+	
+	while (mode != MODE_QUIT)
 	{
-	comp_list[ph_number] = comp_name;
 
-	phone_list_file.getline(ph_number, 64, '\t');
-	phone_list_file.getline(comp_name, 64, '\n');
-	}
-
-
-	std::cout << "RECEIVED\t\tNOT RECEIVED" << std::endl;
-	for (std::map<std::string, std::string>::iterator it = comp_list.begin(); it != comp_list.end(); ++it)
-	{
-		if (report_sheet.reports.count(it->second) > 0)
+		std::cout << "RECEIVED\t\tNOT RECEIVED\n=============================================" << std::endl;
+		for (std::map<std::string, std::string>::iterator it = comp_list.phone_name.begin(); it != comp_list.phone_name.end(); ++it)
 		{
-			std::cout << it->second << std::endl;
-		}
-		else
-		{
-			std::cout << "\t\t\t" << it->second << std::endl;
-		}
-	}
-	std::cout << "\n1. READ MSGS\t2. RUN AT TERMINAL\t3. QUIT" << std::endl;
-	char input_choice;
-	std::cin >> input_choice;
-
-	// basic terminal loop:
-	if (input_choice == '1' || input_choice == '2')
-	{
-		mode = input_choice == '1' ? MODE_COMMAND_ECHO : MODE_USER_INPUT;
-		char ch;
-		char buffer[2] = " ";
-		int command_index = 0;
-		DWORD read, written;
-		bool received_response = true;
-		int idle_ms = 0;
-		do
-		{
-			ReadFile(modem.file, buffer, 1, &read, NULL);
-			if (read)
+			if (report_sheet.reports.count(it->second) > 0)
 			{
-				std::cout << buffer;
-				output_file << buffer;
-				text_data += buffer;
-				received_response = true;
-				idle_ms = 0;
+				std::cout << it->second << std::endl;
 			}
 			else
 			{
-				idle_ms += 1;
+				std::cout << "\t\t\t" << it->second << std::endl;
 			}
+		}
+		std::cout << "\n1. READ MSGS\t2. RUN AT TERMINAL\t3. QUIT" << std::endl;
+		char input_choice;
+		std::cin >> input_choice;
+		if (input_choice == '1')
+			mode = MODE_COMMAND_ECHO;
+		else if (input_choice == '2')
+			mode = MODE_USER_INPUT;
+		else if (input_choice == '3')
+			mode = MODE_QUIT;
+
+		// basic terminal loop:
+		if (mode == MODE_COMMAND_ECHO || mode == MODE_USER_INPUT)
+		{
+			char ch;
+			char buffer[2] = " ";
+			int command_index = 0;
+			DWORD read, written;
+			bool received_response = true;
+			int idle_ms = 0;
+			do
+			{
+				ReadFile(modem.file, buffer, 1, &read, NULL);
+				if (read)
+				{
+					std::cout << buffer;
+					output_file << buffer;
+					text_data += buffer;
+					received_response = true;
+					idle_ms = 0;
+				}
+				else
+				{
+					idle_ms += 1;
+				}
+
+				if (mode == MODE_COMMAND_ECHO)
+				{
+					if (received_response && idle_ms > 100 && ch != '\0')
+					{
+						ch = commands[command_index];
+						if (ch == '\n')
+							WriteFile(modem.file, "\r\n", 3, &written, NULL);
+						else if (ch == ';')
+							WriteFile(modem.file, "\u001A", 1, &written, NULL);
+						else if (ch != '~')
+							WriteFile(modem.file, &ch, 1, &written, NULL);
+						command_index++;
+						received_response = false;
+					}
+				}
+				else if (mode == MODE_USER_INPUT)
+				{
+					if (_kbhit())
+					{
+						ch = _getch();
+						if (ch != 27)
+							WriteFile(modem.file, &ch, 1, &written, NULL);
+						else
+							mode = MODE_MENU;
+					}
+				}
+				Sleep(1);
+			} while (mode == MODE_USER_INPUT || (mode == MODE_COMMAND_ECHO && ch != '~'));
 
 			if (mode == MODE_COMMAND_ECHO)
 			{
-				if (received_response && idle_ms > 10 && ch != '\0')
-				{
-					ch = commands[command_index];
-					if (ch == '\n')
-						WriteFile(modem.file, "\r\n", 3, &written, NULL);
-					else if (ch == ';')
-						WriteFile(modem.file, "\u001A", 1, &written, NULL);
-					else if (ch != '~')
-						WriteFile(modem.file, &ch, 1, &written, NULL);
-					command_index++;
-					received_response = false;
-				}
+
+
+				std::ifstream raw_text_contents;
+				std::ofstream processed_output;
+
+				raw_text_contents.open("output.txt");
+				processed_output.open("processed_output.txt");
+
+
+
+				report_sheet.read_unprocessed(raw_text_contents, &comp_list);
+
+				report_sheet.print(processed_output);
+
+				raw_text_contents.close();
+				processed_output.close();
 			}
-			else if (mode == MODE_USER_INPUT)
-			{
-				if (_kbhit())
-				{
-					ch = _getch();
-					WriteFile(modem.file, &ch, 1, &written, NULL);
-				}
-			}
-			Sleep(1);
-		} while (mode == MODE_USER_INPUT || ch != '~');
-
-		if (mode == MODE_COMMAND_ECHO)
-		{
-			
-
-			std::ifstream raw_text_contents;
-			std::ofstream processed_output;
-
-			raw_text_contents.open("output.txt");
-			processed_output.open("processed_output.txt");
-
-			
-
-			report_sheet.read_unprocessed(raw_text_contents);
-
-			report_sheet.print(processed_output);
-
-			raw_text_contents.close();
-			processed_output.close();
 		}
 	}
 

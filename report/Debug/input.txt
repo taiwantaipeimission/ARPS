@@ -1,0 +1,5 @@
+AT
+AT+CPIN="0000"
+AT+CPMS="SM"
+AT+CMGL="ALL"
+~

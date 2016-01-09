@@ -20,7 +20,7 @@ void ReportRegular::remove_field(std::string key)
 	report_values.erase(key);
 }
 
-bool ReportRegular::read_unprocessed(std::istream& input)
+bool ReportRegular::read_unprocessed(std::istream& input, CompList* comp_list)
 {
 	// prereq: input is after the end of a previous report, and at or before the telephone number
 	// of this report.
@@ -34,7 +34,10 @@ bool ReportRegular::read_unprocessed(std::istream& input)
 	input.putback('+');
 	input.get(str, 14);	//13-digit telephone number
 	sender_number = str;
-	sender_name = "OFFICE";
+	if (comp_list && comp_list->phone_name.count(sender_number) > 0)
+		sender_name = comp_list->phone_name[sender_number];
+	else
+		sender_name = sender_number;
 
 	input.ignore(1000, '\n');
 	input.ignore(1000, '\n');

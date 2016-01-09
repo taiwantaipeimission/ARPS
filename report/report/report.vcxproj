@@ -64,12 +64,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CompList.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Modem.cpp" />
     <ClCompile Include="ReportRegular.cpp" />
     <ClCompile Include="ReportSheet.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CompList.h" />
     <ClInclude Include="Modem.h" />
     <ClInclude Include="ReportRegular.h" />
     <ClInclude Include="ReportSheet.h" />

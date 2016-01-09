@@ -20,12 +20,12 @@ void ReportSheet::add_report(ReportRegular report)
 	}
 }
 
-void ReportSheet::read_unprocessed(std::istream& input)
+void ReportSheet::read_unprocessed(std::istream& input, CompList* comp_list)
 {
 	while (input.good())
 	{
 		ReportRegular report;
-		if (report.read_unprocessed(input))
+		if (report.read_unprocessed(input, comp_list))
 		{
 			add_report(report);
 		}
@@ -52,10 +52,8 @@ void ReportSheet::read_processed(std::istream& input)
 
 void ReportSheet::print(std::ofstream& output)
 {
-	std::cout << "Printing" << std::endl;
 	for (std::map<std::string, ReportRegular>::iterator it = reports.begin(); it != reports.end(); ++it)
 	{
-		std::cout << "Printing:" << it->second.sender_number << std::endl;
 		output << year << ":" << month << ":" << week << ":" << day << "\t";
 		it->second.print(output);
 	}
