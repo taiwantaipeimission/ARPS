@@ -21,6 +21,11 @@ enum TerminalMode
 	MODE_QUIT
 };
 
+static int TIMEOUT_MS = 100;
+static char COMMAND_END_CHAR = '~';
+static char COMMAND_ESCAPE_CHAR = ';';
+static char COMMAND_NEWLINE_CHAR = '\n';
+
 int main(int argc, char **argv)
 {
 	TerminalMode mode = MODE_MENU;
@@ -36,11 +41,7 @@ int main(int argc, char **argv)
 	output_file.open("output.txt");
 	processed_output_file.open("processed_output.txt", std::ios_base::out | std::ios_base::in | std::ios_base::app);
 	input_file.open("input.txt");
-	config_file.open("config.txt");
 	phone_list_file.open("phone_list.txt");
-	
-	char config_data[1000];
-	char commands[1000];
 
 	std::string text_data;
 
@@ -51,15 +52,6 @@ int main(int argc, char **argv)
 
 	ReportSheet report_sheet(year, month, week, day);
 	CompList comp_list;
-
-	if(config_file.is_open())
-	{
-		config_file.getline(config_data, 1000, '\0');
-	}
-	if (input_file.is_open())
-	{
-		input_file.getline(commands, 1000, '\0');
-	}
 
 	report_sheet.read_processed(processed_output_file);
 	comp_list.load(phone_list_file);
@@ -95,10 +87,10 @@ int main(int argc, char **argv)
 		{
 			char ch;
 			char buffer[2] = " ";
-			int command_index = 0;
 			DWORD read, written;
 			bool received_response = true;
-			int idle_ms = 0;
+			int elapsed_ms = 0;
+			int wait_ms = 0;
 			do
 			{
 				ReadFile(modem.file, buffer, 1, &read, NULL);
@@ -108,27 +100,27 @@ int main(int argc, char **argv)
 					output_file << buffer;
 					text_data += buffer;
 					received_response = true;
-					idle_ms = 0;
-				}
-				else
-				{
-					idle_ms += 1;
 				}
 
 				if (mode == MODE_COMMAND_ECHO)
 				{
-					if (received_response && idle_ms > 100 && ch != '\0')
+					if (received_response && elapsed_ms >= wait_ms && ch != COMMAND_END_CHAR)
 					{
-						ch = commands[command_index];
-						if (ch == '\n')
+						//ch = commands[command_index];
+						input_file.get(ch);
+						if (ch == COMMAND_NEWLINE_CHAR)
+						{
 							WriteFile(modem.file, "\r\n", 3, &written, NULL);
-						else if (ch == ';')
+							wait_ms = TIMEOUT_MS;
+							elapsed_ms = 0;
+						}
+						else if (ch == COMMAND_ESCAPE_CHAR)
 							WriteFile(modem.file, "\u001A", 1, &written, NULL);
-						else if (ch != '~')
+						else if (ch != COMMAND_END_CHAR)
 							WriteFile(modem.file, &ch, 1, &written, NULL);
-						command_index++;
 						received_response = false;
 					}
+					elapsed_ms++;
 				}
 				else if (mode == MODE_USER_INPUT)
 				{
@@ -170,7 +162,6 @@ int main(int argc, char **argv)
 	output_file.close();
 	processed_output_file.close();
 	input_file.close();
-	config_file.close();
 	phone_list_file.close();
 
 	return 0;

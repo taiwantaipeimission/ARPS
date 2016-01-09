@@ -6,39 +6,29 @@ AT+CPIN="0000"
 ERROR
 AT+CPMS="SM"
 
-+CPMS: 1,30,1,30
++CPMS: 0,30,0,30
 
 OK
 AT+CMGL="ALL"
 
-+CMGL: 1,"REC READ","+886910358944",,"16/01/05,15:35:09+32"
-TYPE:REPORT
-A:0
-B:2
-C:0
-D:0
-NWBAP:0
-BAP:0
-CONF:0
-BD:2
-SAC:2
-PK:1
-OL:12
-NI:3
-RCLA:0
-LAC:0
-RCT:0
+OK
 
 OK
-31,"REC READ","+886910358944",,"16/01/05,15:35:09+32"
-TYPE:REPORT
-A:0
-B:2
-C:0
-D:0
-NWBAP:0
-BAP:0
-CONF:0
+at
+OK
+at
+OK
+лллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллdf  x Elder Xiao Zhanglao.
++CMGS: 2
+
+OK
+cmgl="ALL"at
+OK
+at+cmgl="ALL"
+OK
+
+OK
+F:0
 BD:2
 SAC:2
 PK:1
