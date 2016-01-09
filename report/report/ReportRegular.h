@@ -13,6 +13,9 @@ public:
 
 	void add_field(std::string key, std::string value);
 	void remove_field(std::string key);
+
+	bool read_unprocessed(std::istream& input);
+	void read_processed(std::istream& input);
 	void print(std::ofstream& output);
 
 	std::string sender_number;

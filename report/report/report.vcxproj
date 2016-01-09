@@ -67,10 +67,12 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Modem.cpp" />
     <ClCompile Include="ReportRegular.cpp" />
+    <ClCompile Include="ReportSheet.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Modem.h" />
     <ClInclude Include="ReportRegular.h" />
+    <ClInclude Include="ReportSheet.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

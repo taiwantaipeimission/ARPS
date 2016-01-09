@@ -10,6 +10,7 @@
 
 #include "Modem.h"
 #include "ReportRegular.h"
+#include "ReportSheet.h"
 
 enum TerminalMode
 {
@@ -23,16 +24,14 @@ int main(int argc, char **argv)
 
 	Modem modem;
 
-	//HANDLE screen = GetStdHandle(STD_OUTPUT_HANDLE);
-
-	std::ofstream output_file;
-	std::ofstream processed_output_file;
+	std::fstream output_file;
+	std::fstream processed_output_file;
 	std::ifstream input_file;
 	std::ifstream config_file;
 	std::ifstream phone_list_file;
 
 	output_file.open("output.txt");
-	processed_output_file.open("processed_output.txt", std::ios_base::out | std::ios_base::app);
+	processed_output_file.open("processed_output.txt", std::ios_base::out | std::ios_base::in | std::ios_base::app);
 	input_file.open("input.txt");
 	config_file.open("config.txt");
 	phone_list_file.open("phone_list.txt");
@@ -45,6 +44,9 @@ int main(int argc, char **argv)
 	std::string year = "2016";
 	std::string month = "1";
 	std::string week = "1";
+	std::string day = "7";
+
+	ReportSheet report_sheet("2016", "1", "2", "7");
 
 	if(config_file.is_open())
 	{
@@ -55,11 +57,46 @@ int main(int argc, char **argv)
 		input_file.getline(commands, 1000, '\0');
 	}
 
-	//char commands[] = "AT\nAT+CMGS=\"+886910358944\"\nTHIS IS A MESSAGE.\u001A";
+	report_sheet.read_processed(processed_output_file);
+
+	// process string
+	std::map<std::string, std::string> comp_list;
+	char all_text[1000] = "";
+	char ph_number[64] = "";
+	char comp_name[64] = "";
+
+	phone_list_file.getline(ph_number, 64, '\t');
+	phone_list_file.getline(comp_name, 64, '\n');
+
+	while (phone_list_file.good() )
+	{
+	comp_list[ph_number] = comp_name;
+
+	phone_list_file.getline(ph_number, 64, '\t');
+	phone_list_file.getline(comp_name, 64, '\n');
+	}
+
+
+	std::cout << "RECEIVED\t\tNOT RECEIVED" << std::endl;
+	for (std::map<std::string, std::string>::iterator it = comp_list.begin(); it != comp_list.end(); ++it)
+	{
+		if (report_sheet.reports.count(it->second) > 0)
+		{
+			std::cout << it->second << std::endl;
+		}
+		else
+		{
+			std::cout << "\t\t\t" << it->second << std::endl;
+		}
+	}
+	std::cout << "\n1. READ MSGS\t2. RUN AT TERMINAL\t3. QUIT" << std::endl;
+	char input_choice;
+	std::cin >> input_choice;
 
 	// basic terminal loop:
-
+	if (input_choice == '1' || input_choice == '2')
 	{
+		mode = input_choice == '1' ? MODE_COMMAND_ECHO : MODE_USER_INPUT;
 		char ch;
 		char buffer[2] = " ";
 		int command_index = 0;
@@ -82,7 +119,7 @@ int main(int argc, char **argv)
 				idle_ms += 1;
 			}
 
-			if(mode == MODE_COMMAND_ECHO)
+			if (mode == MODE_COMMAND_ECHO)
 			{
 				if (received_response && idle_ms > 10 && ch != '\0')
 				{
@@ -97,7 +134,7 @@ int main(int argc, char **argv)
 					received_response = false;
 				}
 			}
-			else if(mode == MODE_USER_INPUT)
+			else if (mode == MODE_USER_INPUT)
 			{
 				if (_kbhit())
 				{
@@ -107,78 +144,27 @@ int main(int argc, char **argv)
 			}
 			Sleep(1);
 		} while (mode == MODE_USER_INPUT || ch != '~');
-	}
 
-	if (mode == MODE_COMMAND_ECHO)
-	{
-		// process string
-		output_file << text_data;
-		std::map<std::string, std::string> phone_list_data;
-		char all_text[1000] = "";
-		char ph_number[64] = "";
-		char comp_name[64] = "";
-		
-		phone_list_file.getline(ph_number, 64, '\t');
-		phone_list_file.getline(comp_name, 64, '\n');
-
-		while (phone_list_file.good() )
+		if (mode == MODE_COMMAND_ECHO)
 		{
-			phone_list_data[ph_number] = comp_name;
+			
 
-			phone_list_file.getline(ph_number, 64, '\t');
-			phone_list_file.getline(comp_name, 64, '\n');
-		}
+			std::ifstream raw_text_contents;
+			std::ofstream processed_output;
 
+			raw_text_contents.open("output.txt");
+			processed_output.open("processed_output.txt");
 
-		int msg_start_pos = text_data.find("+CMGL:", 0);
-		int msg_end_pos = text_data.find("+CMGL:", msg_start_pos + 1);
-		std::string extracted_msg;
-		while (msg_start_pos != std::string::npos)
-		{
+			
 
-			ReportRegular report;
-			int ph_start_pos = text_data.find("+886", msg_start_pos);
-			if (ph_start_pos != std::string::npos)
-			{
-				report.sender_number = text_data.substr(ph_start_pos, 13);
-				report.sender_name = phone_list_data[report.sender_number];
-			}
+			report_sheet.read_unprocessed(raw_text_contents);
 
-			for (unsigned int i = 0; i < report.key_list.size(); i++)
-			{
-				std::string key = report.key_list[i];
-				std::string value;
+			report_sheet.print(processed_output);
 
-				int value_start_pos = text_data.find(key + ":", msg_start_pos) + key.length() + 1;
-				int value_end_pos = text_data.find("\n", value_start_pos + 1);
-
-				value = text_data.substr(value_start_pos, value_end_pos - value_start_pos);
-				report.add_field(key, value);
-			}
-
-			processed_output_file << year << ":" << month << ":" << week << "\t";
-			report.print(processed_output_file);
-
-			msg_start_pos = msg_end_pos;
-			msg_end_pos = text_data.find("+CMGL:", msg_start_pos + 1);
+			raw_text_contents.close();
+			processed_output.close();
 		}
 	}
-
-	/*]
-	do {
-		// check for data on port and display it on screen.
-		ReadFile(modem.file, buffer, sizeof(buffer), &read, NULL);
-		if (read)
-			WriteFile(screen, buffer, read, &written, NULL);
-
-		// check for keypress, and write any out the port.
-		if (_kbhit()) {
-			ch = _getch();
-			WriteFile(modem.file, &ch, 1, &written, NULL);
-			WriteFile(screen, &ch, 1, &written, NULL);
-		}
-		// until user hits escape.
-	} while (ch != 27);*/
 
 	// close up and go home.
 	output_file.close();
