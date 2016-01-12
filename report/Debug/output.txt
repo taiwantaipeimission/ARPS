@@ -6,35 +6,178 @@ AT+CPIN="0000"
 ERROR
 AT+CPMS="SM"
 
-+CPMS: 0,30,0,30
++CPMS: 10,30,10,30
 
 OK
 AT+CMGL="ALL"
 
-OK
-
-OK
-at
-OK
-at
-OK
-лллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллллdf  x Elder Xiao Zhanglao.
-+CMGS: 2
-
-OK
-cmgl="ALL"at
-OK
-at+cmgl="ALL"
-OK
-
-OK
-F:0
-BD:2
-SAC:2
-PK:1
-OL:12
++CMGL: 1,"REC READ","+886972576542",,"16/01/10,20:39:31+32"
+TYPE:REPORT
+A:0
+B:1
+C:2
+D:1
+NWBAP:1
+BAP:0
+CONF:0
+BD:4
+SAC:3
+PK:4
+OL:10
+NI:4
+RCLA:6
+LAC:4
+RCT:1
++CMGL: 2,"REC READ","+886972576561",,"16/01/10,21:01:44+32"
+TYPE:REPORT
+A:
+B:1
+C:
+D:1
+NWBAP:1
+BAP:0
+CONF:0
+BD:6
+SAC:0
+PK:6
+OL:5
+NI:3
+RCLA:3
+LAC:0
+RCT:0
++CMGL: 3,"REC READ","+886963932617",,"16/01/10,20:44:29+32"
+TYPE:REPORT
+A:
+B:
+C:
+D:2
+NWBAP:0
+BAP:0
+CONF:0
+BD:4
+SAC:1
+PK:3
+OL:5
+NI:2
+RCLA:0
+LAC:1
+RCT:0
++CMGL: 4,"REC READ","+886972576587",,"16/01/10,20:44:58+32"
+TYPE:REPORT             A: 0
+B: 1
+C: 1
+D: 2
+NWBAP: 0
+BAP: 0
+CONF: 0
+BD: 4
+SAC: 2
+PK: 8
+OL: 3
+NI: 2
+RCLA: 2
+LAC: 1
+RCT: 0
++CMGL: 5,"REC READ","+886972576562",,"16/01/10,20:50:49+32"
+TYPE:REPORT
+A:0
+B:1
+C:0
+D:2
+NWBAP:0
+BAP:0
+CONF:0
+BD:5
+SAC:1
+PK:6
+OL:11
+NI:5
+RCLA:5
+LAC:4
+RCT:0
++CMGL: 6,"REC READ","+886963932617",,"16/01/10,20:51:59+32"
+TYPE:REPORT
+A:0
+B:0
+C:0
+D:2
+NWBAP:0
+BAP:0
+CONF:0
+BD:4
+SAC:1
+PK:3
+OL:5
 NI:3
 RCLA:0
+LAC:1
+RCT:0
++CMGL: 7,"REC READ","+886972576566",,"16/01/10,20:53:25+32"
+TYPE:REPORT
+A:2
+B:0
+C:0
+D:0
+NWBAP:2
+BAP:0
+CONF:0
+BD:3
+SAC:2
+PK:8
+OL:9
+NI:2
+RCLA:1
+LAC:0
+RCT:0
++CMGL: 8,"REC READ","+886972576554",,"16/01/10,20:53:58+32"
+TYPE:REPORT
+A:0
+B:0
+C:1
+D:5
+NWBAP:0
+BAP:0
+CONF:0
+BD:7
+SAC:3
+PK:8
+OL:21
+NI:5
+RCLA:5
+LAC:1
+RCT:0
++CMGL: 9,"REC READ","+886972576559",,"16/01/10,20:57:44+32"
+TYPE:REPORT
+A:0
+B:0
+C:0
+D:0
+NWBAP:0
+BAP:0
+CONF:0
+BD:0
+SAC:0
+PK:2
+OL:4
+NI:4
+RCLA:2
+LAC:0
+RCT:0
++CMGL: 10,"REC READ","+886963809216",,"16/01/11,08:19:40+32"
+TYPE:REPORT
+A:0
+B:0
+C:0
+D:4
+NWBAP:0
+BAP:0
+CONF:0
+BD:4
+SAC:2
+PK:8
+OL:4
+NI:1
+RCLA:2
 LAC:0
 RCT:0
 
