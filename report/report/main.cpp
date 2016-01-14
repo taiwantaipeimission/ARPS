@@ -7,6 +7,7 @@
 #include <conio.h>
 #include <fstream>
 #include <string>
+#include <sstream>
 
 #include "Modem.h"
 #include "ReportRegular.h"
@@ -21,7 +22,7 @@ enum TerminalMode
 	MODE_QUIT
 };
 
-static int TIMEOUT_MS = 20;
+static int TIMEOUT_MS = 100;
 static char COMMAND_END_CHAR = '~';
 static char COMMAND_ESCAPE_CHAR = ';';
 static char COMMAND_NEWLINE_CHAR = '\n';
@@ -32,21 +33,53 @@ int main(int argc, char **argv)
 
 	Modem modem;
 
-	std::fstream output_file;
-	std::fstream processed_output_file;
+	std::ifstream path_file;
 	std::ifstream input_file;
-	std::ifstream config_file;
 	std::ifstream phone_list_file;
 
-	output_file.open("output.txt");
-	processed_output_file.open("processed_output.txt", std::ios_base::in | std::ios_base::out);	// std::ios_base::app
-	processed_output_file.clear();
-	input_file.open("input.txt");
-	phone_list_file.open("phone_list.txt");
+	std::fstream output_file;
+	std::fstream processed_output_file;
+
+	{
+		//Read file contents
+		std::string commands_path = "";
+		std::string raw_output_path = "";
+		std::string ph_list_path = "";
+		std::string report_data_path = "";
+
+		path_file.open("paths.txt");
+		if (path_file.good())
+		{
+			std::string path_file_contents(static_cast<std::stringstream const&>(std::stringstream() << path_file.rdbuf()).str());
+			int commands_beg_pos = path_file_contents.find("\"", path_file_contents.find("COMMANDS"));
+			int commands_end_pos = path_file_contents.find("\"", commands_beg_pos + 1);
+			commands_path = path_file_contents.substr(commands_beg_pos + 1, commands_end_pos - commands_beg_pos - 1);
+
+			int raw_output_beg_pos = path_file_contents.find("\"", path_file_contents.find("RAW_OUTPUT"));
+			int raw_output_end_pos = path_file_contents.find("\"", raw_output_beg_pos + 1);
+			raw_output_path = path_file_contents.substr(raw_output_beg_pos + 1, raw_output_end_pos - raw_output_beg_pos - 1);
+
+			int ph_list_beg_pos = path_file_contents.find("\"", path_file_contents.find("PH_LIST"));
+			int ph_list_end_pos = path_file_contents.find("\"", ph_list_beg_pos + 1);
+			ph_list_path = path_file_contents.substr(ph_list_beg_pos + 1, ph_list_end_pos - ph_list_beg_pos - 1);
+
+			int report_data_beg_pos = path_file_contents.find("\"", path_file_contents.find("REPORT_DATA"));
+			int report_data_end_pos = path_file_contents.find("\"", report_data_beg_pos + 1);
+			report_data_path = path_file_contents.substr(report_data_beg_pos + 1, report_data_end_pos - report_data_beg_pos - 1);
+		}
+		output_file.open(raw_output_path);
+		processed_output_file.open(report_data_path, std::ios_base::in | std::ios_base::out);	// std::ios_base::app
+		processed_output_file.clear();
+		input_file.open(commands_path);
+		phone_list_file.open(ph_list_path);
+	}
+
+
+	
 
 	std::string text_data;
 
-	std::string date = "2016:1:1:7";
+	std::string date = "2016:1:2:4";
 
 	ReportSheet report_sheet;
 	CompList comp_list;

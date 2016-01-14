@@ -1,0 +1,4 @@
+COMMANDS="input.txt"
+RAW_OUTPUT="output.txt"
+PH_LIST="phone_list.txt"
+REPORT_DATA="report_data.txt"
