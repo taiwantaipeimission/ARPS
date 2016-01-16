@@ -41,7 +41,7 @@ void Terminal::set_mode(TerminalMode new_mode)
 	{
 		command_stream.clear();
 		command_stream.seekg(0, std::ios::beg);
-		command_stream.str("AT+CMGL=\"ALL\"~");
+		command_stream.str("AT+CMGL=\"ALL\"\n~");
 		
 		got_modem = true;
 		wait_ms = 0;
@@ -102,8 +102,11 @@ void Terminal::update(int millis)
 
 		else if (mode == MODE_READ_MSG || mode == MODE_INIT)
 		{
-			if (got_modem && wait_ms <= 0 && command_ch != COMMAND_END_CHAR)
+			if (got_modem && wait_ms <= 0)
 			{
+				got_modem = false;
+				modem_str = "";
+
 				command_stream.get(command_ch);
 				if (command_ch == COMMAND_NEWLINE_CHAR)
 				{
@@ -115,13 +118,22 @@ void Terminal::update(int millis)
 					WriteFile(modem->file, "\u001A", 1, &written, NULL);
 					wait_ms = 0;
 				}
+				else if (command_ch == COMMAND_END_CHAR)
+				{
+					if (mode == MODE_INIT)
+					{
+						set_mode(MODE_READ_MSG);
+					}
+					else if (mode == MODE_READ_MSG)
+					{
+						set_mode(MODE_WAIT_FOR_MSG);
+					}
+				}
 				else if (command_ch != COMMAND_END_CHAR)
 				{
 					WriteFile(modem->file, &command_ch, 1, &written, NULL);
 					wait_ms = 0;
 				}
-				got_modem = false;
-				modem_str = "";
 			}
 			if (got_user && user_ch == 27)
 			{
