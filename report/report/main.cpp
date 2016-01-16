@@ -16,7 +16,8 @@
 
 enum TerminalMode
 {
-	MODE_COMMAND_ECHO = 0,
+	MODE_READ_MSG = 0,
+	MODE_WAIT_FOR_MSG,
 	MODE_USER_INPUT,
 	MODE_MENU,
 	MODE_QUIT
@@ -29,7 +30,7 @@ static char COMMAND_NEWLINE_CHAR = '\n';
 
 int main(int argc, char **argv)
 {
-	TerminalMode mode = MODE_MENU;
+	
 
 	Modem modem;
 
@@ -74,11 +75,6 @@ int main(int argc, char **argv)
 		phone_list_file.open(ph_list_path);
 	}
 
-
-	
-
-	std::string text_data;
-
 	std::string date = "2016:1:2:4";
 
 	ReportSheet report_sheet;
@@ -87,6 +83,10 @@ int main(int argc, char **argv)
 	report_sheet.read_stored_all(processed_output_file);
 	comp_list.load(phone_list_file);
 	// process string
+
+	TerminalMode mode = MODE_MENU;
+	std::stringstream command;
+	command << input_file.rdbuf();
 	
 	while (mode != MODE_QUIT)
 	{
@@ -104,88 +104,117 @@ int main(int argc, char **argv)
 				std::cout << "\t\t\t" << it->second << std::endl;
 			}
 		}
-		std::cout << "\n1. READ MSGS\t2. RUN AT TERMINAL\t3. QUIT" << std::endl;
+		std::cout << "\n1. START\t2. RUN AT TERMINAL\t3. QUIT" << std::endl;
 		char input_choice;
 		std::cin >> input_choice;
 		if (input_choice == '1')
-			mode = MODE_COMMAND_ECHO;
+			mode = MODE_READ_MSG;
 		else if (input_choice == '2')
 			mode = MODE_USER_INPUT;
 		else if (input_choice == '3')
 			mode = MODE_QUIT;
 
 		// basic terminal loop:
-		if (mode == MODE_COMMAND_ECHO || mode == MODE_USER_INPUT)
+		if (mode == MODE_READ_MSG || mode == MODE_USER_INPUT || mode == MODE_WAIT_FOR_MSG)
 		{
-			char ch;
-			char buffer[2] = " ";
+			char user_ch = 0;					//user input
+			bool got_user = false;
+			char command_ch = 0;				//command stream input
+			bool got_command = false;
+			char buffer[2] = " ";			//character received (plus /0)
+			std::string received = "";		//string of consecutive chars received
 			DWORD read, written;
 			bool received_response = true;
-			bool entered_newline = false;
 			int wait_ms = 0;
-			int elapsed_ms = 0;
-			input_file.clear();
-			input_file.seekg(0, std::ios::beg);
+			command.clear();
+			command.seekg(0, std::ios::beg);
+
 			do
 			{
 				ReadFile(modem.file, buffer, 1, &read, NULL);
+
+				//get char from modem
 				if (read)
 				{
 					std::cout << buffer;
 					output_file << buffer;
-					text_data += buffer;
+					received += buffer;
 					received_response = true;
+
 					if (wait_ms > 0)
-						wait_ms = TIMEOUT_MS;
+						wait_ms = TIMEOUT_MS;	//reset wait timer: wait for another TIMOUT_MS ms before writing
 				}
 
-				if (mode == MODE_COMMAND_ECHO)
+				//get char from user input
+				if (_kbhit())
 				{
-					if (received_response && wait_ms <= 0 && ch != COMMAND_END_CHAR)
+					user_ch = _getch();
+					got_user = true;
+				}
+				else
+				{
+					got_user = false;
+				}
+
+				if (mode == MODE_WAIT_FOR_MSG)
+				{
+					if (received.find("+CMTI") != std::string::npos)
 					{
-						//ch = commands[command_index];
-						input_file.get(ch);
-						if (ch == COMMAND_NEWLINE_CHAR)
+						command.str("AT+CMGL=\"ALL\"~");
+						mode = MODE_READ_MSG;
+					}
+					if (got_user && user_ch == 27)
+					{
+						mode = MODE_MENU;
+					}
+				}
+
+				else if (mode == MODE_READ_MSG)
+				{
+					if (received_response && wait_ms <= 0 && command_ch != COMMAND_END_CHAR)
+					{
+						command.get(command_ch);
+						if (command_ch == COMMAND_NEWLINE_CHAR)
 						{
 							WriteFile(modem.file, "\r\n", 3, &written, NULL);
 							wait_ms = TIMEOUT_MS;
 						}
-						else if (ch == COMMAND_ESCAPE_CHAR)
+						else if (command_ch == COMMAND_ESCAPE_CHAR)
 						{
 							WriteFile(modem.file, "\u001A", 1, &written, NULL);
 							wait_ms = 0;
 						}
-						else if (ch != COMMAND_END_CHAR)
+						else if (command_ch != COMMAND_END_CHAR)
 						{
-							WriteFile(modem.file, &ch, 1, &written, NULL);
+							WriteFile(modem.file, &command_ch, 1, &written, NULL);
 							wait_ms = 0;
 						}
 						received_response = false;
+						received = "";
+					}
+					if (got_user && user_ch == 27)
+					{
+						mode = MODE_MENU;
+						output_file.clear();
+						output_file.seekg(0, std::ios::beg);
+						report_sheet.read_unprocessed(output_file, date, &comp_list);
 					}
 					wait_ms--;
 				}
+
 				else if (mode == MODE_USER_INPUT)
 				{
-					if (_kbhit())
+					if (got_user)
 					{
-						ch = _getch();
-						if (ch != 27)
-							WriteFile(modem.file, &ch, 1, &written, NULL);
+						if (user_ch != 27)
+							WriteFile(modem.file, &user_ch, 1, &written, NULL);
 						else
 							mode = MODE_MENU;
 					}
 				}
-				Sleep(1);
-			} while (mode == MODE_USER_INPUT || (mode == MODE_COMMAND_ECHO && ch != '~'));
 
-			if (mode == MODE_COMMAND_ECHO)
-			{
-				output_file.clear();
-				output_file.seekg(0, std::ios::beg);
-				
-				report_sheet.read_unprocessed(output_file, date, &comp_list);
-				
-			}
+				Sleep(1);
+			} while (mode == MODE_USER_INPUT || mode == MODE_WAIT_FOR_MSG || mode == MODE_READ_MSG);
 		}
 	}
 
