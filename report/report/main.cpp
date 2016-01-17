@@ -24,54 +24,55 @@ int main(int argc, char **argv)
 	std::ifstream phone_list_file;
 
 	std::fstream output_file;
-	std::fstream processed_output_file;
 
+	std::ifstream report_data_in;
+	std::ofstream report_data_out;
+
+	//Read file contents
+	std::string commands_path = "";
+	std::string raw_output_path = "";
+	std::string ph_list_path = "";
+	std::string report_data_path = "";
+
+	path_file.open("paths.txt");
+	if (path_file.good())
 	{
-		//Read file contents
-		std::string commands_path = "";
-		std::string raw_output_path = "";
-		std::string ph_list_path = "";
-		std::string report_data_path = "";
+		std::string path_file_contents(static_cast<std::stringstream const&>(std::stringstream() << path_file.rdbuf()).str());
+		int commands_beg_pos = path_file_contents.find("\"", path_file_contents.find("COMMANDS"));
+		int commands_end_pos = path_file_contents.find("\"", commands_beg_pos + 1);
+		commands_path = path_file_contents.substr(commands_beg_pos + 1, commands_end_pos - commands_beg_pos - 1);
 
-		path_file.open("paths.txt");
-		if (path_file.good())
-		{
-			std::string path_file_contents(static_cast<std::stringstream const&>(std::stringstream() << path_file.rdbuf()).str());
-			int commands_beg_pos = path_file_contents.find("\"", path_file_contents.find("COMMANDS"));
-			int commands_end_pos = path_file_contents.find("\"", commands_beg_pos + 1);
-			commands_path = path_file_contents.substr(commands_beg_pos + 1, commands_end_pos - commands_beg_pos - 1);
+		int raw_output_beg_pos = path_file_contents.find("\"", path_file_contents.find("RAW_OUTPUT"));
+		int raw_output_end_pos = path_file_contents.find("\"", raw_output_beg_pos + 1);
+		raw_output_path = path_file_contents.substr(raw_output_beg_pos + 1, raw_output_end_pos - raw_output_beg_pos - 1);
 
-			int raw_output_beg_pos = path_file_contents.find("\"", path_file_contents.find("RAW_OUTPUT"));
-			int raw_output_end_pos = path_file_contents.find("\"", raw_output_beg_pos + 1);
-			raw_output_path = path_file_contents.substr(raw_output_beg_pos + 1, raw_output_end_pos - raw_output_beg_pos - 1);
+		int ph_list_beg_pos = path_file_contents.find("\"", path_file_contents.find("PH_LIST"));
+		int ph_list_end_pos = path_file_contents.find("\"", ph_list_beg_pos + 1);
+		ph_list_path = path_file_contents.substr(ph_list_beg_pos + 1, ph_list_end_pos - ph_list_beg_pos - 1);
 
-			int ph_list_beg_pos = path_file_contents.find("\"", path_file_contents.find("PH_LIST"));
-			int ph_list_end_pos = path_file_contents.find("\"", ph_list_beg_pos + 1);
-			ph_list_path = path_file_contents.substr(ph_list_beg_pos + 1, ph_list_end_pos - ph_list_beg_pos - 1);
-
-			int report_data_beg_pos = path_file_contents.find("\"", path_file_contents.find("REPORT_DATA"));
-			int report_data_end_pos = path_file_contents.find("\"", report_data_beg_pos + 1);
-			report_data_path = path_file_contents.substr(report_data_beg_pos + 1, report_data_end_pos - report_data_beg_pos - 1);
-		}
-		output_file.open(raw_output_path);
-		processed_output_file.open(report_data_path, std::ios_base::in | std::ios_base::out);	// std::ios_base::app
-		processed_output_file.clear();
-		input_file.open(commands_path);
-		phone_list_file.open(ph_list_path);
+		int report_data_beg_pos = path_file_contents.find("\"", path_file_contents.find("REPORT_DATA"));
+		int report_data_end_pos = path_file_contents.find("\"", report_data_beg_pos + 1);
+		report_data_path = path_file_contents.substr(report_data_beg_pos + 1, report_data_end_pos - report_data_beg_pos - 1);
 	}
+	output_file.open(raw_output_path, std::fstream::trunc | std::ios_base::in | std::ios_base::out);
+	report_data_in.open(report_data_path, std::ios_base::in);	// std::ios_base::app
+	report_data_out.open(report_data_path + ".new", std::ios_base::out);
 
-	std::string date = "2016:1:2:4";
+	input_file.open(commands_path);
+	phone_list_file.open(ph_list_path);
+
+	std::string date = "2016:1:2:7";
 
 	ReportSheet report_sheet;
 	CompList comp_list;
 
-	report_sheet.read_stored_all(processed_output_file);
+	report_sheet.read_stored_all(report_data_in);
 	comp_list.load(phone_list_file);
 	// process string
 
 	std::stringstream command;
 
-	Terminal terminal(date, &modem, &report_sheet, &comp_list, &output_file, &processed_output_file);
+	Terminal terminal(date, &modem, &report_sheet, &comp_list, &output_file);
 
 	bool quit = false;
 	
@@ -95,7 +96,7 @@ int main(int argc, char **argv)
 		char input_choice;
 		std::cin >> input_choice;
 		if (input_choice == '1')
-			terminal.set_mode(Terminal::MODE_INIT);
+			terminal.set_mode(Terminal::MODE_READ_MSG);
 		else if (input_choice == '2')
 			terminal.set_mode(Terminal::MODE_USER_INPUT);
 		else if (input_choice == '3')
@@ -103,23 +104,25 @@ int main(int argc, char **argv)
 
 		// basic terminal loop:
 
-		while (terminal.get_mode() != Terminal::MODE_MENU)
+		while (!quit && terminal.get_mode() != Terminal::MODE_MENU)
 		{
 			terminal.update(1);
 			Sleep(1);
 		}
 	}
-		
-
-	processed_output_file.clear();
-	processed_output_file.seekg(0, std::ios::beg);
-	report_sheet.print(processed_output_file);
+	
+	report_data_out.clear();
+	report_sheet.print(report_data_out);
 
 	// close up and go home.
 	output_file.close();
-	processed_output_file.close();
+	report_data_in.close();
+	report_data_out.close();
 	input_file.close();
 	phone_list_file.close();
+
+	std::remove(report_data_path.c_str());
+	std::rename((report_data_path + ".new").c_str(), report_data_path.c_str());
 
 	return 0;
 }

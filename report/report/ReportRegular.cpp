@@ -65,7 +65,7 @@ bool ReportRegular::read_unprocessed(std::string input, std::string date, CompLi
 
 		for (std::vector<std::string>::iterator it = key_list.begin(); it != key_list.end(); ++it)
 		{
-			int key_pos = input.find(*it + ":");
+			int key_pos = input.find("\n" + *it + ":");
 			int value_pos = input.find(':', key_pos) + 1;
 			int value_end_pos = std::min(input.find('\n', value_pos), input.find('\r', value_pos));
 

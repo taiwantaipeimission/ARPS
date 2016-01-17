@@ -11,8 +11,8 @@
 #include "ReportSheet.h"
 #include "CompList.h"
 
-Terminal::Terminal(std::string date_in, Modem* modem_in, ReportSheet* report_sheet_in, CompList* comp_list_in, std::fstream* output_file_in, std::fstream* processed_output_file_in)
-	: mode(MODE_INIT), date(date_in), modem(modem_in), report_sheet(report_sheet_in), comp_list(comp_list_in), output_file(output_file_in), processed_output_file(processed_output_file_in)
+Terminal::Terminal(std::string date_in, Modem* modem_in, ReportSheet* report_sheet_in, CompList* comp_list_in, std::fstream* output_file_in)
+	: mode(MODE_INIT), date(date_in), modem(modem_in), report_sheet(report_sheet_in), comp_list(comp_list_in), output_file(output_file_in)
 {
 	set_mode(MODE_INIT);
 }

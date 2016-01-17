@@ -30,7 +30,6 @@ public:
 	ReportSheet* report_sheet;
 	CompList* comp_list;
 	std::fstream* output_file;
-	std::fstream* processed_output_file;
 	std::string date;
 
 
@@ -49,7 +48,7 @@ public:
 	DWORD read, written;				//number of bytes read/written to modem
 	int wait_ms = 0;					//ms to wait before writing
 
-	Terminal(std::string date_in, Modem* modem_in, ReportSheet* report_sheet_in, CompList* comp_list_in, std::fstream* output_file_in, std::fstream* processed_output_file_in);
+	Terminal(std::string date_in, Modem* modem_in, ReportSheet* report_sheet_in, CompList* comp_list_in, std::fstream* output_file_in);
 	virtual ~Terminal();
 
 	void set_mode(TerminalMode new_mode);
