@@ -4,8 +4,10 @@
 class Modem;
 class ReportSheet;
 class CompList;
+class Message;
 
 #include <sstream>
+#include <vector>
 
 class Terminal
 {
@@ -32,8 +34,8 @@ public:
 	std::fstream* output_file;
 	std::string date;
 
-
 	std::stringstream command_stream;
+	std::vector<Message> cur_messages;
 
 	char user_ch = 0;					//user input
 	bool got_user = false;
@@ -51,6 +53,7 @@ public:
 	Terminal(std::string date_in, Modem* modem_in, ReportSheet* report_sheet_in, CompList* comp_list_in, std::fstream* output_file_in);
 	virtual ~Terminal();
 
+	void parse_messages(std::string raw_str);
 	void set_mode(TerminalMode new_mode);
 	TerminalMode get_mode();
 

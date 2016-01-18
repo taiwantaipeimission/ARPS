@@ -10,6 +10,7 @@
 #include "Modem.h"
 #include "ReportSheet.h"
 #include "CompList.h"
+#include "Message.h"
 
 Terminal::Terminal(std::string date_in, Modem* modem_in, ReportSheet* report_sheet_in, CompList* comp_list_in, std::fstream* output_file_in)
 	: mode(MODE_INIT), date(date_in), modem(modem_in), report_sheet(report_sheet_in), comp_list(comp_list_in), output_file(output_file_in)
@@ -32,9 +33,27 @@ void Terminal::set_mode(TerminalMode new_mode)
 	if (mode == MODE_READ_MSG)
 	{
 		//write the raw msg output to file
-		output_file->clear();
-		output_file->seekg(0, std::ios::beg);
-		report_sheet->read_unprocessed((*output_file), date, comp_list);
+		//output_file->clear();
+		//output_file->seekg(0, std::ios::beg);
+		//report_sheet->read_unprocessed(modem_str, date, comp_list);
+
+		if (modem_str != "" && modem_str.find("+CMGL: ") != std::string::npos)
+		{
+			parse_messages(modem_str);
+			modem_str = "";
+		}
+
+		modem_str = "";
+
+		for (std::vector<Message>::iterator it = cur_messages.begin(); it != cur_messages.end(); ++it)
+		{
+			if (it->type == Message::TYPE_REPORT)
+			{
+				ReportRegular report(*it, date);
+				report_sheet->add_report(report);
+			}
+		}
+		cur_messages.clear();
 	}
 
 	if (new_mode == MODE_READ_MSG)
@@ -59,6 +78,22 @@ void Terminal::set_mode(TerminalMode new_mode)
 	mode = new_mode;
 }
 
+void Terminal::parse_messages(std::string raw_str)
+{
+	//parses messages from the raw_str modem output string
+	int start = raw_str.find("+CMGL:");
+	int end = raw_str.find("+CMGL:", start + 1) - 1;
+	while (start != std::string::npos)
+	{
+		Message msg;
+		msg.parse(raw_str.substr(start, end - start + 1), comp_list);
+		cur_messages.push_back(msg);
+
+		start = end + 1;
+		end = raw_str.find("+CMGL:", start + 1) - 1;
+	}
+}
+
 void Terminal::update(int millis)
 {
 		ReadFile(modem->file, &modem_ch, 1, &read, NULL);
@@ -69,7 +104,7 @@ void Terminal::update(int millis)
 			std::string modem_ch_null = "";
 			modem_ch_null += modem_ch;
 			std::cout << modem_ch_null;
-			(*output_file) << modem_ch_null;
+			//(*output_file) << modem_ch_null;
 			modem_str += modem_ch_null;
 			got_modem = true;
 
@@ -105,8 +140,13 @@ void Terminal::update(int millis)
 			if (got_modem && wait_ms <= 0)
 			{
 				got_modem = false;
-				modem_str = "";
 
+				
+
+				
+
+
+				
 				command_stream.get(command_ch);
 				if (command_ch == COMMAND_NEWLINE_CHAR)
 				{

@@ -6,6 +6,7 @@
 #include <fstream>
 
 #include "CompList.h"
+#include "Message.h"
 
 class ReportRegular
 {
@@ -16,6 +17,7 @@ public:
 	std::map<std::string, std::string> report_values;
 
 	ReportRegular();
+	ReportRegular(Message msg, std::string date);
 	virtual ~ReportRegular();
 
 	std::string get_id_str();
@@ -26,7 +28,6 @@ public:
 	void add_field(std::string key, std::string value);
 	void remove_field(std::string key);
 
-	bool read_unprocessed(std::string input, std::string date, CompList* comp_list = NULL);
 	void read_processed(std::string input);
 	void print(std::ostream& output);
 

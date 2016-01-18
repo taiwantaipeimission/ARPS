@@ -20,30 +20,13 @@ void ReportSheet::add_report(ReportRegular report)
 	}
 }
 
-void ReportSheet::read_unprocessed(std::istream& input, std::string date, CompList* comp_list)
+void read_unprocessed(std::string input, std::string date, CompList* comp_list = NULL)
 {
-	while (input.good())
-	{
-		std::string report_raw = "";
+	int msg_start_pos = input.find("+CMGL" + 5);
+	int msg_end_pos = input.find("+CMGL", msg_start_pos);
 
-		char c;
-		while (report_raw.find("+CMGL") == std::string::npos && input.good())
-		{
-			c = input.get();
-			report_raw += c;
-		}
-
-		ReportRegular report;
-		if (report.read_unprocessed(report_raw, date, comp_list))
-		{
-			int count = reports.count(report.id_str);
-			bool equal = reports[report.id_str] == report;
-			if (count == 0 || !equal)
-			{
-				add_report(report);
-			}
-		}
-	}
+	std::string msg_string = input.substr(msg_start_pos, msg_end_pos - msg_start_pos - 1);
+	// more dongxi...
 }
 
 void ReportSheet::read_stored_all(std::istream& input)
