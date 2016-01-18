@@ -15,9 +15,12 @@ void Message::parse(std::string input, CompList* comp_list)
 	sender_number = "";
 	sender_name = "";
 	int cmgl_id_start = input.find("CMGL: ");
-	int cmgl_id_end = input.find(",", cmgl_id_start);
-	if (cmgl_id_start != std::string::npos && cmgl_id_end != std::string::npos)
-		cmgl_id = input.substr(cmgl_id_start, cmgl_id_end - cmgl_id_start - 1);
+	if (cmgl_id_start != std::string::npos)
+	{
+		cmgl_id_start += 6;
+		int cmgl_id_end = input.find(",", cmgl_id_start);
+		cmgl_id = input.substr(cmgl_id_start, cmgl_id_end - cmgl_id_start);
+	}
 
 	int number_start = input.find("+886");
 	if (number_start != std::string::npos)

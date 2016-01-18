@@ -30,16 +30,6 @@ Terminal::TerminalMode Terminal::get_mode()
 
 void Terminal::set_mode(TerminalMode new_mode)
 {
-	if (mode == MODE_AUTOMATIC)
-	{
-		//write the raw msg output to file
-		//output_file->clear();
-		//output_file->seekg(0, std::ios::beg);
-		//report_sheet->read_unprocessed(modem_str, date, comp_list);
-
-		
-	}
-
 	if (new_mode == MODE_AUTOMATIC)
 	{
 		command_stream.clear();
@@ -102,49 +92,58 @@ void Terminal::update(int millis)
 		{
 			if (got_modem && wait_ms <= 0)
 			{
-				got_modem = false;
-				
 				command_stream.get(command_ch);
 				if (command_ch == COMMAND_NEWLINE_CHAR)
 				{
 					WriteFile(modem->file, "\r\n", 3, &written, NULL);
 					wait_ms = TIMEOUT_MS;
+					got_modem = false;
 				}
 				else if (command_ch == COMMAND_ESCAPE_CHAR)
 				{
 					WriteFile(modem->file, "\u001A", 1, &written, NULL);
 					wait_ms = 0;
+					got_modem = false;
 				}
 				else if (command_ch != COMMAND_END_CHAR)
 				{
 					WriteFile(modem->file, &command_ch, 1, &written, NULL);
 					wait_ms = 0;
+					got_modem = false;
 				}
 				else if (command_ch == COMMAND_END_CHAR)
 				{
-					if (modem_str.find("+CMTI") != std::string::npos)
-					{
-						command_stream.clear();
-						command_stream.seekg(0, std::ios::beg);
-						command_stream.str("AT+CMGL=\"ALL\"\n~");
-					}
+					command_stream.str("");
+					command_stream.clear();
+					command_stream.seekg(0, std::ios::beg);
 
-					if (modem_str != "" && modem_str.find("+CMGL: ") != std::string::npos)
+					if (modem_str.find("+CMGL: ") != std::string::npos || modem_str.find("+CMTI") != std::string::npos)
 					{
-						parse_messages(modem_str);
-					}
-
-					modem_str = "";
-
-					for (std::vector<Message>::iterator it = cur_messages.begin(); it != cur_messages.end(); ++it)
-					{
-						if (it->type == Message::TYPE_REPORT)
+						if (modem_str.find("+CMTI") != std::string::npos)
 						{
-							ReportRegular report(*it, date);
-							report_sheet->add_report(report);
+							command_stream.str("AT+CMGL=\"ALL\"\n~");
 						}
+
+						if (modem_str.find("+CMGL:") != std::string::npos)
+						{
+							parse_messages(modem_str);
+
+							for (std::vector<Message>::iterator it = cur_messages.begin(); it != cur_messages.end(); ++it)
+							{
+								if (it->type == Message::TYPE_REPORT)
+								{
+									ReportRegular report(*it, date);
+									report_sheet->add_report(report);
+
+									command_stream.str(command_stream.str() + "AT+CMGD=" + it->cmgl_id + "\n");
+								}
+							}
+							command_stream.str(command_stream.str() + COMMAND_END_CHAR);
+							cur_messages.clear();
+						}
+						got_modem = true;
+						modem_str = "";
 					}
-					cur_messages.clear();
 				}
 			}
 			if (got_user && user_ch == 27)
