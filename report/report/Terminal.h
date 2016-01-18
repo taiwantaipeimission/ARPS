@@ -14,11 +14,9 @@ class Terminal
 public:
 	enum TerminalMode
 	{
-		MODE_INIT,
-		MODE_READ_MSG,
-		MODE_WAIT_FOR_MSG,
 		MODE_USER_INPUT,
-		MODE_MENU
+		MODE_AUTOMATIC,
+		MODE_INACTIVE
 	};
 
 	static const int TIMEOUT_MS = 100;

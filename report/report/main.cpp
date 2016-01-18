@@ -96,7 +96,7 @@ int main(int argc, char **argv)
 		char input_choice;
 		std::cin >> input_choice;
 		if (input_choice == '1')
-			terminal.set_mode(Terminal::MODE_READ_MSG);
+			terminal.set_mode(Terminal::MODE_AUTOMATIC);
 		else if (input_choice == '2')
 			terminal.set_mode(Terminal::MODE_USER_INPUT);
 		else if (input_choice == '3')
@@ -104,7 +104,7 @@ int main(int argc, char **argv)
 
 		// basic terminal loop:
 
-		while (!quit && terminal.get_mode() != Terminal::MODE_MENU)
+		while (!quit && terminal.get_mode() != Terminal::MODE_INACTIVE)
 		{
 			terminal.update(1);
 			Sleep(1);
