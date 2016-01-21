@@ -1,4 +1,5 @@
 COMMANDS="input.txt"
-RAW_OUTPUT="output.txt"
 PH_LIST="phone_list.txt"
 REPORT_DATA="report_data.txt"
+REPORT_DATA_BY_ZONE="report_data_by_zone.txt"
+REPORT_DATA_BY_MISS="report_data_by_miss.txt"

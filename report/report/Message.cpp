@@ -27,7 +27,9 @@ void Message::parse(std::string input, CompList* comp_list)
 	{
 		sender_number = input.substr(number_start, 13);
 		if (comp_list && comp_list->phone_name.count(sender_number) > 0)
-			sender_name = comp_list->phone_name[sender_number];
+		{
+			sender_name = comp_list->phone_name[sender_number].first;
+		}
 		else
 			sender_name = sender_number;
 	}

@@ -9,8 +9,7 @@
 
 #include "Modem.h"
 #include "FileManager.h"
-#include "ReportRegular.h"
-#include "ReportSheet.h"
+#include "ReportCollection.h"
 #include "CompList.h"
 #include "Terminal.h"
 
@@ -23,7 +22,6 @@ int main(int argc, char **argv)
 	FileManager file_manager("paths.txt");
 
 	file_manager.open_file("COMMANDS", File::FILE_TYPE_INPUT);
-	file_manager.open_file("RAW_OUTPUT", File::FILE_TYPE_OUTPUT);
 	file_manager.open_file("PH_LIST", File::FILE_TYPE_INPUT);
 	file_manager.open_file("REPORT_DATA", File::FILE_TYPE_INPUT);
 	file_manager.open_file("REPORT_DATA_BY_ZONE", File::FILE_TYPE_INPUT);
@@ -31,16 +29,16 @@ int main(int argc, char **argv)
 
 	std::string date = "2016:1:2:7";
 
-	ReportSheet report_sheet;
+	ReportCollection report_collection;
 	CompList comp_list;
 
-	report_sheet.read_stored_all(file_manager.files["REPORT_DATA"]->file);
+	report_collection.read_report_by_comp(file_manager.files["REPORT_DATA"]);
 	comp_list.load(file_manager.files["PH_LIST"]->file);
 	// process string
 
 	std::stringstream command;
 
-	Terminal terminal(date, &modem, &report_sheet, &comp_list);
+	Terminal terminal(date, &modem, &report_collection.report_by_comp, &comp_list);
 
 	bool quit = false;
 	
@@ -48,16 +46,16 @@ int main(int argc, char **argv)
 	{
 
 		std::cout << "RECEIVED\t\tNOT RECEIVED\n=============================================" << std::endl;
-		for (std::map<std::string, std::string>::iterator it = comp_list.phone_name.begin(); it != comp_list.phone_name.end(); ++it)
+		for (std::map<std::string, std::pair<std::string, std::string>>::iterator it = comp_list.phone_name.begin(); it != comp_list.phone_name.end(); ++it)
 		{
-			std::string id_str = date + ":" + it->second;
-			if (report_sheet.reports.count(id_str) > 0)
+			std::string id_str = date + ":" + it->second.first;
+			if (report_collection.report_by_comp.reports.count(id_str) > 0)
 			{
-				std::cout << it->second << std::endl;
+				std::cout << it->second.first << std::endl;
 			}
 			else
 			{
-				std::cout << "\t\t\t" << it->second << std::endl;
+				std::cout << "\t\t\t" << it->second.first << std::endl;
 			}
 		}
 		std::cout << "\n1. START\t2. RUN AT TERMINAL\t3. QUIT" << std::endl;
@@ -78,10 +76,21 @@ int main(int argc, char **argv)
 			Sleep(1);
 		}
 	}
-	
+
+	//close files for input before re-opening for output
 	file_manager.close_file("REPORT_DATA");
+	file_manager.close_file("REPORT_DATA_BY_ZONE");
+	file_manager.close_file("REPORT_DATA_BY_MISS");
+
 	file_manager.open_file("REPORT_DATA", File::FILE_TYPE_OUTPUT);
-	report_sheet.print(file_manager.files["REPORT_DATA"]->file);
+	file_manager.open_file("REPORT_DATA_BY_ZONE", File::FILE_TYPE_OUTPUT);
+	file_manager.open_file("REPORT_DATA_BY_MISS", File::FILE_TYPE_OUTPUT);
+
+	report_collection.calculate_report_by_zone(&comp_list, date);
+	
+	report_collection.write_report_by_comp(file_manager.files["REPORT_DATA"]);
+	report_collection.write_report_by_zone(file_manager.files["REPORT_DATA_BY_ZONE"]);
+	report_collection.write_report_by_indiv(file_manager.files["REPORT_DATA_BY_MISS"]);
 
 	return 0;
 }

@@ -12,6 +12,7 @@ class ReportRegular
 {
 public:
 	std::string id_str;
+	std::string sender_number;
 
 	std::vector<std::string> key_list;
 	std::map<std::string, std::string> report_values;

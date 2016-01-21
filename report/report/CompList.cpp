@@ -14,10 +14,12 @@ void CompList::load(std::istream& input)
 {
 	std::string ph_number;
 	std::string name;
-	input >> ph_number >> name;
+	std::string zone;
+	input >> ph_number >> name >> zone;
 	while (input.good())
 	{
-		phone_name[ph_number] = name;
-		input >> ph_number >> name;
+		phone_name[ph_number].first = name;
+		phone_name[ph_number].second = zone;
+		input >> ph_number >> name >> zone;
 	}
 }
