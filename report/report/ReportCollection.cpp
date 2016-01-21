@@ -16,6 +16,8 @@ ReportCollection::~ReportCollection()
 void ReportCollection::read_report_by_comp(File* file)
 {
 	report_by_comp.read_stored_all(file->file);
+	report_by_zone.header_row = report_by_comp.header_row;
+	report_by_indiv.header_row = report_by_comp.header_row;
 }
 
 void ReportCollection::write_report_by_comp(File* file)
