@@ -29,7 +29,6 @@ public:
 	Modem* modem;
 	ReportSheet* report_sheet;
 	CompList* comp_list;
-	std::fstream* output_file;
 	std::string date;
 
 	std::stringstream command_stream;
@@ -48,7 +47,7 @@ public:
 	DWORD read, written;				//number of bytes read/written to modem
 	int wait_ms = 0;					//ms to wait before writing
 
-	Terminal(std::string date_in, Modem* modem_in, ReportSheet* report_sheet_in, CompList* comp_list_in, std::fstream* output_file_in);
+	Terminal(std::string date_in, Modem* modem_in, ReportSheet* report_sheet_in, CompList* comp_list_in);
 	virtual ~Terminal();
 
 	void parse_messages(std::string raw_str);

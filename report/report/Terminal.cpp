@@ -12,8 +12,8 @@
 #include "CompList.h"
 #include "Message.h"
 
-Terminal::Terminal(std::string date_in, Modem* modem_in, ReportSheet* report_sheet_in, CompList* comp_list_in, std::fstream* output_file_in)
-	: mode(MODE_AUTOMATIC), date(date_in), modem(modem_in), report_sheet(report_sheet_in), comp_list(comp_list_in), output_file(output_file_in)
+Terminal::Terminal(std::string date_in, Modem* modem_in, ReportSheet* report_sheet_in, CompList* comp_list_in)
+	: mode(MODE_AUTOMATIC), date(date_in), modem(modem_in), report_sheet(report_sheet_in), comp_list(comp_list_in)
 {
 	set_mode(MODE_AUTOMATIC);
 }
@@ -69,7 +69,6 @@ void Terminal::update(int millis)
 			std::string modem_ch_null = "";
 			modem_ch_null += modem_ch;
 			std::cout << modem_ch_null;
-			//(*output_file) << modem_ch_null;
 			modem_str += modem_ch_null;
 			got_modem = true;
 

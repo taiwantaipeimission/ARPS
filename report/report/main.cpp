@@ -8,6 +8,7 @@
 #include <sstream>
 
 #include "Modem.h"
+#include "FileManager.h"
 #include "ReportRegular.h"
 #include "ReportSheet.h"
 #include "CompList.h"
@@ -19,60 +20,27 @@ int main(int argc, char **argv)
 
 	Modem modem;
 
-	std::ifstream path_file;
-	std::ifstream input_file;
-	std::ifstream phone_list_file;
+	FileManager file_manager("paths.txt");
 
-	std::fstream output_file;
-
-	std::ifstream report_data_in;
-	std::ofstream report_data_out;
-
-	//Read file contents
-	std::string commands_path = "";
-	std::string raw_output_path = "";
-	std::string ph_list_path = "";
-	std::string report_data_path = "";
-
-	path_file.open("paths.txt");
-	if (path_file.good())
-	{
-		std::string path_file_contents(static_cast<std::stringstream const&>(std::stringstream() << path_file.rdbuf()).str());
-		int commands_beg_pos = path_file_contents.find("\"", path_file_contents.find("COMMANDS"));
-		int commands_end_pos = path_file_contents.find("\"", commands_beg_pos + 1);
-		commands_path = path_file_contents.substr(commands_beg_pos + 1, commands_end_pos - commands_beg_pos - 1);
-
-		int raw_output_beg_pos = path_file_contents.find("\"", path_file_contents.find("RAW_OUTPUT"));
-		int raw_output_end_pos = path_file_contents.find("\"", raw_output_beg_pos + 1);
-		raw_output_path = path_file_contents.substr(raw_output_beg_pos + 1, raw_output_end_pos - raw_output_beg_pos - 1);
-
-		int ph_list_beg_pos = path_file_contents.find("\"", path_file_contents.find("PH_LIST"));
-		int ph_list_end_pos = path_file_contents.find("\"", ph_list_beg_pos + 1);
-		ph_list_path = path_file_contents.substr(ph_list_beg_pos + 1, ph_list_end_pos - ph_list_beg_pos - 1);
-
-		int report_data_beg_pos = path_file_contents.find("\"", path_file_contents.find("REPORT_DATA"));
-		int report_data_end_pos = path_file_contents.find("\"", report_data_beg_pos + 1);
-		report_data_path = path_file_contents.substr(report_data_beg_pos + 1, report_data_end_pos - report_data_beg_pos - 1);
-	}
-	output_file.open(raw_output_path, std::fstream::trunc | std::ios_base::in | std::ios_base::out);
-	report_data_in.open(report_data_path, std::ios_base::in);	// std::ios_base::app
-	report_data_out.open(report_data_path + ".new", std::ios_base::out);
-
-	input_file.open(commands_path);
-	phone_list_file.open(ph_list_path);
+	file_manager.open_file("COMMANDS", File::FILE_TYPE_INPUT);
+	file_manager.open_file("RAW_OUTPUT", File::FILE_TYPE_OUTPUT);
+	file_manager.open_file("PH_LIST", File::FILE_TYPE_INPUT);
+	file_manager.open_file("REPORT_DATA", File::FILE_TYPE_INPUT);
+	file_manager.open_file("REPORT_DATA_BY_ZONE", File::FILE_TYPE_INPUT);
+	file_manager.open_file("REPORT_DATA_BY_MISS", File::FILE_TYPE_INPUT);
 
 	std::string date = "2016:1:2:7";
 
 	ReportSheet report_sheet;
 	CompList comp_list;
 
-	report_sheet.read_stored_all(report_data_in);
-	comp_list.load(phone_list_file);
+	report_sheet.read_stored_all(file_manager.files["REPORT_DATA"]->file);
+	comp_list.load(file_manager.files["PH_LIST"]->file);
 	// process string
 
 	std::stringstream command;
 
-	Terminal terminal(date, &modem, &report_sheet, &comp_list, &output_file);
+	Terminal terminal(date, &modem, &report_sheet, &comp_list);
 
 	bool quit = false;
 	
@@ -111,18 +79,9 @@ int main(int argc, char **argv)
 		}
 	}
 	
-	report_data_out.clear();
-	report_sheet.print(report_data_out);
-
-	// close up and go home.
-	output_file.close();
-	report_data_in.close();
-	report_data_out.close();
-	input_file.close();
-	phone_list_file.close();
-
-	std::remove(report_data_path.c_str());
-	std::rename((report_data_path + ".new").c_str(), report_data_path.c_str());
+	file_manager.close_file("REPORT_DATA");
+	file_manager.open_file("REPORT_DATA", File::FILE_TYPE_OUTPUT);
+	report_sheet.print(file_manager.files["REPORT_DATA"]->file);
 
 	return 0;
 }

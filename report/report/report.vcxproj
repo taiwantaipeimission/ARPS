@@ -65,17 +65,23 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CompList.cpp" />
+    <ClCompile Include="File.cpp" />
+    <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Message.cpp" />
     <ClCompile Include="Modem.cpp" />
+    <ClCompile Include="ReportCollection.cpp" />
     <ClCompile Include="ReportRegular.cpp" />
     <ClCompile Include="ReportSheet.cpp" />
     <ClCompile Include="Terminal.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CompList.h" />
+    <ClInclude Include="File.h" />
+    <ClInclude Include="FileManager.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="Modem.h" />
+    <ClInclude Include="ReportCollection.h" />
     <ClInclude Include="ReportRegular.h" />
     <ClInclude Include="ReportSheet.h" />
     <ClInclude Include="Terminal.h" />
