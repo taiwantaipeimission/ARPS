@@ -37,12 +37,18 @@ void ReportCollection::write_report_by_indiv(File* file)
 
 void ReportCollection::calculate_report_by_zone(CompList* comp_list, std::string date)
 {
+	report_by_zone.reports.clear();
 	for (std::map<std::string, ReportRegular>::iterator it = report_by_comp.reports.begin(); it != report_by_comp.reports.end(); ++it)
 	{
 		if (comp_list->phone_name.count(it->second.sender_number) > 0)
 		{
 			std::string zone_name = comp_list->phone_name[it->second.sender_number].second;
 			std::string zone_id_str = date + ":" + zone_name;
+
+			if (zone_name == "TAIDONG")
+			{
+				zone_name = "TAIDONG";
+			}
 
 			if (report_by_zone.reports.count(zone_id_str) > 0)
 			{
@@ -64,6 +70,7 @@ void ReportCollection::calculate_report_by_zone(CompList* comp_list, std::string
 						zone_report.add_field(j->first, j->second);
 					}
 				}
+				report_by_zone.add_report(zone_report);
 			}
 			else
 			{
