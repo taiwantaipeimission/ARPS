@@ -40,43 +40,41 @@ void ReportCollection::calculate_report_by_zone(CompList* comp_list, std::string
 	report_by_zone.reports.clear();
 	for (std::map<std::string, ReportRegular>::iterator it = report_by_comp.reports.begin(); it != report_by_comp.reports.end(); ++it)
 	{
-		if (comp_list->phone_name.count(it->second.sender_number) > 0)
+		if (it->second.is_new)
 		{
-			std::string zone_name = comp_list->phone_name[it->second.sender_number].second;
-			std::string zone_id_str = date + ":" + zone_name;
-
-			if (zone_name == "TAIDONG")
+			if (comp_list->phone_name.count(it->second.sender_number) > 0)
 			{
-				zone_name = "TAIDONG";
-			}
+				std::string zone_name = comp_list->phone_name[it->second.sender_number].second;
+				std::string zone_id_str = date + ":" + zone_name;
 
-			if (report_by_zone.reports.count(zone_id_str) > 0)
-			{
-				ReportRegular zone_report = report_by_zone.reports[zone_id_str];
-				for (std::map<std::string, std::string>::iterator j = it->second.report_values.begin(); j != it->second.report_values.end(); ++j)
+				if (report_by_zone.reports.count(zone_id_str) > 0)
 				{
-					if (zone_report.report_values.count(j->first) > 0)
+					ReportRegular zone_report = report_by_zone.reports[zone_id_str];
+					for (std::map<std::string, std::string>::iterator j = it->second.report_values.begin(); j != it->second.report_values.end(); ++j)
 					{
-						std::string zone_report_value = zone_report.report_values[j->first];
-						std::string comp_report_value = j->second;
+						if (zone_report.report_values.count(j->first) > 0)
+						{
+							std::string zone_report_value = zone_report.report_values[j->first];
+							std::string comp_report_value = j->second;
 
-						int new_zone_value = std::stoi(zone_report_value) + std::stoi(comp_report_value);
-						char intstr[8];
-						_itoa_s(new_zone_value, intstr, 8, 10);
-						zone_report.report_values[j->first] = std::string(intstr);
+							int new_zone_value = std::stoi(zone_report_value) + std::stoi(comp_report_value);
+							char intstr[8];
+							_itoa_s(new_zone_value, intstr, 8, 10);
+							zone_report.report_values[j->first] = std::string(intstr);
+						}
+						else
+						{
+							zone_report.add_field(j->first, j->second);
+						}
 					}
-					else
-					{
-						zone_report.add_field(j->first, j->second);
-					}
+					report_by_zone.add_report(zone_report);
 				}
-				report_by_zone.add_report(zone_report);
-			}
-			else
-			{
-				ReportRegular zone_report = it->second;
-				zone_report.id_str = zone_id_str;
-				report_by_zone.add_report(zone_report);
+				else
+				{
+					ReportRegular zone_report = it->second;
+					zone_report.id_str = zone_id_str;
+					report_by_zone.add_report(zone_report);
+				}
 			}
 		}
 	}

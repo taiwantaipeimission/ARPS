@@ -27,18 +27,26 @@ int main(int argc, char **argv)
 	file_manager.open_file("REPORT_DATA_BY_ZONE", File::FILE_TYPE_INPUT);
 	file_manager.open_file("REPORT_DATA_BY_MISS", File::FILE_TYPE_INPUT);
 
-	std::string date = "2016:1:2:7";
+
+	std::string date = "2016:1:4:7";
 
 	ReportCollection report_collection;
 	CompList comp_list;
 
 	report_collection.read_report_by_comp(file_manager.files["REPORT_DATA"]);
 	comp_list.load(file_manager.files["PH_LIST"]->file);
+
+	//close input files
+	file_manager.close_file("REPORT_DATA");
+	file_manager.close_file("REPORT_DATA_BY_ZONE");
+	file_manager.close_file("REPORT_DATA_BY_MISS");
+
 	// process string
 
 	std::stringstream command;
 
 	Terminal terminal(date, &modem, &report_collection.report_by_comp, &comp_list);
+	terminal.set_mode(Terminal::MODE_INACTIVE);
 
 	bool quit = false;
 	
@@ -58,7 +66,7 @@ int main(int argc, char **argv)
 				std::cout << "\t\t\t" << it->second.first << std::endl;
 			}
 		}
-		std::cout << "\n1. START\t2. RUN AT TERMINAL\t3. QUIT" << std::endl;
+		std::cout << "\n1. START\t2. RUN AT TERMINAL\t3. SET REPORTING PERIOD\t4. QUIT" << std::endl;
 		char input_choice;
 		std::cin >> input_choice;
 		if (input_choice == '1')
@@ -66,6 +74,22 @@ int main(int argc, char **argv)
 		else if (input_choice == '2')
 			terminal.set_mode(Terminal::MODE_USER_INPUT);
 		else if (input_choice == '3')
+		{
+			std::string year;
+			std::string month;
+			std::string week;
+			std::string day;
+			std::cout << "Year:";
+			std::cin >> year;
+			std::cout << "Month:";
+			std::cin >> month;
+			std::cout << "Week:";
+			std::cin >> week;
+			std::cout << "Day:";
+			std::cin >> day;
+			date = year + ":" + month + ":" + week + ":" + day;
+		}
+		else if (input_choice == '4')
 			quit = true;
 
 		// basic terminal loop:
@@ -77,11 +101,9 @@ int main(int argc, char **argv)
 		}
 	}
 
-	//close files for input before re-opening for output
-	file_manager.close_file("REPORT_DATA");
-	file_manager.close_file("REPORT_DATA_BY_ZONE");
-	file_manager.close_file("REPORT_DATA_BY_MISS");
+	
 
+	//open output files
 	file_manager.open_file("REPORT_DATA", File::FILE_TYPE_OUTPUT);
 	file_manager.open_file("REPORT_DATA_BY_ZONE", File::FILE_TYPE_OUTPUT);
 	file_manager.open_file("REPORT_DATA_BY_MISS", File::FILE_TYPE_OUTPUT);
@@ -91,6 +113,11 @@ int main(int argc, char **argv)
 	report_collection.write_report_by_comp(file_manager.files["REPORT_DATA"]);
 	report_collection.write_report_by_zone(file_manager.files["REPORT_DATA_BY_ZONE"]);
 	report_collection.write_report_by_indiv(file_manager.files["REPORT_DATA_BY_MISS"]);
-
+	
+	//close output files
+	file_manager.close_file("REPORT_DATA");
+	file_manager.close_file("REPORT_DATA_BY_ZONE");
+	file_manager.close_file("REPORT_DATA_BY_MISS");
+	
 	return 0;
 }

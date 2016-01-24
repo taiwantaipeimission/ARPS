@@ -8,6 +8,7 @@
 ReportRegular::ReportRegular()
 {
 	key_list = { "A", "B", "C", "D", "NWBAP", "BAP", "CONF", "BD", "SAC", "PK", "OL", "NI", "RCLA", "LAC", "RCT" };
+	is_new = false;
 }
 
 ReportRegular::ReportRegular(Message msg, std::string date)
@@ -34,6 +35,7 @@ ReportRegular::ReportRegular(Message msg, std::string date)
 		}
 		report_values[*it] = value;
 	}
+	is_new = true;
 }
 
 ReportRegular::~ReportRegular()
@@ -88,6 +90,8 @@ void ReportRegular::read_processed(std::string input)
 			stream >> value;
 		report_values[*it] = value;
 	}
+
+	is_new = false;
 
 	return;
 }

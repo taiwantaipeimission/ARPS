@@ -9,8 +9,8 @@ class FileManager
 public:
 	
 	File path_file;
-	std::string path_file_contents;
 	std::map<std::string, File*> files;
+	std::map<std::string, std::string> paths;
 
 	FileManager(std::string path_file_path_in);
 	virtual ~FileManager();
