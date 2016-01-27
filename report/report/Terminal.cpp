@@ -118,11 +118,6 @@ void Terminal::update(int millis)
 
 					if (modem_str.find("+CMGL: ") != std::string::npos || modem_str.find("+CMTI") != std::string::npos)
 					{
-						if (modem_str.find("+CMTI") != std::string::npos)
-						{
-							command_stream.str("AT+CMGL=\"ALL\"\n~");
-						}
-
 						if (modem_str.find("+CMGL:") != std::string::npos)
 						{
 							parse_messages(modem_str);
@@ -140,6 +135,13 @@ void Terminal::update(int millis)
 							command_stream.str(command_stream.str() + COMMAND_END_CHAR);
 							cur_messages.clear();
 						}
+
+						if (modem_str.find("+CMTI") != std::string::npos)
+						{
+							command_stream.str("AT+CMGL=\"ALL\"\n~");
+						}
+
+						
 						got_modem = true;
 						modem_str = "";
 					}

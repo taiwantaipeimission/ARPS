@@ -42,6 +42,25 @@ ReportRegular::~ReportRegular()
 {
 }
 
+std::string ReportRegular::get_id_str()
+{
+	return id_str;
+}
+
+std::string ReportRegular::get_date()
+{
+	int last_colon_pos = id_str.find_last_of(":");
+	std::string date = id_str.substr(0, last_colon_pos);
+	return date;
+}
+
+std::string ReportRegular::get_sender_name()
+{
+	int last_colon_pos = id_str.find_last_of(":");
+	std::string name = id_str.substr(last_colon_pos, id_str.length() - last_colon_pos - 2);
+	return name;
+}
+
 bool ReportRegular::operator==(ReportRegular& other)
 {
 	if (other.id_str != this->id_str)

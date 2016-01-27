@@ -18,6 +18,9 @@ void ReportCollection::read_report_by_comp(File* file)
 	report_by_comp.read_stored_all(file->file);
 	report_by_zone.header_row = report_by_comp.header_row;
 	report_by_indiv.header_row = report_by_comp.header_row;
+
+	report_by_zone.reports.clear();
+	report_by_indiv.reports.clear();
 }
 
 void ReportCollection::write_report_by_comp(File* file)
@@ -40,12 +43,16 @@ void ReportCollection::calculate_report_by_zone(CompList* comp_list, std::string
 	report_by_zone.reports.clear();
 	for (std::map<std::string, ReportRegular>::iterator it = report_by_comp.reports.begin(); it != report_by_comp.reports.end(); ++it)
 	{
-		if (it->second.is_new)
-		{
-			if (comp_list->phone_name.count(it->second.sender_number) > 0)
+			std::string comp_report_date = it->second.get_date();
+			if (comp_report_date == date && comp_list->phone_name.count(it->second.sender_number) > 0)
 			{
 				std::string zone_name = comp_list->phone_name[it->second.sender_number].second;
 				std::string zone_id_str = date + ":" + zone_name;
+
+				if (zone_id_str == "2016:1:4:7:CENTRAL")
+				{
+					zone_id_str = "2016:1:4:7:CENTRAL";
+				}
 
 				if (report_by_zone.reports.count(zone_id_str) > 0)
 				{
@@ -76,7 +83,6 @@ void ReportCollection::calculate_report_by_zone(CompList* comp_list, std::string
 					report_by_zone.add_report(zone_report);
 				}
 			}
-		}
 	}
 }
 

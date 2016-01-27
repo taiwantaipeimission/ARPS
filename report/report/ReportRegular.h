@@ -23,6 +23,8 @@ public:
 	virtual ~ReportRegular();
 
 	std::string get_id_str();
+	std::string get_date();
+	std::string get_sender_name();
 
 	bool operator==(ReportRegular& other);
 	bool operator!=(ReportRegular& other);
