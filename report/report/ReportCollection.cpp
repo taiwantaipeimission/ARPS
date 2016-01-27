@@ -2,6 +2,8 @@
 #include <map>
 
 #include "File.h"
+#include "CompList.h"
+#include "Area.h"
 
 ReportCollection::ReportCollection()
 	: report_by_comp(), report_by_zone(), report_by_indiv()
@@ -44,15 +46,10 @@ void ReportCollection::calculate_report_by_zone(CompList* comp_list, std::string
 	for (std::map<std::string, ReportRegular>::iterator it = report_by_comp.reports.begin(); it != report_by_comp.reports.end(); ++it)
 	{
 			std::string comp_report_date = it->second.get_date();
-			if (comp_report_date == date && comp_list->phone_name.count(it->second.sender_number) > 0)
+			if (comp_report_date == date && comp_list->areas.count(it->second.sender_number) > 0)
 			{
-				std::string zone_name = comp_list->phone_name[it->second.sender_number].second;
+				std::string zone_name = comp_list->areas[it->second.sender_number].zone_name;
 				std::string zone_id_str = date + ":" + zone_name;
-
-				if (zone_id_str == "2016:1:4:7:CENTRAL")
-				{
-					zone_id_str = "2016:1:4:7:CENTRAL";
-				}
 
 				if (report_by_zone.reports.count(zone_id_str) > 0)
 				{

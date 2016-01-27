@@ -64,6 +64,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Area.cpp" />
     <ClCompile Include="CompList.cpp" />
     <ClCompile Include="File.cpp" />
     <ClCompile Include="FileManager.cpp" />
@@ -76,6 +77,7 @@
     <ClCompile Include="Terminal.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Area.h" />
     <ClInclude Include="CompList.h" />
     <ClInclude Include="File.h" />
     <ClInclude Include="FileManager.h" />

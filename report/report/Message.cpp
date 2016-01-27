@@ -1,5 +1,5 @@
 #include "Message.h"
-
+#include "Area.h"
 
 Message::Message()
 {
@@ -26,9 +26,9 @@ void Message::parse(std::string input, CompList* comp_list)
 	if (number_start != std::string::npos)
 	{
 		sender_number = input.substr(number_start, 13);
-		if (comp_list && comp_list->phone_name.count(sender_number) > 0)
+		if (comp_list && comp_list->areas.count(sender_number) > 0)
 		{
-			sender_name = comp_list->phone_name[sender_number].first;
+			sender_name = comp_list->areas[sender_number].area_name;
 		}
 		else
 			sender_name = sender_number;

@@ -6,12 +6,33 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <vector>
 
 #include "Modem.h"
 #include "FileManager.h"
 #include "ReportCollection.h"
 #include "CompList.h"
 #include "Terminal.h"
+#include "Area.h"
+
+std::string prompt_date()
+{
+	std::string date;
+	std::string year;
+	std::string month;
+	std::string week;
+	std::string day;
+	std::cout << "Year:";
+	std::cin >> year;
+	std::cout << "Month:";
+	std::cin >> month;
+	std::cout << "Week:";
+	std::cin >> week;
+	std::cout << "Day:";
+	std::cin >> day;
+	date = year + ":" + month + ":" + week + ":" + day;
+	return date;
+}
 
 int main(int argc, char **argv)
 {
@@ -28,7 +49,7 @@ int main(int argc, char **argv)
 	file_manager.open_file("REPORT_DATA_BY_MISS", File::FILE_TYPE_INPUT);
 
 
-	std::string date = "2016:1:4:7";
+	std::string date = prompt_date();
 
 	ReportCollection report_collection;
 	CompList comp_list;
@@ -54,16 +75,16 @@ int main(int argc, char **argv)
 	{
 
 		std::cout << "RECEIVED\t\tNOT RECEIVED\n=============================================" << std::endl;
-		for (std::map<std::string, std::pair<std::string, std::string>>::iterator it = comp_list.phone_name.begin(); it != comp_list.phone_name.end(); ++it)
+		for (std::map<std::string, Area>::iterator it = comp_list.areas.begin(); it != comp_list.areas.end(); ++it)
 		{
-			std::string id_str = date + ":" + it->second.first;
+			std::string id_str = date + ":" + it->second.area_name;
 			if (report_collection.report_by_comp.reports.count(id_str) > 0)
 			{
-				std::cout << it->second.first << std::endl;
+				std::cout << it->second.area_name << std::endl;
 			}
 			else
 			{
-				std::cout << "\t\t\t" << it->second.first << std::endl;
+				std::cout << "\t\t\t" << it->second.area_name << std::endl;
 			}
 		}
 		std::cout << "\n1. START\t2. RUN AT TERMINAL\t3. SET REPORTING PERIOD\t4. QUIT" << std::endl;
@@ -75,19 +96,7 @@ int main(int argc, char **argv)
 			terminal.set_mode(Terminal::MODE_USER_INPUT);
 		else if (input_choice == '3')
 		{
-			std::string year;
-			std::string month;
-			std::string week;
-			std::string day;
-			std::cout << "Year:";
-			std::cin >> year;
-			std::cout << "Month:";
-			std::cin >> month;
-			std::cout << "Week:";
-			std::cin >> week;
-			std::cout << "Day:";
-			std::cin >> day;
-			date = year + ":" + month + ":" + week + ":" + day;
+			date = prompt_date();
 		}
 		else if (input_choice == '4')
 			quit = true;
