@@ -72,7 +72,8 @@
     <ClCompile Include="Message.cpp" />
     <ClCompile Include="Modem.cpp" />
     <ClCompile Include="ReportCollection.cpp" />
-    <ClCompile Include="ReportRegular.cpp" />
+    <ClCompile Include="ReportEnglish.cpp" />
+    <ClCompile Include="Report.cpp" />
     <ClCompile Include="ReportSheet.cpp" />
     <ClCompile Include="Terminal.cpp" />
   </ItemGroup>
@@ -84,7 +85,8 @@
     <ClInclude Include="Message.h" />
     <ClInclude Include="Modem.h" />
     <ClInclude Include="ReportCollection.h" />
-    <ClInclude Include="ReportRegular.h" />
+    <ClInclude Include="ReportEnglish.h" />
+    <ClInclude Include="Report.h" />
     <ClInclude Include="ReportSheet.h" />
     <ClInclude Include="Terminal.h" />
   </ItemGroup>

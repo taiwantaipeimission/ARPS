@@ -1,5 +1,6 @@
 #include "ReportCollection.h"
 #include <map>
+#include <sstream>
 
 #include "File.h"
 #include "CompList.h"
@@ -43,7 +44,7 @@ void ReportCollection::write_report_by_indiv(File* file)
 void ReportCollection::calculate_report_by_zone(CompList* comp_list, std::string date)
 {
 	report_by_zone.reports.clear();
-	for (std::map<std::string, ReportRegular>::iterator it = report_by_comp.reports.begin(); it != report_by_comp.reports.end(); ++it)
+	for (std::map<std::string, Report>::iterator it = report_by_comp.reports.begin(); it != report_by_comp.reports.end(); ++it)
 	{
 			std::string comp_report_date = it->second.get_date();
 			if (comp_report_date == date && comp_list->areas.count(it->second.sender_number) > 0)
@@ -53,18 +54,28 @@ void ReportCollection::calculate_report_by_zone(CompList* comp_list, std::string
 
 				if (report_by_zone.reports.count(zone_id_str) > 0)
 				{
-					ReportRegular zone_report = report_by_zone.reports[zone_id_str];
+					Report zone_report = report_by_zone.reports[zone_id_str];
 					for (std::map<std::string, std::string>::iterator j = it->second.report_values.begin(); j != it->second.report_values.end(); ++j)
 					{
 						if (zone_report.report_values.count(j->first) > 0)
 						{
-							std::string zone_report_value = zone_report.report_values[j->first];
-							std::string comp_report_value = j->second;
+							std::stringstream zone_report_ss;
+							std::stringstream comp_report_ss;
 
-							int new_zone_value = std::stoi(zone_report_value) + std::stoi(comp_report_value);
-							char intstr[8];
-							_itoa_s(new_zone_value, intstr, 8, 10);
-							zone_report.report_values[j->first] = std::string(intstr);
+							zone_report_ss.str(zone_report.report_values[j->first]);
+							comp_report_ss.str(j->second);
+							int i_zone_report;
+							int i_comp_report;
+							zone_report_ss >> i_zone_report;
+							comp_report_ss >> i_comp_report;
+
+							if (!zone_report_ss.fail() && !comp_report_ss.fail())
+							{
+								int new_zone_value = i_zone_report + i_comp_report;
+								char intstr[8];
+								_itoa_s(new_zone_value, intstr, 8, 10);
+								zone_report.report_values[j->first] = std::string(intstr);
+							}
 						}
 						else
 						{
@@ -75,7 +86,7 @@ void ReportCollection::calculate_report_by_zone(CompList* comp_list, std::string
 				}
 				else
 				{
-					ReportRegular zone_report = it->second;
+					Report zone_report = it->second;
 					zone_report.id_str = zone_id_str;
 					report_by_zone.add_report(zone_report);
 				}

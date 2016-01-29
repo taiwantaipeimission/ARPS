@@ -66,7 +66,7 @@ int main(int argc, char **argv)
 
 	std::stringstream command;
 
-	Terminal terminal(date, &modem, &report_collection.report_by_comp, &comp_list);
+	Terminal terminal(date, &modem, &report_collection.report_by_comp, NULL, &comp_list);
 	terminal.set_mode(Terminal::MODE_INACTIVE);
 
 	bool quit = false;

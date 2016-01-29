@@ -12,7 +12,7 @@ ReportSheet::~ReportSheet()
 {
 }
 
-void ReportSheet::add_report(ReportRegular report)
+void ReportSheet::add_report(Report report)
 {
 	if (report.id_str != "")
 	{
@@ -40,7 +40,7 @@ void ReportSheet::read_stored_all(std::istream& input)
 		do
 		{
 			std::getline(input, id_str);
-			ReportRegular report;
+			Report report;
 			report.read_processed(id_str);
 			add_report(report);
 		} while (input.good());
@@ -62,7 +62,7 @@ void ReportSheet::read_stored_all(std::istream& input)
 			std::cout << date << std::endl;
 			if (date == (year + ":" + month + ":" + week + ":" + day).c_str())
 			{
-				ReportRegular report;
+				Report report;
 				report.read_processed(id_str);
 				add_report(report);
 				reports[report.sender_name].second = false;
@@ -74,7 +74,7 @@ void ReportSheet::read_stored_all(std::istream& input)
 void ReportSheet::print(std::ostream& output)
 {
 	output << header_row << "\n";
-	for (std::map<std::string, ReportRegular>::iterator it = reports.begin(); it != reports.end(); ++it)
+	for (std::map<std::string, Report>::iterator it = reports.begin(); it != reports.end(); ++it)
 	{
 		it->second.print(output);
 	}

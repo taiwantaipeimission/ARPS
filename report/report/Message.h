@@ -10,7 +10,8 @@ public:
 	
 	enum MessageType
 	{
-		TYPE_REPORT
+		TYPE_REPORT,
+		TYPE_REPORT_ENGLISH
 	};
 
 	MessageType type;

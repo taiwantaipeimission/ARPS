@@ -2,6 +2,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <conio.h>
+#include <ctime>
 
 #include <string>
 #include <iostream>
@@ -9,12 +10,20 @@
 #include "Terminal.h"
 #include "Modem.h"
 #include "ReportSheet.h"
+#include "ReportEnglish.h"
 #include "CompList.h"
 #include "Message.h"
+#include "Area.h"
 
-Terminal::Terminal(std::string date_in, Modem* modem_in, ReportSheet* report_sheet_in, CompList* comp_list_in)
-	: mode(MODE_AUTOMATIC), date(date_in), modem(modem_in), report_sheet(report_sheet_in), comp_list(comp_list_in)
+Terminal::Terminal(std::string date_in, Modem* modem_in, ReportSheet* report_sheet_in, ReportSheet* english_report_sheet_in, CompList* comp_list_in)
+	: mode(MODE_AUTOMATIC), date(date_in), modem(modem_in), report_sheet(report_sheet_in), english_report_sheet(english_report_sheet_in), comp_list(comp_list_in), reminders()
 {
+	time_t cur_time;
+	std::time(&cur_time);
+	struct tm reminder_time;
+	localtime_s(&reminder_time, &cur_time);
+
+	//reminders.push_back(mktime(&reminder_time));
 	set_mode(MODE_AUTOMATIC);
 }
 
@@ -59,6 +68,17 @@ void Terminal::parse_messages(std::string raw_str)
 	}
 }
 
+void Terminal::send_reminders()
+{
+	for (std::map<std::string, Area>::iterator it = comp_list->areas.begin(); it != comp_list->areas.end(); ++it)
+	{
+		if (it->first != "" && report_sheet->reports.count(it->first) <= 0)
+		{
+			command_stream.str(command_stream.str() + "AT+CMGS=\"" + it->first + "\"" + "\nPlease remember to send in your key indicators." + COMMAND_ESCAPE_CHAR + COMMAND_END_CHAR);
+		}
+	}
+}
+
 void Terminal::update(int millis)
 {
 		ReadFile(modem->file, &modem_ch, 1, &read, NULL);
@@ -94,7 +114,7 @@ void Terminal::update(int millis)
 				command_stream.get(command_ch);
 				if (command_ch == COMMAND_NEWLINE_CHAR)
 				{
-					WriteFile(modem->file, "\r\n", 3, &written, NULL);
+					WriteFile(modem->file, "\n", 3, &written, NULL);
 					wait_ms = TIMEOUT_MS;
 					got_modem = false;
 				}
@@ -116,32 +136,56 @@ void Terminal::update(int millis)
 					command_stream.clear();
 					command_stream.seekg(0, std::ios::beg);
 
-					if (modem_str.find("+CMGL: ") != std::string::npos || modem_str.find("+CMTI") != std::string::npos)
+					bool reset = false;
+
+					if (modem_str.find("+CMGL:") != std::string::npos)
 					{
-						if (modem_str.find("+CMGL:") != std::string::npos)
-						{
-							parse_messages(modem_str);
+						parse_messages(modem_str);
 
-							for (std::vector<Message>::iterator it = cur_messages.begin(); it != cur_messages.end(); ++it)
+						for (std::vector<Message>::iterator it = cur_messages.begin(); it != cur_messages.end(); ++it)
+						{
+							if (it->type == Message::TYPE_REPORT)
 							{
-								if (it->type == Message::TYPE_REPORT)
-								{
-									ReportRegular report(*it, date);
-									report_sheet->add_report(report);
+								Report report(*it, date);
+								report_sheet->add_report(report);
 
-									command_stream.str(command_stream.str() + "AT+CMGD=" + it->cmgl_id + "\n");
-								}
+								command_stream.str(command_stream.str() + "AT+CMGD=" + it->cmgl_id + "\n");
 							}
-							command_stream.str(command_stream.str() + COMMAND_END_CHAR);
-							cur_messages.clear();
-						}
+							else if (it->type == Message::TYPE_REPORT_ENGLISH)
+							{
+								ReportEnglish report(*it, date);
+								english_report_sheet->add_report(report);
 
-						if (modem_str.find("+CMTI") != std::string::npos)
+								command_stream.str(command_stream.str() + "AT+CMGD=" + it->cmgl_id + "\n");
+							}
+						}
+						command_stream.str(command_stream.str() + COMMAND_END_CHAR);
+						cur_messages.clear();
+						reset = true;
+					}
+
+					if (modem_str.find("+CMTI") != std::string::npos)
+					{
+						command_stream.str("AT+CMGL=\"ALL\"\n~");
+						reset = true;
+					}
+
+					time_t cur_time;
+					std::time(&cur_time);
+					for (std::vector<time_t>::iterator it = reminders.begin(); it != reminders.end(); )
+					{
+						double time_diff = std::difftime(*it, cur_time);
+						if (time_diff <= 0.0f)
 						{
-							command_stream.str("AT+CMGL=\"ALL\"\n~");
+							send_reminders();
+							it = reminders.erase(it);
+							reset = true;
 						}
+						else ++it;
+					}
 
-						
+					if (reset)
+					{
 						got_modem = true;
 						modem_str = "";
 					}
