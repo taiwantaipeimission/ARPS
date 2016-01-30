@@ -2,7 +2,6 @@
 #include <iostream>
 
 
-
 #include <fstream>
 #include <string>
 #include <sstream>
@@ -47,7 +46,6 @@ int main(int argc, char **argv)
 	file_manager.open_file("REPORT_DATA", File::FILE_TYPE_INPUT);
 	file_manager.open_file("REPORT_DATA_BY_ZONE", File::FILE_TYPE_INPUT);
 	file_manager.open_file("REPORT_DATA_BY_MISS", File::FILE_TYPE_INPUT);
-
 
 	std::string date = prompt_date();
 
@@ -110,12 +108,16 @@ int main(int argc, char **argv)
 		}
 	}
 
-	
+	//copy output file for safety
+
 
 	//open output files
 	file_manager.open_file("REPORT_DATA", File::FILE_TYPE_OUTPUT);
 	file_manager.open_file("REPORT_DATA_BY_ZONE", File::FILE_TYPE_OUTPUT);
 	file_manager.open_file("REPORT_DATA_BY_MISS", File::FILE_TYPE_OUTPUT);
+	file_manager.open_file("REPORT_DATA_OLD", File::FILE_TYPE_OUTPUT);
+
+	file_manager.files["REPORT_DATA_OLD"]->file << file_manager.files["REPORT_DATA"]->file.rdbuf();
 
 	report_collection.calculate_report_by_zone(&comp_list, date);
 	
