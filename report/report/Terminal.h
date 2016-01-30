@@ -54,6 +54,7 @@ public:
 	virtual ~Terminal();
 
 	void parse_messages(std::string raw_str);
+	void add_reminder(tm* time);
 	void send_reminders();
 	void set_mode(TerminalMode new_mode);
 	TerminalMode get_mode();

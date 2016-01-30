@@ -6,6 +6,7 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <ctime>
 
 #include "Modem.h"
 #include "FileManager.h"
@@ -72,7 +73,7 @@ int main(int argc, char **argv)
 	while (!quit)
 	{
 
-		std::cout << "RECEIVED\t\tNOT RECEIVED\n=============================================" << std::endl;
+		std::cout << "Received\t\tNot received\n=============================================" << std::endl;
 		for (std::map<std::string, Area>::iterator it = comp_list.areas.begin(); it != comp_list.areas.end(); ++it)
 		{
 			std::string id_str = date + ":" + it->second.area_name;
@@ -85,7 +86,7 @@ int main(int argc, char **argv)
 				std::cout << "\t\t\t" << it->second.area_name << std::endl;
 			}
 		}
-		std::cout << "\n1. START\t2. RUN AT TERMINAL\t3. SET REPORTING PERIOD\t4. QUIT" << std::endl;
+		std::cout << "\n1. Start\t2. Terminal\t3. Reporting period\t4. Reminders \t5. Quit" << std::endl;
 		char input_choice;
 		std::cin >> input_choice;
 		if (input_choice == '1')
@@ -97,6 +98,47 @@ int main(int argc, char **argv)
 			date = prompt_date();
 		}
 		else if (input_choice == '4')
+		{
+			std::cout << "Current reminders:" << std::endl;
+			for (int i = 0; i < terminal.reminders.size(); i++)
+			{
+				std::cout << i << "-" << terminal.reminders[i] << std::endl;
+			}
+
+			char input_choice_1;
+
+			std::cout << "1. Add reminder\t2. Delete reminder\t3. Return" << std::endl;
+			std::cin >> input_choice;
+
+			if (input_choice == '1')
+			{
+				time_t cur_time;
+				std::time(&cur_time);
+				std::tm reminder;
+				localtime_s(&reminder, &cur_time);
+
+				std::cout << "Enter day of month:" << std::endl;
+				std::cin >> reminder.tm_mday;
+				std::cout << "Enter hours:" << std::endl;
+				std::cin >> reminder.tm_hour;
+				std::cout << "Enter minutes:" << std::endl;
+				std::cin >> reminder.tm_min;
+
+				terminal.add_reminder(&reminder);
+			}
+			else if (input_choice == '2')
+			{
+				int index;
+				std::cout << "Enter index to delete, or -1 to quit" << std::endl;
+				std::cin >> index;
+				if (index >= 0 && index < terminal.reminders.size())
+				{
+					terminal.reminders.erase(terminal.reminders.begin() + index);
+					std::cout << "Reminder " << index << " deleted" << std::endl;
+				}
+			}
+		}
+		else if (input_choice == '5')
 			quit = true;
 
 		// basic terminal loop:

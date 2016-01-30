@@ -60,7 +60,11 @@ void CompList::load(std::istream& input)
 				area_to_add.english_unit_name = *results_i;
 			}
 		}
-		add_area(area_to_add);
+		
+		if (area_to_add.area_name != "")
+		{
+			add_area(area_to_add);
+		}
 	}
 }
 

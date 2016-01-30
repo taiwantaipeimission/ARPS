@@ -68,6 +68,11 @@ void Terminal::parse_messages(std::string raw_str)
 	}
 }
 
+void Terminal::add_reminder(tm* time)
+{
+	reminders.push_back(mktime(time));
+}
+
 void Terminal::send_reminders()
 {
 	for (std::map<std::string, Area>::iterator it = comp_list->areas.begin(); it != comp_list->areas.end(); ++it)
