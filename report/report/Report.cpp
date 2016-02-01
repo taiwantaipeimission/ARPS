@@ -100,6 +100,11 @@ void Report::read_processed(std::string input)
 	stream >> id_str;
 	stream >> sender_number;
 
+	if (id_str == "2016:1:5:7:LUZHOU_B_E")
+	{
+		id_str = "2016:1:5:7:LUZHOU_B_E";
+	}
+
 	std::string key_name;
 	std::string value;
 	for (int i = 0; i < num_keys; i++)

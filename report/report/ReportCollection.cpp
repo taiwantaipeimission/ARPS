@@ -46,6 +46,10 @@ void ReportCollection::calculate_report_by_zone(CompList* comp_list, std::string
 	report_by_zone.reports.clear();
 	for (std::map<std::string, Report>::iterator it = report_by_comp.reports.begin(); it != report_by_comp.reports.end(); ++it)
 	{
+			if (it->second.id_str == "2016:1:5:7:LUZHOU_B_E")
+			{
+				it->second.id_str = "2016:1:5:7:LUZHOU_B_E";
+			}
 			std::string comp_report_date = it->second.get_date();
 			if (comp_report_date == date && comp_list->areas.count(it->second.sender_number) > 0)
 			{
