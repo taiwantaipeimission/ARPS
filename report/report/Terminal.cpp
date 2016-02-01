@@ -77,9 +77,9 @@ void Terminal::send_reminders()
 {
 	for (std::map<std::string, Area>::iterator it = comp_list->areas.begin(); it != comp_list->areas.end(); ++it)
 	{
-		if (it->first != "" && report_sheet->reports.count(it->first) <= 0)
+		if (it->first != "" && report_sheet->reports.count(date + ":" + it->second.area_name) <= 0)
 		{
-			command_stream.str(command_stream.str() + "AT+CMGS=\"" + it->first + "\"" + "\nPlease remember to send in your key indicators." + COMMAND_ESCAPE_CHAR + COMMAND_END_CHAR);
+			command_stream.str(command_stream.str() + "AT+CMGS=\"" + it->first + "\"" + "\nPlease remember to send in your key indicators." + COMMAND_ESCAPE_CHAR + COMMAND_NEWLINE_CHAR);
 		}
 	}
 }
@@ -171,7 +171,7 @@ void Terminal::update(int millis)
 
 					if (modem_str.find("+CMTI") != std::string::npos)
 					{
-						command_stream.str("AT+CMGL=\"ALL\"\n~");
+						command_stream.str(command_stream.str() + "AT+CMGL=\"ALL\"\n");
 						reset = true;
 					}
 
@@ -194,6 +194,7 @@ void Terminal::update(int millis)
 						got_modem = true;
 						modem_str = "";
 					}
+					command_stream.str(command_stream.str() + COMMAND_END_CHAR);
 				}
 			}
 			if (got_user && user_ch == 27)

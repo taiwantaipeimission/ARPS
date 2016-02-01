@@ -31,6 +31,8 @@ void read_unprocessed(std::string input, std::string date, CompList* comp_list =
 
 void ReportSheet::read_stored_all(std::istream& input)
 {
+	input.clear();
+	input.seekg(0, std::ios::beg);
 	if (input.good())
 	{
 		getline(input, header_row);

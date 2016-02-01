@@ -48,6 +48,10 @@ int main(int argc, char **argv)
 	file_manager.open_file("REPORT_DATA_BY_ZONE", File::FILE_TYPE_INPUT);
 	file_manager.open_file("REPORT_DATA_BY_MISS", File::FILE_TYPE_INPUT);
 
+	file_manager.open_file("REPORT_DATA_OLD", File::FILE_TYPE_OUTPUT);
+	file_manager.files["REPORT_DATA_OLD"]->file << file_manager.files["REPORT_DATA"]->file.rdbuf();
+	file_manager.close_file("REPORT_DATA_OLD");
+
 	std::string date = prompt_date();
 
 	ReportCollection report_collection;
@@ -157,15 +161,16 @@ int main(int argc, char **argv)
 	file_manager.open_file("REPORT_DATA", File::FILE_TYPE_OUTPUT);
 	file_manager.open_file("REPORT_DATA_BY_ZONE", File::FILE_TYPE_OUTPUT);
 	file_manager.open_file("REPORT_DATA_BY_MISS", File::FILE_TYPE_OUTPUT);
-	file_manager.open_file("REPORT_DATA_OLD", File::FILE_TYPE_OUTPUT);
 
-	file_manager.files["REPORT_DATA_OLD"]->file << file_manager.files["REPORT_DATA"]->file.rdbuf();
-
-	report_collection.calculate_report_by_zone(&comp_list, date);
+	
 	
 	report_collection.write_report_by_comp(file_manager.files["REPORT_DATA"]);
-	report_collection.write_report_by_zone(file_manager.files["REPORT_DATA_BY_ZONE"]);
 	report_collection.write_report_by_indiv(file_manager.files["REPORT_DATA_BY_MISS"]);
+
+
+	report_collection.calculate_report_by_zone(&comp_list, date);
+	report_collection.write_report_by_zone(file_manager.files["REPORT_DATA_BY_ZONE"]);
+	
 	
 	//close output files
 	file_manager.close_file("REPORT_DATA");
