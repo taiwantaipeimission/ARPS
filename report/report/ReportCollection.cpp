@@ -44,29 +44,25 @@ void ReportCollection::write_report_by_indiv(File* file)
 void ReportCollection::calculate_report_by_zone(CompList* comp_list, std::string date)
 {
 	report_by_zone.reports.clear();
-	for (std::map<std::string, Report>::iterator it = report_by_comp.reports.begin(); it != report_by_comp.reports.end(); ++it)
+	for (std::map<std::string, Report*>::iterator it = report_by_comp.reports.begin(); it != report_by_comp.reports.end(); ++it)
 	{
-			if (it->second.id_str == "2016:1:5:7:LUZHOU_B_E")
+			std::string comp_report_date = it->second->get_date();
+			if (comp_report_date == date && comp_list->areas.count(it->second->sender_number) > 0)
 			{
-				it->second.id_str = "2016:1:5:7:LUZHOU_B_E";
-			}
-			std::string comp_report_date = it->second.get_date();
-			if (comp_report_date == date && comp_list->areas.count(it->second.sender_number) > 0)
-			{
-				std::string zone_name = comp_list->areas[it->second.sender_number].zone_name;
+				std::string zone_name = comp_list->areas[it->second->sender_number].zone_name;
 				std::string zone_id_str = date + ":" + zone_name;
 
 				if (report_by_zone.reports.count(zone_id_str) > 0)
 				{
-					Report zone_report = report_by_zone.reports[zone_id_str];
-					for (std::map<std::string, std::string>::iterator j = it->second.report_values.begin(); j != it->second.report_values.end(); ++j)
+					Report* zone_report = report_by_zone.reports[zone_id_str];
+					for (std::map<std::string, std::string>::iterator j = it->second->report_values.begin(); j != it->second->report_values.end(); ++j)
 					{
-						if (zone_report.report_values.count(j->first) > 0)
+						if (zone_report->report_values.count(j->first) > 0)
 						{
 							std::stringstream zone_report_ss;
 							std::stringstream comp_report_ss;
 
-							zone_report_ss.str(zone_report.report_values[j->first]);
+							zone_report_ss.str(zone_report->report_values[j->first]);
 							comp_report_ss.str(j->second);
 							int i_zone_report;
 							int i_comp_report;
@@ -78,20 +74,20 @@ void ReportCollection::calculate_report_by_zone(CompList* comp_list, std::string
 								int new_zone_value = i_zone_report + i_comp_report;
 								char intstr[8];
 								_itoa_s(new_zone_value, intstr, 8, 10);
-								zone_report.report_values[j->first] = std::string(intstr);
+								zone_report->report_values[j->first] = std::string(intstr);
 							}
 						}
 						else
 						{
-							zone_report.add_field(j->first, j->second);
+							zone_report->add_field(j->first, j->second);
 						}
 					}
 					report_by_zone.add_report(zone_report);
 				}
 				else
 				{
-					Report zone_report = it->second;
-					zone_report.id_str = zone_id_str;
+					Report* zone_report = new Report(*it->second);
+					zone_report->id_str = zone_id_str;
 					report_by_zone.add_report(zone_report);
 				}
 			}

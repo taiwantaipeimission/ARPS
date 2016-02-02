@@ -5,24 +5,27 @@
 
 #include "Message.h"
 
-const std::string Report::key_list_array[] = { "A", "B", "C", "D", "NWBAP", "BAP", "CONF", "BD", "SAC", "PK", "OL", "NI", "RCLA", "LAC", "RCT" };
-const int Report::num_keys = 15;
-
 Report::Report()
 {
+	set_key_list(); 
 	is_new = false;
+	type = TYPE_REGULAR;
 }
 
 Report::Report(Message msg, std::string date)
+: Report()
 {
+	set_key_list();
+	is_new = true;
+
 	id_str = date + ":" + msg.sender_name;
 	sender_number = msg.sender_number;
 
 	std::string value;
 
-	for (int i = 0; i < num_keys; i++)
+	for (int i = 0; i < key_list.size(); i++)
 	{
-		int key_pos = msg.contents.find("\n" + key_list_array[i] + ":");
+		int key_pos = msg.contents.find("\n" + key_list[i] + ":");
 		int value_pos = msg.contents.find(':', key_pos) + 1;
 		int value_end_pos = std::min(msg.contents.find('\n', value_pos), msg.contents.find('\r', value_pos));
 
@@ -34,13 +37,18 @@ Report::Report(Message msg, std::string date)
 				value = msg.contents.substr(value_pos, value_end_pos - value_pos);
 			}
 		}
-		report_values[key_list_array[i]] = value;
+		report_values[key_list[i]] = value;
 	}
-	is_new = true;
+	type = TYPE_REGULAR;
 }
 
 Report::~Report()
 {
+}
+
+void Report::set_key_list()
+{
+	key_list = { "A", "B", "C", "D", "NWBAP", "BAP", "CONF", "BD", "SAC", "PK", "OL", "NI", "RCLA", "LAC", "RCT" };
 }
 
 std::string Report::get_id_str()
@@ -69,11 +77,14 @@ bool Report::operator==(Report& other)
 	
 	// sender number and cmgl_id don't matter; not retained
 
-	for (int i = 0; i < num_keys; i++)
+	if (other.key_list.size() != this->key_list.size())
+		return false;
+
+	for (int i = 0; i < key_list.size(); i++)
 	{
-		if (other.key_list_array[i] != this->key_list_array[i])
+		if (other.key_list[i] != this->key_list[i])
 			return false;
-		if (other.report_values[key_list_array[i]] != this->report_values[key_list_array[i]])
+		if (other.report_values[key_list[i]] != this->report_values[key_list[i]])
 			return false;
 	}
 	return true;
@@ -100,19 +111,14 @@ void Report::read_processed(std::string input)
 	stream >> id_str;
 	stream >> sender_number;
 
-	if (id_str == "2016:1:5:7:LUZHOU_B_E")
-	{
-		id_str = "2016:1:5:7:LUZHOU_B_E";
-	}
-
 	std::string key_name;
 	std::string value;
-	for (int i = 0; i < num_keys; i++)
+	for (int i = 0; i < key_list.size(); i++)
 	{
 		value = "0";
 		if (stream.good())
 			stream >> value;
-		report_values[key_list_array[i]] = value;
+		report_values[key_list[i]] = value;
 	}
 
 	is_new = false;
@@ -123,9 +129,9 @@ void Report::read_processed(std::string input)
 void Report::print(std::ostream& output)
 {
 	output << id_str << "\t" << sender_number;
-	for (int i = 0; i < num_keys; i++)
+	for (int i = 0; i < key_list.size(); i++)
 	{
-		output << '\t' << report_values[key_list_array[i]];
+		output << '\t' << report_values[key_list[i]];
 	}
 	output << std::endl;
 }

@@ -14,9 +14,10 @@
 #include "CompList.h"
 #include "Message.h"
 #include "Area.h"
+#include "File.h"
 
-Terminal::Terminal(std::string date_in, Modem* modem_in, ReportSheet* report_sheet_in, ReportSheet* english_report_sheet_in, CompList* comp_list_in)
-	: mode(MODE_AUTOMATIC), date(date_in), modem(modem_in), report_sheet(report_sheet_in), english_report_sheet(english_report_sheet_in), comp_list(comp_list_in), reminders()
+Terminal::Terminal(std::string date_in, Modem* modem_in, ReportSheet* report_sheet_in, ReportSheet* english_report_sheet_in, CompList* comp_list_in, File* output_file_in)
+	: mode(MODE_AUTOMATIC), date(date_in), modem(modem_in), report_sheet(report_sheet_in), english_report_sheet(english_report_sheet_in), comp_list(comp_list_in), output_file(output_file_in), reminders()
 {
 	time_t cur_time;
 	std::time(&cur_time);
@@ -94,6 +95,7 @@ void Terminal::update(int millis)
 			std::string modem_ch_null = "";
 			modem_ch_null += modem_ch;
 			std::cout << modem_ch_null;
+			output_file->file << modem_ch_null;
 			modem_str += modem_ch_null;
 			got_modem = true;
 
@@ -151,14 +153,14 @@ void Terminal::update(int millis)
 						{
 							if (it->type == Message::TYPE_REPORT)
 							{
-								Report report(*it, date);
+								Report* report = new Report(*it, date);
 								report_sheet->add_report(report);
 
 								command_stream.str(command_stream.str() + "AT+CMGD=" + it->cmgl_id + "\n");
 							}
 							else if (it->type == Message::TYPE_REPORT_ENGLISH)
 							{
-								ReportEnglish report(*it, date);
+								ReportEnglish* report = new ReportEnglish(*it, date);
 								english_report_sheet->add_report(report);
 
 								command_stream.str(command_stream.str() + "AT+CMGD=" + it->cmgl_id + "\n");

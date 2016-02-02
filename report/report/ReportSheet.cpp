@@ -2,31 +2,37 @@
 #include <sstream>
 #include <iostream>
 
+#include "ReportEnglish.h"
+
 ReportSheet::ReportSheet()
-	: reports(), header_row("")
+	: report_type(Report::TYPE_REGULAR), reports(), header_row("")
 {
 }
 
 
 ReportSheet::~ReportSheet()
 {
-}
-
-void ReportSheet::add_report(Report report)
-{
-	if (report.id_str != "")
+	for (std::map<std::string, Report*>::iterator it = reports.begin(); it != reports.end(); ++it)
 	{
-		reports[report.id_str] = report;
+		delete it->second;
 	}
 }
 
-void read_unprocessed(std::string input, std::string date, CompList* comp_list = NULL)
+void ReportSheet::add_report(Report* report)
 {
-	int msg_start_pos = input.find("+CMGL" + 5);
-	int msg_end_pos = input.find("+CMGL", msg_start_pos);
+	if (report->id_str != "")
+	{
+		reports[report->id_str] = report;
+	}
+}
 
-	std::string msg_string = input.substr(msg_start_pos, msg_end_pos - msg_start_pos - 1);
-	// more dongxi...
+void ReportSheet::remove_report(std::string id_str)
+{
+	if (reports.count(id_str) > 0)
+	{
+		delete reports[id_str];
+		reports.erase(id_str);
+	}
 }
 
 void ReportSheet::read_stored_all(std::istream& input)
@@ -42,42 +48,30 @@ void ReportSheet::read_stored_all(std::istream& input)
 		do
 		{
 			std::getline(input, id_str);
-			Report report;
-			report.read_processed(id_str);
-			add_report(report);
+			Report* report;
+			if (report_type == Report::TYPE_REGULAR)
+			{
+				report = new Report();
+				report->read_processed(id_str);
+				add_report(report);
+			}
+			else if (report_type == Report::TYPE_ENGLISH)
+			{
+				report = new ReportEnglish();
+				report->read_processed(id_str);
+				add_report(report);
+			}
+
+			
 		} while (input.good());
 	}
 }
 
-/*void ReportSheet::read_stored_matching_date(std::istream& input, std::string date)	//date format: yyyy:m(m):w:d(d)
-{
-	if (input.good())
-	{
-		std::string id_str;
-		std::string date;
-
-		std::getline(input, id_str);
-		for (; input.good(); std::getline(input, id_str))
-		{
-			int date_end_pos = id_str.find_last_of(":");
-			date = id_str.substr(0, date_end_pos);
-			std::cout << date << std::endl;
-			if (date == (year + ":" + month + ":" + week + ":" + day).c_str())
-			{
-				Report report;
-				report.read_processed(id_str);
-				add_report(report);
-				reports[report.sender_name].second = false;
-			}
-		}
-	}
-}*/
-
 void ReportSheet::print(std::ostream& output)
 {
 	output << header_row << "\n";
-	for (std::map<std::string, Report>::iterator it = reports.begin(); it != reports.end(); ++it)
+	for (std::map<std::string, Report*>::iterator it = reports.begin(); it != reports.end(); ++it)
 	{
-		it->second.print(output);
+		it->second->print(output);
 	}
 }

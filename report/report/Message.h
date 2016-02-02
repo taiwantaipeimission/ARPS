@@ -11,7 +11,8 @@ public:
 	enum MessageType
 	{
 		TYPE_REPORT,
-		TYPE_REPORT_ENGLISH
+		TYPE_REPORT_ENGLISH,
+		TYPE_UNKNOWN
 	};
 
 	MessageType type;

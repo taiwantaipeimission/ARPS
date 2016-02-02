@@ -41,12 +41,10 @@ int main(int argc, char **argv)
 	Modem modem;
 
 	FileManager file_manager("paths.txt");
-
-	file_manager.open_file("COMMANDS", File::FILE_TYPE_INPUT);
+	file_manager.open_file("OUTPUT", File::FILE_TYPE_OUTPUT);
 	file_manager.open_file("PH_LIST", File::FILE_TYPE_INPUT);
 	file_manager.open_file("REPORT_DATA", File::FILE_TYPE_INPUT);
-	file_manager.open_file("REPORT_DATA_BY_ZONE", File::FILE_TYPE_INPUT);
-	file_manager.open_file("REPORT_DATA_BY_MISS", File::FILE_TYPE_INPUT);
+	file_manager.open_file("ENGLISH_DATA", File::FILE_TYPE_INPUT);
 
 	file_manager.open_file("REPORT_DATA_OLD", File::FILE_TYPE_OUTPUT);
 	file_manager.files["REPORT_DATA_OLD"]->file << file_manager.files["REPORT_DATA"]->file.rdbuf();
@@ -55,21 +53,23 @@ int main(int argc, char **argv)
 	std::string date = prompt_date();
 
 	ReportCollection report_collection;
+	ReportCollection report_collection_english;
+	report_collection_english.report_by_comp.report_type = Report::TYPE_ENGLISH;
 	CompList comp_list;
 
 	report_collection.read_report_by_comp(file_manager.files["REPORT_DATA"]);
+	report_collection_english.read_report_by_comp(file_manager.files["ENGLISH_DATA"]);
 	comp_list.load(file_manager.files["PH_LIST"]->file);
 
 	//close input files
 	file_manager.close_file("REPORT_DATA");
-	file_manager.close_file("REPORT_DATA_BY_ZONE");
-	file_manager.close_file("REPORT_DATA_BY_MISS");
+	file_manager.close_file("ENGLISH_DATA");
 
 	// process string
 
 	std::stringstream command;
 
-	Terminal terminal(date, &modem, &report_collection.report_by_comp, NULL, &comp_list);
+	Terminal terminal(date, &modem, &report_collection.report_by_comp, &report_collection_english.report_by_comp, &comp_list, file_manager.files["OUTPUT"]);
 	terminal.set_mode(Terminal::MODE_INACTIVE);
 
 	bool quit = false;
@@ -112,9 +112,9 @@ int main(int argc, char **argv)
 			char input_choice_1;
 
 			std::cout << "1. Add reminder\t2. Delete reminder\t3. Return" << std::endl;
-			std::cin >> input_choice;
+			std::cin >> input_choice_1;
 
-			if (input_choice == '1')
+			if (input_choice_1 == '1')
 			{
 				time_t cur_time;
 				std::time(&cur_time);
@@ -130,7 +130,7 @@ int main(int argc, char **argv)
 
 				terminal.add_reminder(&reminder);
 			}
-			else if (input_choice == '2')
+			else if (input_choice_1 == '2')
 			{
 				int index;
 				std::cout << "Enter index to delete, or -1 to quit" << std::endl;
@@ -160,22 +160,26 @@ int main(int argc, char **argv)
 	//open output files
 	file_manager.open_file("REPORT_DATA", File::FILE_TYPE_OUTPUT);
 	file_manager.open_file("REPORT_DATA_BY_ZONE", File::FILE_TYPE_OUTPUT);
-	file_manager.open_file("REPORT_DATA_BY_MISS", File::FILE_TYPE_OUTPUT);
 
+	file_manager.open_file("ENGLISH_DATA", File::FILE_TYPE_OUTPUT);
+	file_manager.open_file("ENGLISH_DATA_BY_UNIT", File::FILE_TYPE_OUTPUT);
 	
 	
 	report_collection.write_report_by_comp(file_manager.files["REPORT_DATA"]);
-	report_collection.write_report_by_indiv(file_manager.files["REPORT_DATA_BY_MISS"]);
-
-
 	report_collection.calculate_report_by_zone(&comp_list, date);
 	report_collection.write_report_by_zone(file_manager.files["REPORT_DATA_BY_ZONE"]);
+
+	report_collection_english.write_report_by_comp(file_manager.files["ENGLISH_DATA"]);
+	report_collection_english.calculate_report_by_zone(&comp_list, date);
+	report_collection_english.write_report_by_zone(file_manager.files["ENGLISH_DATA_BY_UNIT"]);
 	
 	
 	//close output files
+	file_manager.close_file("OUTPUT");
 	file_manager.close_file("REPORT_DATA");
 	file_manager.close_file("REPORT_DATA_BY_ZONE");
-	file_manager.close_file("REPORT_DATA_BY_MISS");
+	file_manager.close_file("ENGLISH_DATA");
+	file_manager.close_file("ENGLISH_DATA_BY_UNIT");
 	
 	return 0;
 }

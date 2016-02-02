@@ -7,5 +7,7 @@ public:
 	ReportEnglish(Message msg, std::string date);
 	ReportEnglish();
 	virtual ~ReportEnglish();
+
+	void set_key_list();
 };
 

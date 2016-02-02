@@ -6,13 +6,22 @@
 ReportEnglish::ReportEnglish(Message msg, std::string date)
 : Report(msg, date)
 {
+	set_key_list();
+	type = TYPE_ENGLISH;
 }
 
 ReportEnglish::ReportEnglish()
-	: Report()
+: Report()
 {
+	set_key_list();
+	type = TYPE_ENGLISH;
 }
 
 ReportEnglish::~ReportEnglish()
 {
+}
+
+void ReportEnglish::set_key_list()
+{
+	key_list = { "TOTALSTUDENTS", "TOTALNONMEM", "NEWSTUDENTS", "TOTALINV" };
 }
