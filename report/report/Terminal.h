@@ -32,7 +32,8 @@ public:
 	ReportSheet* english_report_sheet;
 	CompList* comp_list;
 	File* output_file;
-	std::string date;
+	std::string date;					//current date string for saving regular reports
+	std::string english_date;			//current date string for saving English reports
 	std::vector<time_t> reminders;
 
 
@@ -52,7 +53,7 @@ public:
 	DWORD read, written;				//number of bytes read/written to modem
 	int wait_ms = 0;					//ms to wait before writing
 
-	Terminal(std::string date_in, Modem* modem_in, ReportSheet* report_sheet_in, ReportSheet* english_report_sheet_in, CompList* comp_list_in, File* output_file_in);
+	Terminal(std::string date_in, std::string english_date_in, Modem* modem_in, ReportSheet* report_sheet_in, ReportSheet* english_report_sheet_in, CompList* comp_list_in, File* output_file_in);
 	virtual ~Terminal();
 
 	void parse_messages(std::string raw_str);

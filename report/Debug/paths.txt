@@ -1,7 +1,8 @@
-OUTPUT="output.txt"
-PH_LIST="phone_list.txt"
-REPORT_DATA="report_data.txt"
-REPORT_DATA_BY_ZONE="report_data_by_zone.txt"
-REPORT_DATA_OLD="report_data.bak.txt"
-ENGLISH_DATA="english_data.txt"
-ENGLISH_DATA_BY_UNIT="english_data_by_unit.txt"
+OUTPUT=output.txt
+CONFIG=config.txt
+PH_LIST=phone_list.txt
+REPORT_DATA=report_data.txt
+REPORT_DATA_BY_ZONE=report_data_by_zone.txt
+REPORT_DATA_OLD=report_data.bak.txt
+ENGLISH_DATA=english_data.txt
+ENGLISH_DATA_BY_UNIT=english_data_by_unit.txt

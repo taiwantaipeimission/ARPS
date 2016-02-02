@@ -26,10 +26,10 @@ public:
 	std::map<std::string, std::string> report_values;
 
 	Report();
-	Report(Message msg, std::string date);
 	virtual ~Report();
 
 	virtual void set_key_list();	//Initializes the key list for a specific type of report
+	virtual void read_message(Message msg, std::string date);
 
 	std::string get_id_str();
 	std::string get_date();

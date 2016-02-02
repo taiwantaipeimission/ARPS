@@ -17,6 +17,7 @@ public:
 	std::fstream file;
 
 	File(std::string filepath_in, FileType file_type_in);
+	File();
 	virtual ~File();
 
 	bool open();

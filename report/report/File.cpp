@@ -14,6 +14,11 @@ File::File(std::string filepath_in, FileType file_type_in)
 	}
 }
 
+File::File()
+	: filepath(""), file_type(FILE_TYPE_INPUT)
+{
+}
+
 File::~File()
 {
 	file.close();

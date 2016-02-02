@@ -7,23 +7,18 @@
 
 Report::Report()
 {
-	set_key_list(); 
-	is_new = false;
+	set_key_list();
 	type = TYPE_REGULAR;
 }
 
-Report::Report(Message msg, std::string date)
-: Report()
+void Report::read_message(Message msg, std::string date)
 {
-	set_key_list();
-	is_new = true;
-
 	id_str = date + ":" + msg.sender_name;
 	sender_number = msg.sender_number;
 
 	std::string value;
 
-	for (int i = 0; i < key_list.size(); i++)
+	for (unsigned int i = 0; i < key_list.size(); i++)
 	{
 		int key_pos = msg.contents.find("\n" + key_list[i] + ":");
 		int value_pos = msg.contents.find(':', key_pos) + 1;
@@ -39,7 +34,6 @@ Report::Report(Message msg, std::string date)
 		}
 		report_values[key_list[i]] = value;
 	}
-	type = TYPE_REGULAR;
 }
 
 Report::~Report()

@@ -3,13 +3,6 @@
 //const std::string ReportEnglish::key_list_array[] = { "CLASS_LEVEL", "TOTAL_STUDENTS", "NEW_STUDENTS", "NEW_INVESTIGATORS" };
 //const int ReportEnglish::num_keys = 4;
 
-ReportEnglish::ReportEnglish(Message msg, std::string date)
-: Report(msg, date)
-{
-	set_key_list();
-	type = TYPE_ENGLISH;
-}
-
 ReportEnglish::ReportEnglish()
 : Report()
 {
@@ -23,5 +16,5 @@ ReportEnglish::~ReportEnglish()
 
 void ReportEnglish::set_key_list()
 {
-	key_list = { "TOTALSTUDENTS", "TOTALNONMEM", "NEWSTUDENTS", "TOTALINV" };
+	key_list = { "CLASSLEVEL", "TOTALSTUDENTS", "TOTALNONMEM", "NEWSTUDENTS", "TOTALINV" };
 }

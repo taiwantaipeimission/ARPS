@@ -3,14 +3,15 @@
 #include <map>
 #include <string>
 #include "File.h"
+#include "FieldFile.h"
 
 class FileManager
 {
 public:
 	
-	File path_file;
+	FieldFile path_file;
+	FieldFile config_file;
 	std::map<std::string, File*> files;
-	std::map<std::string, std::string> paths;
 
 	FileManager(std::string path_file_path_in);
 	virtual ~FileManager();
