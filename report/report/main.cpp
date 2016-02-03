@@ -14,6 +14,7 @@
 #include "CompList.h"
 #include "Terminal.h"
 #include "Area.h"
+#include "Reminder.h"
 
 void show_report_status(ReportCollection* report_collection, CompList* comp_list, std::string date, bool english = false)
 {
@@ -49,9 +50,8 @@ int main(int argc, char **argv)
 
 	std::string date = file_manager.config_file.values["REPORT_DATE"];
 	std::string english_date = file_manager.config_file.values["ENGLISH_DATE"];
-	std::string report_reminder = file_manager.config_file.values["REPORT_REMINDER"];
-	std::string english_reminder = file_manager.config_file.values["ENGLISH_REMINDER"];
-
+	Reminder report_reminder(file_manager.config_file.values["REPORT_REMINDER"]);
+	Reminder english_reminder(file_manager.config_file.values["ENGLISH_REMINDER"]);
 	
 	ReportCollection report_collection;
 	ReportCollection report_collection_english;
@@ -67,6 +67,8 @@ int main(int argc, char **argv)
 	std::stringstream command;
 	Terminal terminal(date, english_date, &modem, &report_collection.report_by_comp, &report_collection_english.report_by_comp, &comp_list, file_manager.files["OUTPUT"]);
 	terminal.set_mode(Terminal::MODE_INACTIVE);
+	terminal.add_reminder(report_reminder);
+	terminal.add_reminder(english_reminder);
 
 	//close input files
 	file_manager.close_file("REPORT_DATA");
@@ -98,10 +100,13 @@ int main(int argc, char **argv)
 
 		// basic terminal loop:
 
+		clock_t start = clock();
+		clock_t end = start;
 		while (!quit && terminal.get_mode() != Terminal::MODE_INACTIVE)
 		{
-			terminal.update(1);
-			Sleep(1);
+			terminal.update(double(end - start) / (double)CLOCKS_PER_SEC * 1000.0f);
+			start = end;
+			end = clock();
 		}
 	}
 

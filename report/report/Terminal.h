@@ -6,6 +6,7 @@ class ReportSheet;
 class CompList;
 class Message;
 class File;
+class Reminder;
 
 #include <sstream>
 #include <vector>
@@ -34,8 +35,7 @@ public:
 	File* output_file;
 	std::string date;					//current date string for saving regular reports
 	std::string english_date;			//current date string for saving English reports
-	std::vector<time_t> reminders;
-
+	std::vector<Reminder> reminders;
 
 	std::stringstream command_stream;
 	std::vector<Message> cur_messages;
@@ -51,17 +51,18 @@ public:
 	bool got_modem = false;
 
 	DWORD read, written;				//number of bytes read/written to modem
-	int wait_ms = 0;					//ms to wait before writing
+	double ms_to_wait;			//time to wait before sending data, in ms
+	time_t cur_time;
 
 	Terminal(std::string date_in, std::string english_date_in, Modem* modem_in, ReportSheet* report_sheet_in, ReportSheet* english_report_sheet_in, CompList* comp_list_in, File* output_file_in);
 	virtual ~Terminal();
 
 	void parse_messages(std::string raw_str);
-	void add_reminder(tm* time);
-	void send_reminders();
+	void add_reminder(Reminder reminder);
+	bool send_reminders();
 	void set_mode(TerminalMode new_mode);
 	TerminalMode get_mode();
 
-	void update(int millis);
+	void update(double millis);
 };
 

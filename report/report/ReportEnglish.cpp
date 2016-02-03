@@ -16,5 +16,5 @@ ReportEnglish::~ReportEnglish()
 
 void ReportEnglish::set_key_list()
 {
-	key_list = { "CLASSLEVEL", "TOTALSTUDENTS", "TOTALNONMEM", "NEWSTUDENTS", "TOTALINV" };
+	key_list = { "CLASSLEVEL", "TOTALSTUDENTS", "TOTALNONMEM", "NEWSTUDENTS", "NEWINV" };
 }

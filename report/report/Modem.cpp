@@ -48,6 +48,7 @@ Modem::Modem()
 	// get the current DCB, and adjust a few bits to our liking.
 	memset(&port, 0, sizeof(port));
 	port.DCBlength = sizeof(port);
+	port.fDtrControl = DTR_CONTROL_HANDSHAKE;
 	if (!GetCommState(file, &port))
 		system_error("getting comm state");
 	if (!BuildCommDCB("baud=9600 parity=n data=8 stop=1", &port))

@@ -72,6 +72,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Message.cpp" />
     <ClCompile Include="Modem.cpp" />
+    <ClCompile Include="Reminder.cpp" />
     <ClCompile Include="ReportCollection.cpp" />
     <ClCompile Include="ReportEnglish.cpp" />
     <ClCompile Include="Report.cpp" />
@@ -86,6 +87,7 @@
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="Modem.h" />
+    <ClInclude Include="Reminder.h" />
     <ClInclude Include="ReportCollection.h" />
     <ClInclude Include="ReportEnglish.h" />
     <ClInclude Include="Report.h" />

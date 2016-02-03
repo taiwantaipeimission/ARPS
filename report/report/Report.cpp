@@ -42,7 +42,7 @@ Report::~Report()
 
 void Report::set_key_list()
 {
-	key_list = { "A", "B", "C", "D", "NWBAP", "BAP", "CONF", "BD", "SAC", "PK", "OL", "NI", "RCLA", "LAC", "RCT" };
+	key_list = { "A", "B", "C", "D", "NWBAP", "BAP", "CONF", "BD", "SAC", "PK", "OL", "NIMISSFIND", "NIMEMREF", "RCLA", "LAC", "RCT" };
 }
 
 std::string Report::get_id_str()

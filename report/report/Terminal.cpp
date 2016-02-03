@@ -15,16 +15,13 @@
 #include "Message.h"
 #include "Area.h"
 #include "File.h"
+#include "Reminder.h"
 
 Terminal::Terminal(std::string date_in, std::string english_date_in, Modem* modem_in, ReportSheet* report_sheet_in, ReportSheet* english_report_sheet_in, CompList* comp_list_in, File* output_file_in)
 	: mode(MODE_AUTOMATIC), date(date_in), english_date(english_date_in), modem(modem_in), report_sheet(report_sheet_in), english_report_sheet(english_report_sheet_in), comp_list(comp_list_in), output_file(output_file_in), reminders()
 {
-	time_t cur_time;
 	std::time(&cur_time);
-	struct tm reminder_time;
-	localtime_s(&reminder_time, &cur_time);
 
-	//reminders.push_back(mktime(&reminder_time));
 	set_mode(MODE_AUTOMATIC);
 }
 
@@ -47,7 +44,7 @@ void Terminal::set_mode(TerminalMode new_mode)
 		command_stream.str("AT+CMGL=\"ALL\"\n~");
 		
 		got_modem = true;
-		wait_ms = 0;
+		ms_to_wait = 0;
 	}
 
 	mode = new_mode;
@@ -69,25 +66,46 @@ void Terminal::parse_messages(std::string raw_str)
 	}
 }
 
-void Terminal::add_reminder(tm* time)
+void Terminal::add_reminder(Reminder reminder)
 {
-	reminders.push_back(mktime(time));
+	reminders.push_back(reminder);
 }
 
-void Terminal::send_reminders()
+bool Terminal::send_reminders()
 {
-	for (std::map<std::string, Area>::iterator it = comp_list->areas.begin(); it != comp_list->areas.end(); ++it)
+	bool sent = false;
+	struct tm cur_time_st;
+	localtime_s(&cur_time_st, &cur_time);
+	for (std::vector<Reminder>::iterator it = reminders.begin(); it != reminders.end(); ++it)
 	{
-		if (it->first != "" && report_sheet->reports.count(date + ":" + it->second.area_name) <= 0)
+		if (it->tm_wday == cur_time_st.tm_wday)
 		{
-			command_stream.str(command_stream.str() + "AT+CMGS=\"" + it->first + "\"" + "\nPlease remember to send in your key indicators." + COMMAND_ESCAPE_CHAR + COMMAND_NEWLINE_CHAR);
+			if (!it->sent)
+			{
+				for (std::map<std::string, Area>::iterator ci = comp_list->areas.begin(); ci != comp_list->areas.end(); ++ci)
+				{
+					if (ci->first != "" && ((it->english && english_report_sheet->reports.count(date + ":" + ci->second.area_name) <= 0 && ci->second.english_unit_name != "NONE" ) || (report_sheet->reports.count(date + ":" + ci->second.area_name) <= 0)))
+					{
+						command_stream.str(command_stream.str() + "AT+CMGS=\"" + ci->first + "\"" + "\nPlease remember to send in your key indicators." + COMMAND_ESCAPE_CHAR + COMMAND_NEWLINE_CHAR);
+						sent = true;
+					}
+				}
+				it->sent = true;
+			}
+		}
+		else
+		{
+			it->sent = false;
 		}
 	}
+	return sent;
 }
 
-void Terminal::update(int millis)
+void Terminal::update(double millis)
 {
 		ReadFile(modem->file, &modem_ch, 1, &read, NULL);
+
+		time(&cur_time);
 
 		//get char from modem
 		if (read)
@@ -99,8 +117,8 @@ void Terminal::update(int millis)
 			modem_str += modem_ch_null;
 			got_modem = true;
 
-			if (wait_ms > 0)
-				wait_ms = TIMEOUT_MS;	//reset wait timer: wait for another TIMOUT_MS ms before writing
+			if (ms_to_wait > 0)
+				ms_to_wait = TIMEOUT_MS;	//reset wait timer: wait for another TIMOUT_MS ms before writing
 		}
 
 		//get char from user input
@@ -116,29 +134,30 @@ void Terminal::update(int millis)
 
 		if (mode == MODE_AUTOMATIC)
 		{
-			if (got_modem && wait_ms <= 0)
+			if (got_modem && ms_to_wait <= 0)
 			{
 				command_stream.get(command_ch);
 				if (command_ch == COMMAND_NEWLINE_CHAR)
 				{
 					WriteFile(modem->file, "\n", 3, &written, NULL);
-					wait_ms = TIMEOUT_MS;
+					ms_to_wait = TIMEOUT_MS;
 					got_modem = false;
 				}
 				else if (command_ch == COMMAND_ESCAPE_CHAR)
 				{
 					WriteFile(modem->file, "\u001A", 1, &written, NULL);
-					wait_ms = 0;
+					ms_to_wait = TIMEOUT_MS;
 					got_modem = false;
 				}
 				else if (command_ch != COMMAND_END_CHAR)
 				{
 					WriteFile(modem->file, &command_ch, 1, &written, NULL);
-					wait_ms = 0;
 					got_modem = false;
 				}
 				else if (command_ch == COMMAND_END_CHAR)
 				{
+					
+
 					command_stream.str("");
 					command_stream.clear();
 					command_stream.seekg(0, std::ios::beg);
@@ -179,18 +198,9 @@ void Terminal::update(int millis)
 						reset = true;
 					}
 
-					time_t cur_time;
-					std::time(&cur_time);
-					for (std::vector<time_t>::iterator it = reminders.begin(); it != reminders.end(); )
+					if (send_reminders())
 					{
-						double time_diff = std::difftime(*it, cur_time);
-						if (time_diff <= 0.0f)
-						{
-							send_reminders();
-							it = reminders.erase(it);
-							reset = true;
-						}
-						else ++it;
+						reset = true;
 					}
 
 					if (reset)
@@ -205,17 +215,21 @@ void Terminal::update(int millis)
 			{
 				set_mode(MODE_INACTIVE);
 			}
-			wait_ms-=millis;
+			if (ms_to_wait > 0)
+				ms_to_wait = min(0, ms_to_wait - millis);
 		}
 
-		else if (mode == MODE_USER_INPUT)
+		else 
 		{
-			if (got_user)
+			if (mode == MODE_USER_INPUT)
 			{
-				if (user_ch != 27)
-					WriteFile(modem->file, &user_ch, 1, &written, NULL);
-				else
-					set_mode(MODE_INACTIVE);
+				if (got_user)
+				{
+					if (user_ch != 27)
+						WriteFile(modem->file, &user_ch, 1, &written, NULL);
+					else
+						set_mode(MODE_INACTIVE);
+				}
 			}
 		}
 };
