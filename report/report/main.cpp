@@ -52,6 +52,7 @@ int main(int argc, char **argv)
 	std::string english_date = file_manager.config_file.values["ENGLISH_DATE"];
 	Reminder report_reminder(file_manager.config_file.values["REPORT_REMINDER"]);
 	Reminder english_reminder(file_manager.config_file.values["ENGLISH_REMINDER"]);
+	english_reminder.english = true;
 	
 	ReportCollection report_collection;
 	ReportCollection report_collection_english;

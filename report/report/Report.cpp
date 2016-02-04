@@ -30,6 +30,8 @@ void Report::read_message(Message msg, std::string date)
 			if (value_pos != value_end_pos)
 			{
 				value = msg.contents.substr(value_pos, value_end_pos - value_pos);
+				value.erase(std::remove(value.begin(), value.end(), ' '), value.end());		//Strip whitespace from string
+				value.erase(std::remove(value.begin(), value.end(), '\n'), value.end());
 			}
 		}
 		report_values[key_list[i]] = value;

@@ -41,7 +41,7 @@ void Terminal::set_mode(TerminalMode new_mode)
 	{
 		command_stream.clear();
 		command_stream.seekg(0, std::ios::beg);
-		command_stream.str("AT+CMGL=\"ALL\"\n~");
+		command_stream.str("AT+CMGL=\"ALL\"\n");
 		
 		got_modem = true;
 		ms_to_wait = 0;
@@ -84,13 +84,24 @@ bool Terminal::send_reminders()
 			{
 				for (std::map<std::string, Area>::iterator ci = comp_list->areas.begin(); ci != comp_list->areas.end(); ++ci)
 				{
-					if (ci->first != "" && ((it->english && english_report_sheet->reports.count(date + ":" + ci->second.area_name) <= 0 && ci->second.english_unit_name != "NONE" ) || (report_sheet->reports.count(date + ":" + ci->second.area_name) <= 0)))
+					bool send_it = false;
+					if (it->english)
+					{
+						if (ci->first != "" && english_report_sheet->reports.count(english_date + ":" + ci->second.area_name) <= 0 && ci->second.english_unit_name != "NONE")
+							send_it = true;
+					}
+					else
+					{
+						if (ci->first != "" && report_sheet->reports.count(date + ":" + ci->second.area_name) <= 0)
+							send_it = true;
+					}
+					if (send_it)
 					{
 						command_stream.str(command_stream.str() + "AT+CMGS=\"" + ci->first + "\"" + "\nPlease remember to send in your key indicators." + COMMAND_ESCAPE_CHAR + COMMAND_NEWLINE_CHAR);
+						it->sent = true;
 						sent = true;
 					}
 				}
-				it->sent = true;
 			}
 		}
 		else
@@ -136,28 +147,29 @@ void Terminal::update(double millis)
 		{
 			if (got_modem && ms_to_wait <= 0)
 			{
-				command_stream.get(command_ch);
-				if (command_ch == COMMAND_NEWLINE_CHAR)
+				if (!command_stream.eof())
 				{
-					WriteFile(modem->file, "\n", 3, &written, NULL);
-					ms_to_wait = TIMEOUT_MS;
-					got_modem = false;
+					command_stream.get(command_ch);
+					if (command_ch == COMMAND_NEWLINE_CHAR)
+					{
+						WriteFile(modem->file, "\n", 3, &written, NULL);
+						ms_to_wait = TIMEOUT_MS;
+						got_modem = false;
+					}
+					else if (command_ch == COMMAND_ESCAPE_CHAR)
+					{
+						WriteFile(modem->file, "\u001A", 1, &written, NULL);
+						ms_to_wait = TIMEOUT_MS * 5;
+						got_modem = false;
+					}
+					else
+					{
+						WriteFile(modem->file, &command_ch, 1, &written, NULL);
+						got_modem = false;
+					}
 				}
-				else if (command_ch == COMMAND_ESCAPE_CHAR)
+				else	//eof
 				{
-					WriteFile(modem->file, "\u001A", 1, &written, NULL);
-					ms_to_wait = TIMEOUT_MS;
-					got_modem = false;
-				}
-				else if (command_ch != COMMAND_END_CHAR)
-				{
-					WriteFile(modem->file, &command_ch, 1, &written, NULL);
-					got_modem = false;
-				}
-				else if (command_ch == COMMAND_END_CHAR)
-				{
-					
-
 					command_stream.str("");
 					command_stream.clear();
 					command_stream.seekg(0, std::ios::beg);
@@ -187,7 +199,6 @@ void Terminal::update(double millis)
 								command_stream.str(command_stream.str() + "AT+CMGD=" + it->cmgl_id + "\n");
 							}
 						}
-						command_stream.str(command_stream.str() + COMMAND_END_CHAR);
 						cur_messages.clear();
 						reset = true;
 					}
@@ -198,17 +209,17 @@ void Terminal::update(double millis)
 						reset = true;
 					}
 
-					if (send_reminders())
+					/*if (send_reminders())
 					{
+						std::string str = command_stream.str();
 						reset = true;
-					}
+					}*/
 
 					if (reset)
 					{
 						got_modem = true;
 						modem_str = "";
 					}
-					command_stream.str(command_stream.str() + COMMAND_END_CHAR);
 				}
 			}
 			if (got_user && user_ch == 27)
@@ -216,7 +227,7 @@ void Terminal::update(double millis)
 				set_mode(MODE_INACTIVE);
 			}
 			if (ms_to_wait > 0)
-				ms_to_wait = min(0, ms_to_wait - millis);
+				ms_to_wait = max(0, ms_to_wait - millis);
 		}
 
 		else 
