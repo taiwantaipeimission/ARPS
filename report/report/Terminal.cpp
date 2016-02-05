@@ -147,9 +147,9 @@ void Terminal::update(double millis)
 		{
 			if (got_modem && ms_to_wait <= 0)
 			{
+				command_stream.get(command_ch);
 				if (!command_stream.eof())
 				{
-					command_stream.get(command_ch);
 					if (command_ch == COMMAND_NEWLINE_CHAR)
 					{
 						WriteFile(modem->file, "\n", 3, &written, NULL);
@@ -159,7 +159,7 @@ void Terminal::update(double millis)
 					else if (command_ch == COMMAND_ESCAPE_CHAR)
 					{
 						WriteFile(modem->file, "\u001A", 1, &written, NULL);
-						ms_to_wait = TIMEOUT_MS * 5;
+						ms_to_wait = MSG_TIMEOUT_MS;
 						got_modem = false;
 					}
 					else
@@ -170,10 +170,6 @@ void Terminal::update(double millis)
 				}
 				else	//eof
 				{
-					command_stream.str("");
-					command_stream.clear();
-					command_stream.seekg(0, std::ios::beg);
-
 					bool reset = false;
 
 					if (modem_str.find("+CMGL:") != std::string::npos)
@@ -209,14 +205,11 @@ void Terminal::update(double millis)
 						reset = true;
 					}
 
-					/*if (send_reminders())
-					{
-						std::string str = command_stream.str();
-						reset = true;
-					}*/
-
 					if (reset)
 					{
+						command_stream.str("");
+						command_stream.clear();
+						command_stream.seekg(0, std::ios::beg);
 						got_modem = true;
 						modem_str = "";
 					}

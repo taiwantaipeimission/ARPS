@@ -16,6 +16,15 @@
 #include "Area.h"
 #include "Reminder.h"
 
+#define OUTPUT "OUTPUT"
+#define PH_LIST "PH_LIST"
+#define REPORT_DATA "REPORT_DATA"
+#define REPORT_DATA_OLD "REPORT_DATA_OLD"
+#define REPORT_DATA_ZONE "REPORT_DATA_ZONE"
+#define ENGLISH_DATA "ENGLISH_DATA"
+#define ENGLISH_DATA_OLD "ENGLISH_DATA_OLD"
+#define ENGLISH_DATA_UNIT "ENGLISH_DATA_UNIT"
+
 void show_report_status(ReportCollection* report_collection, CompList* comp_list, std::string date, bool english = false)
 {
 	std::cout << "Received\t\tNot received\n=============================================" << std::endl;
@@ -39,14 +48,15 @@ void show_report_status(ReportCollection* report_collection, CompList* comp_list
 int main(int argc, char **argv)
 {
 	FileManager file_manager("paths.txt");
-	file_manager.open_file("OUTPUT", File::FILE_TYPE_OUTPUT);
-	file_manager.open_file("PH_LIST", File::FILE_TYPE_INPUT);
-	file_manager.open_file("REPORT_DATA", File::FILE_TYPE_INPUT);
-	file_manager.open_file("ENGLISH_DATA", File::FILE_TYPE_INPUT);
+	file_manager.open_file(OUTPUT, File::FILE_TYPE_OUTPUT, true);
+	file_manager.open_file(PH_LIST, File::FILE_TYPE_INPUT);
+	file_manager.open_file(REPORT_DATA, File::FILE_TYPE_INPUT);
+	file_manager.open_file(ENGLISH_DATA, File::FILE_TYPE_INPUT);
 
-	file_manager.open_file("REPORT_DATA_OLD", File::FILE_TYPE_OUTPUT);
-	file_manager.files["REPORT_DATA_OLD"]->file << file_manager.files["REPORT_DATA"]->file.rdbuf();
-	file_manager.close_file("REPORT_DATA_OLD");
+	file_manager.open_file(REPORT_DATA_OLD, File::FILE_TYPE_OUTPUT, true);
+	file_manager.files[REPORT_DATA_OLD]->file << "=========================";
+	file_manager.files[REPORT_DATA_OLD]->file << file_manager.files[REPORT_DATA]->file.rdbuf();
+	file_manager.close_file(REPORT_DATA_OLD);
 
 	std::string date = file_manager.config_file.values["REPORT_DATE"];
 	std::string english_date = file_manager.config_file.values["ENGLISH_DATE"];
@@ -60,20 +70,20 @@ int main(int argc, char **argv)
 	report_collection_english.report_by_zone.report_type = Report::TYPE_ENGLISH;
 	CompList comp_list;
 
-	report_collection.read_report_by_comp(file_manager.files["REPORT_DATA"]);
-	report_collection_english.read_report_by_comp(file_manager.files["ENGLISH_DATA"]);
-	comp_list.load(file_manager.files["PH_LIST"]->file);
+	report_collection.read_report_by_comp(file_manager.files[REPORT_DATA]);
+	report_collection_english.read_report_by_comp(file_manager.files[ENGLISH_DATA]);
+	comp_list.load(file_manager.files[PH_LIST]->file);
 
 	Modem modem;
 	std::stringstream command;
-	Terminal terminal(date, english_date, &modem, &report_collection.report_by_comp, &report_collection_english.report_by_comp, &comp_list, file_manager.files["OUTPUT"]);
+	Terminal terminal(date, english_date, &modem, &report_collection.report_by_comp, &report_collection_english.report_by_comp, &comp_list, file_manager.files[OUTPUT]);
 	terminal.set_mode(Terminal::MODE_INACTIVE);
 	terminal.add_reminder(report_reminder);
 	terminal.add_reminder(english_reminder);
 
 	//close input files
-	file_manager.close_file("REPORT_DATA");
-	file_manager.close_file("ENGLISH_DATA");
+	file_manager.close_file(REPORT_DATA);
+	file_manager.close_file(ENGLISH_DATA);
 
 	// process string
 
@@ -85,7 +95,7 @@ int main(int argc, char **argv)
 	{
 
 		
-		std::cout << "\n1. Start\n2. Report status\n3. English report status\t4. Terminal\t5. Quit" << std::endl;
+		std::cout << "1. Start\n2. Report status\n3. English report status\n4. Terminal\n5. Quit" << std::endl;
 		char input_choice;
 		std::cin >> input_choice;
 		if (input_choice == '1')
@@ -115,28 +125,28 @@ int main(int argc, char **argv)
 
 
 	//open output files
-	file_manager.open_file("REPORT_DATA", File::FILE_TYPE_OUTPUT);
-	file_manager.open_file("REPORT_DATA_BY_ZONE", File::FILE_TYPE_OUTPUT);
+	file_manager.open_file(REPORT_DATA, File::FILE_TYPE_OUTPUT);
+	file_manager.open_file(REPORT_DATA_ZONE, File::FILE_TYPE_OUTPUT);
 
-	file_manager.open_file("ENGLISH_DATA", File::FILE_TYPE_OUTPUT);
-	file_manager.open_file("ENGLISH_DATA_BY_UNIT", File::FILE_TYPE_OUTPUT);
+	file_manager.open_file(ENGLISH_DATA, File::FILE_TYPE_OUTPUT);
+	file_manager.open_file(ENGLISH_DATA_UNIT, File::FILE_TYPE_OUTPUT);
 	
 	
-	report_collection.write_report_by_comp(file_manager.files["REPORT_DATA"]);
+	report_collection.write_report_by_comp(file_manager.files[REPORT_DATA]);
 	report_collection.calculate_report_by_zone(&comp_list, date);
-	report_collection.write_report_by_zone(file_manager.files["REPORT_DATA_BY_ZONE"]);
+	report_collection.write_report_by_zone(file_manager.files[REPORT_DATA_ZONE]);
 
-	report_collection_english.write_report_by_comp(file_manager.files["ENGLISH_DATA"]);
+	report_collection_english.write_report_by_comp(file_manager.files[ENGLISH_DATA]);
 	report_collection_english.calculate_report_by_zone(&comp_list, english_date, true);
-	report_collection_english.write_report_by_zone(file_manager.files["ENGLISH_DATA_BY_UNIT"]);
+	report_collection_english.write_report_by_zone(file_manager.files[ENGLISH_DATA_UNIT]);
 	
 	
 	//close output files
-	file_manager.close_file("OUTPUT");
-	file_manager.close_file("REPORT_DATA");
-	file_manager.close_file("REPORT_DATA_BY_ZONE");
-	file_manager.close_file("ENGLISH_DATA");
-	file_manager.close_file("ENGLISH_DATA_BY_UNIT");
+	file_manager.close_file(OUTPUT);
+	file_manager.close_file(REPORT_DATA);
+	file_manager.close_file(REPORT_DATA_ZONE);
+	file_manager.close_file(ENGLISH_DATA);
+	file_manager.close_file(ENGLISH_DATA_UNIT);
 	
 	return 0;
 }

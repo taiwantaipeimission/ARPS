@@ -39,7 +39,7 @@ void Message::parse(std::string input, CompList* comp_list)
 	int type_start = input.find("TYPE:");
 	if (type_start != std::string::npos)
 	{
-		type_start += 5;
+		type_start = input.find_first_not_of(' ', type_start + 5);
 		int type_end = input.find("\n", type_start);
 		std::string type_str = input.substr(type_start, type_end - type_start);
 		if (type_str == "REPORT")

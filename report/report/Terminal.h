@@ -22,6 +22,7 @@ public:
 	};
 
 	static const int TIMEOUT_MS = 2500;
+	static const int MSG_TIMEOUT_MS = 10000;
 	static const char COMMAND_END_CHAR = EOF;
 	static const char COMMAND_ESCAPE_CHAR = ';';
 	static const char COMMAND_NEWLINE_CHAR = '\n';

@@ -1,17 +1,10 @@
 #include "File.h"
 
 
-File::File(std::string filepath_in, FileType file_type_in)
+File::File(std::string filepath_in, FileType file_type_in, bool append)
 	: filepath(filepath_in), file_type(file_type_in)
 {
-	if (file_type == FILE_TYPE_INPUT)
-	{
-		file.open(filepath.c_str(), std::ios_base::in);
-	}
-	else if (file_type == FILE_TYPE_OUTPUT)
-	{
-		file.open(filepath.c_str(), std::ios_base::out);
-	}
+	open(append);
 }
 
 File::File()
@@ -24,18 +17,18 @@ File::~File()
 	file.close();
 }
 
-bool File::open()
+bool File::open(bool append)
 {
 	if (!file.is_open())
 	{
+		std::ios_base::openmode mode = 0;
 		if (file_type == FILE_TYPE_INPUT)
-		{
-			file.open(filepath.c_str(), std::ios_base::in);
-		}
+			mode |= std::ios_base::in;
 		else if (file_type == FILE_TYPE_OUTPUT)
-		{
-			file.open(filepath.c_str(), std::ios_base::out);
-		}
+			mode |= std::ios_base::out;
+		if (append)
+			mode |= std::ios_base::app;
+		file.open(filepath, mode);
 	}
 	return file.good();
 }

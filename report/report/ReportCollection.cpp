@@ -43,14 +43,13 @@ void ReportCollection::write_report_by_indiv(File* file)
 
 void ReportCollection::calculate_report_by_zone(CompList* comp_list, std::string date, bool english)
 {
-	report_by_zone.reports.clear();
 	for (std::map<std::string, Report*>::iterator it = report_by_comp.reports.begin(); it != report_by_comp.reports.end(); ++it)
 	{
 			std::string comp_report_date = it->second->get_date();
-			if (comp_report_date == date && comp_list->areas.count(it->second->sender_number) > 0)
+			if (comp_list->areas.count(it->second->sender_number) > 0)
 			{
 				std::string zone_name = english ? comp_list->areas[it->second->sender_number].english_unit_name : comp_list->areas[it->second->sender_number].zone_name;
-				std::string zone_id_str = date + ":" + zone_name;
+				std::string zone_id_str = comp_report_date + ":" + zone_name;
 
 				if (report_by_zone.reports.count(zone_id_str) > 0)
 				{

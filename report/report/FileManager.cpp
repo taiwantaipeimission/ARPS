@@ -18,12 +18,12 @@ FileManager::~FileManager()
 	path_file.close();
 }
 
-bool FileManager::open_file(std::string file_id, File::FileType type)
+bool FileManager::open_file(std::string file_id, File::FileType type, bool append)
 {
 	bool success = false;
 	if (path_file.values.count(file_id) > 0)
 	{
-		File* file = new File(path_file.values[file_id], type);
+		File* file = new File(path_file.values[file_id], type, append);
 		if (file->get_file()->good())
 		{
 			files[file_id] = file;

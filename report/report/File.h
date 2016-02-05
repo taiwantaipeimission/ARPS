@@ -16,11 +16,11 @@ public:
 	FileType file_type;
 	std::fstream file;
 
-	File(std::string filepath_in, FileType file_type_in);
+	File(std::string filepath_in, FileType file_type_in, bool append = false);
 	File();
 	virtual ~File();
 
-	bool open();
+	bool open(bool append = false);
 	void close();
 	
 	std::fstream* get_file();

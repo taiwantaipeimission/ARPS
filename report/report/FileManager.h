@@ -16,7 +16,7 @@ public:
 	FileManager(std::string path_file_path_in);
 	virtual ~FileManager();
 
-	bool open_file(std::string file_id, File::FileType type);
+	bool open_file(std::string file_id, File::FileType type, bool append = false);
 	bool close_file(std::string file_id);
 };
 
