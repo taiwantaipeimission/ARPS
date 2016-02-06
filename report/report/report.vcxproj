@@ -73,7 +73,6 @@
     <ClCompile Include="Message.cpp" />
     <ClCompile Include="Modem.cpp" />
     <ClCompile Include="Referral.cpp" />
-    <ClCompile Include="ReferralRoutingTable.cpp" />
     <ClCompile Include="Reminder.cpp" />
     <ClCompile Include="ReportCollection.cpp" />
     <ClCompile Include="ReportEnglish.cpp" />
@@ -90,7 +89,6 @@
     <ClInclude Include="Message.h" />
     <ClInclude Include="Modem.h" />
     <ClInclude Include="Referral.h" />
-    <ClInclude Include="ReferralRoutingTable.h" />
     <ClInclude Include="Reminder.h" />
     <ClInclude Include="ReportCollection.h" />
     <ClInclude Include="ReportEnglish.h" />

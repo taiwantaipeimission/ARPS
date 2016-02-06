@@ -9,6 +9,7 @@ const std::string CompList::ph_number_header = "PH_NUMBER";
 const std::string CompList::area_name_header = "AREA_NAME";
 const std::string CompList::zone_name_header = "ZONE_NAME";
 const std::string CompList::english_unit_name_header = "ENGLISH_UNIT_NAME";
+const std::string CompList::geog_area_header = "GEOG_AREAS";
 
 CompList::CompList()
 {
@@ -58,6 +59,10 @@ void CompList::load(std::istream& input)
 			if (*header_i == english_unit_name_header)
 			{
 				area_to_add.english_unit_name = *results_i;
+			}
+			if (*header_i == geog_area_header)
+			{
+				area_to_add.geog_area = *results_i;
 			}
 		}
 		

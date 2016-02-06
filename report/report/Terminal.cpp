@@ -202,6 +202,7 @@ void Terminal::update(double millis)
 							{
 								Referral referral;
 								referral.read_message(*it);
+								referral.locate(comp_list);
 								if (referral.found_dest())
 								{
 									command_stream.str(command_stream.str() + "AT+CMGS=" + referral.dest_number +

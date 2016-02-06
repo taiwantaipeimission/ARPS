@@ -15,6 +15,7 @@ public:
 	static const std::string area_name_header;
 	static const std::string zone_name_header;
 	static const std::string english_unit_name_header;
+	static const std::string geog_area_header;
 
 	std::map<std::string, Area> areas;						// Keyed by phone number
 	std::multimap<std::string, std::string> by_area_name;
