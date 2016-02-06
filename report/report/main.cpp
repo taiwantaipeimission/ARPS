@@ -24,6 +24,8 @@
 #define ENGLISH_DATA "ENGLISH_DATA"
 #define ENGLISH_DATA_OLD "ENGLISH_DATA_OLD"
 #define ENGLISH_DATA_UNIT "ENGLISH_DATA_UNIT"
+#define REFERRAL_ROUTING_TABLE "REFERRAL_ROUTING_TABLE"
+#define REFERRAL_HISTORY "REFERRAL_HISTORY"
 
 void show_report_status(ReportCollection* report_collection, CompList* comp_list, std::string date, bool english = false)
 {
@@ -52,6 +54,7 @@ int main(int argc, char **argv)
 	file_manager.open_file(PH_LIST, File::FILE_TYPE_INPUT);
 	file_manager.open_file(REPORT_DATA, File::FILE_TYPE_INPUT);
 	file_manager.open_file(ENGLISH_DATA, File::FILE_TYPE_INPUT);
+	file_manager.open_file(REFERRAL_ROUTING_TABLE, File::FILE_TYPE_OUTPUT);
 
 	file_manager.open_file(REPORT_DATA_OLD, File::FILE_TYPE_OUTPUT, true);
 	file_manager.files[REPORT_DATA_OLD]->file << "=========================";
@@ -84,6 +87,7 @@ int main(int argc, char **argv)
 	//close input files
 	file_manager.close_file(REPORT_DATA);
 	file_manager.close_file(ENGLISH_DATA);
+	file_manager.close_file(REFERRAL_ROUTING_TABLE);
 
 	// process string
 

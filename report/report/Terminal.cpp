@@ -16,6 +16,7 @@
 #include "Area.h"
 #include "File.h"
 #include "Reminder.h"
+#include "Referral.h"
 
 Terminal::Terminal(std::string date_in, std::string english_date_in, Modem* modem_in, ReportSheet* report_sheet_in, ReportSheet* english_report_sheet_in, CompList* comp_list_in, File* output_file_in)
 	: mode(MODE_AUTOMATIC), date(date_in), english_date(english_date_in), modem(modem_in), report_sheet(report_sheet_in), english_report_sheet(english_report_sheet_in), comp_list(comp_list_in), output_file(output_file_in), reminders()
@@ -152,7 +153,7 @@ void Terminal::update(double millis)
 				{
 					if (command_ch == COMMAND_NEWLINE_CHAR)
 					{
-						WriteFile(modem->file, "\n", 3, &written, NULL);
+						WriteFile(modem->file, &command_ch, 1, &written, NULL);
 						ms_to_wait = TIMEOUT_MS;
 						got_modem = false;
 					}
@@ -171,6 +172,9 @@ void Terminal::update(double millis)
 				else	//eof
 				{
 					bool reset = false;
+					command_stream.str("");
+					command_stream.clear();
+					command_stream.seekg(0, std::ios::beg);
 
 					if (modem_str.find("+CMGL:") != std::string::npos)
 					{
@@ -184,7 +188,7 @@ void Terminal::update(double millis)
 								report->read_message(*it, date);
 								report_sheet->add_report(report);
 
-								command_stream.str(command_stream.str() + "AT+CMGD=" + it->cmgl_id + "\n");
+								command_stream.str(command_stream.str() + "AT+CMGD=" + it->cmgl_id + COMMAND_NEWLINE_CHAR);
 							}
 							else if (it->type == Message::TYPE_REPORT_ENGLISH)
 							{
@@ -192,7 +196,25 @@ void Terminal::update(double millis)
 								report->read_message(*it, english_date);
 								english_report_sheet->add_report(report);
 
-								command_stream.str(command_stream.str() + "AT+CMGD=" + it->cmgl_id + "\n");
+								command_stream.str(command_stream.str() + "AT+CMGD=" + it->cmgl_id + COMMAND_NEWLINE_CHAR);
+							}
+							else if (it->type == Message::TYPE_REFERRAL)
+							{
+								Referral referral;
+								referral.read_message(*it);
+								if (referral.found_dest())
+								{
+									command_stream.str(command_stream.str() + "AT+CMGS=" + referral.dest_number +
+																			  "\nName:" + referral.name +
+																			  "\nNumber:" + referral.number +
+																			  "\nInfo:" + referral.info +
+																			  COMMAND_ESCAPE_CHAR + COMMAND_NEWLINE_CHAR + "AT+CMGD=" + it->cmgl_id + COMMAND_NEWLINE_CHAR);
+									//referral_list.add_sent(referral);
+								}
+								else
+								{
+									//referral_list.add_unsent(referral);
+								}
 							}
 						}
 						cur_messages.clear();
@@ -201,15 +223,12 @@ void Terminal::update(double millis)
 
 					if (modem_str.find("+CMTI") != std::string::npos)
 					{
-						command_stream.str(command_stream.str() + "AT+CMGL=\"ALL\"\n");
+						command_stream.str(command_stream.str() + "AT+CMGL=\"ALL\"" + COMMAND_NEWLINE_CHAR);
 						reset = true;
 					}
 
 					if (reset)
 					{
-						command_stream.str("");
-						command_stream.clear();
-						command_stream.seekg(0, std::ios::beg);
 						got_modem = true;
 						modem_str = "";
 					}

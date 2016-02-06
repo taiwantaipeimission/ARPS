@@ -46,6 +46,8 @@ void Message::parse(std::string input, CompList* comp_list)
 			type = TYPE_REPORT;
 		else if (type_str == "ENGLISH")
 			type = TYPE_REPORT_ENGLISH;
+		else if (type_str == "REFERRAL")
+			type = TYPE_REFERRAL;
 		else
 			type = TYPE_UNKNOWN;
 	}

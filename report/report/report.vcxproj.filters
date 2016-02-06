@@ -57,6 +57,12 @@
     <ClCompile Include="Reminder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Referral.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ReferralRoutingTable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Modem.h">
@@ -96,6 +102,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Reminder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Referral.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ReferralRoutingTable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
