@@ -41,25 +41,26 @@ void ReportCollection::write_report_by_indiv(File* file)
 	report_by_indiv.print(file->file);
 }
 
-void ReportCollection::calculate_report_by_zone(CompList* comp_list, std::string date, bool english)
+void ReportCollection::calculate_report_by_zone(CompList* comp_list, std::wstring date, bool english)
 {
-	for (std::map<std::string, Report*>::iterator it = report_by_comp.reports.begin(); it != report_by_comp.reports.end(); ++it)
+	report_by_zone.reports.clear();
+	for (std::map<std::wstring, Report*>::iterator it = report_by_comp.reports.begin(); it != report_by_comp.reports.end(); ++it)
 	{
-			std::string comp_report_date = it->second->get_date();
+			std::wstring comp_report_date = it->second->get_date();
 			if (comp_list->areas.count(it->second->sender_number) > 0)
 			{
-				std::string zone_name = english ? comp_list->areas[it->second->sender_number].english_unit_name : comp_list->areas[it->second->sender_number].zone_name;
-				std::string zone_id_str = comp_report_date + ":" + zone_name;
+				std::wstring zone_name = english ? comp_list->areas[it->second->sender_number].english_unit_name : comp_list->areas[it->second->sender_number].zone_name;
+				std::wstring zone_id_str = comp_report_date + L":" + zone_name;
 
 				if (report_by_zone.reports.count(zone_id_str) > 0)
 				{
 					Report* zone_report = report_by_zone.reports[zone_id_str];
-					for (std::map<std::string, std::string>::iterator j = it->second->report_values.begin(); j != it->second->report_values.end(); ++j)
+					for (std::map<std::wstring, std::wstring>::iterator j = it->second->report_values.begin(); j != it->second->report_values.end(); ++j)
 					{
 						if (zone_report->report_values.count(j->first) > 0)
 						{
-							std::stringstream zone_report_ss;
-							std::stringstream comp_report_ss;
+							std::wstringstream zone_report_ss;
+							std::wstringstream comp_report_ss;
 
 							zone_report_ss.str(zone_report->report_values[j->first]);
 							comp_report_ss.str(j->second);
@@ -71,9 +72,9 @@ void ReportCollection::calculate_report_by_zone(CompList* comp_list, std::string
 							if (!zone_report_ss.fail() && !comp_report_ss.fail())
 							{
 								int new_zone_value = i_zone_report + i_comp_report;
-								char intstr[8];
-								_itoa_s(new_zone_value, intstr, 8, 10);
-								zone_report->report_values[j->first] = std::string(intstr);
+								wchar_t intstr[8];
+								_itow_s(new_zone_value, intstr, 8, 10);
+								zone_report->report_values[j->first] = std::wstring(intstr);
 							}
 						}
 						else

@@ -1,6 +1,6 @@
 #include "ReportEnglish.h"
 
-//const std::string ReportEnglish::key_list_array[] = { "CLASS_LEVEL", "TOTAL_STUDENTS", "NEW_STUDENTS", "NEW_INVESTIGATORS" };
+//const std::wstring ReportEnglish::key_list_array[] = { "CLASS_LEVEL", "TOTAL_STUDENTS", "NEW_STUDENTS", "NEW_INVESTIGATORS" };
 //const int ReportEnglish::num_keys = 4;
 
 ReportEnglish::ReportEnglish()
@@ -16,5 +16,5 @@ ReportEnglish::~ReportEnglish()
 
 void ReportEnglish::set_key_list()
 {
-	key_list = { "CLASSLEVEL", "TOTALSTUDENTS", "TOTALNONMEM", "NEWSTUDENTS", "NEWINV" };
+	key_list = { L"CLASSLEVEL", L"TOTALSTUDENTS", L"TOTALNONMEM", L"NEWSTUDENTS", L"NEWINV" };
 }

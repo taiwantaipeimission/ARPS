@@ -5,11 +5,11 @@
 class Area
 {
 public:
-	std::string ph_number;
-	std::string area_name;
-	std::string geog_area;			//Name of geographical area that the proselyting area covers
-	std::string zone_name;
-	std::string english_unit_name;
+	std::wstring ph_number;
+	std::wstring area_name;
+	std::wstring geog_area;			//Name of geographical area that the proselyting area covers
+	std::wstring zone_name;
+	std::wstring english_unit_name;
 
 	Area();
 	virtual ~Area();

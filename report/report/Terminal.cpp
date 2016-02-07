@@ -18,7 +18,7 @@
 #include "Reminder.h"
 #include "Referral.h"
 
-Terminal::Terminal(std::string date_in, std::string english_date_in, Modem* modem_in, ReportSheet* report_sheet_in, ReportSheet* english_report_sheet_in, CompList* comp_list_in, File* output_file_in)
+Terminal::Terminal(std::wstring date_in, std::wstring english_date_in, Modem* modem_in, ReportSheet* report_sheet_in, ReportSheet* english_report_sheet_in, CompList* comp_list_in, File* output_file_in)
 	: mode(MODE_AUTOMATIC), date(date_in), english_date(english_date_in), modem(modem_in), report_sheet(report_sheet_in), english_report_sheet(english_report_sheet_in), comp_list(comp_list_in), output_file(output_file_in), reminders()
 {
 	std::time(&cur_time);
@@ -42,7 +42,7 @@ void Terminal::set_mode(TerminalMode new_mode)
 	{
 		command_stream.clear();
 		command_stream.seekg(0, std::ios::beg);
-		command_stream.str("AT+CMGL=\"ALL\"\n");
+		command_stream.str(L"AT+CMGL=\"ALL\"\n");
 		
 		got_modem = true;
 		ms_to_wait = 0;
@@ -51,19 +51,19 @@ void Terminal::set_mode(TerminalMode new_mode)
 	mode = new_mode;
 }
 
-void Terminal::parse_messages(std::string raw_str)
+void Terminal::parse_messages(std::wstring raw_str)
 {
 	//parses messages from the raw_str modem output string
-	int start = raw_str.find("+CMGL:");
-	int end = raw_str.find("+CMGL:", start + 1) - 1;
-	while (start != std::string::npos)
+	int start = raw_str.find(L"+CMGL:");
+	int end = raw_str.find(L"+CMGL:", start + 1) - 1;
+	while (start != std::wstring::npos)
 	{
 		Message msg;
 		msg.parse(raw_str.substr(start, end - start + 1), comp_list);
 		cur_messages.push_back(msg);
 
 		start = end + 1;
-		end = raw_str.find("+CMGL:", start + 1) - 1;
+		end = raw_str.find(L"+CMGL:", start + 1) - 1;
 	}
 }
 
@@ -83,22 +83,22 @@ bool Terminal::send_reminders()
 		{
 			if (!it->sent)
 			{
-				for (std::map<std::string, Area>::iterator ci = comp_list->areas.begin(); ci != comp_list->areas.end(); ++ci)
+				for (std::map<std::wstring, Area>::iterator ci = comp_list->areas.begin(); ci != comp_list->areas.end(); ++ci)
 				{
 					bool send_it = false;
 					if (it->english)
 					{
-						if (ci->first != "" && english_report_sheet->reports.count(english_date + ":" + ci->second.area_name) <= 0 && ci->second.english_unit_name != "NONE")
+						if (ci->first != L"" && english_report_sheet->reports.count(english_date + L":" + ci->second.area_name) <= 0 && ci->second.english_unit_name != L"NONE")
 							send_it = true;
 					}
 					else
 					{
-						if (ci->first != "" && report_sheet->reports.count(date + ":" + ci->second.area_name) <= 0)
+						if (ci->first != L"" && report_sheet->reports.count(date + L":" + ci->second.area_name) <= 0)
 							send_it = true;
 					}
 					if (send_it)
 					{
-						command_stream.str(command_stream.str() + "AT+CMGS=\"" + ci->first + "\"" + "\nPlease remember to send in your key indicators." + COMMAND_ESCAPE_CHAR + COMMAND_NEWLINE_CHAR);
+						command_stream.str(command_stream.str() + L"AT+CMGS=\"" + ci->first + L"\"" + L"\nPlease remember to send in your key indicators." + COMMAND_ESCAPE_CHAR + COMMAND_NEWLINE_CHAR);
 						it->sent = true;
 						sent = true;
 					}
@@ -122,9 +122,9 @@ void Terminal::update(double millis)
 		//get char from modem
 		if (read)
 		{
-			std::string modem_ch_null = "";
+			std::wstring modem_ch_null = L"";
 			modem_ch_null += modem_ch;
-			std::cout << modem_ch_null;
+			std::wcout << modem_ch_null;
 			output_file->file << modem_ch_null;
 			modem_str += modem_ch_null;
 			got_modem = true;
@@ -172,11 +172,11 @@ void Terminal::update(double millis)
 				else	//eof
 				{
 					bool reset = false;
-					command_stream.str("");
+					command_stream.str(L"");
 					command_stream.clear();
 					command_stream.seekg(0, std::ios::beg);
 
-					if (modem_str.find("+CMGL:") != std::string::npos)
+					if (modem_str.find(L"+CMGL:") != std::wstring::npos)
 					{
 						parse_messages(modem_str);
 
@@ -188,7 +188,7 @@ void Terminal::update(double millis)
 								report->read_message(*it, date);
 								report_sheet->add_report(report);
 
-								command_stream.str(command_stream.str() + "AT+CMGD=" + it->cmgl_id + COMMAND_NEWLINE_CHAR);
+								command_stream.str(command_stream.str() + L"AT+CMGD=" + it->cmgl_id + COMMAND_NEWLINE_CHAR);
 							}
 							else if (it->type == Message::TYPE_REPORT_ENGLISH)
 							{
@@ -196,7 +196,7 @@ void Terminal::update(double millis)
 								report->read_message(*it, english_date);
 								english_report_sheet->add_report(report);
 
-								command_stream.str(command_stream.str() + "AT+CMGD=" + it->cmgl_id + COMMAND_NEWLINE_CHAR);
+								command_stream.str(command_stream.str() + L"AT+CMGD=" + it->cmgl_id + COMMAND_NEWLINE_CHAR);
 							}
 							else if (it->type == Message::TYPE_REFERRAL)
 							{
@@ -205,11 +205,11 @@ void Terminal::update(double millis)
 								referral.locate(comp_list);
 								if (referral.found_dest())
 								{
-									command_stream.str(command_stream.str() + "AT+CMGS=" + referral.dest_number +
-																			  "\nName:" + referral.name +
-																			  "\nNumber:" + referral.number +
-																			  "\nInfo:" + referral.info +
-																			  COMMAND_ESCAPE_CHAR + COMMAND_NEWLINE_CHAR + "AT+CMGD=" + it->cmgl_id + COMMAND_NEWLINE_CHAR);
+									command_stream.str(command_stream.str() + L"AT+CMGS=" + referral.dest_number +
+																			  L"\nName:" + referral.name +
+																			  L"\nNumber:" + referral.number +
+																			  L"\nInfo:" + referral.info +
+																			  COMMAND_ESCAPE_CHAR + COMMAND_NEWLINE_CHAR + L"AT+CMGD=" + it->cmgl_id + COMMAND_NEWLINE_CHAR);
 									//referral_list.add_sent(referral);
 								}
 								else
@@ -222,16 +222,21 @@ void Terminal::update(double millis)
 						reset = true;
 					}
 
-					if (modem_str.find("+CMTI") != std::string::npos)
+					if (modem_str.find(L"+CMTI") != std::wstring::npos)
 					{
-						command_stream.str(command_stream.str() + "AT+CMGL=\"ALL\"" + COMMAND_NEWLINE_CHAR);
+						command_stream.str(command_stream.str() + L"AT+CMGL=\"ALL\"" + COMMAND_NEWLINE_CHAR);
+						reset = true;
+					}
+
+					if (send_reminders())
+					{
 						reset = true;
 					}
 
 					if (reset)
 					{
 						got_modem = true;
-						modem_str = "";
+						modem_str = L"";
 					}
 				}
 			}

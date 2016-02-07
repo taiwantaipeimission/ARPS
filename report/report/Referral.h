@@ -6,13 +6,13 @@
 class Referral
 {
 public:
-	std::string src_number;
-	std::string src_name;
-	std::string dest_geog_area;
-	std::string dest_number;
-	std::string name;
-	std::string number;
-	std::string info;
+	std::wstring src_number;
+	std::wstring src_name;
+	std::wstring dest_geog_area;
+	std::wstring dest_number;
+	std::wstring name;
+	std::wstring number;
+	std::wstring info;
 
 	Referral();
 	virtual ~Referral();

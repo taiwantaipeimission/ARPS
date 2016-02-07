@@ -18,29 +18,29 @@ public:
 	};
 
 	Type type;
-	std::string id_str;
-	std::string sender_number;
+	std::wstring id_str;
+	std::wstring sender_number;
 	bool is_new;
 
-	std::vector<std::string> key_list;
-	std::map<std::string, std::string> report_values;
+	std::vector<std::wstring> key_list;
+	std::map<std::wstring, std::wstring> report_values;
 
 	Report();
 	virtual ~Report();
 
 	virtual void set_key_list();	//Initializes the key list for a specific type of report
-	virtual void read_message(Message msg, std::string date);
+	virtual void read_message(Message msg, std::wstring date);
 
-	std::string get_id_str();
-	std::string get_date();
-	std::string get_sender_name();
+	std::wstring get_id_str();
+	std::wstring get_date();
+	std::wstring get_sender_name();
 
 	bool operator==(Report& other);
 	bool operator!=(Report& other);
 
-	void add_field(std::string key, std::string value);
-	void remove_field(std::string key);
+	void add_field(std::wstring key, std::wstring value);
+	void remove_field(std::wstring key);
 
-	void read_processed(std::string input);
-	void print(std::ostream& output);
+	void read_processed(std::wstring input);
+	void print(std::wostream& output);
 };

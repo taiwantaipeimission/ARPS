@@ -1,14 +1,14 @@
 #include "File.h"
 
 
-File::File(std::string filepath_in, FileType file_type_in, bool append)
+File::File(std::wstring filepath_in, FileType file_type_in, bool append)
 	: filepath(filepath_in), file_type(file_type_in)
 {
 	open(append);
 }
 
 File::File()
-	: filepath(""), file_type(FILE_TYPE_INPUT)
+	: filepath(L""), file_type(FILE_TYPE_INPUT)
 {
 }
 
@@ -41,7 +41,7 @@ void File::close()
 	}
 }
 
-std::fstream* File::get_file()
+std::wfstream* File::get_file()
 {
 	return &file;
 }

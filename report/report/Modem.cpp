@@ -18,7 +18,7 @@ void Modem::system_error(char *name) {
 		0,
 		GetLastError(),
 		0,
-		(char *)&ptr,
+		(LPWSTR)&ptr,
 		1024,
 		NULL);
 
@@ -29,9 +29,8 @@ void Modem::system_error(char *name) {
 Modem::Modem()
 {
 	// open the comm port.
-
 	file = CreateFile(
-		"\\\\.\\COM1",     // address of name of the communications device
+		L"\\\\.\\COM1",     // address of name of the communications device
 		GENERIC_READ | GENERIC_WRITE,         // access (read-write) mode
 		0,                  // share mode
 		NULL,               // address of security descriptor
@@ -51,7 +50,7 @@ Modem::Modem()
 	port.fDtrControl = DTR_CONTROL_HANDSHAKE;
 	if (!GetCommState(file, &port))
 		system_error("getting comm state");
-	if (!BuildCommDCB("baud=9600 parity=n data=8 stop=1", &port))
+	if (!BuildCommDCB(L"baud=9600 parity=n data=8 stop=1", &port))
 		system_error("building comm DCB");
 	if (!SetCommState(file, &port))
 		system_error("adjusting port settings");

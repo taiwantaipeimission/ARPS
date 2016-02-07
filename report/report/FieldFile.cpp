@@ -1,7 +1,7 @@
 #include "FieldFile.h"
 
 
-FieldFile::FieldFile(std::string filepath_in)
+FieldFile::FieldFile(std::wstring filepath_in)
 : File(filepath_in, FILE_TYPE_INPUT)
 {
 	open();
@@ -19,17 +19,17 @@ FieldFile::~FieldFile()
 bool FieldFile::open()
 {
 	File::open();
-	std::string line;
-	std::string key;
-	std::string value;
+	std::wstring line;
+	std::wstring key;
+	std::wstring value;
 
 	std::getline(file, line);
 	while (file.good())
 	{
 		int key_beg_pos = 0;
-		int key_end_pos = line.find("=", key_beg_pos) - 1;
+		int key_end_pos = line.find(L"=", key_beg_pos) - 1;
 		int value_beg_pos = key_end_pos + 2;
-		int value_end_pos = line.find("\n", value_beg_pos + 1) - 1;
+		int value_end_pos = line.find(L"\n", value_beg_pos + 1) - 1;
 
 		key = line.substr(key_beg_pos, key_end_pos - key_beg_pos + 1);
 		value = line.substr(value_beg_pos, value_end_pos - value_beg_pos + 1);
@@ -46,7 +46,7 @@ void FieldFile::close()
 	File::close();
 }
 
-std::string FieldFile::get_field(std::string key)
+std::wstring FieldFile::get_field(std::wstring key)
 {
 	if (values.count(key) > 0)
 	{
@@ -54,6 +54,6 @@ std::string FieldFile::get_field(std::string key)
 	}
 	else
 	{
-		return "NA";
+		return L"NA";
 	}
 }

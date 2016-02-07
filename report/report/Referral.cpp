@@ -16,7 +16,7 @@ void Referral::read_message(Message msg)
 	src_number = msg.sender_number;
 	src_name = msg.sender_name;
 
-	std::stringstream ss(msg.contents);
+	std::wstringstream ss(msg.contents);
 	ss.ignore(1000, '\n');	//get rid of type line
 	ss.ignore(1000, '\n');	//get rid of type line
 	std::getline(ss, dest_geog_area);
@@ -26,8 +26,8 @@ void Referral::read_message(Message msg)
 
 bool Referral::locate(CompList* list)
 {
-	std::vector<std::string> potential_numbers;
-	for (std::map<std::string, Area>::iterator it = list->areas.begin(); it != list->areas.end(); ++it)
+	std::vector<std::wstring> potential_numbers;
+	for (std::map<std::wstring, Area>::iterator it = list->areas.begin(); it != list->areas.end(); ++it)
 	{
 		if (it->second.geog_area == dest_geog_area)
 		{
@@ -42,12 +42,12 @@ bool Referral::locate(CompList* list)
 	}
 	else
 	{
-		dest_number = "";
+		dest_number = L"";
 		return false;
 	}
 }
 
 bool Referral::found_dest()
 {
-	return(dest_number != "");
+	return(dest_number != L"");
 }

@@ -12,9 +12,9 @@ public:
 	bool sent;
 
 	Reminder();
-	Reminder(std::string time_str);
+	Reminder(std::wstring time_str);
 	virtual ~Reminder();
 
-	void read_time_str(std::string time_str);
+	void read_time_str(std::wstring time_str);
 };
 

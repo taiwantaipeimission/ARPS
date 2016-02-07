@@ -7,7 +7,7 @@ Reminder::Reminder()
 {
 }
 
-Reminder::Reminder(std::string time_str)
+Reminder::Reminder(std::wstring time_str)
 : Reminder()
 {
 	read_time_str(time_str);
@@ -17,13 +17,14 @@ Reminder::~Reminder()
 {
 }
 
-void Reminder::read_time_str(std::string time_str)
+void Reminder::read_time_str(std::wstring time_str)
 {
-	std::stringstream ss;
+	std::wstringstream ss;
 	ss.str(time_str);
 	ss >> tm_wday;
 	ss.ignore();
 	ss >> tm_hour;
 	ss.ignore();
 	ss >> tm_min;
+	tm_wday = tm_wday % 7;
 }

@@ -11,12 +11,12 @@ public:
 	
 	FieldFile path_file;
 	FieldFile config_file;
-	std::map<std::string, File*> files;
+	std::map<std::wstring, File*> files;
 
-	FileManager(std::string path_file_path_in);
+	FileManager(std::wstring path_file_path_in);
 	virtual ~FileManager();
 
-	bool open_file(std::string file_id, File::FileType type, bool append = false);
-	bool close_file(std::string file_id);
+	bool open_file(std::wstring file_id, File::FileType type, bool append = false);
+	bool close_file(std::wstring file_id);
 };
 

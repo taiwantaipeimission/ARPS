@@ -17,15 +17,15 @@ public:
 	};
 
 	MessageType type;
-	std::string sender_name;
-	std::string sender_number;
-	std::string contents;
-	std::string sent_date;
-	std::string cmgl_id;
+	std::wstring sender_name;
+	std::wstring sender_number;
+	std::wstring contents;
+	std::wstring sent_date;
+	std::wstring cmgl_id;
 
 	Message();
 	virtual ~Message();
 
-	void parse(std::string input, CompList* comp_list);
+	void parse(std::wstring input, CompList* comp_list);
 };
 

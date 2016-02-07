@@ -5,14 +5,14 @@
 #include "ReportEnglish.h"
 
 ReportSheet::ReportSheet()
-	: report_type(Report::TYPE_REGULAR), reports(), header_row("")
+	: report_type(Report::TYPE_REGULAR), reports(), header_row(L"")
 {
 }
 
 
 ReportSheet::~ReportSheet()
 {
-	for (std::map<std::string, Report*>::iterator it = reports.begin(); it != reports.end(); ++it)
+	for (std::map<std::wstring, Report*>::iterator it = reports.begin(); it != reports.end(); ++it)
 	{
 		delete it->second;
 	}
@@ -20,13 +20,13 @@ ReportSheet::~ReportSheet()
 
 void ReportSheet::add_report(Report* report)
 {
-	if (report->id_str != "")
+	if (report->id_str != L"")
 	{
 		reports[report->id_str] = report;
 	}
 }
 
-void ReportSheet::remove_report(std::string id_str)
+void ReportSheet::remove_report(std::wstring id_str)
 {
 	if (reports.count(id_str) > 0)
 	{
@@ -35,15 +35,15 @@ void ReportSheet::remove_report(std::string id_str)
 	}
 }
 
-void ReportSheet::read_stored_all(std::istream& input)
+void ReportSheet::read_stored_all(std::wistream& input)
 {
 	input.clear();
 	input.seekg(0, std::ios::beg);
 	if (input.good())
 	{
 		getline(input, header_row);
-		std::string id_str;
-		std::string date;
+		std::wstring id_str;
+		std::wstring date;
 
 		do
 		{
@@ -67,10 +67,10 @@ void ReportSheet::read_stored_all(std::istream& input)
 	}
 }
 
-void ReportSheet::print(std::ostream& output)
+void ReportSheet::print(std::wostream& output)
 {
-	output << header_row << "\n";
-	for (std::map<std::string, Report*>::iterator it = reports.begin(); it != reports.end(); ++it)
+	output << header_row << L"\n";
+	for (std::map<std::wstring, Report*>::iterator it = reports.begin(); it != reports.end(); ++it)
 	{
 		it->second->print(output);
 	}

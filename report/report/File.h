@@ -12,17 +12,17 @@ public:
 		FILE_TYPE_OUTPUT
 	};
 
-	std::string filepath;
+	std::wstring filepath;
 	FileType file_type;
-	std::fstream file;
+	std::wfstream file;
 
-	File(std::string filepath_in, FileType file_type_in, bool append = false);
+	File(std::wstring filepath_in, FileType file_type_in, bool append = false);
 	File();
 	virtual ~File();
 
 	bool open(bool append = false);
 	void close();
 	
-	std::fstream* get_file();
+	std::wfstream* get_file();
 };
 

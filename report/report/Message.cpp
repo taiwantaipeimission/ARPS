@@ -10,20 +10,20 @@ Message::~Message()
 {
 }
 
-void Message::parse(std::string input, CompList* comp_list)
+void Message::parse(std::wstring input, CompList* comp_list)
 {
-	sender_number = "";
-	sender_name = "";
-	int cmgl_id_start = input.find("CMGL: ");
-	if (cmgl_id_start != std::string::npos)
+	sender_number = L"";
+	sender_name = L"";
+	int cmgl_id_start = input.find(L"CMGL: ");
+	if (cmgl_id_start != std::wstring::npos)
 	{
 		cmgl_id_start += 6;
-		int cmgl_id_end = input.find(",", cmgl_id_start);
+		int cmgl_id_end = input.find(L",", cmgl_id_start);
 		cmgl_id = input.substr(cmgl_id_start, cmgl_id_end - cmgl_id_start);
 	}
 
-	int number_start = input.find("+886");
-	if (number_start != std::string::npos)
+	int number_start = input.find(L"+886");
+	if (number_start != std::wstring::npos)
 	{
 		sender_number = input.substr(number_start, 13);
 		if (comp_list && comp_list->areas.count(sender_number) > 0)
@@ -36,17 +36,17 @@ void Message::parse(std::string input, CompList* comp_list)
 
 	//change this later!
 
-	int type_start = input.find("TYPE:");
-	if (type_start != std::string::npos)
+	int type_start = input.find(L"TYPE:");
+	if (type_start != std::wstring::npos)
 	{
 		type_start = input.find_first_not_of(' ', type_start + 5);
-		int type_end = input.find("\n", type_start);
-		std::string type_str = input.substr(type_start, type_end - type_start);
-		if (type_str == "REPORT")
+		int type_end = input.find(L"\n", type_start);
+		std::wstring type_str = input.substr(type_start, type_end - type_start);
+		if (type_str == L"REPORT")
 			type = TYPE_REPORT;
-		else if (type_str == "ENGLISH")
+		else if (type_str == L"ENGLISH")
 			type = TYPE_REPORT_ENGLISH;
-		else if (type_str == "REFERRAL")
+		else if (type_str == L"REFERRAL")
 			type = TYPE_REFERRAL;
 		else
 			type = TYPE_UNKNOWN;

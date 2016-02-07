@@ -9,15 +9,15 @@ class FieldFile :
 	public File
 {
 public:
-	std::map<std::string, std::string> values;
+	std::map<std::wstring, std::wstring> values;
 
-	FieldFile(std::string filepath_in);
+	FieldFile(std::wstring filepath_in);
 	FieldFile();
 	virtual ~FieldFile();
 
 	bool FieldFile::open();
 	void FieldFile::close();
 	
-	std::string get_field(std::string field_name);
+	std::wstring get_field(std::wstring field_name);
 };
 

@@ -11,15 +11,15 @@ public:
 
 	Report::Type report_type;
 
-	std::map<std::string, Report*> reports;
-	std::string header_row;
+	std::map<std::wstring, Report*> reports;
+	std::wstring header_row;
 
 	ReportSheet();
 	virtual ~ReportSheet();
 
 	void add_report(Report* report);
-	void remove_report(std::string id_str);
-	void read_stored_all(std::istream& input);
-	void print(std::ostream& output);
+	void remove_report(std::wstring id_str);
+	void read_stored_all(std::wistream& input);
+	void print(std::wostream& output);
 };
 

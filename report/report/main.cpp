@@ -1,4 +1,4 @@
-#include <string.h>
+﻿#include <string.h>
 #include <iostream>
 
 
@@ -16,40 +16,64 @@
 #include "Area.h"
 #include "Reminder.h"
 
-#define OUTPUT "OUTPUT"
-#define PH_LIST "PH_LIST"
-#define REPORT_DATA "REPORT_DATA"
-#define REPORT_DATA_OLD "REPORT_DATA_OLD"
-#define REPORT_DATA_ZONE "REPORT_DATA_ZONE"
-#define ENGLISH_DATA "ENGLISH_DATA"
-#define ENGLISH_DATA_OLD "ENGLISH_DATA_OLD"
-#define ENGLISH_DATA_UNIT "ENGLISH_DATA_UNIT"
-#define REFERRAL_ROUTING_TABLE "REFERRAL_ROUTING_TABLE"
-#define REFERRAL_HISTORY "REFERRAL_HISTORY"
+#define OUTPUT L"OUTPUT"
+#define PH_LIST L"PH_LIST"
+#define REPORT_DATA L"REPORT_DATA"
+#define REPORT_DATA_OLD L"REPORT_DATA_OLD"
+#define REPORT_DATA_ZONE L"REPORT_DATA_ZONE"
+#define ENGLISH_DATA L"ENGLISH_DATA"
+#define ENGLISH_DATA_OLD L"ENGLISH_DATA_OLD"
+#define ENGLISH_DATA_UNIT L"ENGLISH_DATA_UNIT"
+#define REFERRAL_ROUTING_TABLE L"REFERRAL_ROUTING_TABLE"
+#define REFERRAL_HISTORY L"REFERRAL_HISTORY"
 
-void show_report_status(ReportCollection* report_collection, CompList* comp_list, std::string date, bool english = false)
+void show_report_status(ReportCollection* report_collection, CompList* comp_list, std::wstring date, bool english = false)
 {
 	std::cout << "Received\t\tNot received\n=============================================" << std::endl;
-	for (std::map<std::string, Area>::iterator it = comp_list->areas.begin(); it != comp_list->areas.end(); ++it)
+	for (std::map<std::wstring, Area>::iterator it = comp_list->areas.begin(); it != comp_list->areas.end(); ++it)
 	{
-		std::string id_str = date + ":" + it->second.area_name;
-		if (!english || it->second.english_unit_name != "")
+		std::wstring id_str = date + L":" + it->second.area_name;
+		if (!english || it->second.english_unit_name != L"")
 		{
 			if (report_collection->report_by_comp.reports.count(id_str) > 0)
 			{
-				std::cout << it->second.area_name << std::endl;
+				std::wcout << it->second.area_name << std::endl;
 			}
 			else
 			{
-				std::cout << "\t\t\t" << it->second.area_name << std::endl;
+				std::wcout << L"\t\t\t" << it->second.area_name << std::endl;
 			}
 		}
 	}
 }
 
+void save(FileManager* file_manager, ReportCollection* report_collection, ReportCollection* report_collection_english, CompList* comp_list, std::wstring date, std::wstring english_date)
+{
+	//open output files
+	file_manager->open_file(REPORT_DATA, File::FILE_TYPE_OUTPUT);
+	file_manager->open_file(REPORT_DATA_ZONE, File::FILE_TYPE_OUTPUT);
+
+	file_manager->open_file(ENGLISH_DATA, File::FILE_TYPE_OUTPUT);
+	file_manager->open_file(ENGLISH_DATA_UNIT, File::FILE_TYPE_OUTPUT);
+
+
+	report_collection->write_report_by_comp(file_manager->files[REPORT_DATA]);
+	report_collection->calculate_report_by_zone(comp_list, date);
+	report_collection->write_report_by_zone(file_manager->files[REPORT_DATA_ZONE]);
+
+	report_collection_english->write_report_by_comp(file_manager->files[ENGLISH_DATA]);
+	report_collection_english->calculate_report_by_zone(comp_list, english_date, true);
+	report_collection_english->write_report_by_zone(file_manager->files[ENGLISH_DATA_UNIT]);
+
+	file_manager->close_file(REPORT_DATA);
+	file_manager->close_file(REPORT_DATA_ZONE);
+	file_manager->close_file(ENGLISH_DATA);
+	file_manager->close_file(ENGLISH_DATA_UNIT);
+}
+
 int main(int argc, char **argv)
 {
-	FileManager file_manager("paths.txt");
+	FileManager file_manager(L"paths.txt");
 	file_manager.open_file(OUTPUT, File::FILE_TYPE_OUTPUT, true);
 	file_manager.open_file(PH_LIST, File::FILE_TYPE_INPUT);
 	file_manager.open_file(REPORT_DATA, File::FILE_TYPE_INPUT);
@@ -61,10 +85,10 @@ int main(int argc, char **argv)
 	file_manager.files[REPORT_DATA_OLD]->file << file_manager.files[REPORT_DATA]->file.rdbuf();
 	file_manager.close_file(REPORT_DATA_OLD);
 
-	std::string date = file_manager.config_file.values["REPORT_DATE"];
-	std::string english_date = file_manager.config_file.values["ENGLISH_DATE"];
-	Reminder report_reminder(file_manager.config_file.values["REPORT_REMINDER"]);
-	Reminder english_reminder(file_manager.config_file.values["ENGLISH_REMINDER"]);
+	std::wstring date = file_manager.config_file.values[L"REPORT_DATE"];
+	std::wstring english_date = file_manager.config_file.values[L"ENGLISH_DATE"];
+	Reminder report_reminder(file_manager.config_file.values[L"REPORT_REMINDER"]);
+	Reminder english_reminder(file_manager.config_file.values[L"ENGLISH_REMINDER"]);
 	english_reminder.english = true;
 	
 	ReportCollection report_collection;
@@ -78,7 +102,7 @@ int main(int argc, char **argv)
 	comp_list.load(file_manager.files[PH_LIST]->file);
 
 	Modem modem;
-	std::stringstream command;
+	std::wstringstream command;
 	Terminal terminal(date, english_date, &modem, &report_collection.report_by_comp, &report_collection_english.report_by_comp, &comp_list, file_manager.files[OUTPUT]);
 	terminal.set_mode(Terminal::MODE_INACTIVE);
 	terminal.add_reminder(report_reminder);
@@ -99,7 +123,7 @@ int main(int argc, char **argv)
 	{
 
 		
-		std::cout << "1. Start\n2. Report status\n3. English report status\n4. Terminal\n5. Quit" << std::endl;
+		std::cout << "1. Start\n2. Report status\n3. English report status\n4. Terminal\n5. Save\n6. Quit" << std::endl;
 		char input_choice;
 		std::cin >> input_choice;
 		if (input_choice == '1')
@@ -111,6 +135,8 @@ int main(int argc, char **argv)
 		else if (input_choice == '4')
 			terminal.set_mode(Terminal::MODE_USER_INPUT);
 		else if (input_choice == '5')
+			save(&file_manager, &report_collection, &report_collection_english, &comp_list, date, english_date);
+		else if (input_choice == '6')
 			quit = true;
 
 		// basic terminal loop:
@@ -125,32 +151,13 @@ int main(int argc, char **argv)
 		}
 	}
 
-	//copy output file for safety
+	//save
 
+	save(&file_manager, &report_collection, &report_collection_english, &comp_list, date, english_date);
 
-	//open output files
-	file_manager.open_file(REPORT_DATA, File::FILE_TYPE_OUTPUT);
-	file_manager.open_file(REPORT_DATA_ZONE, File::FILE_TYPE_OUTPUT);
-
-	file_manager.open_file(ENGLISH_DATA, File::FILE_TYPE_OUTPUT);
-	file_manager.open_file(ENGLISH_DATA_UNIT, File::FILE_TYPE_OUTPUT);
-	
-	
-	report_collection.write_report_by_comp(file_manager.files[REPORT_DATA]);
-	report_collection.calculate_report_by_zone(&comp_list, date);
-	report_collection.write_report_by_zone(file_manager.files[REPORT_DATA_ZONE]);
-
-	report_collection_english.write_report_by_comp(file_manager.files[ENGLISH_DATA]);
-	report_collection_english.calculate_report_by_zone(&comp_list, english_date, true);
-	report_collection_english.write_report_by_zone(file_manager.files[ENGLISH_DATA_UNIT]);
-	
-	
 	//close output files
 	file_manager.close_file(OUTPUT);
-	file_manager.close_file(REPORT_DATA);
-	file_manager.close_file(REPORT_DATA_ZONE);
-	file_manager.close_file(ENGLISH_DATA);
-	file_manager.close_file(ENGLISH_DATA_UNIT);
+	
 	
 	return 0;
 }
