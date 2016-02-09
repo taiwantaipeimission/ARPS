@@ -1,7 +1,6 @@
 ﻿#include <string.h>
 #include <iostream>
 
-
 #include <fstream>
 #include <string>
 #include <sstream>
@@ -71,10 +70,50 @@ void save(FileManager* file_manager, ReportCollection* report_collection, Report
 	file_manager->close_file(ENGLISH_DATA_UNIT);
 }
 
+std::string to_utf8(const wchar_t* buffer, int len)
+{
+	int nChars = ::WideCharToMultiByte(
+		CP_UTF8,
+		0,
+		buffer,
+		len,
+		NULL,
+		0,
+		NULL,
+		NULL);
+	if (nChars == 0) return "";
+
+	std::string newbuffer;
+	newbuffer.resize(nChars);
+	::WideCharToMultiByte(
+		CP_UTF8,
+		0,
+		buffer,
+		len,
+		const_cast< char* >(newbuffer.c_str()),
+		nChars,
+		NULL,
+		NULL);
+
+	return newbuffer;
+}
+
+std::string to_utf8(const std::wstring& str)
+{
+	return to_utf8(str.c_str(), (int)str.size());
+}
+
 int main(int argc, char **argv)
 {
+
+
+
+
+
 	FileManager file_manager(L"paths.txt");
 	file_manager.open_file(OUTPUT, File::FILE_TYPE_OUTPUT, true);
+	file_manager.files[OUTPUT]->file << L"Test陳la";
+
 	file_manager.open_file(PH_LIST, File::FILE_TYPE_INPUT);
 	file_manager.open_file(REPORT_DATA, File::FILE_TYPE_INPUT);
 	file_manager.open_file(ENGLISH_DATA, File::FILE_TYPE_INPUT);
@@ -154,7 +193,7 @@ int main(int argc, char **argv)
 	//save
 
 	save(&file_manager, &report_collection, &report_collection_english, &comp_list, date, english_date);
-
+	
 	//close output files
 	file_manager.close_file(OUTPUT);
 	

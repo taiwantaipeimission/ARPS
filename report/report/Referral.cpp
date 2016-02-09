@@ -18,7 +18,6 @@ void Referral::read_message(Message msg)
 
 	std::wstringstream ss(msg.contents);
 	ss.ignore(1000, '\n');	//get rid of type line
-	ss.ignore(1000, '\n');	//get rid of type line
 	std::getline(ss, dest_geog_area);
 	std::getline(ss, name);
 	std::getline(ss, info);

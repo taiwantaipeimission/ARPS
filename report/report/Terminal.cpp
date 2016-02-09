@@ -42,7 +42,7 @@ void Terminal::set_mode(TerminalMode new_mode)
 	{
 		command_stream.clear();
 		command_stream.seekg(0, std::ios::beg);
-		command_stream.str(L"AT+CMGL=\"ALL\"\n");
+		command_stream.str(L"AT+CMGF=0\nAT+CMGL=4\nAT+CMGF=1\n");
 		
 		got_modem = true;
 		ms_to_wait = 0;
@@ -224,7 +224,7 @@ void Terminal::update(double millis)
 
 					if (modem_str.find(L"+CMTI") != std::wstring::npos)
 					{
-						command_stream.str(command_stream.str() + L"AT+CMGL=\"ALL\"" + COMMAND_NEWLINE_CHAR);
+						command_stream.str(command_stream.str() + L"AT+CMGF=0\nAT+CMGL=4\nAT+CMGF=1\n" + COMMAND_NEWLINE_CHAR);
 						reset = true;
 					}
 

@@ -1,5 +1,5 @@
 #include "File.h"
-
+#include <codecvt>
 
 File::File(std::wstring filepath_in, FileType file_type_in, bool append)
 	: filepath(filepath_in), file_type(file_type_in)
@@ -21,6 +21,7 @@ bool File::open(bool append)
 {
 	if (!file.is_open())
 	{
+		file.imbue(std::locale::global(std::locale("zh-TW")));
 		std::ios_base::openmode mode = 0;
 		if (file_type == FILE_TYPE_INPUT)
 			mode |= std::ios_base::in;
