@@ -37,15 +37,15 @@ std::wstring encode_phone_number(std::wstring ph_num_str)
 	std::wstringstream ss(ph_num_str);
 	ss.ignore(256, '+');
 	std::wstring encoded = L"";
-	int ph_num_octets = (ss.str().length() + 1) / 2;
 	wchar_t orig[3] = L"";
 	wchar_t swapped[3] = L"";
-	for (int i = 0; i < ph_num_octets; i++)
+	ss.get(orig, 3);
+	while(!ss.eof())
 	{
-		ss.get(orig, 3);
 		swapped[0] = orig[1] == EOF ? 'F' : orig[1];
 		swapped[1] = orig[0];
 		encoded += swapped;
+		ss.get(orig, 3);
 	}
 	return encoded;
 }
@@ -122,24 +122,33 @@ std::wstring extract_septets(std::wstringstream&ss, int length)
 std::wstring Message::encode(std::wstring dest_number)
 {
 	std::wstringstream encoded(L"");
-	std::wstring raw_pdu_contents = raw_pdu.substr(raw_pdu.length() - msg_length, msg_length);
-	encoded << std::hex << "001100" << dest_number.length() << "91";
+	std::wstring raw_pdu_contents = raw_pdu.substr(raw_pdu.length() - msg_length * 2, msg_length * 2);
 	std::wstring dest_number_encoded = encode_phone_number(dest_number);
-	encoded << dest_number_encoded << std::setfill('0') << std::setw(2) << std::hex << data_coding << "AA" << msg_length;
-	encoded << raw_pdu_contents;
+	encoded << std::hex
+			<< "001100"
+			<< std::setfill(L'0') << std::setw(2) << dest_number_encoded.length()
+			<< "91"
+			<< dest_number_encoded
+			<< "00"
+			<< std::setfill(L'0') << std::setw(2) << std::hex << data_coding
+			<< "ff"
+			<< std::setfill(L'0') << std::setw(2) << std::hex << msg_length
+			<< raw_pdu_contents;
 
 	return encoded.str();
 }
 
 void Message::parse(std::wstring input, CompList* comp_list)
 {
-	int newline_loc = input.find(L"\n");
-	input = input.substr(newline_loc + 1, input.size() - newline_loc);
-	raw_pdu = input;
-
 	std::wstringstream ss;
 	ss.clear();
 	ss.str(input);
+	ss.ignore(256, '\n');
+	ss >> raw_pdu;
+	ss.clear();
+	ss.seekg(0, std::ios::beg);
+	ss.str(raw_pdu);
+
 	int service_center_number_length = extract_octet_value(ss, 2);
 	int service_center_type = extract_octet_value(ss, 2);
 	std::wstring service_center_number = extract_phone_number(ss, service_center_number_length * 2);

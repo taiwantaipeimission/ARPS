@@ -105,10 +105,10 @@ std::string to_utf8(const std::wstring& str)
 
 int main(int argc, char **argv)
 {
-
-
-
-
+	Message msg;
+	msg.parse(L"\n0791889623048036240C9188960153984400006120900223012304D4F29C0E", NULL);
+	std::wstring encoded = msg.encode(L"+886910358944");
+	std::wcout << encoded << std::endl;
 
 	FileManager file_manager(L"paths.txt");
 	file_manager.open_file(OUTPUT, File::FILE_TYPE_OUTPUT, true);
@@ -187,6 +187,7 @@ int main(int argc, char **argv)
 			terminal.update(double(end - start) / (double)CLOCKS_PER_SEC * 1000.0f);
 			start = end;
 			end = clock();
+			Sleep(1);
 		}
 	}
 

@@ -205,10 +205,11 @@ void Terminal::update(double millis)
 								referral.locate(comp_list);
 								if (referral.found_dest())
 								{
-									command_stream.str(command_stream.str() + L"AT+CMGS=" + referral.dest_number +
-																			  L"\nName:" + referral.name +
-																			  L"\nNumber:" + referral.number +
-																			  L"\nInfo:" + referral.info +
+									std::wstring encoded_msg = it->encode(referral.dest_number);
+									std::wstringstream length(L"");
+									length << std::dec << (encoded_msg.length() / 2 - 1);
+
+									command_stream.str(command_stream.str() + L"AT+CMGF=0\nAT+CMGS=" + length.str() + L"\n" + encoded_msg +
 																			  COMMAND_ESCAPE_CHAR + COMMAND_NEWLINE_CHAR + L"AT+CMGD=" + it->cmgl_id + COMMAND_NEWLINE_CHAR);
 									//referral_list.add_sent(referral);
 								}
