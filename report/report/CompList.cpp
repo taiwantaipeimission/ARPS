@@ -62,7 +62,13 @@ void CompList::load(std::wistream& input)
 			}
 			if (*header_i == geog_area_header)
 			{
-				area_to_add.geog_area = *results_i;
+				std::wstringstream ss(*results_i);
+				std::wstring geog_area_name = L"";
+				do
+				{
+					ss >> geog_area_name;
+					area_to_add.geog_areas.push_back(geog_area_name);
+				} while (ss.good());
 			}
 		}
 		

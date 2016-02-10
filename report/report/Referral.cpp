@@ -28,7 +28,7 @@ bool Referral::locate(CompList* list)
 	std::vector<std::wstring> potential_numbers;
 	for (std::map<std::wstring, Area>::iterator it = list->areas.begin(); it != list->areas.end(); ++it)
 	{
-		if (it->second.geog_area == dest_geog_area)
+		if (std::count(it->second.geog_areas.begin(), it->second.geog_areas.end(), dest_geog_area) > 0)
 		{
 			potential_numbers.push_back(it->first);
 		}

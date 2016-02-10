@@ -44,7 +44,7 @@ Report::~Report()
 
 void Report::set_key_list()
 {
-	key_list = { L"A", L"B", L"C", L"D", L"NWBAP", L"BAP", L"CONF", L"BD", L"SAC", L"PK", L"OL", L"NIMISSFIND", L"NIMEMREF", L"RCLA", L"LAC", L"RCT" };
+	key_list = { L"A", L"B", L"C", L"D", L"NEXTWEEKBAP", L"BAP", L"CONF", L"BD", L"SAC", L"PK", L"OL", L"NIMISSFIND", L"NIMEMREF", L"RCLA", L"LAC", L"RCT" };
 }
 
 std::wstring Report::get_id_str()

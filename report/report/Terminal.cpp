@@ -56,11 +56,50 @@ void Terminal::parse_messages(std::wstring raw_str)
 	//parses messages from the raw_str modem output string
 	int start = raw_str.find(L"+CMGL:");
 	int end = raw_str.find(L"+CMGL:", start + 1) - 1;
+	std::vector<int> incomplete_indices;	//Vector containing all indices of messages fragmented due to length restrictions
 	while (start != std::wstring::npos)
 	{
 		Message msg;
 		msg.parse(raw_str.substr(start, end - start + 1), comp_list);
-		cur_messages.push_back(msg);
+		bool resolved = false;
+		if (incomplete_indices.size() > 0)
+		{
+			for (std::vector<int>::iterator index = incomplete_indices.begin(); index != incomplete_indices.end() && !resolved; )
+			{
+				if (cur_messages[*index].sender_number == msg.sender_number && cur_messages[*index].concat_refnum == msg.concat_refnum && cur_messages[*index].concat_index + 1 == msg.concat_index)
+				{
+					cur_messages[*index].contents += msg.contents;
+					cur_messages[*index].msg_length += msg.msg_length;
+					cur_messages[*index].concat_index = msg.concat_index;
+					cur_messages[*index].concatenated = false;
+					if (msg.concat_index == msg.concat_num_msgs)
+					{
+						index = incomplete_indices.erase(index);
+					}
+					else
+					{
+						++index;
+					}
+					resolved = true;
+				}
+				else
+				{
+					++index;
+				}
+			}
+		}
+		if (msg.concatenated)
+		{
+			if (!resolved)
+			{
+				cur_messages.push_back(msg);
+				incomplete_indices.push_back(cur_messages.size() - 1);
+			}
+		}
+		else
+		{
+			cur_messages.push_back(msg);
+		}
 
 		start = end + 1;
 		end = raw_str.find(L"+CMGL:", start + 1) - 1;
@@ -79,7 +118,7 @@ bool Terminal::send_reminders()
 	localtime_s(&cur_time_st, &cur_time);
 	for (std::vector<Reminder>::iterator it = reminders.begin(); it != reminders.end(); ++it)
 	{
-		if (it->tm_wday == cur_time_st.tm_wday)
+		if (it->tm_wday == cur_time_st.tm_wday && (it->tm_hour * 60 + it->tm_min) < (cur_time_st.tm_hour * 60 + cur_time_st.tm_min))
 		{
 			if (!it->sent)
 			{
@@ -182,40 +221,43 @@ void Terminal::update(double millis)
 
 						for (std::vector<Message>::iterator it = cur_messages.begin(); it != cur_messages.end(); ++it)
 						{
-							if (it->type == Message::TYPE_REPORT)
+							if (!it->concatenated)
 							{
-								Report* report = new Report();
-								report->read_message(*it, date);
-								report_sheet->add_report(report);
-
-								command_stream.str(command_stream.str() + L"AT+CMGD=" + it->cmgl_id + COMMAND_NEWLINE_CHAR);
-							}
-							else if (it->type == Message::TYPE_REPORT_ENGLISH)
-							{
-								ReportEnglish* report = new ReportEnglish();
-								report->read_message(*it, english_date);
-								english_report_sheet->add_report(report);
-
-								command_stream.str(command_stream.str() + L"AT+CMGD=" + it->cmgl_id + COMMAND_NEWLINE_CHAR);
-							}
-							else if (it->type == Message::TYPE_REFERRAL)
-							{
-								Referral referral;
-								referral.read_message(*it);
-								referral.locate(comp_list);
-								if (referral.found_dest())
+								if (it->type == Message::TYPE_REPORT)
 								{
-									std::wstring encoded_msg = it->encode(referral.dest_number);
-									std::wstringstream length(L"");
-									length << std::dec << (encoded_msg.length() / 2 - 1);
+									Report* report = new Report();
+									report->read_message(*it, date);
+									report_sheet->add_report(report);
 
-									command_stream.str(command_stream.str() + L"AT+CMGF=0\nAT+CMGS=" + length.str() + L"\n" + encoded_msg +
-																			  COMMAND_ESCAPE_CHAR + COMMAND_NEWLINE_CHAR + L"AT+CMGD=" + it->cmgl_id + COMMAND_NEWLINE_CHAR);
-									//referral_list.add_sent(referral);
+									command_stream.str(command_stream.str() + L"AT+CMGD=" + it->cmgl_id + COMMAND_NEWLINE_CHAR);
 								}
-								else
+								else if (it->type == Message::TYPE_REPORT_ENGLISH)
 								{
-									//referral_list.add_unsent(referral);
+									ReportEnglish* report = new ReportEnglish();
+									report->read_message(*it, english_date);
+									english_report_sheet->add_report(report);
+
+									command_stream.str(command_stream.str() + L"AT+CMGD=" + it->cmgl_id + COMMAND_NEWLINE_CHAR);
+								}
+								else if (it->type == Message::TYPE_REFERRAL)
+								{
+									Referral referral;
+									referral.read_message(*it);
+									referral.locate(comp_list);
+									if (referral.found_dest())
+									{
+										std::wstring encoded_msg = it->encode(referral.dest_number);
+										std::wstringstream length(L"");
+										length << std::dec << (encoded_msg.length() / 2 - 1);
+
+										command_stream.str(command_stream.str() + L"AT+CMGF=0\nAT+CMGS=" + length.str() + L"\n" + encoded_msg +
+											COMMAND_ESCAPE_CHAR + COMMAND_NEWLINE_CHAR + L"AT+CMGD=" + it->cmgl_id + COMMAND_NEWLINE_CHAR + L"AT+CMGF=1" + COMMAND_NEWLINE_CHAR);
+										//referral_list.add_sent(referral);
+									}
+									else
+									{
+										//referral_list.add_unsent(referral);
+									}
 								}
 							}
 						}

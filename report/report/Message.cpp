@@ -24,6 +24,9 @@ int get_octet_value(std::wstring octet_rep, int octet_size)
 	return octet_hex_value;
 }
 
+/* Extracts a hexadecimal value from the stringstream.
+ * octet_size: the number of characters per octet representation. (usually 2)
+ */
 int extract_octet_value(std::wstringstream& ss, int octet_size)
 {
 	wchar_t chars[256];
@@ -71,10 +74,10 @@ std::wstring extract_phone_number(std::wstringstream& ss, int ph_num_length)
 	return number;
 }
 
-std::wstring extract_septets(std::wstringstream&ss, int length)
+std::wstring extract_septets(std::wstringstream&ss, unsigned int length)
 {
 	std::vector<unsigned int> data;
-	for (int i = 0; i < length; i++)
+	for (unsigned int i = 0; i < length; i++)
 	{
 		int octet_value = extract_octet_value(ss, 2);
 		data.push_back(octet_value);
@@ -86,7 +89,7 @@ std::wstring extract_septets(std::wstringstream&ss, int length)
 	unsigned int base = 0u;
 	unsigned int adder = 0u;
 	unsigned int result = 0u;
-	while (index < length)
+	while (decoded_data.size() < length)
 	{
 		if (offset == 0)
 		{
@@ -151,7 +154,13 @@ void Message::parse(std::wstring input, CompList* comp_list)
 
 	int service_center_number_length = extract_octet_value(ss, 2);
 	int service_center_type = extract_octet_value(ss, 2);
-	std::wstring service_center_number = extract_phone_number(ss, service_center_number_length * 2);
+	std::wstring service_center_number = extract_phone_number(ss, service_center_number_length * 2 - 2);
+	int pdu_header = extract_octet_value(ss, 2);
+	bool has_udh = false;
+	{
+		has_udh = (pdu_header & 0x40) != 0;
+	}
+	
 	int sender_number_length = extract_octet_value(ss, 2);
 	int sender_number_type = extract_octet_value(ss, 2);
 	sender_number = extract_phone_number(ss, sender_number_length);
@@ -159,18 +168,56 @@ void Message::parse(std::wstring input, CompList* comp_list)
 	data_coding = extract_octet_value(ss, 2);
 	std::wstring time = extract_phone_number(ss, 14);
 	msg_length = extract_octet_value(ss, 2);
+	std::wstring udh;
 
 	contents = L"";
 	if (data_coding == 8)
 	{
-		for (int i = 0; i < (msg_length + 1) / 2; i++)
+		int i = 0;
+		if (has_udh)
 		{
-			contents.push_back(extract_octet_value(ss, 4));		//Extract in 2-byte octet pairs
+			int udhl = extract_octet_value(ss, 2);			//Length of the user data header
+			udh.push_back(extract_octet_value(ss, 2));		//IEI
+			extract_octet_value(ss, 2);						//IEDL
+			udh.push_back(extract_octet_value(ss, 2));		//IED: refnum
+			udh.push_back(extract_octet_value(ss, 2));		//IED: num of concat msgs
+			udh.push_back(extract_octet_value(ss, 2));		//IED: concat index of this msg
+			i += udhl;
+		}
+		int value = extract_octet_value(ss, 4);
+		while (ss.good())
+		{
+			contents.push_back(value);		//Extract in 2-byte octet pairs
+			value = extract_octet_value(ss, 4);
 		}
 	}
 	else
 	{
-		contents = extract_septets(ss, msg_length);
+		int udhl = 0;
+		if (has_udh)
+		{
+			int udhl = extract_octet_value(ss, 2);			//Length of the user data header
+			udh.push_back(extract_octet_value(ss, 2));		//IEI
+			extract_octet_value(ss, 2);						//IEDL
+			udh.push_back(extract_octet_value(ss, 2));		//IED: refnum
+			udh.push_back(extract_octet_value(ss, 2));		//IED: num of concat msgs
+			udh.push_back(extract_octet_value(ss, 2));		//IED: concat index of this msg
+		}
+		contents = extract_septets(ss, msg_length - udhl);
+	}
+	if (has_udh)
+	{
+		concatenated = (udh[0] == 0x0) || (udh[0] == 0x8);
+		concat_refnum = udh[1];
+		concat_num_msgs = udh[2];
+		concat_index = udh[3];
+	}
+	else
+	{
+		concatenated = false;
+		concat_refnum = 0;
+		concat_index = 0;
+		concat_num_msgs = 0;
 	}
 
 	if (comp_list && comp_list->areas.count(sender_number) > 0)
@@ -196,9 +243,6 @@ void Message::parse(std::wstring input, CompList* comp_list)
 			type = TYPE_UNKNOWN;
 	}
 
-	/*
-	sender_number = L"";
-	sender_name = L"";
 	int cmgl_id_start = input.find(L"CMGL: ");
 	if (cmgl_id_start != std::wstring::npos)
 	{
@@ -207,7 +251,7 @@ void Message::parse(std::wstring input, CompList* comp_list)
 		cmgl_id = input.substr(cmgl_id_start, cmgl_id_end - cmgl_id_start);
 	}
 
-	int number_start = input.find(L"+886");
+	/*int number_start = input.find(L"+886");
 	if (number_start != std::wstring::npos)
 	{
 		sender_number = input.substr(number_start, 13);

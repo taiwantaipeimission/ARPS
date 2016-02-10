@@ -42,12 +42,20 @@ void ReportSheet::read_stored_all(std::wistream& input)
 	if (input.good())
 	{
 		getline(input, header_row);
+		
 		std::wstring id_str;
 		std::wstring date;
 
 		do
 		{
-			std::getline(input, id_str);
+			wchar_t line[2028] = L"";
+			input.get(line, 2028, '\n');
+			input.ignore(1, '\n');
+			id_str = line;
+			bool eof = input.eof();
+			bool good = input.good();
+			bool fail = input.fail();
+			bool bad = input.bad();
 			Report* report;
 			if (report_type == Report::TYPE_REGULAR)
 			{
