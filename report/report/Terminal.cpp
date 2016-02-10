@@ -19,11 +19,9 @@
 #include "Referral.h"
 
 Terminal::Terminal(std::wstring date_in, std::wstring english_date_in, Modem* modem_in, ReportSheet* report_sheet_in, ReportSheet* english_report_sheet_in, CompList* comp_list_in, File* output_file_in)
-	: mode(MODE_AUTOMATIC), date(date_in), english_date(english_date_in), modem(modem_in), report_sheet(report_sheet_in), english_report_sheet(english_report_sheet_in), comp_list(comp_list_in), output_file(output_file_in), reminders()
+	: cmd_source(COMMAND_SOURCE_LOGIC), date(date_in), english_date(english_date_in), modem(modem_in), report_sheet(report_sheet_in), english_report_sheet(english_report_sheet_in), comp_list(comp_list_in), output_file(output_file_in), reminders()
 {
 	std::time(&cur_time);
-
-	set_mode(MODE_AUTOMATIC);
 }
 
 
@@ -31,12 +29,7 @@ Terminal::~Terminal()
 {
 }
 
-Terminal::TerminalMode Terminal::get_mode()
-{
-	return mode;
-}
-
-void Terminal::set_mode(TerminalMode new_mode)
+/*void Terminal::set_mode(TerminalMode new_mode)
 {
 	if (new_mode == MODE_AUTOMATIC)
 	{
@@ -49,12 +42,28 @@ void Terminal::set_mode(TerminalMode new_mode)
 	}
 
 	mode = new_mode;
+}*/
+
+void Terminal::init_auto()
+{
+	cmd_source = COMMAND_SOURCE_LOGIC;
+	command_stream.str(L"AT + CMGF = 0\nAT + CMGL = 4\nAT + CMGF = 1\n");
+	got_modem = true;
+	ms_to_wait = 0;
+}
+
+void Terminal::init_user()
+{
+	cmd_source = COMMAND_SOURCE_USER;
+	command_stream.str(L"");
+	got_modem = true;
+	ms_to_wait = 0;
 }
 
 void Terminal::parse_messages(std::wstring raw_str)
 {
 	//parses messages from the raw_str modem output string
-	int start = raw_str.find(L"+CMGL:");
+	int start = raw_str.find('\n', raw_str.find(L"+CMGL:")) + 1;
 	int end = raw_str.find(L"+CMGL:", start + 1) - 1;
 	std::vector<int> incomplete_indices;	//Vector containing all indices of messages fragmented due to length restrictions
 	while (start != std::wstring::npos)
@@ -93,12 +102,14 @@ void Terminal::parse_messages(std::wstring raw_str)
 			if (!resolved)
 			{
 				cur_messages.push_back(msg);
+				std::wcout << msg.contents << std::endl;
 				incomplete_indices.push_back(cur_messages.size() - 1);
 			}
 		}
 		else
 		{
 			cur_messages.push_back(msg);
+			std::wcout << msg.contents << std::endl;
 		}
 
 		start = end + 1;
@@ -152,156 +163,180 @@ bool Terminal::send_reminders()
 	return sent;
 }
 
-void Terminal::update(double millis)
+void Terminal::process_messages()
 {
-		ReadFile(modem->file, &modem_ch, 1, &read, NULL);
-
-		time(&cur_time);
-
-		//get char from modem
-		if (read)
+	for (std::vector<Message>::iterator it = cur_messages.begin(); it != cur_messages.end(); ++it)
+	{
+		if (!it->concatenated)
 		{
-			std::wstring modem_ch_null = L"";
-			modem_ch_null += modem_ch;
-			std::wcout << modem_ch_null;
-			output_file->file << modem_ch_null;
-			modem_str += modem_ch_null;
-			got_modem = true;
-
-			if (ms_to_wait > 0)
-				ms_to_wait = TIMEOUT_MS;	//reset wait timer: wait for another TIMOUT_MS ms before writing
-		}
-
-		//get char from user input
-		if (_kbhit())
-		{
-			user_ch = _getch();
-			got_user = true;
-		}
-		else
-		{
-			got_user = false;
-		}
-
-		if (mode == MODE_AUTOMATIC)
-		{
-			if (got_modem && ms_to_wait <= 0)
+			if (it->type == Message::TYPE_REPORT)
 			{
-				command_stream.get(command_ch);
-				if (!command_stream.eof())
-				{
-					if (command_ch == COMMAND_NEWLINE_CHAR)
-					{
-						WriteFile(modem->file, &command_ch, 1, &written, NULL);
-						ms_to_wait = TIMEOUT_MS;
-						got_modem = false;
-					}
-					else if (command_ch == COMMAND_ESCAPE_CHAR)
-					{
-						WriteFile(modem->file, "\u001A", 1, &written, NULL);
-						ms_to_wait = MSG_TIMEOUT_MS;
-						got_modem = false;
-					}
-					else
-					{
-						WriteFile(modem->file, &command_ch, 1, &written, NULL);
-						got_modem = false;
-					}
-				}
-				else	//eof
-				{
-					bool reset = false;
-					command_stream.str(L"");
-					command_stream.clear();
-					command_stream.seekg(0, std::ios::beg);
+				Report* report = new Report();
+				report->read_message(*it, date);
+				report_sheet->add_report(report);
 
-					if (modem_str.find(L"+CMGL:") != std::wstring::npos)
-					{
-						parse_messages(modem_str);
-
-						for (std::vector<Message>::iterator it = cur_messages.begin(); it != cur_messages.end(); ++it)
-						{
-							if (!it->concatenated)
-							{
-								if (it->type == Message::TYPE_REPORT)
-								{
-									Report* report = new Report();
-									report->read_message(*it, date);
-									report_sheet->add_report(report);
-
-									command_stream.str(command_stream.str() + L"AT+CMGD=" + it->cmgl_id + COMMAND_NEWLINE_CHAR);
-								}
-								else if (it->type == Message::TYPE_REPORT_ENGLISH)
-								{
-									ReportEnglish* report = new ReportEnglish();
-									report->read_message(*it, english_date);
-									english_report_sheet->add_report(report);
-
-									command_stream.str(command_stream.str() + L"AT+CMGD=" + it->cmgl_id + COMMAND_NEWLINE_CHAR);
-								}
-								else if (it->type == Message::TYPE_REFERRAL)
-								{
-									Referral referral;
-									referral.read_message(*it);
-									referral.locate(comp_list);
-									if (referral.found_dest())
-									{
-										std::wstring encoded_msg = it->encode(referral.dest_number);
-										std::wstringstream length(L"");
-										length << std::dec << (encoded_msg.length() / 2 - 1);
-
-										command_stream.str(command_stream.str() + L"AT+CMGF=0\nAT+CMGS=" + length.str() + L"\n" + encoded_msg +
-											COMMAND_ESCAPE_CHAR + COMMAND_NEWLINE_CHAR + L"AT+CMGD=" + it->cmgl_id + COMMAND_NEWLINE_CHAR + L"AT+CMGF=1" + COMMAND_NEWLINE_CHAR);
-										//referral_list.add_sent(referral);
-									}
-									else
-									{
-										//referral_list.add_unsent(referral);
-									}
-								}
-							}
-						}
-						cur_messages.clear();
-						reset = true;
-					}
-
-					if (modem_str.find(L"+CMTI") != std::wstring::npos)
-					{
-						command_stream.str(command_stream.str() + L"AT+CMGF=0\nAT+CMGL=4\nAT+CMGF=1\n" + COMMAND_NEWLINE_CHAR);
-						reset = true;
-					}
-
-					if (send_reminders())
-					{
-						reset = true;
-					}
-
-					if (reset)
-					{
-						got_modem = true;
-						modem_str = L"";
-					}
-				}
+				command_stream.str(command_stream.str() + L"AT+CMGD=" + it->cmgl_id + COMMAND_NEWLINE_CHAR);
 			}
-			if (got_user && user_ch == 27)
+			else if (it->type == Message::TYPE_REPORT_ENGLISH)
 			{
-				set_mode(MODE_INACTIVE);
-			}
-			if (ms_to_wait > 0)
-				ms_to_wait = max(0, ms_to_wait - millis);
-		}
+				ReportEnglish* report = new ReportEnglish();
+				report->read_message(*it, english_date);
+				english_report_sheet->add_report(report);
 
-		else 
-		{
-			if (mode == MODE_USER_INPUT)
+				command_stream.str(command_stream.str() + L"AT+CMGD=" + it->cmgl_id + COMMAND_NEWLINE_CHAR);
+			}
+			else if (it->type == Message::TYPE_REFERRAL)
 			{
-				if (got_user)
+				Referral referral;
+				referral.read_message(*it);
+				referral.locate(comp_list);
+				if (referral.found_dest())
 				{
-					if (user_ch != 27)
-						WriteFile(modem->file, &user_ch, 1, &written, NULL);
-					else
-						set_mode(MODE_INACTIVE);
+					std::wstring encoded_msg = it->encode(referral.dest_number);
+					std::wstringstream length(L"");
+					length << std::dec << (encoded_msg.length() / 2 - 1);
+
+					command_stream.str(command_stream.str() + L"AT+CMGF=0\nAT+CMGS=" + length.str() + L"\n" + encoded_msg +
+						COMMAND_ESCAPE_CHAR + COMMAND_NEWLINE_CHAR + L"AT+CMGD=" + it->cmgl_id + COMMAND_NEWLINE_CHAR + L"AT+CMGF=1" + COMMAND_NEWLINE_CHAR);
+					//referral_list.add_sent(referral);
+				}
+				else
+				{
+					//referral_list.add_unsent(referral);
 				}
 			}
 		}
-};
+	}
+}
+
+bool Terminal::update(double millis)
+{
+	bool ret_value = true;
+	ReadFile(modem->file, &modem_ch, 1, &read, NULL);
+
+	time(&cur_time);
+
+	//get char from modem
+	if (read)
+	{
+		std::wstring modem_ch_null = L"";
+		modem_ch_null += modem_ch;
+		std::wcout << modem_ch_null;
+		output_file->file << modem_ch_null;
+		modem_str += modem_ch_null;
+		got_modem = true;
+
+		if (ms_to_wait > 0)
+			ms_to_wait = TIMEOUT_MS;	//reset wait timer: wait for another TIMOUT_MS ms before writing
+	}
+
+	//get char from user input
+	wchar_t user_ch = '\0';
+	if (_kbhit())
+	{
+		user_ch = _getch();
+		got_user = true;
+	}
+	else
+	{
+		got_user = false;
+	}
+
+	if (cmd_source == COMMAND_SOURCE_LOGIC)
+	{
+		if (got_modem && ms_to_wait <= 0)
+		{
+			command_stream.get(command_ch);
+			if (!command_stream.eof())
+			{
+				if (command_ch == COMMAND_NEWLINE_CHAR)
+				{
+					WriteFile(modem->file, &command_ch, 1, &written, NULL);
+					ms_to_wait = TIMEOUT_MS;
+					got_modem = false;
+				}
+				else if (command_ch == COMMAND_ESCAPE_CHAR)
+				{
+					WriteFile(modem->file, "\u001A", 1, &written, NULL);
+					ms_to_wait = MSG_TIMEOUT_MS;
+					got_modem = false;
+				}
+				else
+				{
+					WriteFile(modem->file, &command_ch, 1, &written, NULL);
+					got_modem = false;
+				}
+			}
+			else	//eof
+			{
+				bool reset = false;
+				command_stream.str(L"");
+				command_stream.clear();
+				command_stream.seekg(0, std::ios::beg);
+
+				if (modem_str.find(L"+CMGL:") != std::wstring::npos)
+				{
+					parse_messages(modem_str);
+					process_messages();
+					cur_messages.clear();
+					reset = true;
+				}
+				if (modem_str.find(L"+CMTI") != std::wstring::npos)
+				{
+					command_stream.str(command_stream.str() + L"AT+CMGF=0\nAT+CMGL=4\nAT+CMGF=1\n" + COMMAND_NEWLINE_CHAR);
+					reset = true;
+				}
+				if (send_reminders())
+				{
+					reset = true;
+				}
+
+				if (reset)
+				{
+					got_modem = true;
+					modem_str = L"";
+				}
+			}
+		}
+		if (got_user && user_ch == 27)
+		{
+			ret_value = false;
+		}
+		
+	}
+	else if (cmd_source == COMMAND_SOURCE_USER)
+	{
+		//std::wcout << command_stream.str() << std::endl;
+		if (got_user)
+		{
+			if (user_ch != 27)
+			{
+				command_stream.str(command_stream.str() + user_ch);
+			}
+			else
+				ret_value = false;
+		}
+		if (got_modem && ms_to_wait <= 0)
+		{
+			command_stream.clear();
+			command_stream.get(command_ch);
+			if (!command_stream.eof())
+			{
+				if (command_ch == COMMAND_NEWLINE_CHAR)
+				{
+					WriteFile(modem->file, &command_ch, 1, &written, NULL);
+					ms_to_wait = TIMEOUT_MS;
+					got_modem = false;
+				}
+				else
+				{
+					WriteFile(modem->file, &command_ch, 1, &written, NULL);
+					got_modem = false;
+				}
+			}
+		}
+	}
+	if (ms_to_wait > 0)
+		ms_to_wait = max(0, ms_to_wait - millis);
+	return ret_value;
+}

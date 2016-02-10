@@ -146,7 +146,6 @@ void Message::parse(std::wstring input, CompList* comp_list)
 	std::wstringstream ss;
 	ss.clear();
 	ss.str(input);
-	ss.ignore(256, '\n');
 	ss >> raw_pdu;
 	ss.clear();
 	ss.seekg(0, std::ios::beg);

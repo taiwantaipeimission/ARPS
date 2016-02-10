@@ -118,9 +118,30 @@ std::wstring get_report_date_str(std::wstring report_wday)
 	return report_date;
 }
 
+class Console_streambuf
+	: public std::basic_streambuf<wchar_t>
+{
+	HANDLE m_out;
+public:
+	Console_streambuf(HANDLE out) : m_out(out) {}
+
+	virtual int_type overflow(int_type c = traits_type::eof())
+	{
+		wchar_t wc = c;
+		DWORD numberOfCharsWritten;
+		BOOL res = WriteConsoleW(m_out, &wc, 1, &numberOfCharsWritten, NULL);
+		(void)res;
+		return 1;
+	}
+};
+
+
 int main(int argc, char **argv)
 {
-
+	Console_streambuf out(GetStdHandle(STD_OUTPUT_HANDLE));
+	auto old_buf = std::wcout.rdbuf(&out);
+	std::wcout << L"привет, 猫咪!\n";
+	
 
 
 
@@ -177,7 +198,6 @@ int main(int argc, char **argv)
 	Modem modem;
 	std::wstringstream command;
 	Terminal terminal(report_date, english_date, &modem, &report_collection.report_by_comp, &report_collection_english.report_by_comp, &comp_list, file_manager.files[OUTPUT]);
-	terminal.set_mode(Terminal::MODE_INACTIVE);
 	terminal.add_reminder(report_reminder);
 	terminal.add_reminder(english_reminder);
 
@@ -201,7 +221,7 @@ int main(int argc, char **argv)
 		english_date = get_report_date_str(english_wday);
 		if (input_choice == '1')
 		{
-			terminal.set_mode(Terminal::MODE_AUTOMATIC);
+			terminal.init_auto();
 		}
 		else if (input_choice == '2')
 		{
@@ -212,7 +232,7 @@ int main(int argc, char **argv)
 			show_report_status(&report_collection_english, &comp_list, english_date, true);
 		}
 		else if (input_choice == '4')
-			terminal.set_mode(Terminal::MODE_USER_INPUT);
+			terminal.init_user();
 		else if (input_choice == '5')
 			save(&file_manager, &report_collection, &report_collection_english, &comp_list, report_date, english_date);
 		else if (input_choice == '6')
@@ -222,9 +242,8 @@ int main(int argc, char **argv)
 
 		clock_t start = clock();
 		clock_t end = start;
-		while (!quit && terminal.get_mode() != Terminal::MODE_INACTIVE)
+		while (!quit && terminal.update(double(end - start) / (double)CLOCKS_PER_SEC * 1000.0f))
 		{
-			terminal.update(double(end - start) / (double)CLOCKS_PER_SEC * 1000.0f);
 			start = end;
 			end = clock();
 			Sleep(1);
@@ -238,6 +257,6 @@ int main(int argc, char **argv)
 	//close output files
 	file_manager.close_file(OUTPUT);
 	
-	
+	std::wcout.rdbuf(old_buf);
 	return 0;
 }

@@ -14,11 +14,11 @@ class Reminder;
 class Terminal
 {
 public:
-	enum TerminalMode
+
+	enum CommandSource
 	{
-		MODE_USER_INPUT,
-		MODE_AUTOMATIC,
-		MODE_INACTIVE
+		COMMAND_SOURCE_USER,
+		COMMAND_SOURCE_LOGIC
 	};
 
 	static const int TIMEOUT_MS = 2500;
@@ -27,7 +27,7 @@ public:
 	static const wchar_t COMMAND_ESCAPE_CHAR = ';';
 	static const wchar_t COMMAND_NEWLINE_CHAR = '\n';
 
-	TerminalMode mode;
+	CommandSource cmd_source;
 
 	Modem* modem;
 	ReportSheet* report_sheet;
@@ -39,9 +39,10 @@ public:
 	std::vector<Reminder> reminders;
 
 	std::wstringstream command_stream;
+	
 	std::vector<Message> cur_messages;
 
-	wchar_t user_ch = 0;					//user input
+	
 	bool got_user = false;
 
 	wchar_t command_ch = 0;				//command stream input
@@ -52,18 +53,19 @@ public:
 	bool got_modem = false;
 
 	DWORD read, written;				//number of bytes read/written to modem
-	double ms_to_wait;			//time to wait before sending data, in ms
+	double ms_to_wait;					//time to wait before sending data, in ms
 	time_t cur_time;
 
 	Terminal(std::wstring date_in, std::wstring english_date_in, Modem* modem_in, ReportSheet* report_sheet_in, ReportSheet* english_report_sheet_in, CompList* comp_list_in, File* output_file_in);
 	virtual ~Terminal();
 
+	void init_auto();
+	void init_user();
 	void parse_messages(std::wstring raw_str);
+	void process_messages();
 	void add_reminder(Reminder reminder);
 	bool send_reminders();
-	void set_mode(TerminalMode new_mode);
-	TerminalMode get_mode();
 
-	void update(double millis);
+	bool update(double millis);		//returns false when it wants to quit
 };
 
