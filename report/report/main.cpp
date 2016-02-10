@@ -6,6 +6,7 @@
 #include <sstream>
 #include <vector>
 #include <ctime>
+#include "include/utf8.h"
 
 #include "Modem.h"
 #include "FileManager.h"
@@ -29,6 +30,8 @@
 
 //Characters
 #define DATE_STAMP_SEPARATOR_CHAR L":"
+
+using namespace std;
 
 std::wstring tos(int x)
 {
@@ -117,6 +120,20 @@ std::wstring get_report_date_str(std::wstring report_wday)
 
 int main(int argc, char **argv)
 {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	FileManager file_manager(L"paths.txt");
 	file_manager.open_file(OUTPUT, File::FILE_TYPE_OUTPUT, true);
 	std::wstring test = L"高級班";
