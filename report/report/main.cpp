@@ -15,6 +15,7 @@
 #include "Terminal.h"
 #include "Area.h"
 #include "Reminder.h"
+#include "Message.h"
 
 // File handles
 #define OUTPUT L"OUTPUT"
@@ -138,9 +139,33 @@ public:
 
 int main(int argc, char **argv)
 {
+	Message msg;
+
+	msg.contents = L"TYPE:REFERRAL\nZHONGSHAN\n歐巴馬\nThis guy is actually really cool.  We met him on the street.  He's black, and I think he's from America.  He speaks really good English and is super 帥. This text message is also really long.";
+	msg.dest_number = L"+886972576566";
+
+	std::vector<std::wstring> strings;
+
+	strings = encode_msg(&msg);
+
+	for (int i = 0; i < strings.size(); i++)
+		std::wcout << strings[i] << endl;
+
+
+
+
+
+		
+
+
+
+
+
+
+
 	Console_streambuf out(GetStdHandle(STD_OUTPUT_HANDLE));
 	auto old_buf = std::wcout.rdbuf(&out);
-	std::wcout << L"привет, 猫咪!\n";
+	std::wcout << "Loading..." << std::endl;
 	
 
 
@@ -157,15 +182,6 @@ int main(int argc, char **argv)
 
 	FileManager file_manager(L"paths.txt");
 	file_manager.open_file(OUTPUT, File::FILE_TYPE_OUTPUT, true);
-	std::wstring test = L"高級班";
-	file_manager.files[OUTPUT]->file << test;
-
-
-
-
-
-
-
 	file_manager.open_file(PH_LIST, File::FILE_TYPE_INPUT);
 	file_manager.open_file(REPORT_DATA, File::FILE_TYPE_INPUT);
 	file_manager.open_file(ENGLISH_DATA, File::FILE_TYPE_INPUT);

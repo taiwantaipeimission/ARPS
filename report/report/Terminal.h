@@ -23,7 +23,7 @@ public:
 	};
 
 	static const int TIMEOUT_MS = 2500;
-	static const int MSG_TIMEOUT_MS = 10000;
+	static const int MSG_TIMEOUT_MS = 20000;
 	static const wchar_t COMMAND_END_CHAR = EOF;
 	static const wchar_t COMMAND_ESCAPE_CHAR = ';';
 	static const wchar_t COMMAND_NEWLINE_CHAR = '\n';
@@ -51,7 +51,7 @@ public:
 
 	wchar_t modem_ch;						//character received
 	std::wstring modem_str;			//string of consecutive chars received
-	bool got_modem = false;
+	bool got_modem = true;
 
 	DWORD read, written;				//number of bytes read/written to modem
 	double ms_to_wait;					//time to wait before sending data, in ms

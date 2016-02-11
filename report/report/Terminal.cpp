@@ -49,9 +49,10 @@ void Terminal::init_auto()
 	cmd_source = COMMAND_SOURCE_LOGIC;
 	while (!command_stream.empty())
 		command_stream.pop();
-	push_command(L"AT + CMGF = 0\nAT + CMGL = 4\nAT + CMGF = 1\n");
+	push_command(L"ATE0AT + CMGF = 0\nAT + CMGL = 4\nAT + CMGF = 1\n");
 	got_modem = true;
 	ms_to_wait = 0;
+	cur_messages.clear();
 }
 
 void Terminal::init_user()
@@ -59,66 +60,9 @@ void Terminal::init_user()
 	cmd_source = COMMAND_SOURCE_USER;
 	while (!command_stream.empty())
 		command_stream.pop();
+	push_command(L"ATE0");
 	got_modem = true;
 	ms_to_wait = 0;
-}
-
-void Terminal::parse_messages(std::wstring raw_str)
-{
-	//parses messages from the raw_str modem output string
-	int start = raw_str.find(L"+CMGL:");
-	int end = raw_str.find(L"+CMGL:", start + 1) - 1;
-	std::vector<int> incomplete_indices;	//Vector containing all indices of messages fragmented due to length restrictions
-	while (start != std::wstring::npos)
-	{
-		Message msg;
-		std::wstring msg_str = raw_str.substr(start, end - start + 1);	//String containing message info as well as CMGL response of the modem
-		msg.parse(msg_str, comp_list);
-		bool resolved = false;
-		if (incomplete_indices.size() > 0)
-		{
-			for (std::vector<int>::iterator index = incomplete_indices.begin(); index != incomplete_indices.end() && !resolved; )
-			{
-				if (cur_messages[*index].sender_number == msg.sender_number && cur_messages[*index].concat_refnum == msg.concat_refnum && cur_messages[*index].concat_index + 1 == msg.concat_index)
-				{
-					cur_messages[*index].contents += msg.contents;
-					cur_messages[*index].msg_length += msg.msg_length;
-					cur_messages[*index].concat_index = msg.concat_index;
-					cur_messages[*index].concatenated = false;
-					if (msg.concat_index == msg.concat_num_msgs)
-					{
-						index = incomplete_indices.erase(index);
-					}
-					else
-					{
-						++index;
-					}
-					resolved = true;
-				}
-				else
-				{
-					++index;
-				}
-			}
-		}
-		if (msg.concatenated)
-		{
-			if (!resolved)
-			{
-				cur_messages.push_back(msg);
-				std::wcout << msg.contents << std::endl;
-				incomplete_indices.push_back(cur_messages.size() - 1);
-			}
-		}
-		else
-		{
-			cur_messages.push_back(msg);
-			std::wcout << msg.contents << std::endl;
-		}
-
-		start = end + 1;
-		end = raw_str.find(L"+CMGL:", start + 1) - 1;
-	}
 }
 
 void Terminal::add_reminder(Reminder reminder)
@@ -152,7 +96,7 @@ bool Terminal::send_reminders()
 					}
 					if (send_it)
 					{
-//						command_stream.str(command_stream.str() + L"AT+CMGS=\"" + ci->first + L"\"" + L"\nPlease remember to send in your key indicators." + COMMAND_ESCAPE_CHAR + COMMAND_NEWLINE_CHAR);
+						push_command(L"AT+CMGS=\"" + ci->first + L"\"" + L"\nPlease remember to send in your key indicators." + COMMAND_ESCAPE_CHAR);
 						it->sent = true;
 						sent = true;
 					}
@@ -167,10 +111,61 @@ bool Terminal::send_reminders()
 	return sent;
 }
 
+void Terminal::parse_messages(std::wstring raw_str)
+{
+	//parses messages from the raw_str modem output string
+	int start = raw_str.find(L"+CMGL:");
+	int end = raw_str.find(L"+CMGL:", start + 1) - 1;
+	std::map<int, std::vector<int>> concatenated_messages;		//map containing all concatenated msg indeces, keyed by concat_index
+	while (start != std::wstring::npos)
+	{
+		Message msg;
+		std::wstring msg_str = raw_str.substr(start, end - start + 1);	//String containing message info as well as CMGL response of the modem
+		decode_msg(&msg, msg_str, comp_list);
+		cur_messages.push_back(msg);
+		if (msg.concatenated)
+		{
+			concatenated_messages[msg.concat_refnum].push_back(cur_messages.size() - 1);
+			std::wcout << msg.contents << L"<text missing>" << std::endl;
+		}
+		else
+		{
+			std::wcout << msg.contents << std::endl;
+		}
+		start = end + 1;
+		end = raw_str.find(L"+CMGL:", start + 1) - 1;
+	}
+
+	//Attempt to piece together concatenated messages
+	for (std::map<int, std::vector<int>>::iterator it = concatenated_messages.begin(); it != concatenated_messages.end(); ++it)
+	{
+		std::vector<int> correct_order;
+		int num_msgs = cur_messages[*it->second.begin()].concat_num_msgs;
+		correct_order.assign(num_msgs, -1);		//Fill with -1s so we can see if any msgs are missing
+		for (std::vector<int>::iterator jt = it->second.begin(); jt != it->second.end(); ++jt)
+		{
+			int this_concat_index = cur_messages[*jt].concat_index;
+			correct_order[this_concat_index - 1] = *jt;					//Concat indeces inside msg start from 1, so subtract 1
+		}
+		if (std::count(correct_order.begin(), correct_order.end(), -1) == 0)	//All sub-msgs found that make up this concat msg
+		{
+			for (unsigned int i = 1; i < correct_order.size(); i++)
+			{
+				cur_messages[correct_order[0]].contents += cur_messages[correct_order[i]].contents;
+			}
+			cur_messages[correct_order[0]].concatenated = false;
+			std::wcout << cur_messages[correct_order[0]].contents << std::endl;
+		}
+	}
+
+	return;
+}
+
 void Terminal::process_messages()
 {
-	for (std::vector<Message>::iterator it = cur_messages.begin(); it != cur_messages.end(); ++it)
+	for (std::vector<Message>::iterator it = cur_messages.begin(); it != cur_messages.end(); )
 	{
+		bool remove_this_msg = false;
 		if (!it->concatenated)
 		{
 			if (it->type == Message::TYPE_REPORT)
@@ -179,7 +174,9 @@ void Terminal::process_messages()
 				report->read_message(*it, date);
 				report_sheet->add_report(report);
 
-				push_command(L"AT+CMGD=" + it->cmgl_id + COMMAND_NEWLINE_CHAR);
+				for (int i = 0; i < it->cmgl_ids.size(); i++)
+					push_command(L"AT+CMGD=" + it->cmgl_ids[i] + COMMAND_NEWLINE_CHAR);
+				remove_this_msg = true;
 			}
 			else if (it->type == Message::TYPE_REPORT_ENGLISH)
 			{
@@ -187,7 +184,9 @@ void Terminal::process_messages()
 				report->read_message(*it, english_date);
 				english_report_sheet->add_report(report);
 
-				push_command(L"AT+CMGD=" + it->cmgl_id + COMMAND_NEWLINE_CHAR);
+				for (int i = 0; i < it->cmgl_ids.size(); i++)
+					push_command(L"AT+CMGD=" + it->cmgl_ids[i] + COMMAND_NEWLINE_CHAR);
+				remove_this_msg = true;
 			}
 			else if (it->type == Message::TYPE_REFERRAL)
 			{
@@ -196,12 +195,21 @@ void Terminal::process_messages()
 				referral.locate(comp_list);
 				if (referral.found_dest())
 				{
-					std::wstring encoded_msg = it->encode(referral.dest_number);
-					std::wstringstream length(L"");
-					length << std::dec << (encoded_msg.length() / 2 - 1);
+					it->dest_number = referral.dest_number;
+					std::vector<std::wstring> encoded_msgs = encode_msg(&(*it));
+					
+					push_command(L"AT+CMGF=0" + COMMAND_NEWLINE_CHAR);
+					for (int i = 0; i < encoded_msgs.size(); i++)
+					{
+						std::wstringstream length(L"");
+						length << std::dec << (encoded_msgs[i].length() / 2 - 1);
+						push_command(L"AT+CMGS=" + length.str() + L"\n" + encoded_msgs[i] + COMMAND_ESCAPE_CHAR);
+					}
 
-					 push_command(L"AT+CMGF=0\nAT+CMGS=" + length.str() + L"\n" + encoded_msg +
-						COMMAND_ESCAPE_CHAR + COMMAND_NEWLINE_CHAR + L"AT+CMGD=" + it->cmgl_id + COMMAND_NEWLINE_CHAR + L"AT+CMGF=1" + COMMAND_NEWLINE_CHAR);
+					for (int i = 0; i < it->cmgl_ids.size(); i++)
+						push_command(L"AT+CMGD=" + it->cmgl_ids[i] + COMMAND_NEWLINE_CHAR); 
+					remove_this_msg = true;
+					push_command(L"AT+CMGF=1" + COMMAND_NEWLINE_CHAR);
 					//referral_list.add_sent(referral);
 				}
 				else
@@ -209,6 +217,14 @@ void Terminal::process_messages()
 					//referral_list.add_unsent(referral);
 				}
 			}
+		}
+		if (remove_this_msg)
+		{
+			it = cur_messages.erase(it);
+		}
+		else
+		{
+			++it;
 		}
 	}
 }
@@ -277,8 +293,8 @@ bool Terminal::update(double millis)
 				else
 				{
 					WriteFile(modem->file, &command_ch, 1, &written, NULL);
-					got_modem = false;
 				}
+				std::wcout << command_ch;
 			}
 			else	//eof
 			{
@@ -286,13 +302,16 @@ bool Terminal::update(double millis)
 				if (modem_str.find(L"+CMGL:") != std::wstring::npos)
 				{
 					parse_messages(modem_str);
+					reset = true;
+				}
+				if (cur_messages.size() > 0)
+				{
 					process_messages();
-					cur_messages.clear();
 					reset = true;
 				}
 				if (modem_str.find(L"+CMTI") != std::wstring::npos)
 				{
-					push_command(L"AT+CMGF=0\nAT+CMGL=4\nAT+CMGF=1\n" + COMMAND_NEWLINE_CHAR);
+					push_command(L"AT+CMGF=0\nAT+CMGL=0\nAT+CMGF=1\n" + COMMAND_NEWLINE_CHAR);
 					reset = true;
 				}
 				if (send_reminders())
@@ -337,11 +356,17 @@ bool Terminal::update(double millis)
 					ms_to_wait = TIMEOUT_MS;
 					got_modem = false;
 				}
+				else if (command_ch == COMMAND_ESCAPE_CHAR)
+				{
+					WriteFile(modem->file, "\u001A", 1, &written, NULL);
+					ms_to_wait = MSG_TIMEOUT_MS;
+					got_modem = false;
+				}
 				else
 				{
 					WriteFile(modem->file, &command_ch, 1, &written, NULL);
-					got_modem = false;
 				}
+				std::wcout << command_ch;
 			}
 		}
 	}
