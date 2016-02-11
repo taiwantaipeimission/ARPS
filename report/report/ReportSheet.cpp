@@ -69,8 +69,6 @@ void ReportSheet::read_stored_all(std::wistream& input)
 				report->read_processed(id_str);
 				add_report(report);
 			}
-
-			
 		} while (input.good());
 	}
 }

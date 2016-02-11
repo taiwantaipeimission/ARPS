@@ -10,6 +10,7 @@ class Reminder;
 
 #include <sstream>
 #include <vector>
+#include <queue>
 
 class Terminal
 {
@@ -38,7 +39,7 @@ public:
 	std::wstring english_date;			//current date string for saving English reports
 	std::vector<Reminder> reminders;
 
-	std::wstringstream command_stream;
+	std::queue<wchar_t> command_stream;
 	
 	std::vector<Message> cur_messages;
 
@@ -65,7 +66,7 @@ public:
 	void process_messages();
 	void add_reminder(Reminder reminder);
 	bool send_reminders();
-
+	void push_command(std::wstring cmd);
 	bool update(double millis);		//returns false when it wants to quit
 };
 

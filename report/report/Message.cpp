@@ -146,6 +146,10 @@ void Message::parse(std::wstring input, CompList* comp_list)
 	std::wstringstream ss;
 	ss.clear();
 	ss.str(input);
+	if (input.find('\n') > 0)
+	{
+		ss.ignore(256, '\n');
+	}
 	ss >> raw_pdu;
 	ss.clear();
 	ss.seekg(0, std::ios::beg);
@@ -249,51 +253,4 @@ void Message::parse(std::wstring input, CompList* comp_list)
 		int cmgl_id_end = input.find(L",", cmgl_id_start);
 		cmgl_id = input.substr(cmgl_id_start, cmgl_id_end - cmgl_id_start);
 	}
-
-	/*int number_start = input.find(L"+886");
-	if (number_start != std::wstring::npos)
-	{
-		sender_number = input.substr(number_start, 13);
-		if (comp_list && comp_list->areas.count(sender_number) > 0)
-		{
-			sender_name = comp_list->areas[sender_number].area_name;
-		}
-		else
-			sender_name = sender_number;
-	}
-
-	int contents_start = input.find(L"\n", number_start) + 1;
-	std::wstring raw_contents = input.substr(contents_start, input.find_last_of(L"\r\n") - contents_start - 1);
-	
-	contents = L"";
-	int hex_value = 0;
-	std::wstringstream ss;
-	ss.str(L"");
-	ss.clear();
-	for (int i = 0; i + 3 < raw_contents.length(); i += 4)
-	{
-		ss.clear();
-		std::wstring substr = raw_contents.substr(i, 4);
-		ss << std::hex << substr;
-		ss >> hex_value;
-		contents.push_back(hex_value);
-	}
-
-	//change this later!
-
-	int type_start = contents.find(L"TYPE:");
-	if (type_start != std::wstring::npos)
-	{
-		type_start = contents.find_first_not_of(' ', type_start + 5);
-		int type_end = contents.find(L"\n", type_start);
-		std::wstring type_str = contents.substr(type_start, type_end - type_start);
-		if (type_str == L"REPORT")
-			type = TYPE_REPORT;
-		else if (type_str == L"ENGLISH")
-			type = TYPE_REPORT_ENGLISH;
-		else if (type_str == L"REFERRAL")
-			type = TYPE_REFERRAL;
-		else
-			type = TYPE_UNKNOWN;
-	}*/
 }

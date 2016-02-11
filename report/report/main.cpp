@@ -211,6 +211,7 @@ int main(int argc, char **argv)
 	
 
 	bool quit = false;
+	bool run_terminal = false;
 	
 	while (!quit)
 	{
@@ -222,31 +223,42 @@ int main(int argc, char **argv)
 		if (input_choice == '1')
 		{
 			terminal.init_auto();
+			run_terminal = true;
 		}
 		else if (input_choice == '2')
 		{
 			show_report_status(&report_collection, &comp_list, report_date, false);
+			run_terminal = false;
 		}
 		else if (input_choice == '3')
 		{
 			show_report_status(&report_collection_english, &comp_list, english_date, true);
+			run_terminal = false;
 		}
 		else if (input_choice == '4')
+		{
 			terminal.init_user();
+			run_terminal = true;
+		}
 		else if (input_choice == '5')
+		{
 			save(&file_manager, &report_collection, &report_collection_english, &comp_list, report_date, english_date);
+			run_terminal = false;
+		}
 		else if (input_choice == '6')
+		{
 			quit = true;
+			run_terminal = false;
+		}
 
 		// basic terminal loop:
 
 		clock_t start = clock();
 		clock_t end = start;
-		while (!quit && terminal.update(double(end - start) / (double)CLOCKS_PER_SEC * 1000.0f))
+		while (run_terminal && terminal.update(double(end - start) / (double)CLOCKS_PER_SEC * 1000.0f))
 		{
 			start = end;
 			end = clock();
-			Sleep(1);
 		}
 	}
 
