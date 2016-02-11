@@ -140,52 +140,51 @@ std::vector<std::wstring> encode_msg(Message* msg)
 	std::wstring dest_number_encoded = encode_phone_number(msg->dest_number);
 	int num_length = dest_number_encoded.length();
 
-	int num_concat_msgs = (msg->contents.length() * 4) / MAX_MSG_LEN + 1;
+	int num_concat_msgs = (msg->contents.length() * 2) / MAX_MSG_LEN + 1;
 	std::wstring remaining_contents(msg->contents);
 	std::vector<std::wstring> strings;
 
 	for (int i = 0; i < num_concat_msgs; i++)
 	{
-		int this_msg_length = std::min(remaining_contents.length(), (size_t)(MAX_MSG_LEN / 4));
+		int this_msg_length = std::min(remaining_contents.length(), (size_t)(MAX_MSG_LEN / 2));
+		int all_msg_data_length = this_msg_length * 2 + (num_concat_msgs > 1 ? 6 : 0);
 		std::wstring msg_chars = remaining_contents.substr((size_t)0, (size_t)this_msg_length);
 		remaining_contents = remaining_contents.substr(this_msg_length, remaining_contents.length() - this_msg_length);
 
+		int pdu_header = 0x11;
+		std::wstring udh;			//User data header
+		int udhl = 0;					//Length of user data header
+		if (num_concat_msgs > 1)
+		{
+			pdu_header |= 0x40;			//Indicate the presence of a user data header
+			udhl = 5;					//5 octets needed for concat info
+		}
 
 
 		std::wstringstream ss;
-		ss << "001100"
+		ss << "00"
+			<< std::hex << std::setfill(L'0') << std::setw(2) << pdu_header
+			<< "00"
 			<< std::hex << std::setfill(L'0') << std::setw(2) << num_length
 			<< "91"
 			<< dest_number_encoded
 			<< "00"
 			<< "08"
 			<< "AA"
-			<< std::hex << std::setfill(L'0') << std::setw(2) << (this_msg_length * 2)
-			<< encode_octet_value(msg_chars, 4);
+			<< std::hex << std::setfill(L'0') << std::setw(2) << all_msg_data_length;
+		if (num_concat_msgs > 1)
+		{
+			ss << "05"
+				<< "00"
+				<< "03"
+				<< "ff"
+				<< std::hex << std::setfill(L'0') << std::setw(2) << num_concat_msgs
+				<< std::hex << std::setfill(L'0') << std::setw(2) << ( i + 1);
+		}
+		ss << encode_octet_value(msg_chars, 4);
 		strings.push_back(ss.str());
 	}
 	return strings;
-
-
-
-
-
-	/*
-	std::wstringstream encoded(L"");
-	std::wstring raw_pdu_contents = msg->raw_pdu.substr(msg->raw_pdu.length() - msg->msg_length * 2, msg->msg_length * 2);
-	std::wstring dest_number_encoded = encode_phone_number(msg->dest_number);
-	encoded << std::hex
-			<< "001100"
-			<< std::setfill(L'0') << std::setw(2) << dest_number_encoded.length()
-			<< "91"
-			<< dest_number_encoded
-			<< "00"
-			<< std::setfill(L'0') << std::setw(2) << std::hex << msg->data_coding
-			<< "ff"
-			<< std::setfill(L'0') << std::setw(2) << std::hex << msg->msg_length
-			<< raw_pdu_contents;
-
-	return encoded.str();*/
 }
 
 bool decode_msg(Message* msg, std::wstring input, CompList* comp_list)

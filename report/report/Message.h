@@ -5,7 +5,7 @@
 #include "CompList.h"
 
 
-#define MAX_MSG_LEN 140	//140 characters of message (for 8-bit encoding)
+#define MAX_MSG_LEN 134 	//140 characters of message (for 8-bit encoding); take away 6 bits for possible UDH data
 
 class Message;
 
