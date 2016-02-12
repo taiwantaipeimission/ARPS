@@ -12,6 +12,8 @@ class Reminder;
 #include <vector>
 #include <queue>
 
+#define COMMAND_NEWLINE_CHAR L"\r"
+
 class Terminal
 {
 public:
@@ -24,9 +26,8 @@ public:
 
 	static const int TIMEOUT_MS = 2500;
 	static const int MSG_TIMEOUT_MS = 20000;
-	static const wchar_t COMMAND_END_CHAR = EOF;
 	static const wchar_t COMMAND_ESCAPE_CHAR = ';';
-	static const wchar_t COMMAND_NEWLINE_CHAR = '\n';
+	
 
 	CommandSource cmd_source;
 
@@ -64,6 +65,7 @@ public:
 	void init_user();
 	void parse_messages(std::wstring raw_str);
 	void process_messages();
+	void send_message(std::wstring dest_number, std::wstring message_contents);
 	void add_reminder(Reminder reminder);
 	bool send_reminders();
 	void push_command(std::wstring cmd);

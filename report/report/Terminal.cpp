@@ -1,4 +1,4 @@
-#define STRICT
+﻿#define STRICT
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <conio.h>
@@ -49,7 +49,15 @@ void Terminal::init_auto()
 	cmd_source = COMMAND_SOURCE_LOGIC;
 	while (!command_stream.empty())
 		command_stream.pop();
-	push_command(L"ATE0AT + CMGF = 0\nAT + CMGL = 4\nAT + CMGF = 1\n");
+	push_command(L"AT");
+	push_command(COMMAND_NEWLINE_CHAR);
+	push_command(L"AT+CMGF=0");
+	push_command(COMMAND_NEWLINE_CHAR);
+	/*push_command(L"AT+CMGL=4");
+	push_command(COMMAND_NEWLINE_CHAR);*/
+
+	send_message(L"+886910358944", L"TYPE:REFERRAL\nZHONGSHAN\n歐巴馬\nThis guy is actually really cool. We met him on the street. He's black, and I think he's from America. He speaks really good English and is super 帥. This text message is also really long.");
+
 	got_modem = true;
 	ms_to_wait = 0;
 	cur_messages.clear();
@@ -61,6 +69,8 @@ void Terminal::init_user()
 	while (!command_stream.empty())
 		command_stream.pop();
 	push_command(L"ATE0");
+	push_command(COMMAND_NEWLINE_CHAR);
+	
 	got_modem = true;
 	ms_to_wait = 0;
 }
@@ -175,7 +185,10 @@ void Terminal::process_messages()
 				report_sheet->add_report(report);
 
 				for (int i = 0; i < it->cmgl_ids.size(); i++)
-					push_command(L"AT+CMGD=" + it->cmgl_ids[i] + COMMAND_NEWLINE_CHAR);
+				{
+					push_command(L"AT+CMGD=" + it->cmgl_ids[i]);
+					push_command(COMMAND_NEWLINE_CHAR);
+				}
 				remove_this_msg = true;
 			}
 			else if (it->type == Message::TYPE_REPORT_ENGLISH)
@@ -185,7 +198,10 @@ void Terminal::process_messages()
 				english_report_sheet->add_report(report);
 
 				for (int i = 0; i < it->cmgl_ids.size(); i++)
-					push_command(L"AT+CMGD=" + it->cmgl_ids[i] + COMMAND_NEWLINE_CHAR);
+				{
+					push_command(L"AT+CMGD=" + it->cmgl_ids[i]);
+					push_command(COMMAND_NEWLINE_CHAR);
+				}
 				remove_this_msg = true;
 			}
 			else if (it->type == Message::TYPE_REFERRAL)
@@ -196,20 +212,16 @@ void Terminal::process_messages()
 				if (referral.found_dest())
 				{
 					it->dest_number = referral.dest_number;
-					std::vector<std::wstring> encoded_msgs = encode_msg(&(*it));
-					
-					push_command(L"AT+CMGF=0" + COMMAND_NEWLINE_CHAR);
-					for (int i = 0; i < encoded_msgs.size(); i++)
-					{
-						std::wstringstream length(L"");
-						length << std::dec << (encoded_msgs[i].length() / 2 - 1);
-						push_command(L"AT+CMGS=" + length.str() + L"\n" + encoded_msgs[i] + COMMAND_ESCAPE_CHAR);
-					}
+					send_message(it->dest_number, it->contents);
 
 					for (int i = 0; i < it->cmgl_ids.size(); i++)
-						push_command(L"AT+CMGD=" + it->cmgl_ids[i] + COMMAND_NEWLINE_CHAR); 
+					{
+						push_command(L"AT+CMGD=" + it->cmgl_ids[i]);
+						push_command(COMMAND_NEWLINE_CHAR);
+					}
 					remove_this_msg = true;
-					push_command(L"AT+CMGF=1" + COMMAND_NEWLINE_CHAR);
+					push_command(L"AT+CMGF=1");
+					push_command(COMMAND_NEWLINE_CHAR);
 					//referral_list.add_sent(referral);
 				}
 				else
@@ -226,6 +238,25 @@ void Terminal::process_messages()
 		{
 			++it;
 		}
+	}
+}
+
+void Terminal::send_message(std::wstring dest_ph_number, std::wstring msg_contents)
+{
+	Message msg;
+	msg.contents = msg_contents;
+	msg.dest_number = dest_ph_number;
+	std::vector<std::wstring> strings = encode_msg(&msg);
+	for (int i = 0; i < strings.size(); i++)
+	{
+		std::wstringstream cmd;
+		cmd << L"AT+CMGS=";
+		cmd << std::dec << (int)(strings[i].length() / 2 - 1);
+		cmd << COMMAND_NEWLINE_CHAR;
+		cmd << strings[i];
+		cmd << COMMAND_ESCAPE_CHAR;
+		std::wstring cmd_str = cmd.str();
+		push_command(cmd.str());
 	}
 }
 
@@ -274,29 +305,8 @@ bool Terminal::update(double millis)
 	{
 		if (got_modem && ms_to_wait <= 0)
 		{
-			if (command_stream.size() > 0)
-			{
-				command_ch = command_stream.front();
-				command_stream.pop();
-				if (command_ch == COMMAND_NEWLINE_CHAR)
-				{
-					WriteFile(modem->file, &command_ch, 1, &written, NULL);
-					ms_to_wait = TIMEOUT_MS;
-					got_modem = false;
-				}
-				else if (command_ch == COMMAND_ESCAPE_CHAR)
-				{
-					WriteFile(modem->file, "\u001A", 1, &written, NULL);
-					ms_to_wait = MSG_TIMEOUT_MS;
-					got_modem = false;
-				}
-				else
-				{
-					WriteFile(modem->file, &command_ch, 1, &written, NULL);
-				}
-				std::wcout << command_ch;
-			}
-			else	//eof
+
+			if(command_stream.size() <= 0)	//eof
 			{
 				bool reset = false;
 				if (modem_str.find(L"+CMGL:") != std::wstring::npos)
@@ -311,7 +321,8 @@ bool Terminal::update(double millis)
 				}
 				if (modem_str.find(L"+CMTI") != std::wstring::npos)
 				{
-					push_command(L"AT+CMGF=0\nAT+CMGL=0\nAT+CMGF=1\n" + COMMAND_NEWLINE_CHAR);
+					push_command(L"AT+CMGF=0\nAT+CMGL=0\nAT+CMGF=1\n");
+					push_command(COMMAND_NEWLINE_CHAR);
 					reset = true;
 				}
 				if (send_reminders())
@@ -334,40 +345,48 @@ bool Terminal::update(double millis)
 	}
 	else if (cmd_source == COMMAND_SOURCE_USER)
 	{
-		//std::wcout << command_stream.str() << std::endl;
 		if (got_user)
 		{
-			if (user_ch != 27)
+			if (user_ch == ',')
+			{
+				send_message(L"+886972576566", L"Hello there!");
+			}
+			else if (user_ch != 27)
 			{
 				command_stream.push(user_ch);
 			}
 			else
 				ret_value = false;
 		}
-		if (got_modem && ms_to_wait <= 0)
+		
+	}
+	if (got_modem && ms_to_wait <= 0)
+	{
+		if (command_stream.size() > 0)
 		{
-			if (command_stream.size() > 0)
+			command_ch = command_stream.front();
+			std::wstring command_ch_str = L"";
+			command_ch_str += command_ch;
+			command_stream.pop();
+			if (command_ch_str == COMMAND_NEWLINE_CHAR)
 			{
-				command_ch = command_stream.front();
-				command_stream.pop();
-				if (command_ch == COMMAND_NEWLINE_CHAR)
-				{
-					WriteFile(modem->file, &command_ch, 1, &written, NULL);
-					ms_to_wait = TIMEOUT_MS;
-					got_modem = false;
-				}
-				else if (command_ch == COMMAND_ESCAPE_CHAR)
-				{
-					WriteFile(modem->file, "\u001A", 1, &written, NULL);
-					ms_to_wait = MSG_TIMEOUT_MS;
-					got_modem = false;
-				}
-				else
-				{
-					WriteFile(modem->file, &command_ch, 1, &written, NULL);
-				}
-				std::wcout << command_ch;
+				WriteFile(modem->file, COMMAND_NEWLINE_CHAR, 1, &written, NULL);
+				ms_to_wait = TIMEOUT_MS;
+				got_modem = false;
+				std::wcout << std::endl;
 			}
+			else if (command_ch == COMMAND_ESCAPE_CHAR)
+			{
+				WriteFile(modem->file, "\u001A", 1, &written, NULL);
+				ms_to_wait = MSG_TIMEOUT_MS;
+				got_modem = false;
+				std::wcout << command_ch_str;
+			}
+			else
+			{
+				WriteFile(modem->file, &command_ch, 1, &written, NULL);
+				std::wcout << command_ch_str;
+			}	
 		}
 	}
 	if (ms_to_wait > 0)
