@@ -1,5 +1,6 @@
 #include "FileManager.h"
 #include <sstream>
+#include <iostream>
 
 FileManager::FileManager(std::wstring path_file_path_in)
 	: path_file(path_file_path_in), config_file(), files()
@@ -30,6 +31,9 @@ bool FileManager::open_file(std::wstring file_id, File::FileType type, bool appe
 			success = true;
 		}
 	}
+
+	if (!success)
+		std::wcout << "Error opening file:" << path_file.values[file_id] << std::endl;
 	return success;
 }
 

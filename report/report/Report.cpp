@@ -61,8 +61,8 @@ std::wstring Report::get_date()
 
 std::wstring Report::get_sender_name()
 {
-	int last_colon_pos = id_str.find_last_of(L":");
-	std::wstring name = id_str.substr(last_colon_pos, id_str.length() - last_colon_pos - 2);
+	int name_begin_pos = id_str.find_last_of(L":") + 1;
+	std::wstring name = id_str.substr(name_begin_pos, id_str.length() - name_begin_pos);
 	return name;
 }
 

@@ -23,10 +23,10 @@
 #define REPORT_DATA L"REPORT_DATA"
 #define REPORT_DATA_OLD L"REPORT_DATA_OLD"
 #define REPORT_DATA_ZONE L"REPORT_DATA_ZONE"
+#define REPORT_DATA_ZONE_MONTH L"REPORT_DATA_ZONE_MONTH"
 #define ENGLISH_DATA L"ENGLISH_DATA"
 #define ENGLISH_DATA_OLD L"ENGLISH_DATA_OLD"
 #define ENGLISH_DATA_UNIT L"ENGLISH_DATA_UNIT"
-#define REFERRAL_ROUTING_TABLE L"REFERRAL_ROUTING_TABLE"
 #define REFERRAL_HISTORY L"REFERRAL_HISTORY"
 
 //Characters
@@ -61,19 +61,22 @@ void show_report_status(ReportCollection* report_collection, CompList* comp_list
 	}
 }
 
-void save(FileManager* file_manager, ReportCollection* report_collection, ReportCollection* report_collection_english, CompList* comp_list, std::wstring date, std::wstring english_date)
+bool save(FileManager* file_manager, ReportCollection* report_collection, ReportCollection* report_collection_english, CompList* comp_list, std::wstring date, std::wstring english_date)
 {
 	//open output files
-	file_manager->open_file(REPORT_DATA, File::FILE_TYPE_OUTPUT);
-	file_manager->open_file(REPORT_DATA_ZONE, File::FILE_TYPE_OUTPUT);
+	bool success = file_manager->open_file(REPORT_DATA, File::FILE_TYPE_OUTPUT)
+		&& file_manager->open_file(REPORT_DATA_ZONE, File::FILE_TYPE_OUTPUT)
+		&& file_manager->open_file(REPORT_DATA_ZONE_MONTH, File::FILE_TYPE_OUTPUT)
+		&& file_manager->open_file(ENGLISH_DATA, File::FILE_TYPE_OUTPUT)
+		&& file_manager->open_file(ENGLISH_DATA_UNIT, File::FILE_TYPE_OUTPUT);
 
-	file_manager->open_file(ENGLISH_DATA, File::FILE_TYPE_OUTPUT);
-	file_manager->open_file(ENGLISH_DATA_UNIT, File::FILE_TYPE_OUTPUT);
-
+	/*if (!success)
+		return false;*/
 
 	report_collection->write_report_by_comp(file_manager->files[REPORT_DATA]);
 	report_collection->calculate_report_by_zone(comp_list, date);
 	report_collection->write_report_by_zone(file_manager->files[REPORT_DATA_ZONE]);
+	report_collection->write_report_by_zone_month(file_manager->files[REPORT_DATA_ZONE_MONTH]);
 
 	report_collection_english->write_report_by_comp(file_manager->files[ENGLISH_DATA]);
 	report_collection_english->calculate_report_by_zone(comp_list, english_date, true);
@@ -81,8 +84,11 @@ void save(FileManager* file_manager, ReportCollection* report_collection, Report
 
 	file_manager->close_file(REPORT_DATA);
 	file_manager->close_file(REPORT_DATA_ZONE);
+	file_manager->close_file(REPORT_DATA_ZONE_MONTH);
 	file_manager->close_file(ENGLISH_DATA);
 	file_manager->close_file(ENGLISH_DATA_UNIT);
+
+	return true;
 }
 
 /* Create the date stamp for a reporting period, based on the current time and the weekday of reporting.
@@ -139,53 +145,15 @@ public:
 
 int main(int argc, char **argv)
 {
-	Message msg;
-
-	msg.contents = L"TYPE:REFERRAL\nZHONGSHAN\n歐巴馬\nThis guy is actually really cool.  We met him on the street.  He's black, and I think he's from America.  He speaks really good English and is super 帥. This text message is also really long.";
-	msg.dest_number = L"+886972576566";
-
-	std::vector<std::wstring> strings;
-
-	strings = encode_msg(&msg);
-
-	for (int i = 0; i < strings.size(); i++)
-		std::wcout << strings[i] << endl;
-
-
-
-
-
-		
-
-
-
-
-
-
-
 	Console_streambuf out(GetStdHandle(STD_OUTPUT_HANDLE));
 	auto old_buf = std::wcout.rdbuf(&out);
 	std::wcout << "Loading..." << std::endl;
 	
-
-
-
-
-
-
-
-
-
-
-
-
-
 	FileManager file_manager(L"paths.txt");
 	file_manager.open_file(OUTPUT, File::FILE_TYPE_OUTPUT, true);
 	file_manager.open_file(PH_LIST, File::FILE_TYPE_INPUT);
 	file_manager.open_file(REPORT_DATA, File::FILE_TYPE_INPUT);
 	file_manager.open_file(ENGLISH_DATA, File::FILE_TYPE_INPUT);
-	file_manager.open_file(REFERRAL_ROUTING_TABLE, File::FILE_TYPE_OUTPUT);
 
 	file_manager.open_file(REPORT_DATA_OLD, File::FILE_TYPE_OUTPUT, true);
 	file_manager.files[REPORT_DATA_OLD]->file << "=========================";
@@ -220,7 +188,6 @@ int main(int argc, char **argv)
 	//close input files
 	file_manager.close_file(REPORT_DATA);
 	file_manager.close_file(ENGLISH_DATA);
-	file_manager.close_file(REFERRAL_ROUTING_TABLE);
 
 	// process string
 
