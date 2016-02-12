@@ -29,21 +29,6 @@ Terminal::~Terminal()
 {
 }
 
-/*void Terminal::set_mode(TerminalMode new_mode)
-{
-	if (new_mode == MODE_AUTOMATIC)
-	{
-		command_stream.clear();
-		command_stream.seekg(0, std::ios::beg);
-		command_stream.str(L"AT+CMGF=0\nAT+CMGL=4\nAT+CMGF=1\n");
-		
-		got_modem = true;
-		ms_to_wait = 0;
-	}
-
-	mode = new_mode;
-}*/
-
 void Terminal::init_auto()
 {
 	cmd_source = COMMAND_SOURCE_LOGIC;
@@ -322,33 +307,21 @@ bool Terminal::update(double millis)
 
 			if(command_stream.size() <= 0)	//eof
 			{
-				bool reset = false;
 				if (modem_str.find(L"+CMGL:") != std::wstring::npos)
 				{
 					parse_messages(modem_str);
-					reset = true;
+					modem_str = L"";
 				}
 				if (cur_messages.size() > 0)
 				{
 					process_messages();
-					reset = true;
 				}
 				if (modem_str.find(L"+CMTI") != std::wstring::npos)
 				{
 					push_command(L"AT+CMGL=0");
 					push_command(COMMAND_NEWLINE_CHAR);
-					reset = true;
 				}
-				if (send_reminders())
-				{
-					reset = true;
-				}
-
-				if (reset)
-				{
-					got_modem = true;
-					modem_str = L"";
-				}
+				send_reminders();
 			}
 		}
 		if (got_user && user_ch == 27)
