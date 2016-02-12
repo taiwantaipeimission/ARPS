@@ -162,6 +162,7 @@ void Terminal::parse_messages(std::wstring raw_str)
 			for (unsigned int i = 1; i < correct_order.size(); i++)
 			{
 				cur_messages[correct_order[0]].contents += cur_messages[correct_order[i]].contents;
+				cur_messages[correct_order[0]].cmgl_ids.push_back(cur_messages[correct_order[i]].cmgl_ids[0]);
 			}
 			cur_messages[correct_order[0]].concatenated = false;
 			std::wcout << cur_messages[correct_order[0]].contents << std::endl;
@@ -186,8 +187,7 @@ void Terminal::process_messages()
 
 				for (int i = 0; i < it->cmgl_ids.size(); i++)
 				{
-					push_command(L"AT+CMGD=" + it->cmgl_ids[i]);
-					push_command(COMMAND_NEWLINE_CHAR);
+					delete_message(it->cmgl_ids[i]);
 				}
 				remove_this_msg = true;
 			}
@@ -199,8 +199,7 @@ void Terminal::process_messages()
 
 				for (int i = 0; i < it->cmgl_ids.size(); i++)
 				{
-					push_command(L"AT+CMGD=" + it->cmgl_ids[i]);
-					push_command(COMMAND_NEWLINE_CHAR);
+					delete_message(it->cmgl_ids[i]);
 				}
 				remove_this_msg = true;
 			}
@@ -216,8 +215,7 @@ void Terminal::process_messages()
 
 					for (int i = 0; i < it->cmgl_ids.size(); i++)
 					{
-						push_command(L"AT+CMGD=" + it->cmgl_ids[i]);
-						push_command(COMMAND_NEWLINE_CHAR);
+						delete_message(it->cmgl_ids[i]);
 					}
 					remove_this_msg = true;
 					//referral_list.add_sent(referral);
@@ -226,6 +224,15 @@ void Terminal::process_messages()
 				{
 					//referral_list.add_unsent(referral);
 				}
+			}
+			else if (it->type == Message::TYPE_UNKNOWN)
+			{
+				output_file->file << it->sender_name << L":" << it->sender_number << L":" << it->contents << std::endl;
+				for (int i = 0; i < it->cmgl_ids.size(); i++)
+				{
+					delete_message(it->cmgl_ids[i]);
+				}
+				remove_this_msg = true;
 			}
 		}
 		if (remove_this_msg)
@@ -256,6 +263,15 @@ void Terminal::send_message(std::wstring dest_ph_number, std::wstring msg_conten
 		std::wstring cmd_str = cmd.str();
 		push_command(cmd.str());
 	}
+}
+
+void Terminal::delete_message(int msg_cmg_id)
+{
+	std::wstringstream cmgl_id(L"");
+	cmgl_id << std::dec << msg_cmg_id;
+	push_command(L"AT+CMGD=");
+	push_command(cmgl_id.str());
+	push_command(COMMAND_NEWLINE_CHAR);
 }
 
 void Terminal::push_command(std::wstring cmd)
@@ -319,7 +335,7 @@ bool Terminal::update(double millis)
 				}
 				if (modem_str.find(L"+CMTI") != std::wstring::npos)
 				{
-					push_command(L"AT+CMGF=0\nAT+CMGL=0\nAT+CMGF=1\n");
+					push_command(L"AT+CMGL=0");
 					push_command(COMMAND_NEWLINE_CHAR);
 					reset = true;
 				}
@@ -351,6 +367,9 @@ bool Terminal::update(double millis)
 			}
 			else if (user_ch != 27)
 			{
+				if (user_ch == '\r')
+					std::wcout << std::endl;
+				std::wcout << user_ch;
 				command_stream.push(user_ch);
 			}
 			else
@@ -366,24 +385,23 @@ bool Terminal::update(double millis)
 			std::wstring command_ch_str = L"";
 			command_ch_str += command_ch;
 			command_stream.pop();
+			if (cmd_source != COMMAND_SOURCE_USER)
+				std::wcout << command_ch_str;
 			if (command_ch_str == COMMAND_NEWLINE_CHAR)
 			{
 				WriteFile(modem->file, COMMAND_NEWLINE_CHAR, 1, &written, NULL);
 				ms_to_wait = TIMEOUT_MS;
 				got_modem = false;
-				std::wcout << std::endl;
 			}
 			else if (command_ch == COMMAND_ESCAPE_CHAR)
 			{
 				WriteFile(modem->file, "\u001A", 1, &written, NULL);
 				ms_to_wait = MSG_TIMEOUT_MS;
 				got_modem = false;
-				std::wcout << command_ch_str;
 			}
 			else
 			{
 				WriteFile(modem->file, &command_ch, 1, &written, NULL);
-				std::wcout << command_ch_str;
 			}	
 		}
 	}

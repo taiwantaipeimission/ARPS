@@ -66,6 +66,7 @@ public:
 	void parse_messages(std::wstring raw_str);
 	void process_messages();
 	void send_message(std::wstring dest_number, std::wstring message_contents);
+	void delete_message(int msg_cmg_id);
 	void add_reminder(Reminder reminder);
 	bool send_reminders();
 	void push_command(std::wstring cmd);
