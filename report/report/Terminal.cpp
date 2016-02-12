@@ -53,10 +53,10 @@ void Terminal::init_auto()
 	push_command(COMMAND_NEWLINE_CHAR);
 	push_command(L"AT+CMGF=0");
 	push_command(COMMAND_NEWLINE_CHAR);
-	/*push_command(L"AT+CMGL=4");
-	push_command(COMMAND_NEWLINE_CHAR);*/
+	push_command(L"AT+CMGL=4");
+	push_command(COMMAND_NEWLINE_CHAR);
 
-	send_message(L"+886910358944", L"TYPE:REFERRAL\nZHONGSHAN\n歐巴馬\nThis guy is actually really cool. We met him on the street. He's black, and I think he's from America. He speaks really good English and is super 帥. This text message is also really long.");
+	//send_message(L"+886910358944", L"TYPE:REFERRAL\nZHONGSHAN\n歐巴馬\nThis guy is actually really cool. We met him on the street. He's black, and I think he's from America. He speaks really good English and is super 帥. This text message is also really long.");
 
 	got_modem = true;
 	ms_to_wait = 0;
@@ -106,7 +106,7 @@ bool Terminal::send_reminders()
 					}
 					if (send_it)
 					{
-						push_command(L"AT+CMGS=\"" + ci->first + L"\"" + L"\nPlease remember to send in your key indicators." + COMMAND_ESCAPE_CHAR);
+						send_message(ci->first, L"\nPlease remember to send in your key indicators.");
 						it->sent = true;
 						sent = true;
 					}
@@ -220,8 +220,6 @@ void Terminal::process_messages()
 						push_command(COMMAND_NEWLINE_CHAR);
 					}
 					remove_this_msg = true;
-					push_command(L"AT+CMGF=1");
-					push_command(COMMAND_NEWLINE_CHAR);
 					//referral_list.add_sent(referral);
 				}
 				else

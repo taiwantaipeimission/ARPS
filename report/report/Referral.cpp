@@ -1,6 +1,7 @@
 #include "Referral.h"
 #include "Area.h"
 #include <sstream>
+#include <algorithm>
 
 Referral::Referral()
 {
@@ -11,16 +12,34 @@ Referral::~Referral()
 {
 }
 
+std::wstring find_value(std::wstring msg_contents, std::wstring key)
+{
+	int key_pos = msg_contents.find(L"\n" + key + L":");
+	int value_pos = msg_contents.find(':', key_pos) + 1;
+	int value_end_pos = std::min(msg_contents.find('\n', value_pos), msg_contents.find('\r', value_pos));
+
+	std::wstring value = L"0";
+	if (key_pos != std::wstring::npos && value_pos != std::wstring::npos)
+	{
+		if (value_pos != value_end_pos)
+		{
+			value = msg_contents.substr(value_pos, value_end_pos - value_pos);
+			value.erase(std::remove(value.begin(), value.end(), ' '), value.end());		//Strip whitespace from string
+			value.erase(std::remove(value.begin(), value.end(), '\n'), value.end());
+		}
+	}
+	return value;
+}
+
 void Referral::read_message(Message msg)
 {
 	src_number = msg.sender_number;
 	src_name = msg.sender_name;
 
-	std::wstringstream ss(msg.contents);
-	ss.ignore(1000, '\n');	//get rid of type line
-	std::getline(ss, dest_geog_area);
-	std::getline(ss, name);
-	std::getline(ss, info);
+	dest_geog_area = find_value(msg.contents, L"PLACE");
+	name = find_value(msg.contents, L"NAME");
+	number = find_value(msg.contents, L"NUMBER");
+	info = find_value(msg.contents, L"INFO");
 }
 
 bool Referral::locate(CompList* list)
