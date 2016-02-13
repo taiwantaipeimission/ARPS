@@ -293,6 +293,8 @@ bool decode_msg(Message* msg, std::wstring input, CompList* comp_list)
 			msg->type = Message::TYPE_REPORT;
 		else if (type_str == L"ENGLISH")
 			msg->type = Message::TYPE_REPORT_ENGLISH;
+		else if (type_str == L"BAPTISM")
+			msg->type = Message::TYPE_REPORT_BAPTISM;
 		else if (type_str == L"REFERRAL")
 			msg->type = Message::TYPE_REFERRAL;
 		else

@@ -33,7 +33,7 @@ bool FileManager::open_file(std::wstring file_id, File::FileType type, bool appe
 	}
 
 	if (!success)
-		std::wcout << "Error opening file:" << path_file.values[file_id] << std::endl;
+		std::wcout << "Error opening file " << file_id << " from " << path_file.values[file_id] << std::endl;
 	return success;
 }
 

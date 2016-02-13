@@ -45,9 +45,6 @@
     <ClCompile Include="Area.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ReportEnglish.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Report.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -87,9 +84,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Area.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ReportEnglish.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Report.h">

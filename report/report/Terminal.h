@@ -34,6 +34,7 @@ public:
 	Modem* modem;
 	ReportSheet* report_sheet;
 	ReportSheet* english_report_sheet;
+	ReportSheet* baptism_report_sheet;
 	CompList* comp_list;
 	File* output_file;
 	std::wstring date;					//current date string for saving regular reports
@@ -58,7 +59,7 @@ public:
 	double ms_to_wait;					//time to wait before sending data, in ms
 	time_t cur_time;
 
-	Terminal(std::wstring date_in, std::wstring english_date_in, Modem* modem_in, ReportSheet* report_sheet_in, ReportSheet* english_report_sheet_in, CompList* comp_list_in, File* output_file_in);
+	Terminal(std::wstring date_in, std::wstring english_date_in, Modem* modem_in, ReportSheet* report_sheet_in, ReportSheet* english_report_sheet_in, ReportSheet* baptism_report_sheet_in, CompList* comp_list_in, File* output_file_in);
 	virtual ~Terminal();
 
 	void init_auto();

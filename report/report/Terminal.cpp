@@ -10,7 +10,6 @@
 #include "Terminal.h"
 #include "Modem.h"
 #include "ReportSheet.h"
-#include "ReportEnglish.h"
 #include "CompList.h"
 #include "Message.h"
 #include "Area.h"
@@ -18,8 +17,8 @@
 #include "Reminder.h"
 #include "Referral.h"
 
-Terminal::Terminal(std::wstring date_in, std::wstring english_date_in, Modem* modem_in, ReportSheet* report_sheet_in, ReportSheet* english_report_sheet_in, CompList* comp_list_in, File* output_file_in)
-	: cmd_source(COMMAND_SOURCE_LOGIC), date(date_in), english_date(english_date_in), modem(modem_in), report_sheet(report_sheet_in), english_report_sheet(english_report_sheet_in), comp_list(comp_list_in), output_file(output_file_in), reminders()
+Terminal::Terminal(std::wstring date_in, std::wstring english_date_in, Modem* modem_in, ReportSheet* report_sheet_in, ReportSheet* english_report_sheet_in, ReportSheet* baptism_report_sheet_in, CompList* comp_list_in, File* output_file_in)
+	: cmd_source(COMMAND_SOURCE_LOGIC), date(date_in), english_date(english_date_in), modem(modem_in), report_sheet(report_sheet_in), english_report_sheet(english_report_sheet_in), baptism_report_sheet(baptism_report_sheet_in), comp_list(comp_list_in), output_file(output_file_in), reminders()
 {
 	std::time(&cur_time);
 }
@@ -166,8 +165,9 @@ void Terminal::process_messages()
 		{
 			if (it->type == Message::TYPE_REPORT)
 			{
-				Report* report = new Report();
-				report->read_message(*it, date);
+				Report report;
+				report.set_type(Report::TYPE_REGULAR);
+				report.read_message(*it, date);
 				report_sheet->add_report(report);
 
 				for (int i = 0; i < it->cmgl_ids.size(); i++)
@@ -175,11 +175,19 @@ void Terminal::process_messages()
 					delete_message(it->cmgl_ids[i]);
 				}
 				remove_this_msg = true;
+
+				int baptisms = _wtoi(report.report_values[L"BAP"].c_str());
+				if (baptisms > 0)
+				{
+					send_message(it->sender_number, L"Congratulations on your baptism[s]! Please send in one copy of this template per baptism.");
+					send_message(it->sender_number, L"TYPE:BAPTISM\nCONV_NAME:\nBP_DATE:\nCONF_DATE:\nWARD:\nADDR:\nPH_NUM:\nBAP_SRC:");
+				}
 			}
 			else if (it->type == Message::TYPE_REPORT_ENGLISH)
 			{
-				ReportEnglish* report = new ReportEnglish();
-				report->read_message(*it, english_date);
+				Report report;
+				report.set_type(Report::TYPE_ENGLISH);
+				report.read_message(*it, english_date);
 				english_report_sheet->add_report(report);
 
 				for (int i = 0; i < it->cmgl_ids.size(); i++)
@@ -187,6 +195,19 @@ void Terminal::process_messages()
 					delete_message(it->cmgl_ids[i]);
 				}
 				remove_this_msg = true;
+			}
+			else if (it->type == Message::TYPE_REPORT_BAPTISM)
+			{
+				Report report;
+				report.set_type(Report::TYPE_BAPTISM);
+				report.read_message(*it, date);
+				baptism_report_sheet->add_report(report);
+
+				/*remove_this_msg = true;
+				for (int i = 0; i < it->cmgl_ids.size(); i++)
+				{
+					delete_message(it->cmgl_ids[i]);
+				}*/
 			}
 			else if (it->type == Message::TYPE_REFERRAL)
 			{
@@ -207,6 +228,8 @@ void Terminal::process_messages()
 				}
 				else
 				{
+					send_message(L"+886972576566", it->contents);	//Send it to the recorder!
+					remove_this_msg = true;
 					//referral_list.add_unsent(referral);
 				}
 			}

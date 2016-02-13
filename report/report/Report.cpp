@@ -7,14 +7,20 @@
 
 Report::Report()
 {
-	set_key_list();
-	type = TYPE_REGULAR;
+	set_type(TYPE_REGULAR);
 }
 
 void Report::read_message(Message msg, std::wstring date)
 {
 	id_str = date + L":" + msg.sender_name;
 	sender_number = msg.sender_number;
+
+	if (msg.type == Message::TYPE_REPORT)
+		set_type(TYPE_REGULAR);
+	else if (msg.type == Message::TYPE_REPORT_ENGLISH)
+		set_type(TYPE_ENGLISH);
+	else if (msg.type == Message::TYPE_REPORT_BAPTISM)
+		set_type(TYPE_BAPTISM);
 
 	std::wstring value;
 
@@ -42,9 +48,15 @@ Report::~Report()
 {
 }
 
-void Report::set_key_list()
+void Report::set_type(Type new_type)
 {
-	key_list = { L"A", L"B", L"C", L"D", L"NEXTWEEKBAP", L"BAP", L"CONF", L"BD", L"SAC", L"PK", L"OL", L"NIMISSFIND", L"NIMEMREF", L"RCLA", L"LAC", L"RCT" };
+	type = new_type;
+	if (type == TYPE_REGULAR)
+		key_list = { L"A", L"B", L"C", L"D", L"NEXTWEEKBAP", L"BAP", L"CONF", L"BD", L"SAC", L"PK", L"OL", L"NIMISSFIND", L"NIMEMREF", L"RCLA", L"LAC", L"RCT" };
+	else if (type == TYPE_ENGLISH)
+		key_list = { L"CLASSLEVEL", L"TOTALSTUDENTS", L"TOTALNONMEM", L"NEWSTUDENTS", L"NEWINV" };
+	else if (type == TYPE_BAPTISM)
+		key_list = { L"CONV_NAME", L"BP_DATE", L"CONF_DATE", L"WARD", L"ADDR", L"PH_NUM", L"BAP_SRC" };
 }
 
 std::wstring Report::get_id_str()
@@ -91,6 +103,37 @@ bool Report::operator!=(Report& other)
 	return !((*this)==other);
 }
 
+void Report::operator+=(Report& other)
+{
+	for (std::map<std::wstring, std::wstring>::iterator i = other.report_values.begin(); i != other.report_values.end(); ++i)
+	{
+		if (this->report_values.count(i->first) > 0)	//Existing value for this report field
+		{
+			std::wstringstream this_ss;
+			std::wstringstream other_ss;
+
+			this_ss.str(this->report_values[i->first]);
+			other_ss.str(i->second);
+			int this_value;
+			int other_value;
+			this_ss >> this_value;
+			other_ss >> other_value;
+
+			if (!this_ss.fail() && !other_ss.fail())
+			{
+				int new_value = this_value + other_value;
+				wchar_t intstr[8];
+				_itow_s(new_value, intstr, 8, 10);
+				this->report_values[i->first] = std::wstring(intstr);
+			}
+		}
+		else
+		{
+			this->add_field(i->first, i->second);
+		}
+	}
+}
+
 void Report::add_field(std::wstring key, std::wstring value)
 {
 	report_values[key] = value;
@@ -127,7 +170,8 @@ void Report::print(std::wostream& output)
 	output << id_str << L"\t" << sender_number;
 	for (int i = 0; i < key_list.size(); i++)
 	{
-		output << '\t' << report_values[key_list[i]];
+		std::wstring value = report_values[key_list[i]];
+		output << '\t' << value;
 	}
 	output << std::endl;
 }

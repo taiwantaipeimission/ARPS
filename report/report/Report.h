@@ -14,7 +14,8 @@ public:
 	enum Type
 	{
 		TYPE_REGULAR,
-		TYPE_ENGLISH
+		TYPE_ENGLISH,
+		TYPE_BAPTISM
 	};
 
 	Type type;
@@ -28,19 +29,22 @@ public:
 	Report();
 	virtual ~Report();
 
-	virtual void set_key_list();	//Initializes the key list for a specific type of report
+	virtual void set_type(Type type);
 	virtual void read_message(Message msg, std::wstring date);
 
-	std::wstring get_id_str();
-	std::wstring get_date();
-	std::wstring get_sender_name();
+	
 
-	bool operator==(Report& other);
-	bool operator!=(Report& other);
+	virtual std::wstring get_id_str();
+	virtual std::wstring get_date();
+	virtual std::wstring get_sender_name();
 
-	void add_field(std::wstring key, std::wstring value);
-	void remove_field(std::wstring key);
+	virtual bool operator==(Report& other);
+	virtual bool operator!=(Report& other);
+	virtual void operator+=(Report& other);
 
-	void read_processed(std::wstring input);
-	void print(std::wostream& output);
+	virtual void add_field(std::wstring key, std::wstring value);
+	virtual void remove_field(std::wstring key);
+
+	virtual void read_processed(std::wstring input);
+	virtual void print(std::wostream& output);
 };
