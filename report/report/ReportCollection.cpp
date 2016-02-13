@@ -16,66 +16,68 @@ ReportCollection::~ReportCollection()
 {
 }
 
-void ReportCollection::read_report_by_comp(File* file)
+void ReportCollection::read_report_by_comp(Report::Type type, File* file)
 {
-	report_by_comp.read_stored_all(file->file);
-	report_by_zone.header_row = report_by_comp.header_row;
-	report_by_zone_month.header_row = report_by_comp.header_row;
-	report_by_indiv.header_row = report_by_comp.header_row;
+	report_by_comp[type].report_type = type;
+	report_by_zone[type].report_type = type;
+	report_by_zone_month[type].report_type = type;
+	report_by_indiv[type].report_type = type;
 
-	report_by_zone.reports.clear();
-	report_by_indiv.reports.clear();
+	report_by_comp[type].read_stored_all(file->file);
+	report_by_zone[type].reports.clear();
+	report_by_zone_month[type].reports.clear();
+	report_by_indiv[type].reports.clear();
 }
 
-void ReportCollection::write_report_by_comp(File* file)
+void ReportCollection::write_report_by_comp(Report::Type type, File* file)
 {
-	report_by_comp.print(file->file);
+	report_by_comp[type].print(file->file);
 }
 
-void ReportCollection::write_report_by_zone(File* file)
+void ReportCollection::write_report_by_zone(Report::Type type, File* file)
 {
-	report_by_zone.print(file->file);
+	report_by_zone[type].print(file->file);
 }
 
-void ReportCollection::write_report_by_zone_month(File* file)
+void ReportCollection::write_report_by_zone_month(Report::Type type, File* file)
 {
-	report_by_zone_month.print(file->file);
+	report_by_zone_month[type].print(file->file);
 }
 
-void ReportCollection::write_report_by_indiv(File* file)
+void ReportCollection::write_report_by_indiv(Report::Type type, File* file)
 {
-	report_by_indiv.print(file->file);
+	report_by_indiv[type].print(file->file);
 }
 
-void ReportCollection::calculate_report_by_zone(CompList* comp_list, std::wstring date, bool english)
+void ReportCollection::calculate_report_by_zone(Report::Type type, CompList* comp_list, std::wstring date)
 {
-	report_by_zone.reports.clear();
-	for (std::map<std::wstring, Report>::iterator it = report_by_comp.reports.begin(); it != report_by_comp.reports.end(); ++it)
+	report_by_zone[type].reports.clear();
+	for (std::map<std::wstring, Report>::iterator it = report_by_comp[type].reports.begin(); it != report_by_comp[type].reports.end(); ++it)
 	{
 		std::wstring comp_report_date = it->second.get_date();
 		if (comp_list->areas.count(it->second.sender_number) > 0)
 		{
-			std::wstring zone_name = english ? comp_list->areas[it->second.sender_number].english_unit_name : comp_list->areas[it->second.sender_number].zone_name;
+			std::wstring zone_name = type == Report::TYPE_ENGLISH ? comp_list->areas[it->second.sender_number].english_unit_name : comp_list->areas[it->second.sender_number].zone_name;
 			std::wstring zone_id_str = comp_report_date + L":" + zone_name;
 
-			if (report_by_zone.reports.count(zone_id_str) > 0)
+			if (report_by_zone[type].reports.count(zone_id_str) > 0)
 			{
-				Report zone_report = report_by_zone.reports[zone_id_str];
+				Report zone_report = report_by_zone[type].reports[zone_id_str];
 				zone_report += it->second;
-				report_by_zone.add_report(zone_report);
+				report_by_zone[type].add_report(zone_report);
 			}
 			else
 			{
 				Report report = it->second;
 				report.id_str = zone_id_str;
-				report_by_zone.add_report(report);
+				report_by_zone[type].add_report(report);
 			}
 		}
 	}
 
-	report_by_zone_month.reports.clear();
+	report_by_zone_month[type].reports.clear();
 
-	for (std::map<std::wstring, Report>::iterator it = report_by_zone.reports.begin(); it != report_by_zone.reports.end(); ++it)
+	for (std::map<std::wstring, Report>::iterator it = report_by_zone[type].reports.begin(); it != report_by_zone[type].reports.end(); ++it)
 	{
 		std::wstring report_date = it->second.get_date();
 		std::wstring zone_name = it->second.get_sender_name();
@@ -83,17 +85,17 @@ void ReportCollection::calculate_report_by_zone(CompList* comp_list, std::wstrin
 
 		std::wstring zone_id_str = report_date_year_month + L":0:0:" + zone_name;
 
-		if (report_by_zone_month.reports.count(zone_id_str) > 0)
+		if (report_by_zone_month[type].reports.count(zone_id_str) > 0)
 		{
-			Report monthly_zone_report = report_by_zone_month.reports[zone_id_str];
+			Report monthly_zone_report = report_by_zone_month[type].reports[zone_id_str];
 			monthly_zone_report += it->second;
-			report_by_zone_month.add_report(monthly_zone_report);
+			report_by_zone_month[type].add_report(monthly_zone_report);
 		}
 		else
 		{
 			Report report = it->second;
 			report.id_str = zone_id_str;
-			report_by_zone_month.add_report(report);
+			report_by_zone_month[type].add_report(report);
 		}
 	}
 }

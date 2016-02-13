@@ -9,7 +9,7 @@
 
 #include "Terminal.h"
 #include "Modem.h"
-#include "ReportSheet.h"
+#include "ReportCollection.h"
 #include "CompList.h"
 #include "Message.h"
 #include "Area.h"
@@ -17,8 +17,8 @@
 #include "Reminder.h"
 #include "Referral.h"
 
-Terminal::Terminal(std::wstring date_in, std::wstring english_date_in, Modem* modem_in, ReportSheet* report_sheet_in, ReportSheet* english_report_sheet_in, ReportSheet* baptism_report_sheet_in, CompList* comp_list_in, File* output_file_in)
-	: cmd_source(COMMAND_SOURCE_LOGIC), date(date_in), english_date(english_date_in), modem(modem_in), report_sheet(report_sheet_in), english_report_sheet(english_report_sheet_in), baptism_report_sheet(baptism_report_sheet_in), comp_list(comp_list_in), output_file(output_file_in), reminders()
+Terminal::Terminal(std::wstring date_in, std::wstring english_date_in, Modem* modem_in, ReportCollection* report_collection_in, CompList* comp_list_in, File* output_file_in)
+	: cmd_source(COMMAND_SOURCE_LOGIC), date(date_in), english_date(english_date_in), modem(modem_in), report_collection(report_collection_in), comp_list(comp_list_in), output_file(output_file_in), reminders()
 {
 	std::time(&cur_time);
 }
@@ -80,12 +80,12 @@ bool Terminal::send_reminders()
 					bool send_it = false;
 					if (it->english)
 					{
-						if (ci->first != L"" && english_report_sheet->reports.count(english_date + L":" + ci->second.area_name) <= 0 && ci->second.english_unit_name != L"NONE")
+						if (ci->first != L"" && report_collection->report_by_zone[Report::TYPE_ENGLISH].reports.count(english_date + L":" + ci->second.area_name) <= 0 && ci->second.english_unit_name != L"NONE")
 							send_it = true;
 					}
 					else
 					{
-						if (ci->first != L"" && report_sheet->reports.count(date + L":" + ci->second.area_name) <= 0)
+						if (ci->first != L"" && report_collection->report_by_zone[Report::TYPE_REGULAR].reports.count(date + L":" + ci->second.area_name) <= 0)
 							send_it = true;
 					}
 					if (send_it)
@@ -168,7 +168,7 @@ void Terminal::process_messages()
 				Report report;
 				report.set_type(Report::TYPE_REGULAR);
 				report.read_message(*it, date);
-				report_sheet->add_report(report);
+				report_collection->report_by_comp[Report::TYPE_REGULAR].add_report(report);
 
 				for (int i = 0; i < it->cmgl_ids.size(); i++)
 				{
@@ -188,7 +188,7 @@ void Terminal::process_messages()
 				Report report;
 				report.set_type(Report::TYPE_ENGLISH);
 				report.read_message(*it, english_date);
-				english_report_sheet->add_report(report);
+				report_collection->report_by_comp[Report::TYPE_ENGLISH].add_report(report);
 
 				for (int i = 0; i < it->cmgl_ids.size(); i++)
 				{
@@ -199,9 +199,28 @@ void Terminal::process_messages()
 			else if (it->type == Message::TYPE_REPORT_BAPTISM)
 			{
 				Report report;
-				report.set_type(Report::TYPE_BAPTISM);
+				report.set_type(Report::TYPE_BAPTISM_RECORD);
 				report.read_message(*it, date);
-				baptism_report_sheet->add_report(report);
+				report_collection->report_by_comp[Report::TYPE_BAPTISM_RECORD].add_report(report);
+
+				int choice = _wtoi(report.report_values[L"BAP_SOURCE"].c_str());
+				Report bap_source = report;
+				bap_source.set_type(Report::TYPE_BAPTISM_SOURCE);
+				if (choice == 1)
+					bap_source.report_values.insert(std::pair<std::wstring, std::wstring>(L"BAP_MISS_FIND", L"1"));
+				else if (choice == 2)
+					bap_source.report_values.insert(std::pair<std::wstring, std::wstring>(L"BAP_LA_REF", L"1"));
+				else if (choice == 3)
+					bap_source.report_values.insert(std::pair<std::wstring, std::wstring>(L"BAP_RC_REF", L"1"));
+				else if (choice == 4)
+					bap_source.report_values.insert(std::pair<std::wstring, std::wstring>(L"BAP_MEM_REF", L"1"));
+				else if (choice == 5)
+					bap_source.report_values.insert(std::pair<std::wstring, std::wstring>(L"BAP_ENGLISH", L"1"));
+				else if (choice == 6)
+					bap_source.report_values.insert(std::pair<std::wstring, std::wstring>(L"BAP_TOUR", L"1"));
+
+				report_collection->report_by_comp[Report::TYPE_BAPTISM_SOURCE].add_report(bap_source);
+
 
 				/*remove_this_msg = true;
 				for (int i = 0; i < it->cmgl_ids.size(); i++)

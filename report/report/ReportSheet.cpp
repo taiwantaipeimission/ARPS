@@ -3,7 +3,7 @@
 #include <iostream>
 
 ReportSheet::ReportSheet()
-	: report_type(Report::TYPE_REGULAR), reports(), header_row(L"")
+	: reports()
 {
 }
 
@@ -34,7 +34,7 @@ void ReportSheet::read_stored_all(std::wistream& input)
 	input.seekg(0, std::ios::beg);
 	if (input.good())
 	{
-		getline(input, header_row);
+		input.ignore(2028, '\n');	//Ignore the header row
 		
 		std::wstring id_str;
 		std::wstring date;

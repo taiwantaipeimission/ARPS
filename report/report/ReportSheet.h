@@ -12,7 +12,6 @@ public:
 	Report::Type report_type;
 
 	std::map<std::wstring, Report> reports;
-	std::wstring header_row;
 
 	ReportSheet();
 	virtual ~ReportSheet();

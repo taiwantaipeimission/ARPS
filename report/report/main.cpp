@@ -6,6 +6,7 @@
 #include <sstream>
 #include <vector>
 #include <ctime>
+#include <codecvt>
 #include "include/utf8.h"
 
 #include "Modem.h"
@@ -20,16 +21,20 @@
 // File handles
 #define OUTPUT L"OUTPUT"
 #define PH_LIST L"PH_LIST"
+
 #define REPORT_DATA L"REPORT_DATA"
 #define REPORT_DATA_OLD L"REPORT_DATA_OLD"
 #define REPORT_DATA_ZONE L"REPORT_DATA_ZONE"
 #define REPORT_DATA_ZONE_MONTH L"REPORT_DATA_ZONE_MONTH"
+
 #define ENGLISH_DATA L"ENGLISH_DATA"
 #define ENGLISH_DATA_OLD L"ENGLISH_DATA_OLD"
 #define ENGLISH_DATA_UNIT L"ENGLISH_DATA_UNIT"
-#define BAPTISM_DATA L"BAPTISM_DATA"
-#define BAPTISM_DATA_ZONE L"BAPTISM_DATA_ZONE"
-#define BAPTISM_DATA_ZONE_MONTH L"BAPTISM_DATA_ZONE_MONTH"
+
+#define BAPTISM_RECORD L"BAPTISM_RECORD"
+#define BAPTISM_SOURCE L"BAPTISM_SOURCE"
+#define BAPTISM_SOURCE_ZONE L"BAPTISM_SOURCE_ZONE"
+#define BAPTISM_SOURCE_ZONE_MONTH L"BAPTISM_SOURCE_ZONE_MONTH"
 #define REFERRAL_HISTORY L"REFERRAL_HISTORY"
 
 //Characters
@@ -52,7 +57,7 @@ void show_report_status(ReportCollection* report_collection, CompList* comp_list
 		std::wstring id_str = date + L":" + it->second.area_name;
 		if (!english || it->second.english_unit_name != L"")
 		{
-			if (report_collection->report_by_comp.reports.count(id_str) > 0)
+			if (report_collection->report_by_comp[Report::TYPE_ENGLISH].reports.count(id_str) > 0)
 			{
 				std::wcout << it->second.area_name << std::endl;
 			}
@@ -64,7 +69,7 @@ void show_report_status(ReportCollection* report_collection, CompList* comp_list
 	}
 }
 
-bool save(FileManager* file_manager, ReportCollection* report_collection, ReportCollection* report_collection_english, ReportCollection* report_collection_baptism, CompList* comp_list, std::wstring date, std::wstring english_date)
+bool save(FileManager* file_manager, ReportCollection* report_collection, CompList* comp_list, std::wstring date, std::wstring english_date)
 {
 	//open output files
 	bool success = file_manager->open_file(REPORT_DATA, File::FILE_TYPE_OUTPUT)
@@ -72,35 +77,39 @@ bool save(FileManager* file_manager, ReportCollection* report_collection, Report
 		&& file_manager->open_file(REPORT_DATA_ZONE_MONTH, File::FILE_TYPE_OUTPUT)
 		&& file_manager->open_file(ENGLISH_DATA, File::FILE_TYPE_OUTPUT)
 		&& file_manager->open_file(ENGLISH_DATA_UNIT, File::FILE_TYPE_OUTPUT)
-		&& file_manager->open_file(BAPTISM_DATA, File::FILE_TYPE_OUTPUT)
-		&& file_manager->open_file(BAPTISM_DATA_ZONE, File::FILE_TYPE_OUTPUT)
-		&& file_manager->open_file(BAPTISM_DATA_ZONE_MONTH, File::FILE_TYPE_OUTPUT);
+		&& file_manager->open_file(BAPTISM_RECORD, File::FILE_TYPE_OUTPUT)
+		&& file_manager->open_file(BAPTISM_SOURCE, File::FILE_TYPE_OUTPUT)
+		&& file_manager->open_file(BAPTISM_SOURCE_ZONE, File::FILE_TYPE_OUTPUT)
+		&& file_manager->open_file(BAPTISM_SOURCE_ZONE_MONTH, File::FILE_TYPE_OUTPUT);
 
 	if (!success)
 		return false;
 
-	report_collection->write_report_by_comp(file_manager->files[REPORT_DATA]);
-	report_collection->calculate_report_by_zone(comp_list, date);
-	report_collection->write_report_by_zone(file_manager->files[REPORT_DATA_ZONE]);
-	report_collection->write_report_by_zone_month(file_manager->files[REPORT_DATA_ZONE_MONTH]);
+	report_collection->write_report_by_comp(Report::TYPE_REGULAR, file_manager->files[REPORT_DATA]);
+	report_collection->calculate_report_by_zone(Report::TYPE_REGULAR, comp_list, date);
+	report_collection->write_report_by_zone(Report::TYPE_REGULAR, file_manager->files[REPORT_DATA_ZONE]);
+	report_collection->write_report_by_zone_month(Report::TYPE_REGULAR, file_manager->files[REPORT_DATA_ZONE_MONTH]);
 
-	report_collection_english->write_report_by_comp(file_manager->files[ENGLISH_DATA]);
-	report_collection_english->calculate_report_by_zone(comp_list, english_date, true);
-	report_collection_english->write_report_by_zone(file_manager->files[ENGLISH_DATA_UNIT]);
+	report_collection->write_report_by_comp(Report::TYPE_ENGLISH, file_manager->files[ENGLISH_DATA]);
+	report_collection->calculate_report_by_zone(Report::TYPE_ENGLISH, comp_list, english_date);
+	report_collection->write_report_by_zone(Report::TYPE_ENGLISH, file_manager->files[ENGLISH_DATA_UNIT]);
 
-	report_collection_baptism->write_report_by_comp(file_manager->files[BAPTISM_DATA]);
-	report_collection_baptism->calculate_report_by_zone(comp_list, date);
-	report_collection_baptism->write_report_by_zone(file_manager->files[BAPTISM_DATA_ZONE]);
-	report_collection_baptism->write_report_by_zone_month(file_manager->files[BAPTISM_DATA_ZONE_MONTH]);
+	report_collection->write_report_by_comp(Report::TYPE_BAPTISM_RECORD, file_manager->files[BAPTISM_RECORD]);
+
+	report_collection->write_report_by_comp(Report::TYPE_BAPTISM_SOURCE, file_manager->files[BAPTISM_SOURCE]);
+	report_collection->calculate_report_by_zone(Report::TYPE_BAPTISM_SOURCE, comp_list, date);
+	report_collection->write_report_by_zone(Report::TYPE_BAPTISM_SOURCE, file_manager->files[BAPTISM_SOURCE_ZONE]);
+	report_collection->write_report_by_zone_month(Report::TYPE_BAPTISM_SOURCE, file_manager->files[BAPTISM_SOURCE_ZONE_MONTH]);
 
 	file_manager->close_file(REPORT_DATA);
 	file_manager->close_file(REPORT_DATA_ZONE);
 	file_manager->close_file(REPORT_DATA_ZONE_MONTH);
 	file_manager->close_file(ENGLISH_DATA);
 	file_manager->close_file(ENGLISH_DATA_UNIT);
-	file_manager->close_file(BAPTISM_DATA);
-	file_manager->close_file(BAPTISM_DATA_ZONE);
-	file_manager->close_file(BAPTISM_DATA_ZONE_MONTH);
+	file_manager->close_file(BAPTISM_RECORD);
+	file_manager->close_file(BAPTISM_SOURCE);
+	file_manager->close_file(BAPTISM_SOURCE_ZONE);
+	file_manager->close_file(BAPTISM_SOURCE_ZONE_MONTH);
 
 	return true;
 }
@@ -168,6 +177,8 @@ int main(int argc, char **argv)
 	file_manager.open_file(PH_LIST, File::FILE_TYPE_INPUT);
 	file_manager.open_file(REPORT_DATA, File::FILE_TYPE_INPUT);
 	file_manager.open_file(ENGLISH_DATA, File::FILE_TYPE_INPUT);
+	file_manager.open_file(BAPTISM_RECORD, File::FILE_TYPE_INPUT);
+	file_manager.open_file(BAPTISM_SOURCE, File::FILE_TYPE_INPUT);
 
 	file_manager.open_file(REPORT_DATA_OLD, File::FILE_TYPE_OUTPUT, true);
 	file_manager.files[REPORT_DATA_OLD]->file << "=========================";
@@ -181,27 +192,19 @@ int main(int argc, char **argv)
 	english_reminder.english = true;
 	std::wstring report_date = get_report_date_str(report_wday);
 	std::wstring english_date = get_report_date_str(english_wday);
-	
-	
-	ReportCollection report_collection;
-	ReportCollection report_collection_english;
-	ReportCollection report_collection_baptism;
-	report_collection_english.report_by_comp.report_type = Report::TYPE_ENGLISH;
-	report_collection_english.report_by_zone.report_type = Report::TYPE_ENGLISH;
-	report_collection_english.report_by_zone_month.report_type = Report::TYPE_ENGLISH;
-	report_collection_baptism.report_by_comp.report_type = Report::TYPE_BAPTISM;
-	report_collection_baptism.report_by_zone.report_type = Report::TYPE_BAPTISM;
-	report_collection_baptism.report_by_zone_month.report_type = Report::TYPE_BAPTISM;
 
+	ReportCollection report_collection;
 	CompList comp_list;
 
-	report_collection.read_report_by_comp(file_manager.files[REPORT_DATA]);
-	report_collection_english.read_report_by_comp(file_manager.files[ENGLISH_DATA]);
+	report_collection.read_report_by_comp(Report::TYPE_REGULAR, file_manager.files[REPORT_DATA]);
+	report_collection.read_report_by_comp(Report::TYPE_ENGLISH, file_manager.files[ENGLISH_DATA]);
+	report_collection.read_report_by_comp(Report::TYPE_BAPTISM_RECORD, file_manager.files[BAPTISM_RECORD]);
+	report_collection.read_report_by_comp(Report::TYPE_BAPTISM_SOURCE, file_manager.files[BAPTISM_SOURCE]);
 	comp_list.load(file_manager.files[PH_LIST]->file);
 
 	Modem modem;
 	std::wstringstream command;
-	Terminal terminal(report_date, english_date, &modem, &report_collection.report_by_comp, &report_collection_english.report_by_comp, &report_collection_baptism.report_by_comp, &comp_list, file_manager.files[OUTPUT]);
+	Terminal terminal(report_date, english_date, &modem, &report_collection, &comp_list, file_manager.files[OUTPUT]);
 	terminal.add_reminder(report_reminder);
 	terminal.add_reminder(english_reminder);
 
@@ -235,7 +238,7 @@ int main(int argc, char **argv)
 		}
 		else if (input_choice == '3')
 		{
-			show_report_status(&report_collection_english, &comp_list, english_date, true);
+			show_report_status(&report_collection, &comp_list, english_date, true);
 			run_terminal = false;
 		}
 		else if (input_choice == '4')
@@ -245,7 +248,7 @@ int main(int argc, char **argv)
 		}
 		else if (input_choice == '5')
 		{
-			save(&file_manager, &report_collection, &report_collection_english, &report_collection_baptism, &comp_list, report_date, english_date);
+			save(&file_manager, &report_collection, &comp_list, report_date, english_date);
 			run_terminal = false;
 		}
 		else if (input_choice == '6')
@@ -267,7 +270,7 @@ int main(int argc, char **argv)
 
 	//save
 
-	save(&file_manager, &report_collection, &report_collection_english, &report_collection_baptism, &comp_list, report_date, english_date);
+	save(&file_manager, &report_collection, &comp_list, report_date, english_date);
 	
 	//close output files
 	file_manager.close_file(OUTPUT);

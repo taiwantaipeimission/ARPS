@@ -29,6 +29,7 @@ bool File::open(bool append)
 		if (append)
 			mode |= std::ios_base::app;
 		file.open(filepath, mode);
+		file.imbue(std::locale(file.getloc(), new std::codecvt_utf8<wchar_t, 0x10ffff, std::little_endian>()));
 	}
 	return file.good();
 }

@@ -20,7 +20,7 @@ void Report::read_message(Message msg, std::wstring date)
 	else if (msg.type == Message::TYPE_REPORT_ENGLISH)
 		set_type(TYPE_ENGLISH);
 	else if (msg.type == Message::TYPE_REPORT_BAPTISM)
-		set_type(TYPE_BAPTISM);
+		set_type(TYPE_BAPTISM_RECORD);
 
 	std::wstring value;
 
@@ -52,11 +52,13 @@ void Report::set_type(Type new_type)
 {
 	type = new_type;
 	if (type == TYPE_REGULAR)
-		key_list = { L"A", L"B", L"C", L"D", L"NEXTWEEKBAP", L"BAP", L"CONF", L"BD", L"SAC", L"PK", L"OL", L"NIMISSFIND", L"NIMEMREF", L"RCLA", L"LAC", L"RCT" };
+		key_list = { L"A", L"B", L"C", L"D", L"NEXTWEEKBAP", L"BAP", L"CONF", L"BD", L"SAC", L"PK", L"OL", L"NIMISSFIND", L"NIMEMREF", L"RCLA", L"LAC", L"RCT"};
 	else if (type == TYPE_ENGLISH)
 		key_list = { L"CLASSLEVEL", L"TOTALSTUDENTS", L"TOTALNONMEM", L"NEWSTUDENTS", L"NEWINV" };
-	else if (type == TYPE_BAPTISM)
-		key_list = { L"CONV_NAME", L"BP_DATE", L"CONF_DATE", L"WARD", L"ADDR", L"PH_NUM", L"BAP_SRC" };
+	else if (type == TYPE_BAPTISM_RECORD)
+		key_list = { L"CONV_NAME", L"BP_DATE", L"CONF_DATE", L"WARD", L"HOME_ADDR", L"PH_NUM", L"BAP_SOURCE" };
+	else if (type == TYPE_BAPTISM_SOURCE)
+		key_list = { L"BAP_MISS_FIND", L"BAP_LA_REF", L"BAP_RC_REF", L"BAP_MEM_REF", L"BAP_ENGLISH", L"BAP_TOUR" };
 }
 
 std::wstring Report::get_id_str()
@@ -171,7 +173,8 @@ void Report::print(std::wostream& output)
 	for (int i = 0; i < key_list.size(); i++)
 	{
 		std::wstring value = report_values[key_list[i]];
-		output << '\t' << value;
+		output << L'\t';
+		output << value;
 	}
 	output << std::endl;
 }
