@@ -14,8 +14,12 @@ std::wstring extract_septets(std::wstringstream&ss, unsigned int length);
 std::wstring encode_phone_number(std::wstring phone_number);
 std::wstring extract_phone_number(std::wstringstream&ss, int length);
 int get_octet_value(std::wstring octet_rep, int octet_size);
+
 std::vector<std::wstring> encode_msg(Message* msg);
 bool decode_msg(Message* msg, std::wstring raw_input, CompList* comp_list);
+
+bool read_filed_msg(Message* msg, std::wstring input);
+std::wstring write_filed_msg(Message* msg);
 
 class Message
 {

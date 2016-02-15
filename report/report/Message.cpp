@@ -4,6 +4,8 @@
 #include <iomanip>
 #include <algorithm>
 
+#define MSG_FILE_FIELD_SEPARATOR L"\t"
+
 Message::Message()
 {
 }
@@ -132,8 +134,6 @@ std::wstring extract_septets(std::wstringstream&ss, unsigned int length)
 
 	return decoded_data;
 }
-
-
 
 std::vector<std::wstring> encode_msg(Message* msg)
 {
@@ -316,4 +316,37 @@ bool decode_msg(Message* msg, std::wstring input, CompList* comp_list)
 	{
 		msg->cmgl_ids.clear();
 	}
+}
+
+bool read_filed_msg(Message* msg, std::wstring input)
+{
+	std::wstringstream ss(input);
+
+	int msg_type;
+	ss >> msg->sender_name;
+	ss >> msg->sender_number;
+	ss >> msg_type;
+	msg->type = msg_type;
+	ss >> msg->data_coding;
+	ss >> msg->msg_length;
+	ss >> msg->concatenated;
+	ss >> msg->concat_refnum;
+	ss >> msg->concat_num_msgs;
+	ss >> msg->concat_index;
+}
+
+std::wstring write_filed_msg(Message* msg)
+{
+	std::wstringstream ss;
+	ss << msg->sender_name << MSG_FILE_FIELD_SEPARATOR
+		<< msg->sender_number << MSG_FILE_FIELD_SEPARATOR
+		<< msg->type << MSG_FILE_FIELD_SEPARATOR
+		<< msg->data_coding << MSG_FILE_FIELD_SEPARATOR
+		<< msg->msg_length << MSG_FILE_FIELD_SEPARATOR
+		<< msg->concatenated << MSG_FILE_FIELD_SEPARATOR
+		<< msg->concat_refnum << MSG_FILE_FIELD_SEPARATOR
+		<< msg->concat_num_msgs << MSG_FILE_FIELD_SEPARATOR
+		<< msg->concat_index;
+	std::wstring return_str = ss.str();
+	return return_str;
 }

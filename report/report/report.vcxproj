@@ -71,6 +71,7 @@
     <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Message.cpp" />
+    <ClCompile Include="MessageHandler.cpp" />
     <ClCompile Include="Modem.cpp" />
     <ClCompile Include="Referral.cpp" />
     <ClCompile Include="Reminder.cpp" />
@@ -86,6 +87,7 @@
     <ClInclude Include="File.h" />
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="Message.h" />
+    <ClInclude Include="MessageHandler.h" />
     <ClInclude Include="Modem.h" />
     <ClInclude Include="Referral.h" />
     <ClInclude Include="Reminder.h" />
