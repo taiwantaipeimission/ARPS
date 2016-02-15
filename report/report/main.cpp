@@ -170,7 +170,7 @@ std::wstring get_report_date_str(std::wstring report_wday)
 	{
 		report_date = tos(1900 + curtime_st.tm_year)
 			+ DATE_STAMP_SEPARATOR_CHAR + tos(curtime_st.tm_mon + 1)
-			+ DATE_STAMP_SEPARATOR_CHAR + tos(curtime_st.tm_mday / 7)
+			+ DATE_STAMP_SEPARATOR_CHAR + tos((curtime_st.tm_mday + 6) / 7)
 			+ DATE_STAMP_SEPARATOR_CHAR + report_wday;
 	}
 	else
@@ -181,7 +181,7 @@ std::wstring get_report_date_str(std::wstring report_wday)
 		localtime_s(&last_week_tm_st, &last_week_tm);
 		report_date = tos(1900 + last_week_tm_st.tm_year)
 			+ DATE_STAMP_SEPARATOR_CHAR + tos(last_week_tm_st.tm_mon + 1)
-			+ DATE_STAMP_SEPARATOR_CHAR + tos(last_week_tm_st.tm_mday / 7)
+			+ DATE_STAMP_SEPARATOR_CHAR + tos((last_week_tm_st.tm_mday + 6) / 7)
 			+ DATE_STAMP_SEPARATOR_CHAR + report_wday;
 	}
 	return report_date;
