@@ -12,3 +12,5 @@ BAPTISM_RECORD=baptism/baptism_record.txt
 BAPTISM_SOURCE=baptism/baptism_source.txt
 BAPTISM_SOURCE_ZONE=baptism/baptism_source_zone.txt
 BAPTISM_SOURCE_ZONE_MONTH=baptism/baptism_source_zone_month.txt
+MESSAGES_PROCESSED=messages/messages_processed.txt
+MESSAGES_UNPROCESSED=messages/messages_unprocessed.txt

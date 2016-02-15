@@ -16,6 +16,7 @@ public:
 	virtual ~ReportCollection();
 
 	void read_report_by_comp(Report::Type type, File* file);
+	void read_report_by_zone(Report::Type type, File* file);
 
 	void write_report_by_comp(Report::Type type, File* file);
 	void write_report_by_zone(Report::Type type, File* file);

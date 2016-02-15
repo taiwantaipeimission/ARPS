@@ -24,9 +24,11 @@ void ReportCollection::read_report_by_comp(Report::Type type, File* file)
 	report_by_indiv[type].report_type = type;
 
 	report_by_comp[type].read_stored_all(file->file);
-	report_by_zone[type].reports.clear();
-	report_by_zone_month[type].reports.clear();
-	report_by_indiv[type].reports.clear();
+}
+
+void ReportCollection::read_report_by_zone(Report::Type type, File* file)
+{
+	report_by_zone[type].read_stored_all(file->file);
 }
 
 void ReportCollection::write_report_by_comp(Report::Type type, File* file)
@@ -52,6 +54,7 @@ void ReportCollection::write_report_by_indiv(Report::Type type, File* file)
 void ReportCollection::calculate_report_by_zone(Report::Type type, CompList* comp_list, std::wstring date)
 {
 	report_by_zone[type].reports.clear();
+
 	for (std::map<std::wstring, Report>::iterator it = report_by_comp[type].reports.begin(); it != report_by_comp[type].reports.end(); ++it)
 	{
 		std::wstring comp_report_date = it->second.get_date();

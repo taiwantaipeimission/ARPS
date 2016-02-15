@@ -180,7 +180,7 @@ void Terminal::process_messages()
 				if (baptisms > 0)
 				{
 					send_message(it->sender_number, L"Congratulations on your baptism[s]! Please send in one copy of this template per baptism.");
-					send_message(it->sender_number, L"TYPE:BAPTISM\nCONV_NAME:\nBP_DATE:\nCONF_DATE:\nWARD:\nADDR:\nPH_NUM:\nBAP_SRC:");
+					send_message(it->sender_number, L"TYPE:BAPTISM\nCONV_NAME:\nBP_DATE:\nCONF_DATE:\nWARD:\nHOME_ADDR:\nPH_NUM:\nBAP_SOURCE:\n1=Missionary contacting\n2=LA referral\n3=RC referral\n4=Active member referral\n5=English class\n6=Temple tour");
 				}
 			}
 			else if (it->type == Message::TYPE_REPORT_ENGLISH)

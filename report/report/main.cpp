@@ -114,6 +114,45 @@ bool save(FileManager* file_manager, ReportCollection* report_collection, CompLi
 	return true;
 }
 
+bool load(FileManager* file_manager, ReportCollection* report_collection, CompList* comp_list)
+{
+	file_manager->open_file(PH_LIST, File::FILE_TYPE_INPUT);
+
+	file_manager->open_file(REPORT_DATA, File::FILE_TYPE_INPUT);
+	file_manager->open_file(REPORT_DATA_ZONE, File::FILE_TYPE_INPUT);
+	file_manager->open_file(ENGLISH_DATA, File::FILE_TYPE_INPUT);
+	file_manager->open_file(ENGLISH_DATA_UNIT, File::FILE_TYPE_INPUT);
+	file_manager->open_file(BAPTISM_SOURCE, File::FILE_TYPE_INPUT);
+	file_manager->open_file(BAPTISM_SOURCE_ZONE, File::FILE_TYPE_INPUT);
+	file_manager->open_file(BAPTISM_RECORD, File::FILE_TYPE_INPUT);
+
+	file_manager->open_file(REPORT_DATA_OLD, File::FILE_TYPE_OUTPUT, true);
+	file_manager->files[REPORT_DATA_OLD]->file << "=========================";
+	file_manager->files[REPORT_DATA_OLD]->file << file_manager->files[REPORT_DATA]->file.rdbuf();
+	file_manager->close_file(REPORT_DATA_OLD);
+
+	report_collection->read_report_by_comp(Report::TYPE_REGULAR, file_manager->files[REPORT_DATA]);
+	report_collection->read_report_by_zone(Report::TYPE_REGULAR, file_manager->files[REPORT_DATA_ZONE]);
+	report_collection->read_report_by_comp(Report::TYPE_ENGLISH, file_manager->files[ENGLISH_DATA]);
+	report_collection->read_report_by_zone(Report::TYPE_REGULAR, file_manager->files[ENGLISH_DATA_UNIT]);
+	report_collection->read_report_by_comp(Report::TYPE_BAPTISM_SOURCE, file_manager->files[BAPTISM_SOURCE]);
+	report_collection->read_report_by_zone(Report::TYPE_BAPTISM_SOURCE, file_manager->files[BAPTISM_SOURCE]);
+
+	report_collection->read_report_by_comp(Report::TYPE_BAPTISM_RECORD, file_manager->files[BAPTISM_RECORD]);
+
+	comp_list->load(file_manager->files[PH_LIST]->file);
+
+	file_manager->close_file(REPORT_DATA);
+	file_manager->close_file(REPORT_DATA_ZONE);
+	file_manager->close_file(ENGLISH_DATA);
+	file_manager->close_file(ENGLISH_DATA_UNIT);
+	file_manager->close_file(BAPTISM_SOURCE);
+	file_manager->close_file(BAPTISM_SOURCE_ZONE);
+	file_manager->close_file(BAPTISM_RECORD);
+
+	return true;
+}
+
 /* Create the date stamp for a reporting period, based on the current time and the weekday of reporting.
  * All days up to the day of reporting return back to the previous reporting period (e.g. Thursday-Tuesday will be counted as reports
  * for English reporting session which began on the Wednesday previous).
@@ -131,7 +170,7 @@ std::wstring get_report_date_str(std::wstring report_wday)
 	{
 		report_date = tos(1900 + curtime_st.tm_year)
 			+ DATE_STAMP_SEPARATOR_CHAR + tos(curtime_st.tm_mon + 1)
-			+ DATE_STAMP_SEPARATOR_CHAR + tos(curtime_st.tm_mday / 7 + 1)
+			+ DATE_STAMP_SEPARATOR_CHAR + tos(curtime_st.tm_mday / 7)
 			+ DATE_STAMP_SEPARATOR_CHAR + report_wday;
 	}
 	else
@@ -142,7 +181,7 @@ std::wstring get_report_date_str(std::wstring report_wday)
 		localtime_s(&last_week_tm_st, &last_week_tm);
 		report_date = tos(1900 + last_week_tm_st.tm_year)
 			+ DATE_STAMP_SEPARATOR_CHAR + tos(last_week_tm_st.tm_mon + 1)
-			+ DATE_STAMP_SEPARATOR_CHAR + tos(last_week_tm_st.tm_mday / 7 + 1)
+			+ DATE_STAMP_SEPARATOR_CHAR + tos(last_week_tm_st.tm_mday / 7)
 			+ DATE_STAMP_SEPARATOR_CHAR + report_wday;
 	}
 	return report_date;
@@ -170,21 +209,14 @@ int main(int argc, char **argv)
 {
 	Console_streambuf out(GetStdHandle(STD_OUTPUT_HANDLE));
 	auto old_buf = std::wcout.rdbuf(&out);
+
+	ReportCollection report_collection;
+	CompList comp_list;
+
 	std::wcout << "Loading..." << std::endl;
-	
 	FileManager file_manager(L"paths.txt");
 	file_manager.open_file(OUTPUT, File::FILE_TYPE_OUTPUT, true);
-	file_manager.open_file(PH_LIST, File::FILE_TYPE_INPUT);
-	file_manager.open_file(REPORT_DATA, File::FILE_TYPE_INPUT);
-	file_manager.open_file(ENGLISH_DATA, File::FILE_TYPE_INPUT);
-	file_manager.open_file(BAPTISM_RECORD, File::FILE_TYPE_INPUT);
-	file_manager.open_file(BAPTISM_SOURCE, File::FILE_TYPE_INPUT);
-
-	file_manager.open_file(REPORT_DATA_OLD, File::FILE_TYPE_OUTPUT, true);
-	file_manager.files[REPORT_DATA_OLD]->file << "=========================";
-	file_manager.files[REPORT_DATA_OLD]->file << file_manager.files[REPORT_DATA]->file.rdbuf();
-	file_manager.close_file(REPORT_DATA_OLD);
-
+	load(&file_manager, &report_collection, &comp_list);
 	std::wstring report_wday = file_manager.config_file.values[L"REPORT_WDAY"];
 	std::wstring english_wday = file_manager.config_file.values[L"ENGLISH_WDAY"];
 	Reminder report_reminder(file_manager.config_file.values[L"REPORT_REMINDER"]);
@@ -193,28 +225,13 @@ int main(int argc, char **argv)
 	std::wstring report_date = get_report_date_str(report_wday);
 	std::wstring english_date = get_report_date_str(english_wday);
 
-	ReportCollection report_collection;
-	CompList comp_list;
-
-	report_collection.read_report_by_comp(Report::TYPE_REGULAR, file_manager.files[REPORT_DATA]);
-	report_collection.read_report_by_comp(Report::TYPE_ENGLISH, file_manager.files[ENGLISH_DATA]);
-	report_collection.read_report_by_comp(Report::TYPE_BAPTISM_RECORD, file_manager.files[BAPTISM_RECORD]);
-	report_collection.read_report_by_comp(Report::TYPE_BAPTISM_SOURCE, file_manager.files[BAPTISM_SOURCE]);
-	comp_list.load(file_manager.files[PH_LIST]->file);
-
 	Modem modem;
 	std::wstringstream command;
 	Terminal terminal(report_date, english_date, &modem, &report_collection, &comp_list, file_manager.files[OUTPUT]);
 	terminal.add_reminder(report_reminder);
 	terminal.add_reminder(english_reminder);
 
-	//close input files
-	file_manager.close_file(REPORT_DATA);
-	file_manager.close_file(ENGLISH_DATA);
-
 	// process string
-
-	
 
 	bool quit = false;
 	bool run_terminal = false;
