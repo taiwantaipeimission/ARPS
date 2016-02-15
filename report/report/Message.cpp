@@ -4,8 +4,6 @@
 #include <iomanip>
 #include <algorithm>
 
-#define MSG_FILE_FIELD_SEPARATOR L"\t"
-
 Message::Message()
 {
 }
@@ -318,21 +316,36 @@ bool decode_msg(Message* msg, std::wstring input, CompList* comp_list)
 	}
 }
 
-bool read_filed_msg(Message* msg, std::wstring input)
+void read_filed_msg(Message* msg, std::wstring input)
 {
 	std::wstringstream ss(input);
 
-	int msg_type;
-	ss >> msg->sender_name;
-	ss >> msg->sender_number;
-	ss >> msg_type;
-	msg->type = msg_type;
-	ss >> msg->data_coding;
-	ss >> msg->msg_length;
-	ss >> msg->concatenated;
-	ss >> msg->concat_refnum;
-	ss >> msg->concat_num_msgs;
-	ss >> msg->concat_index;
+	
+	std::getline(ss, msg->sender_name, MSG_FILE_FIELD_SEPARATOR);
+	std::getline(ss, msg->sender_number, MSG_FILE_FIELD_SEPARATOR);
+	std::wstring msg_type;
+	std::getline(ss, msg_type, MSG_FILE_FIELD_SEPARATOR);
+	msg->type = (Message::MessageType)_wtoi(msg_type.c_str()); 
+	std::getline(ss, msg->contents, MSG_FILE_FIELD_SEPARATOR);
+	std::getline(ss, msg->sent_date, MSG_FILE_FIELD_SEPARATOR);
+	std::wstring data_coding;
+	std::getline(ss, data_coding, MSG_FILE_FIELD_SEPARATOR);
+	msg->data_coding = _wtoi(data_coding.c_str());
+	std::wstring msg_length;
+	std::getline(ss, msg_length, MSG_FILE_FIELD_SEPARATOR);
+	msg->msg_length = _wtoi(msg_length.c_str());
+	std::wstring concatenated;
+	std::getline(ss, concatenated, MSG_FILE_FIELD_SEPARATOR);
+	msg->concatenated = _wtoi(concatenated.c_str());
+	std::wstring concat_refnum;
+	std::getline(ss, concat_refnum, MSG_FILE_FIELD_SEPARATOR);
+	msg->concat_refnum = _wtoi(concat_refnum.c_str());
+	std::wstring concat_num_msgs;
+	std::getline(ss, concat_num_msgs, MSG_FILE_FIELD_SEPARATOR);
+	msg->concat_num_msgs = _wtoi(concat_num_msgs.c_str());
+	std::wstring concat_index;
+	std::getline(ss, concat_index, MSG_FILE_FIELD_SEPARATOR);
+	msg->concat_index = _wtoi(concat_index.c_str());
 }
 
 std::wstring write_filed_msg(Message* msg)
@@ -341,6 +354,8 @@ std::wstring write_filed_msg(Message* msg)
 	ss << msg->sender_name << MSG_FILE_FIELD_SEPARATOR
 		<< msg->sender_number << MSG_FILE_FIELD_SEPARATOR
 		<< msg->type << MSG_FILE_FIELD_SEPARATOR
+		<< msg->contents << MSG_FILE_FIELD_SEPARATOR
+		<< msg->sent_date << MSG_FILE_FIELD_SEPARATOR
 		<< msg->data_coding << MSG_FILE_FIELD_SEPARATOR
 		<< msg->msg_length << MSG_FILE_FIELD_SEPARATOR
 		<< msg->concatenated << MSG_FILE_FIELD_SEPARATOR

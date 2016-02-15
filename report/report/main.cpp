@@ -17,10 +17,13 @@
 #include "Area.h"
 #include "Reminder.h"
 #include "Message.h"
+#include "MessageHandler.h"
 
 // File handles
 #define OUTPUT L"OUTPUT"
 #define PH_LIST L"PH_LIST"
+#define MESSAGES_PROCESSED L"MESSAGES_PROCESSED"
+#define MESSAGES_UNPROCESSED L"MESSAGES_UNPROCESSED"
 
 #define REPORT_DATA L"REPORT_DATA"
 #define REPORT_DATA_OLD L"REPORT_DATA_OLD"
@@ -69,7 +72,7 @@ void show_report_status(ReportCollection* report_collection, CompList* comp_list
 	}
 }
 
-bool save(FileManager* file_manager, ReportCollection* report_collection, CompList* comp_list, std::wstring date, std::wstring english_date)
+bool save(FileManager* file_manager, ReportCollection* report_collection, CompList* comp_list, MessageHandler* message_handler, std::wstring date, std::wstring english_date)
 {
 	//open output files
 	bool success = file_manager->open_file(REPORT_DATA, File::FILE_TYPE_OUTPUT)
@@ -80,10 +83,15 @@ bool save(FileManager* file_manager, ReportCollection* report_collection, CompLi
 		&& file_manager->open_file(BAPTISM_RECORD, File::FILE_TYPE_OUTPUT)
 		&& file_manager->open_file(BAPTISM_SOURCE, File::FILE_TYPE_OUTPUT)
 		&& file_manager->open_file(BAPTISM_SOURCE_ZONE, File::FILE_TYPE_OUTPUT)
-		&& file_manager->open_file(BAPTISM_SOURCE_ZONE_MONTH, File::FILE_TYPE_OUTPUT);
+		&& file_manager->open_file(BAPTISM_SOURCE_ZONE_MONTH, File::FILE_TYPE_OUTPUT)
+		&& file_manager->open_file(MESSAGES_UNPROCESSED, File::FILE_TYPE_OUTPUT)
+		&& file_manager->open_file(MESSAGES_PROCESSED, File::FILE_TYPE_OUTPUT);
 
 	if (!success)
 		return false;
+
+	message_handler->write_filed_msgs(file_manager->files[MESSAGES_UNPROCESSED]->file, false);
+	message_handler->write_filed_msgs(file_manager->files[MESSAGES_PROCESSED]->file, true);
 
 	report_collection->write_report_by_comp(Report::TYPE_REGULAR, file_manager->files[REPORT_DATA]);
 	report_collection->calculate_report_by_zone(Report::TYPE_REGULAR, comp_list, date);
@@ -110,13 +118,17 @@ bool save(FileManager* file_manager, ReportCollection* report_collection, CompLi
 	file_manager->close_file(BAPTISM_SOURCE);
 	file_manager->close_file(BAPTISM_SOURCE_ZONE);
 	file_manager->close_file(BAPTISM_SOURCE_ZONE_MONTH);
+	file_manager->close_file(MESSAGES_UNPROCESSED);
+	file_manager->close_file(MESSAGES_PROCESSED);
 
 	return true;
 }
 
-bool load(FileManager* file_manager, ReportCollection* report_collection, CompList* comp_list)
+bool load(FileManager* file_manager, ReportCollection* report_collection, CompList* comp_list, MessageHandler* message_handler)
 {
 	file_manager->open_file(PH_LIST, File::FILE_TYPE_INPUT);
+	file_manager->open_file(MESSAGES_UNPROCESSED, File::FILE_TYPE_INPUT);
+	file_manager->open_file(MESSAGES_PROCESSED, File::FILE_TYPE_INPUT);
 
 	file_manager->open_file(REPORT_DATA, File::FILE_TYPE_INPUT);
 	file_manager->open_file(REPORT_DATA_ZONE, File::FILE_TYPE_INPUT);
@@ -131,6 +143,9 @@ bool load(FileManager* file_manager, ReportCollection* report_collection, CompLi
 	file_manager->files[REPORT_DATA_OLD]->file << file_manager->files[REPORT_DATA]->file.rdbuf();
 	file_manager->close_file(REPORT_DATA_OLD);
 
+	message_handler->read_filed_msgs(file_manager->files[MESSAGES_UNPROCESSED]->file, false);
+	message_handler->read_filed_msgs(file_manager->files[MESSAGES_PROCESSED]->file, true);
+
 	report_collection->read_report_by_comp(Report::TYPE_REGULAR, file_manager->files[REPORT_DATA]);
 	report_collection->read_report_by_zone(Report::TYPE_REGULAR, file_manager->files[REPORT_DATA_ZONE]);
 	report_collection->read_report_by_comp(Report::TYPE_ENGLISH, file_manager->files[ENGLISH_DATA]);
@@ -142,6 +157,9 @@ bool load(FileManager* file_manager, ReportCollection* report_collection, CompLi
 
 	comp_list->load(file_manager->files[PH_LIST]->file);
 
+	file_manager->close_file(PH_LIST);
+	file_manager->close_file(MESSAGES_UNPROCESSED);
+	file_manager->close_file(MESSAGES_PROCESSED);
 	file_manager->close_file(REPORT_DATA);
 	file_manager->close_file(REPORT_DATA_ZONE);
 	file_manager->close_file(ENGLISH_DATA);
@@ -212,11 +230,13 @@ int main(int argc, char **argv)
 
 	ReportCollection report_collection;
 	CompList comp_list;
+	MessageHandler msg_handler;
+	Modem modem;
 
 	std::wcout << "Loading..." << std::endl;
 	FileManager file_manager(L"paths.txt");
 	file_manager.open_file(OUTPUT, File::FILE_TYPE_OUTPUT, true);
-	load(&file_manager, &report_collection, &comp_list);
+	load(&file_manager, &report_collection, &comp_list, &msg_handler);
 	std::wstring report_wday = file_manager.config_file.values[L"REPORT_WDAY"];
 	std::wstring english_wday = file_manager.config_file.values[L"ENGLISH_WDAY"];
 	Reminder report_reminder(file_manager.config_file.values[L"REPORT_REMINDER"]);
@@ -225,9 +245,8 @@ int main(int argc, char **argv)
 	std::wstring report_date = get_report_date_str(report_wday);
 	std::wstring english_date = get_report_date_str(english_wday);
 
-	Modem modem;
-	std::wstringstream command;
-	Terminal terminal(report_date, english_date, &modem, &report_collection, &comp_list, file_manager.files[OUTPUT]);
+	
+	Terminal terminal(report_date, english_date, &modem, &report_collection, &comp_list, &msg_handler, file_manager.files[OUTPUT]);
 	terminal.add_reminder(report_reminder);
 	terminal.add_reminder(english_reminder);
 
@@ -265,7 +284,7 @@ int main(int argc, char **argv)
 		}
 		else if (input_choice == '5')
 		{
-			save(&file_manager, &report_collection, &comp_list, report_date, english_date);
+			save(&file_manager, &report_collection, &comp_list, &msg_handler, report_date, english_date);
 			run_terminal = false;
 		}
 		else if (input_choice == '6')
@@ -287,7 +306,7 @@ int main(int argc, char **argv)
 
 	//save
 
-	save(&file_manager, &report_collection, &comp_list, report_date, english_date);
+	save(&file_manager, &report_collection, &comp_list, &msg_handler, report_date, english_date);
 	
 	//close output files
 	file_manager.close_file(OUTPUT);

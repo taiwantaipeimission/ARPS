@@ -3,6 +3,7 @@
 class Terminal;
 class ReportCollection;
 class Message;
+class CompList;
 
 #include <vector>
 #include <map>
@@ -18,6 +19,8 @@ public:
 	virtual ~MessageHandler();
 
 	void parse_messages(std::wstring raw_str, CompList* comp_list);
-	void process_messages(Terminal* terminal, ReportCollection* report_collection, CompList* comp_list, std::wstring date, std::wstring english_date)
+	void process_messages(Terminal* terminal, ReportCollection* report_collection, CompList* comp_list, std::wstring date, std::wstring english_date);
+	void read_filed_msgs(std::wistream& input, bool handled);
+	void write_filed_msgs(std::wostream& output, bool handled);
 };
 

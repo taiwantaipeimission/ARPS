@@ -46,7 +46,7 @@ void MessageHandler::parse_messages(std::wstring raw_str, CompList* comp_list)
 		correct_order.assign(num_msgs, -1);				//Fill with -1s so we can see if any msgs are missing
 		for (int i = 0; i < it->second.size(); i++)
 		{
-			correct_order[it->second[i].concat_index + 1] = i;					//Concat indeces inside msg start from 1, so subtract 1
+			correct_order[it->second[i].concat_index - 1] = i;					//Concat indeces inside msg start from 1, so subtract 1
 		}
 		if (std::count(correct_order.begin(), correct_order.end(), -1) == 0)	//All sub-msgs found that make up this concat msg
 		{
@@ -162,5 +162,41 @@ void MessageHandler::process_messages(Terminal* terminal, ReportCollection* repo
 		{
 			++it;
 		}
+	}
+}
+
+void MessageHandler::read_filed_msgs(std::wistream& input, bool handled)
+{
+	input.clear();
+	input.seekg(0, std::ios::beg);
+	if (input.good())
+	{
+		do
+		{
+			std::wstring line;
+			std::getline(input, line, MSG_SEPARATOR);
+			Message msg;
+			read_filed_msg(&msg, line);
+			if (msg.concatenated)
+			{
+				msgs_fragment[msg.concat_refnum].push_back(msg);
+			}
+			else
+			{
+				if (handled)
+					msgs_handled.push_back(msg);
+				else
+					msgs_unhandled.push_back(msg);
+			}
+		} while (input.good());
+	}
+}
+
+void MessageHandler::write_filed_msgs(std::wostream& output, bool handled)
+{
+	std::vector<Message>* list_ptr = handled ? &msgs_handled : &msgs_unhandled;
+	for (std::vector<Message>::iterator it = list_ptr->begin(); it != list_ptr->end(); ++it)
+	{
+		output << write_filed_msg(&*it) << MSG_SEPARATOR;
 	}
 }

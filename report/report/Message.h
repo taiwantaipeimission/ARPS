@@ -6,6 +6,8 @@
 
 
 #define MAX_MSG_LEN 134 	//140 characters of message (for 8-bit encoding); take away 6 bits for possible UDH data
+#define MSG_FILE_FIELD_SEPARATOR L'|'
+#define MSG_SEPARATOR L';'
 
 class Message;
 
@@ -18,7 +20,7 @@ int get_octet_value(std::wstring octet_rep, int octet_size);
 std::vector<std::wstring> encode_msg(Message* msg);
 bool decode_msg(Message* msg, std::wstring raw_input, CompList* comp_list);
 
-bool read_filed_msg(Message* msg, std::wstring input);
+void read_filed_msg(Message* msg, std::wstring input);
 std::wstring write_filed_msg(Message* msg);
 
 class Message

@@ -16,9 +16,10 @@
 #include "File.h"
 #include "Reminder.h"
 #include "Referral.h"
+#include "MessageHandler.h"
 
-Terminal::Terminal(std::wstring date_in, std::wstring english_date_in, Modem* modem_in, ReportCollection* report_collection_in, CompList* comp_list_in, File* output_file_in)
-	: cmd_source(COMMAND_SOURCE_LOGIC), date(date_in), english_date(english_date_in), modem(modem_in), report_collection(report_collection_in), comp_list(comp_list_in), output_file(output_file_in), reminders()
+Terminal::Terminal(std::wstring date_in, std::wstring english_date_in, Modem* modem_in, ReportCollection* report_collection_in, CompList* comp_list_in, MessageHandler* message_handler_in, File* output_file_in)
+	: cmd_source(COMMAND_SOURCE_LOGIC), date(date_in), english_date(english_date_in), modem(modem_in), report_collection(report_collection_in), comp_list(comp_list_in), msg_handler(message_handler_in), output_file(output_file_in), reminders()
 {
 	std::time(&cur_time);
 }
@@ -127,7 +128,7 @@ void Terminal::send_message(std::wstring dest_ph_number, std::wstring msg_conten
 	}
 }
 
-void Terminal::delete_message(int msg_cmg_id)
+void Terminal::delete_message_from_sim(int msg_cmg_id)
 {
 	std::wstringstream cmgl_id(L"");
 	cmgl_id << std::dec << msg_cmg_id;
@@ -186,12 +187,12 @@ bool Terminal::update(double millis)
 			{
 				if (modem_str.find(L"+CMGL:") != std::wstring::npos)
 				{
-					parse_messages(modem_str);
+					msg_handler->parse_messages(modem_str, comp_list);
 					modem_str = L"";
 				}
 				if (cur_messages.size() > 0)
 				{
-					process_messages();
+					msg_handler->process_messages(this, report_collection, comp_list, date, english_date);
 				}
 				if (modem_str.find(L"+CMTI") != std::wstring::npos)
 				{
