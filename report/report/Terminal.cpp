@@ -45,7 +45,6 @@ void Terminal::init_auto()
 
 	got_modem = true;
 	ms_to_wait = 0;
-	cur_messages.clear();
 }
 
 void Terminal::init_user()
@@ -187,13 +186,10 @@ bool Terminal::update(double millis)
 			{
 				if (modem_str.find(L"+CMGL:") != std::wstring::npos)
 				{
-					msg_handler->parse_messages(modem_str, comp_list);
+					msg_handler->parse_messages(this, modem_str, comp_list);
 					modem_str = L"";
 				}
-				if (cur_messages.size() > 0)
-				{
-					msg_handler->process_messages(this, report_collection, comp_list, date, english_date);
-				}
+				msg_handler->process_messages(this, report_collection, comp_list, date, english_date);
 				if (modem_str.find(L"+CMTI") != std::wstring::npos)
 				{
 					push_command(L"AT+CMGL=0");

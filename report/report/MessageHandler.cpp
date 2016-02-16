@@ -15,7 +15,7 @@ MessageHandler::~MessageHandler()
 {
 }
 
-void MessageHandler::parse_messages(std::wstring raw_str, CompList* comp_list)
+void MessageHandler::parse_messages(Terminal* terminal, std::wstring raw_str, CompList* comp_list)
 {
 	//parses messages from the raw_str modem output string
 	int start = raw_str.find(L"+CMGL:");
@@ -36,6 +36,7 @@ void MessageHandler::parse_messages(std::wstring raw_str, CompList* comp_list)
 		}
 		start = end + 1;
 		end = raw_str.find(L"+CMGL:", start + 1) - 1;
+		terminal->delete_message_from_sim(msg.cmgl_ids[0]);
 	}
 
 	//Attempt to piece together concatenated messages
@@ -110,8 +111,9 @@ void MessageHandler::process_messages(Terminal* terminal, ReportCollection* repo
 				report_collection->report_by_comp[Report::TYPE_BAPTISM_RECORD].add_report(report);
 
 				int choice = _wtoi(report.report_values[L"BAP_SOURCE"].c_str());
-				Report bap_source = report;
+				Report bap_source;
 				bap_source.set_type(Report::TYPE_BAPTISM_SOURCE);
+				bap_source.id_str = report.id_str;
 				if (choice == 1)
 					bap_source.report_values.insert(std::pair<std::wstring, std::wstring>(L"BAP_MISS_FIND", L"1"));
 				else if (choice == 2)

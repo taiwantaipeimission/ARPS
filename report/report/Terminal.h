@@ -42,8 +42,6 @@ public:
 	std::vector<Reminder> reminders;
 
 	std::queue<wchar_t> command_stream;
-	
-	std::vector<Message> cur_messages;
 
 	
 	bool got_user = false;

@@ -11,11 +11,11 @@
 
 class Message;
 
-std::wstring encode_octet_value(std::wstring chars, int octet_size);
-std::wstring extract_septets(std::wstringstream&ss, unsigned int length);
+std::wstring encode_hex_value(std::wstring chars, int rep_num_chars);
+std::wstring unpack_septets(std::vector<int> packed_data);
 std::wstring encode_phone_number(std::wstring phone_number);
 std::wstring extract_phone_number(std::wstringstream&ss, int length);
-int get_octet_value(std::wstring octet_rep, int octet_size);
+int get_hex_value(std::wstring hex_rep);
 
 std::vector<std::wstring> encode_msg(Message* msg);
 bool decode_msg(Message* msg, std::wstring raw_input, CompList* comp_list);

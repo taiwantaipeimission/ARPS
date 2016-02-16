@@ -13,35 +13,35 @@ Message::~Message()
 {
 }
 
-int get_octet_value(std::wstring octet_rep, int octet_size)
+int get_hex_value(std::wstring rep)
 {
 	std::wstringstream conversion_stream;
-	int octet_hex_value;
+	int hex_value;
 
 	conversion_stream.clear();
-	conversion_stream << std::hex << octet_rep;
-	conversion_stream >> octet_hex_value;
+	conversion_stream << std::hex << rep;
+	conversion_stream >> hex_value;
 
-	return octet_hex_value;
+	return hex_value;
 }
 
 /* Extracts a hexadecimal value from the stringstream.
- * octet_size: the number of characters per octet representation. (usually 2)
+ * num_rep_chars: the number of chars to extract as a hex representation, usually 2
  */
-int extract_octet_value(std::wstringstream& ss, int octet_size)
+int extract_hex_value(std::wstringstream& ss, int num_rep_chars)
 {
 	wchar_t chars[256];
 	std::wstring str;
-	ss.get(chars, octet_size + 1);
-	return get_octet_value((std::wstring)chars, octet_size);
+	ss.get(chars, num_rep_chars + 1);
+	return get_hex_value((std::wstring)chars);
 }
 
-std::wstring encode_octet_value(std::wstring chars, int octet_size)
+std::wstring encode_hex_value(std::wstring chars, int num_rep_chars)
 {
 	std::wstringstream ss;
 	for (int i = 0; i < chars.size(); i++)
 	{
-		ss << std::setw(octet_size) << std::setfill(L'0') << std::hex << (int)chars[i];
+		ss << std::setw(num_rep_chars) << std::setfill(L'0') << std::hex << (int)chars[i];
 	}
 	return ss.str();
 }
@@ -85,14 +85,8 @@ std::wstring extract_phone_number(std::wstringstream& ss, int ph_num_length)
 	return number;
 }
 
-std::wstring extract_septets(std::wstringstream&ss, unsigned int length)
+std::wstring unpack_septets(std::vector<int> data)
 {
-	std::vector<unsigned int> data;
-	for (unsigned int i = 0; i < length; i++)
-	{
-		int octet_value = extract_octet_value(ss, 2);
-		data.push_back(octet_value);
-	}
 	std::wstring decoded_data = L"";
 
 	int offset = 0;
@@ -100,7 +94,7 @@ std::wstring extract_septets(std::wstringstream&ss, unsigned int length)
 	unsigned int base = 0u;
 	unsigned int adder = 0u;
 	unsigned int result = 0u;
-	while (decoded_data.size() < length)
+	while (index < data.size())
 	{
 		if (offset == 0)
 		{
@@ -179,7 +173,7 @@ std::vector<std::wstring> encode_msg(Message* msg)
 				<< std::hex << std::setfill(L'0') << std::setw(2) << num_concat_msgs
 				<< std::hex << std::setfill(L'0') << std::setw(2) << ( i + 1);
 		}
-		ss << encode_octet_value(msg_chars, 4);
+		ss << encode_hex_value(msg_chars, 4);
 		strings.push_back(ss.str());
 	}
 	return strings;
@@ -200,26 +194,26 @@ bool decode_msg(Message* msg, std::wstring input, CompList* comp_list)
 	ss.seekg(0, std::ios::beg);
 	ss.str(msg->raw_pdu);
 
-	int service_center_number_length = extract_octet_value(ss, 2);
+	int service_center_number_length = extract_hex_value(ss, 2);
 	if (service_center_number_length < 0)
 		return false;
-	int service_center_type = extract_octet_value(ss, 2);
+	int service_center_type = extract_hex_value(ss, 2);
 	std::wstring service_center_number = extract_phone_number(ss, service_center_number_length * 2 - 2);
-	int pdu_header = extract_octet_value(ss, 2);
+	int pdu_header = extract_hex_value(ss, 2);
 	bool has_udh = false;
 	{
 		has_udh = (pdu_header & 0x40) != 0;
 	}
 	
-	int sender_number_length = extract_octet_value(ss, 2);
+	int sender_number_length = extract_hex_value(ss, 2);
 	if (sender_number_length < 0)
 		return false;
-	int sender_number_type = extract_octet_value(ss, 2);
+	int sender_number_type = extract_hex_value(ss, 2);
 	msg->sender_number = extract_phone_number(ss, sender_number_length);
-	int protocol_id = extract_octet_value(ss, 2);
-	msg->data_coding = extract_octet_value(ss, 2);
+	int protocol_id = extract_hex_value(ss, 2);
+	msg->data_coding = extract_hex_value(ss, 2);
 	std::wstring time = extract_phone_number(ss, 14);
-	msg->msg_length = extract_octet_value(ss, 2);
+	msg->msg_length = extract_hex_value(ss, 2);
 	if (msg->msg_length < 0)
 		return false;
 	std::wstring udh;
@@ -230,34 +224,42 @@ bool decode_msg(Message* msg, std::wstring input, CompList* comp_list)
 		int i = 0;
 		if (has_udh)
 		{
-			int udhl = extract_octet_value(ss, 2);			//Length of the user data header
-			udh.push_back(extract_octet_value(ss, 2));		//IEI
-			extract_octet_value(ss, 2);						//IEDL
-			udh.push_back(extract_octet_value(ss, 2));		//IED: refnum
-			udh.push_back(extract_octet_value(ss, 2));		//IED: num of concat msgs
-			udh.push_back(extract_octet_value(ss, 2));		//IED: concat index of this msg
+			int udhl = extract_hex_value(ss, 2);			//Length of the user data header
+			udh.push_back(extract_hex_value(ss, 2));		//IEI
+			extract_hex_value(ss, 2);						//IEDL
+			udh.push_back(extract_hex_value(ss, 2));		//IED: refnum
+			udh.push_back(extract_hex_value(ss, 2));		//IED: num of concat msgs
+			udh.push_back(extract_hex_value(ss, 2));		//IED: concat index of this msg
 			i += udhl;
 		}
-		int value = extract_octet_value(ss, 4);
+		int value = extract_hex_value(ss, 4);
 		while (ss.good())
 		{
 			msg->contents.push_back(value);		//Extract in 2-byte octet pairs
-			value = extract_octet_value(ss, 4);
+			value = extract_hex_value(ss, 4);
 		}
 	}
 	else
 	{
+		std::vector<int> packed_data;
+		while (ss.good())
+		{
+			packed_data.push_back(extract_hex_value(ss, 2));
+		}
+
 		int udhl = 0;
 		if (has_udh)
 		{
-			int udhl = extract_octet_value(ss, 2);			//Length of the user data header
-			udh.push_back(extract_octet_value(ss, 2));		//IEI
-			extract_octet_value(ss, 2);						//IEDL
-			udh.push_back(extract_octet_value(ss, 2));		//IED: refnum
-			udh.push_back(extract_octet_value(ss, 2));		//IED: num of concat msgs
-			udh.push_back(extract_octet_value(ss, 2));		//IED: concat index of this msg
+			udhl = packed_data[0];					//Length of the user data header
+			udh.push_back(packed_data[1]);					//IEI
+														//IEDL
+			udh.push_back(packed_data[3]);					//IED: refnum
+			udh.push_back(packed_data[4]);					//IED: num of concat msgs
+			udh.push_back(packed_data[5]);					//IED: concat index of this msg
 		}
-		msg->contents = extract_septets(ss, msg->msg_length - udhl);
+		std::wstring all_contents = unpack_septets(packed_data);
+		int udh_num_septets = (((udhl + 1) * 8) + 6) / 7;
+		msg->contents = all_contents.substr(udh_num_septets, all_contents.length() - udh_num_septets);
 	}
 	if (has_udh)
 	{
