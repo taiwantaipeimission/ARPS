@@ -1,4 +1,6 @@
-﻿#include <string.h>
+﻿#define WIN32
+
+#include <string.h>
 #include <iostream>
 
 #include <fstream>
@@ -7,7 +9,11 @@
 #include <vector>
 #include <ctime>
 #include <codecvt>
-#include "include/utf8.h"
+#include <FL/FL.h>
+#include <FL/FL_Window.h>
+#include <FL/Fl_Box.H>
+#include <FL/Fl_Button.H>
+#include <FL/Fl_Menu_Bar.H>
 
 #include "Modem.h"
 #include "FileManager.h"
@@ -60,7 +66,7 @@ void show_report_status(ReportCollection* report_collection, CompList* comp_list
 		std::wstring id_str = date + L":" + it->second.area_name;
 		if (!english || it->second.english_unit_name != L"")
 		{
-			if (report_collection->report_by_comp[Report::TYPE_ENGLISH].reports.count(id_str) > 0)
+			if (report_collection->reports[english ? Report::TYPE_ENGLISH : Report::TYPE_REGULAR][ReportCollection::COMP].reports.count(id_str) > 0)
 			{
 				std::wcout << it->second.area_name << std::endl;
 			}
@@ -93,21 +99,21 @@ bool save(FileManager* file_manager, ReportCollection* report_collection, CompLi
 	message_handler->write_filed_msgs(file_manager->files[MESSAGES_UNPROCESSED]->file, false);
 	message_handler->write_filed_msgs(file_manager->files[MESSAGES_PROCESSED]->file, true);
 
-	report_collection->write_report_by_comp(Report::TYPE_REGULAR, file_manager->files[REPORT_DATA]);
+	report_collection->write_report(Report::TYPE_REGULAR, ReportCollection::COMP, file_manager->files[REPORT_DATA]);
 	report_collection->calculate_report_by_zone(Report::TYPE_REGULAR, comp_list, date);
-	report_collection->write_report_by_zone(Report::TYPE_REGULAR, file_manager->files[REPORT_DATA_ZONE]);
-	report_collection->write_report_by_zone_month(Report::TYPE_REGULAR, file_manager->files[REPORT_DATA_ZONE_MONTH]);
+	report_collection->write_report(Report::TYPE_REGULAR, ReportCollection::ZONE, file_manager->files[REPORT_DATA_ZONE]);
+	report_collection->write_report(Report::TYPE_REGULAR, ReportCollection::ZONE_MONTH, file_manager->files[REPORT_DATA_ZONE_MONTH]);
 
-	report_collection->write_report_by_comp(Report::TYPE_ENGLISH, file_manager->files[ENGLISH_DATA]);
+	report_collection->write_report(Report::TYPE_ENGLISH, ReportCollection::COMP, file_manager->files[ENGLISH_DATA]);
 	report_collection->calculate_report_by_zone(Report::TYPE_ENGLISH, comp_list, english_date);
-	report_collection->write_report_by_zone(Report::TYPE_ENGLISH, file_manager->files[ENGLISH_DATA_UNIT]);
+	report_collection->write_report(Report::TYPE_ENGLISH, ReportCollection::ZONE, file_manager->files[ENGLISH_DATA_UNIT]);
 
-	report_collection->write_report_by_comp(Report::TYPE_BAPTISM_RECORD, file_manager->files[BAPTISM_RECORD]);
+	report_collection->write_report(Report::TYPE_BAPTISM_RECORD, ReportCollection::COMP, file_manager->files[BAPTISM_RECORD]);
 
-	report_collection->write_report_by_comp(Report::TYPE_BAPTISM_SOURCE, file_manager->files[BAPTISM_SOURCE]);
+	report_collection->write_report(Report::TYPE_BAPTISM_SOURCE, ReportCollection::COMP, file_manager->files[BAPTISM_SOURCE]);
 	report_collection->calculate_report_by_zone(Report::TYPE_BAPTISM_SOURCE, comp_list, date);
-	report_collection->write_report_by_zone(Report::TYPE_BAPTISM_SOURCE, file_manager->files[BAPTISM_SOURCE_ZONE]);
-	report_collection->write_report_by_zone_month(Report::TYPE_BAPTISM_SOURCE, file_manager->files[BAPTISM_SOURCE_ZONE_MONTH]);
+	report_collection->write_report(Report::TYPE_BAPTISM_SOURCE, ReportCollection::ZONE, file_manager->files[BAPTISM_SOURCE_ZONE]);
+	report_collection->write_report(Report::TYPE_BAPTISM_SOURCE, ReportCollection::ZONE_MONTH, file_manager->files[BAPTISM_SOURCE_ZONE_MONTH]);
 
 	file_manager->close_file(REPORT_DATA);
 	file_manager->close_file(REPORT_DATA_ZONE);
@@ -132,10 +138,12 @@ bool load(FileManager* file_manager, ReportCollection* report_collection, CompLi
 
 	file_manager->open_file(REPORT_DATA, File::FILE_TYPE_INPUT);
 	file_manager->open_file(REPORT_DATA_ZONE, File::FILE_TYPE_INPUT);
+	file_manager->open_file(REPORT_DATA_ZONE_MONTH, File::FILE_TYPE_INPUT);
 	file_manager->open_file(ENGLISH_DATA, File::FILE_TYPE_INPUT);
 	file_manager->open_file(ENGLISH_DATA_UNIT, File::FILE_TYPE_INPUT);
 	file_manager->open_file(BAPTISM_SOURCE, File::FILE_TYPE_INPUT);
 	file_manager->open_file(BAPTISM_SOURCE_ZONE, File::FILE_TYPE_INPUT);
+	file_manager->open_file(BAPTISM_SOURCE_ZONE_MONTH, File::FILE_TYPE_INPUT);
 	file_manager->open_file(BAPTISM_RECORD, File::FILE_TYPE_INPUT);
 
 	file_manager->open_file(REPORT_DATA_OLD, File::FILE_TYPE_OUTPUT, true);
@@ -146,14 +154,16 @@ bool load(FileManager* file_manager, ReportCollection* report_collection, CompLi
 	message_handler->read_filed_msgs(file_manager->files[MESSAGES_UNPROCESSED]->file, false);
 	message_handler->read_filed_msgs(file_manager->files[MESSAGES_PROCESSED]->file, true);
 
-	report_collection->read_report_by_comp(Report::TYPE_REGULAR, file_manager->files[REPORT_DATA]);
-	report_collection->read_report_by_zone(Report::TYPE_REGULAR, file_manager->files[REPORT_DATA_ZONE]);
-	report_collection->read_report_by_comp(Report::TYPE_ENGLISH, file_manager->files[ENGLISH_DATA]);
-	report_collection->read_report_by_zone(Report::TYPE_REGULAR, file_manager->files[ENGLISH_DATA_UNIT]);
-	report_collection->read_report_by_comp(Report::TYPE_BAPTISM_SOURCE, file_manager->files[BAPTISM_SOURCE]);
-	report_collection->read_report_by_zone(Report::TYPE_BAPTISM_SOURCE, file_manager->files[BAPTISM_SOURCE]);
+	report_collection->read_report(Report::TYPE_REGULAR, ReportCollection::COMP, file_manager->files[REPORT_DATA]);
+	report_collection->read_report(Report::TYPE_REGULAR, ReportCollection::ZONE, file_manager->files[REPORT_DATA_ZONE]);
+	report_collection->read_report(Report::TYPE_REGULAR, ReportCollection::ZONE_MONTH, file_manager->files[REPORT_DATA_ZONE_MONTH]);
+	report_collection->read_report(Report::TYPE_ENGLISH, ReportCollection::COMP, file_manager->files[ENGLISH_DATA]);
+	report_collection->read_report(Report::TYPE_ENGLISH, ReportCollection::ZONE, file_manager->files[ENGLISH_DATA_UNIT]);
+	report_collection->read_report(Report::TYPE_BAPTISM_SOURCE, ReportCollection::COMP, file_manager->files[BAPTISM_SOURCE]);
+	report_collection->read_report(Report::TYPE_BAPTISM_SOURCE, ReportCollection::ZONE, file_manager->files[BAPTISM_SOURCE_ZONE]);
+	report_collection->read_report(Report::TYPE_BAPTISM_SOURCE, ReportCollection::ZONE_MONTH, file_manager->files[BAPTISM_SOURCE_ZONE_MONTH]);
 
-	report_collection->read_report_by_comp(Report::TYPE_BAPTISM_RECORD, file_manager->files[BAPTISM_RECORD]);
+	report_collection->read_report(Report::TYPE_BAPTISM_RECORD, ReportCollection::COMP, file_manager->files[BAPTISM_RECORD]);
 
 	comp_list->load(file_manager->files[PH_LIST]->file);
 
@@ -162,10 +172,12 @@ bool load(FileManager* file_manager, ReportCollection* report_collection, CompLi
 	file_manager->close_file(MESSAGES_PROCESSED);
 	file_manager->close_file(REPORT_DATA);
 	file_manager->close_file(REPORT_DATA_ZONE);
+	file_manager->close_file(REPORT_DATA_ZONE_MONTH);
 	file_manager->close_file(ENGLISH_DATA);
 	file_manager->close_file(ENGLISH_DATA_UNIT);
 	file_manager->close_file(BAPTISM_SOURCE);
 	file_manager->close_file(BAPTISM_SOURCE_ZONE);
+	file_manager->close_file(BAPTISM_SOURCE_ZONE_MONTH);
 	file_manager->close_file(BAPTISM_RECORD);
 
 	return true;
@@ -222,9 +234,61 @@ public:
 	}
 };
 
+void quit_cb(Fl_Widget*, void*)
+{
+	exit(0);
+}
+
+void save_cb(Fl_Widget*, void*)
+{
+	//save(file_manager, report_collection, comp_list, msg_handler, date, english_date);
+}
+
 
 int main(int argc, char **argv)
 {
+	Fl_Window* window = new Fl_Window(400, 400);
+	Fl_Menu_Bar* menu = new Fl_Menu_Bar(0, 0, 400, 25);
+	menu->add("&File/Save", FL_CTRL + 's', save_cb); 
+	menu->add("&File/Quit", FL_CTRL + 'q', quit_cb);
+	menu->add("&Reporting/&English report status");
+	window->end();
+	window->show();
+	Fl::run();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	Console_streambuf out(GetStdHandle(STD_OUTPUT_HANDLE));
 	auto old_buf = std::wcout.rdbuf(&out);
 

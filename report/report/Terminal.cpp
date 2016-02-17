@@ -80,12 +80,12 @@ bool Terminal::send_reminders()
 					bool send_it = false;
 					if (it->english)
 					{
-						if (ci->first != L"" && report_collection->report_by_zone[Report::TYPE_ENGLISH].reports.count(english_date + L":" + ci->second.area_name) <= 0 && ci->second.english_unit_name != L"NONE")
+						if (ci->first != L"" && report_collection->reports[Report::TYPE_ENGLISH][ReportCollection::ZONE].reports.count(english_date + L":" + ci->second.area_name) <= 0 && ci->second.english_unit_name != L"NONE")
 							send_it = true;
 					}
 					else
 					{
-						if (ci->first != L"" && report_collection->report_by_zone[Report::TYPE_REGULAR].reports.count(date + L":" + ci->second.area_name) <= 0)
+						if (ci->first != L"" && report_collection->reports[Report::TYPE_REGULAR][ReportCollection::ZONE].reports.count(date + L":" + ci->second.area_name) <= 0)
 							send_it = true;
 					}
 					if (send_it)

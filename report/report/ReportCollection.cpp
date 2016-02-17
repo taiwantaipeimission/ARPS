@@ -7,8 +7,15 @@
 #include "Area.h"
 
 ReportCollection::ReportCollection()
-	: report_by_comp(), report_by_zone(), report_by_zone_month(), report_by_indiv()
+	: reports()
 {
+	for (int i = 0; i <= Report::TYPE_BAPTISM_SOURCE; i++)
+	{
+		for (int j = 0; j <= INDIV; j++)
+		{
+			reports[(Report::Type)i][(DataOrder)j].report_type = (Report::Type)i;
+		}
+	}
 }
 
 
@@ -16,46 +23,32 @@ ReportCollection::~ReportCollection()
 {
 }
 
-void ReportCollection::read_report_by_comp(Report::Type type, File* file)
+void ReportCollection::read_report(Report::Type type, DataOrder data_order, File* file)
 {
-	report_by_comp[type].report_type = type;
-	report_by_zone[type].report_type = type;
-	report_by_zone_month[type].report_type = type;
-	report_by_indiv[type].report_type = type;
-
-	report_by_comp[type].read_stored_all(file->file);
+	reports[type][data_order].report_type = type;
+	reports[type][data_order].read_stored_all(file->file);
 }
 
-void ReportCollection::read_report_by_zone(Report::Type type, File* file)
+void ReportCollection::write_report(Report::Type type, DataOrder data_order, File* file)
 {
-	report_by_zone[type].read_stored_all(file->file);
-}
-
-void ReportCollection::write_report_by_comp(Report::Type type, File* file)
-{
-	report_by_comp[type].print(file->file);
-}
-
-void ReportCollection::write_report_by_zone(Report::Type type, File* file)
-{
-	report_by_zone[type].print(file->file);
-}
-
-void ReportCollection::write_report_by_zone_month(Report::Type type, File* file)
-{
-	report_by_zone_month[type].print(file->file);
-}
-
-void ReportCollection::write_report_by_indiv(Report::Type type, File* file)
-{
-	report_by_indiv[type].print(file->file);
+	reports[type][data_order].print(file->file);
 }
 
 void ReportCollection::calculate_report_by_zone(Report::Type type, CompList* comp_list, std::wstring date)
 {
-	report_by_zone[type].reports.clear();
+	//Remove all zone reports for the current date, so they can be updated
+	for (std::map<std::wstring, Report>::iterator it = reports[type][ZONE].reports.begin(); it != reports[type][ZONE].reports.end();)
+	{
+		std::wstring report_date = it->second.get_date();
+		if (report_date == date)
+			it = reports[type][ZONE].reports.erase(it);
+		else
+			++it;
+	}
 
-	for (std::map<std::wstring, Report>::iterator it = report_by_comp[type].reports.begin(); it != report_by_comp[type].reports.end(); ++it)
+	std::map<std::wstring, Report> reports_to_add;
+
+	for (std::map<std::wstring, Report>::iterator it = reports[type][COMP].reports.begin(); it != reports[type][COMP].reports.end(); ++it)
 	{
 		std::wstring comp_report_date = it->second.get_date();
 		if (comp_list->areas.count(it->second.sender_number) > 0)
@@ -63,24 +56,39 @@ void ReportCollection::calculate_report_by_zone(Report::Type type, CompList* com
 			std::wstring zone_name = type == Report::TYPE_ENGLISH ? comp_list->areas[it->second.sender_number].english_unit_name : comp_list->areas[it->second.sender_number].zone_name;
 			std::wstring zone_id_str = comp_report_date + L":" + zone_name;
 
-			if (report_by_zone[type].reports.count(zone_id_str) > 0)
+			if (reports[type][ZONE].reports.count(zone_id_str) <= 0)			//There is no report for this zone yet
 			{
-				Report zone_report = report_by_zone[type].reports[zone_id_str];
-				zone_report += it->second;
-				report_by_zone[type].add_report(zone_report);
-			}
-			else
-			{
-				Report report = it->second;
-				report.id_str = zone_id_str;
-				report_by_zone[type].add_report(report);
+				if (reports_to_add.count(zone_id_str) > 0)
+				{
+					reports_to_add[zone_id_str] += it->second;
+				}
+				else
+				{
+					Report report = it->second;
+					report.id_str = zone_id_str;
+					reports_to_add[report.id_str] = report;						//Start adding a new report
+				}
 			}
 		}
 	}
 
-	report_by_zone_month[type].reports.clear();
+	for (std::map<std::wstring, Report>::iterator it = reports_to_add.begin(); it != reports_to_add.end(); ++it)
+	{
+		reports[type][ZONE].reports[it->first] = it->second;
+	}
 
-	for (std::map<std::wstring, Report>::iterator it = report_by_zone[type].reports.begin(); it != report_by_zone[type].reports.end(); ++it)
+	reports_to_add.clear();
+
+	for (std::map<std::wstring, Report>::iterator it = reports[type][ZONE_MONTH].reports.begin(); it != reports[type][ZONE_MONTH].reports.end();)
+	{
+		std::wstring report_date = it->second.get_date();
+		if (report_date == date)
+			it = reports[type][ZONE_MONTH].reports.erase(it);
+		else
+			++it;
+	}
+
+	for (std::map<std::wstring, Report>::iterator it = reports[type][ZONE].reports.begin(); it != reports[type][ZONE].reports.end(); ++it)
 	{
 		std::wstring report_date = it->second.get_date();
 		std::wstring zone_name = it->second.get_sender_name();
@@ -88,18 +96,24 @@ void ReportCollection::calculate_report_by_zone(Report::Type type, CompList* com
 
 		std::wstring zone_id_str = report_date_year_month + L":0:0:" + zone_name;
 
-		if (report_by_zone_month[type].reports.count(zone_id_str) > 0)
+		if (reports[type][ZONE_MONTH].reports.count(zone_id_str) <= 0)
 		{
-			Report monthly_zone_report = report_by_zone_month[type].reports[zone_id_str];
-			monthly_zone_report += it->second;
-			report_by_zone_month[type].add_report(monthly_zone_report);
+			if (reports_to_add.count(zone_id_str) > 0)
+			{
+				reports_to_add[zone_id_str] += it->second;
+			}
+			else
+			{
+				Report report = it->second;
+				report.id_str = zone_id_str;
+				reports_to_add[report.id_str] = report;
+			}
 		}
-		else
-		{
-			Report report = it->second;
-			report.id_str = zone_id_str;
-			report_by_zone_month[type].add_report(report);
-		}
+	}
+
+	for (std::map<std::wstring, Report>::iterator it = reports_to_add.begin(); it != reports_to_add.end(); ++it)
+	{
+		reports[type][ZONE_MONTH].reports[it->first] = it->second;
 	}
 }
 

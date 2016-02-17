@@ -83,7 +83,7 @@ void MessageHandler::process_messages(Terminal* terminal, ReportCollection* repo
 				Report report;
 				report.set_type(Report::TYPE_REGULAR);
 				report.read_message(*it, date);
-				report_collection->report_by_comp[Report::TYPE_REGULAR].add_report(report);
+				report_collection->reports[Report::TYPE_REGULAR][ReportCollection::COMP].add_report(report);
 
 				processed_this_msg = true;
 
@@ -99,7 +99,7 @@ void MessageHandler::process_messages(Terminal* terminal, ReportCollection* repo
 				Report report;
 				report.set_type(Report::TYPE_ENGLISH);
 				report.read_message(*it, english_date);
-				report_collection->report_by_comp[Report::TYPE_ENGLISH].add_report(report);
+				report_collection->reports[Report::TYPE_ENGLISH][ReportCollection::COMP].add_report(report);
 
 				processed_this_msg = true;
 			}
@@ -108,7 +108,7 @@ void MessageHandler::process_messages(Terminal* terminal, ReportCollection* repo
 				Report report;
 				report.set_type(Report::TYPE_BAPTISM_RECORD);
 				report.read_message(*it, date);
-				report_collection->report_by_comp[Report::TYPE_BAPTISM_RECORD].add_report(report);
+				report_collection->reports[Report::TYPE_BAPTISM_RECORD][ReportCollection::COMP].add_report(report);
 
 				int choice = _wtoi(report.report_values[L"BAP_SOURCE"].c_str());
 				Report bap_source;
@@ -127,7 +127,7 @@ void MessageHandler::process_messages(Terminal* terminal, ReportCollection* repo
 				else if (choice == 6)
 					bap_source.report_values.insert(std::pair<std::wstring, std::wstring>(L"BAP_TOUR", L"1"));
 
-				report_collection->report_by_comp[Report::TYPE_BAPTISM_SOURCE].add_report(bap_source);
+				report_collection->reports[Report::TYPE_BAPTISM_SOURCE][ReportCollection::COMP].add_report(bap_source);
 
 				processed_this_msg = true;
 			}
