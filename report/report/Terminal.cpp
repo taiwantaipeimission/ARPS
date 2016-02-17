@@ -195,7 +195,7 @@ bool Terminal::update(double millis)
 					push_command(L"AT+CMGL=0");
 					push_command(COMMAND_NEWLINE_CHAR);
 				}
-				send_reminders();
+				//send_reminders();
 			}
 		}
 		if (got_user && user_ch == 27)

@@ -100,18 +100,18 @@ bool save(FileManager* file_manager, ReportCollection* report_collection, CompLi
 	message_handler->write_filed_msgs(file_manager->files[MESSAGES_PROCESSED]->file, true);
 
 	report_collection->write_report(Report::TYPE_REGULAR, ReportCollection::COMP, file_manager->files[REPORT_DATA]);
-	report_collection->calculate_report_by_zone(Report::TYPE_REGULAR, comp_list, date);
+	report_collection->total_all_reports(Report::TYPE_REGULAR, comp_list, date);
 	report_collection->write_report(Report::TYPE_REGULAR, ReportCollection::ZONE, file_manager->files[REPORT_DATA_ZONE]);
 	report_collection->write_report(Report::TYPE_REGULAR, ReportCollection::ZONE_MONTH, file_manager->files[REPORT_DATA_ZONE_MONTH]);
 
 	report_collection->write_report(Report::TYPE_ENGLISH, ReportCollection::COMP, file_manager->files[ENGLISH_DATA]);
-	report_collection->calculate_report_by_zone(Report::TYPE_ENGLISH, comp_list, english_date);
+	report_collection->total_all_reports(Report::TYPE_ENGLISH, comp_list, english_date);
 	report_collection->write_report(Report::TYPE_ENGLISH, ReportCollection::ZONE, file_manager->files[ENGLISH_DATA_UNIT]);
 
 	report_collection->write_report(Report::TYPE_BAPTISM_RECORD, ReportCollection::COMP, file_manager->files[BAPTISM_RECORD]);
 
 	report_collection->write_report(Report::TYPE_BAPTISM_SOURCE, ReportCollection::COMP, file_manager->files[BAPTISM_SOURCE]);
-	report_collection->calculate_report_by_zone(Report::TYPE_BAPTISM_SOURCE, comp_list, date);
+	report_collection->total_all_reports(Report::TYPE_BAPTISM_SOURCE, comp_list, date);
 	report_collection->write_report(Report::TYPE_BAPTISM_SOURCE, ReportCollection::ZONE, file_manager->files[BAPTISM_SOURCE_ZONE]);
 	report_collection->write_report(Report::TYPE_BAPTISM_SOURCE, ReportCollection::ZONE_MONTH, file_manager->files[BAPTISM_SOURCE_ZONE_MONTH]);
 

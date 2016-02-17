@@ -12,6 +12,8 @@ public:
 		COMP,					//Data by companionship
 		ZONE,					//Data by zone
 		ZONE_MONTH,				//Data by zone (monthly totals)
+		MISSION,
+		MISSION_MONTH,
 		INDIV					//Data by individual
 	};
 
@@ -22,8 +24,9 @@ public:
 
 	void read_report(Report::Type type, DataOrder data_order, File* file);
 	void write_report(Report::Type type, DataOrder data_order, File* file);
+	std::wstring get_owner_id_str(Report* rep, DataOrder from, DataOrder to, CompList* comp_list);
 
-	void calculate_report_by_zone(Report::Type type, CompList* comp_list, std::wstring date);
-	void calculate_report_by_indiv();
+	void total_reports(Report::Type type, DataOrder from, DataOrder to, CompList* comp_list, std::wstring date);
+	void total_all_reports(Report::Type type, CompList* comp_list, std::wstring date);
 };
 
