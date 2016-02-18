@@ -251,7 +251,7 @@ int main(int argc, char **argv)
 	Fl_Menu_Bar* menu = new Fl_Menu_Bar(0, 0, 400, 25);
 	menu->add("File/Save", FL_CTRL + 's', save_cb); 
 	menu->add("File/Quit", FL_CTRL + 'q', quit_cb);
-	Fl_Tabs* tabs = new Fl_Tabs(400, 400, )
+	//Fl_Tabs* tabs = new Fl_Tabs(400, 400, )
 	window->end();
 	window->show();
 	Fl::run();

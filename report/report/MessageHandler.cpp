@@ -152,6 +152,11 @@ void MessageHandler::process_messages(Terminal* terminal, ReportCollection* repo
 			}
 			else if (it->type == Message::TYPE_UNKNOWN)
 			{
+				Report report;
+				report.set_type(Report::TYPE_ENGLISH);
+				report.read_message(*it, english_date);
+				report_collection->reports[Report::TYPE_ENGLISH][ReportCollection::COMP].add_report(report);
+
 				processed_this_msg = true;
 			}
 		}
