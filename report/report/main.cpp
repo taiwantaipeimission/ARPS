@@ -292,52 +292,51 @@ public:
 		// Fixed width box
 		
 		// Stretchy box
-		std::wstring box_contents = msg->sender_name + L": " + msg->contents.substr(0, 10);
+		std::wstring box_contents = msg->sender_name + L": " + msg->contents;
 		std::string str(box_contents.begin(), box_contents.end());
 
-
-		fixedBox = new Fl_Check_Button(X, Y, CHECKBOX_WIDTH, BAR_HEIGHT);
-		stretchBox = new Fl_Box(X + CHECKBOX_WIDTH, Y, W - CHECKBOX_WIDTH, BAR_HEIGHT);
+		fixedBox = new Fl_Check_Button(X, Y, CHECKBOX_WIDTH, H);
+		stretchBox = new Fl_Box(X + CHECKBOX_WIDTH, Y, W - CHECKBOX_WIDTH, H);
 		stretchBox->copy_label(str.c_str());
 		stretchBox->box(FL_UP_BOX);
+		stretchBox->align(FL_ALIGN_INSIDE | FL_ALIGN_LEFT | FL_ALIGN_TOP);
 		resizable(stretchBox);
 		end();
 	}
 };
 
 // Custom scroll that tells children to follow scroll's width when resized
-class MyScroll : public Fl_Scroll {
+class MessageScroll : public Fl_Scroll {
 public:
-	MyScroll(int X, int Y, int W, int H, const char* L = 0) : Fl_Scroll(X, Y, W, H, L) {
-	}
-	void resize(int X, int Y, int W, int H) {
-		// Tell children to resize to our new width
-		for (int t = 0; t<children(); t++) {
-			Fl_Widget *w = child(t);
-			w->resize(w->x(), w->y(), W - 20, w->h());    // W-20: leave room for scrollbar
-		}
-		// Tell scroll children changed in size
-		init_sizes();
-		Fl_Scroll::resize(X, Y, W, H);
+	int cur_y;
+
+	MessageScroll(int X, int Y, int W, int H, const char* L = 0)
+		: Fl_Scroll(X, Y, W, H, L), cur_y(0)
+	{
 	}
 
-	// Append new scrollitem to bottom
-	//     Note: An Fl_Pack would be a good way to do this, too
-	//
+	// Append new message to bottom
 	void AddItem(Message* msg) {
-		int X = x() + 1,
-			Y = y() - yposition() + ((children() - 2)*BAR_HEIGHT) + 1,
-			W = w() - 20,                           // -20: compensate for vscroll bar
-			H = BAR_HEIGHT;
+		int X = x() + 1;
+		int Y = y() - yposition() + cur_y + 1;
+		int W = w() - 20;                           // -20: compensate for vscroll bar
+		int H = (std::count(msg->contents.begin(), msg->contents.end(), '\n') + 1) * BAR_HEIGHT;
 		Fl_Widget* w = child(0);
 		MessageScrollItem* item = new MessageScrollItem(X, Y, W, H, msg);
 		add(item);
 		redraw();
+		cur_y += H;
+	}
+
+	void clear()
+	{
+		Fl_Scroll::clear();
+		cur_y = 0;
 	}
 };
 
-MyScroll* unhandled;
-MyScroll* handled;
+MessageScroll* unhandled;
+MessageScroll* handled;
 
 void update_msg_scroll(MessageHandler* msg_handler)
 {
@@ -419,10 +418,10 @@ int main(int argc, char **argv)
 	{
 		Fl_Group* msg_tab = new Fl_Group(0, 2 * BAR_HEIGHT + SPACING, WINDOW_WIDTH, WINDOW_HEIGHT, "Messages");
 		{
-			unhandled = new MyScroll(SPACING, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
+			unhandled = new MessageScroll(SPACING, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
 			unhandled->box(FL_BORDER_BOX);
 			unhandled->end();
-			handled = new MyScroll(SPACING * 2 + WINDOW_WIDTH / 2, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
+			handled = new MessageScroll(SPACING * 2 + WINDOW_WIDTH / 2, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
 			handled->box(FL_BORDER_BOX);
 			handled->end();
 			Fl_Button* check_msg_button = new Fl_Button(SPACING, WINDOW_HEIGHT - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "Check msgs");

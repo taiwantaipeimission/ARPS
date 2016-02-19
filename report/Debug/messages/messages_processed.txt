@@ -62,4 +62,8 @@ INFO:she is an 8 year old girl. Mom bring to english. Little girl is awesome!||8
 PLACE:鶯歌區，新台北
 NAME:林俊宏
 NUMBER:0925255806
-INFO:works at yingge. Lives at jieshou lu. Nice||8|140|0|198|2|1;
+INFO:works at yingge. Lives at jieshou lu. Nice||8|140|0|198|2|1;ZHUBEI_1_S|+886972576574|3|TYPE:REFERRAL
+PLACE: TAIDONG
+NAME:呂弟兄 
+NUMBER:0923773972
+INFO: referral given to us for guonian from taidong - could never set up with us ||8|140|0|127|3|1;
