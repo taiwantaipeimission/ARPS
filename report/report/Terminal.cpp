@@ -17,9 +17,10 @@
 #include "Reminder.h"
 #include "Referral.h"
 #include "MessageHandler.h"
+#include "FileManager.h"
 
-Terminal::Terminal(std::wstring date_in, std::wstring english_date_in, Modem* modem_in, ReportCollection* report_collection_in, CompList* comp_list_in, MessageHandler* message_handler_in, File* output_file_in)
-	: cmd_source(COMMAND_SOURCE_LOGIC), date(date_in), english_date(english_date_in), modem(modem_in), report_collection(report_collection_in), comp_list(comp_list_in), msg_handler(message_handler_in), output_file(output_file_in), reminders()
+Terminal::Terminal(std::wstring date_in, std::wstring english_date_in, Modem* modem_in, ReportCollection* report_collection_in, CompList* comp_list_in, MessageHandler* message_handler_in, File* output_file_in, FileManager* file_manager_in)
+	: cmd_source(COMMAND_SOURCE_LOGIC), date(date_in), english_date(english_date_in), modem(modem_in), report_collection(report_collection_in), comp_list(comp_list_in), msg_handler(message_handler_in), output_file(output_file_in), file_manager(file_manager_in), reminders()
 {
 	std::time(&cur_time);
 }
@@ -181,7 +182,6 @@ bool Terminal::update(double millis)
 	{
 		if (got_modem && ms_to_wait <= 0)
 		{
-
 			if(command_stream.size() <= 0)	//eof
 			{
 				if (modem_str.find(L"+CMGL:") != std::wstring::npos)
@@ -189,20 +189,9 @@ bool Terminal::update(double millis)
 					msg_handler->parse_messages(this, modem_str, comp_list);
 					modem_str = L"";
 				}
-				msg_handler->process_messages(this, report_collection, comp_list, date, english_date);
-				if (modem_str.find(L"+CMTI") != std::wstring::npos)
-				{
-					push_command(L"AT+CMGL=0");
-					push_command(COMMAND_NEWLINE_CHAR);
-				}
-				send_reminders();
+				ret_value = false;
 			}
 		}
-		if (got_user && user_ch == 27)
-		{
-			ret_value = false;
-		}
-		
 	}
 	else if (cmd_source == COMMAND_SOURCE_USER)
 	{
@@ -240,7 +229,7 @@ bool Terminal::update(double millis)
 				ms_to_wait = TIMEOUT_MS;
 				got_modem = false;
 			}
-			else if (command_ch == COMMAND_ESCAPE_CHAR)
+			else if (command_ch_str == COMMAND_ESCAPE_CHAR)
 			{
 				WriteFile(modem->file, "\u001A", 1, &written, NULL);
 				ms_to_wait = MSG_TIMEOUT_MS;

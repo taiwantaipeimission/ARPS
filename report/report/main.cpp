@@ -14,6 +14,11 @@
 #include <FL/Fl_Box.H>
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Menu_Bar.H>
+#include <FL/Fl_Tabs.H>
+#include <FL/Fl_Scroll.H>
+#include <FL/Fl_Check_Button.h>
+#include <FL/Fl_Timer.H>
+#include <FL/fl_ask.H>
 
 #include "Modem.h"
 #include "FileManager.h"
@@ -49,7 +54,18 @@
 //Characters
 #define DATE_STAMP_SEPARATOR_CHAR L":"
 
+const double POLL_INTERVAL = 300.0f;
+
+const int WINDOW_WIDTH = 800;
+const int WINDOW_HEIGHT = 600;
+const int BAR_HEIGHT = 25;
+const int BUTTON_WIDTH = 100;
+const int CHECKBOX_WIDTH = BAR_HEIGHT;
+const int SPACING = 5;
+
 using namespace std;
+
+bool saved = true;
 
 std::wstring tos(int x)
 {
@@ -234,64 +250,136 @@ public:
 	}
 };
 
-void quit_cb(Fl_Widget*, void*)
+void run_terminal_commands(Terminal* terminal)
 {
-	exit(0);
+	clock_t start = clock();
+	clock_t end = start;
+	while (terminal->update(double(end - start) / (double)CLOCKS_PER_SEC * 1000.0f))
+	{
+		start = end;
+		end = clock();
+	}
 }
 
-void save_cb(Fl_Widget*, void*)
+
+
+void save_cb(Fl_Widget* wg, void* ptr)
 {
-	//save(file_manager, report_collection, comp_list, msg_handler, date, english_date);
+	Terminal* terminal = (Terminal*)ptr;
+	save(terminal->file_manager, terminal->report_collection, terminal->comp_list, terminal->msg_handler, terminal->date, terminal->english_date);
+	saved = true;
 }
 
+void quit_cb(Fl_Widget* wg, void* ptr)
+{
+	if (saved || fl_ask("Unsaved changes! Are you sure you want to quit?"))
+		exit(0);
+}
+
+void user_terminal_cb(Fl_Widget* wg, void* ptr)
+{
+	Terminal* terminal = (Terminal*)ptr;
+	terminal->init_user();
+	run_terminal_commands(terminal);
+}
+
+class MessageScrollItem : public Fl_Group {
+	Fl_Check_Button *fixedBox;
+	Fl_Box *stretchBox;
+public:
+	MessageScrollItem(int X, int Y, int W, int H, Message* msg) : Fl_Group(X, Y, W, H, 0) {
+		begin();
+		// Fixed width box
+		
+		// Stretchy box
+		std::wstring box_contents = msg->sender_name + L": " + msg->contents.substr(0, 10);
+		std::string str(box_contents.begin(), box_contents.end());
+
+
+		fixedBox = new Fl_Check_Button(X, Y, CHECKBOX_WIDTH, BAR_HEIGHT);
+		stretchBox = new Fl_Box(X + CHECKBOX_WIDTH, Y, W - CHECKBOX_WIDTH, BAR_HEIGHT);
+		stretchBox->copy_label(str.c_str());
+		stretchBox->box(FL_UP_BOX);
+		resizable(stretchBox);
+		end();
+	}
+};
+
+// Custom scroll that tells children to follow scroll's width when resized
+class MyScroll : public Fl_Scroll {
+public:
+	MyScroll(int X, int Y, int W, int H, const char* L = 0) : Fl_Scroll(X, Y, W, H, L) {
+	}
+	void resize(int X, int Y, int W, int H) {
+		// Tell children to resize to our new width
+		for (int t = 0; t<children(); t++) {
+			Fl_Widget *w = child(t);
+			w->resize(w->x(), w->y(), W - 20, w->h());    // W-20: leave room for scrollbar
+		}
+		// Tell scroll children changed in size
+		init_sizes();
+		Fl_Scroll::resize(X, Y, W, H);
+	}
+
+	// Append new scrollitem to bottom
+	//     Note: An Fl_Pack would be a good way to do this, too
+	//
+	void AddItem(Message* msg) {
+		int X = x() + 1,
+			Y = y() - yposition() + ((children() - 2)*BAR_HEIGHT) + 1,
+			W = w() - 20,                           // -20: compensate for vscroll bar
+			H = BAR_HEIGHT;
+		Fl_Widget* w = child(0);
+		MessageScrollItem* item = new MessageScrollItem(X, Y, W, H, msg);
+		add(item);
+		redraw();
+	}
+};
+
+MyScroll* unhandled;
+MyScroll* handled;
+
+void update_msg_scroll(MessageHandler* msg_handler)
+{
+	unhandled->clear();
+	handled->clear();
+	for (int i = 0; i < msg_handler->msgs_unhandled.size(); i++)
+	{
+		unhandled->AddItem(&msg_handler->msgs_unhandled[i]);
+	}
+	for (int i = 0; i < msg_handler->msgs_handled.size(); i++)
+	{
+		handled->AddItem(&msg_handler->msgs_handled[i]);
+	}
+}
+
+void check_msg_cb(Fl_Widget* wg, void* ptr)
+{
+	Terminal* terminal = (Terminal*)ptr;
+	terminal->init_auto();
+	run_terminal_commands(terminal);
+	update_msg_scroll(terminal->msg_handler);
+	saved = false;
+}
+
+void process_msg_cb(Fl_Widget* wg, void* ptr)
+{
+	Terminal* terminal = (Terminal*)ptr;
+	terminal->msg_handler->process_messages(terminal, terminal->report_collection, terminal->comp_list, terminal->date, terminal->english_date);
+	run_terminal_commands(terminal);
+	update_msg_scroll(terminal->msg_handler);
+	saved = false;
+}
+
+void timer_cb(void* ptr)
+{
+	check_msg_cb(NULL, ptr);
+	process_msg_cb(NULL, ptr);
+	Fl::repeat_timeout(POLL_INTERVAL, timer_cb, ptr);
+}
 
 int main(int argc, char **argv)
 {
-	Fl_Window* window = new Fl_Window(400, 400);
-	Fl_Menu_Bar* menu = new Fl_Menu_Bar(0, 0, 400, 25);
-	menu->add("File/Save", FL_CTRL + 's', save_cb); 
-	menu->add("File/Quit", FL_CTRL + 'q', quit_cb);
-	//Fl_Tabs* tabs = new Fl_Tabs(400, 400, )
-	window->end();
-	window->show();
-	Fl::run();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	Console_streambuf out(GetStdHandle(STD_OUTPUT_HANDLE));
-	auto old_buf = std::wcout.rdbuf(&out);
-
 	ReportCollection report_collection;
 	CompList comp_list;
 	MessageHandler msg_handler;
@@ -310,7 +398,7 @@ int main(int argc, char **argv)
 	std::wstring english_date = get_report_date_str(english_wday);
 
 	
-	Terminal terminal(report_date, english_date, &modem, &report_collection, &comp_list, &msg_handler, file_manager.files[OUTPUT]);
+	Terminal terminal(report_date, english_date, &modem, &report_collection, &comp_list, &msg_handler, file_manager.files[OUTPUT], &file_manager);
 	terminal.add_reminder(report_reminder);
 	terminal.add_reminder(english_reminder);
 
@@ -318,63 +406,51 @@ int main(int argc, char **argv)
 
 	bool quit = false;
 	bool run_terminal = false;
-	
-	while (!quit)
+
+
+	Fl::add_timeout(POLL_INTERVAL, timer_cb, &terminal);
+	Fl_Window* window = new Fl_Window(WINDOW_WIDTH, WINDOW_HEIGHT);
+	Fl_Menu_Bar* menu = new Fl_Menu_Bar(0, 0, WINDOW_WIDTH, BAR_HEIGHT);
 	{
-		std::cout << "1. Start\n2. Report status\n3. English report status\n4. Terminal\n5. Save\n6. Quit" << std::endl;
-		char input_choice;
-		std::cin >> input_choice;
-		report_date = get_report_date_str(report_wday);
-		english_date = get_report_date_str(english_wday);
-		if (input_choice == '1')
-		{
-			terminal.init_auto();
-			run_terminal = true;
-		}
-		else if (input_choice == '2')
-		{
-			show_report_status(&report_collection, &comp_list, report_date, false);
-			run_terminal = false;
-		}
-		else if (input_choice == '3')
-		{
-			show_report_status(&report_collection, &comp_list, english_date, true);
-			run_terminal = false;
-		}
-		else if (input_choice == '4')
-		{
-			terminal.init_user();
-			run_terminal = true;
-		}
-		else if (input_choice == '5')
-		{
-			save(&file_manager, &report_collection, &comp_list, &msg_handler, report_date, english_date);
-			run_terminal = false;
-		}
-		else if (input_choice == '6')
-		{
-			quit = true;
-			run_terminal = false;
-		}
-
-		// basic terminal loop:
-
-		clock_t start = clock();
-		clock_t end = start;
-		while (run_terminal && terminal.update(double(end - start) / (double)CLOCKS_PER_SEC * 1000.0f))
-		{
-			start = end;
-			end = clock();
-		}
+		menu->add("File/Save", FL_CTRL + 's', save_cb, &terminal);
+		menu->add("File/Quit", FL_CTRL + 'q', quit_cb);
 	}
+	Fl_Tabs* tabs = new Fl_Tabs(0, BAR_HEIGHT + SPACING, WINDOW_WIDTH, WINDOW_HEIGHT - BAR_HEIGHT - SPACING);
+	{
+		Fl_Group* msg_tab = new Fl_Group(0, 2 * BAR_HEIGHT + SPACING, WINDOW_WIDTH, WINDOW_HEIGHT, "Messages");
+		{
+			unhandled = new MyScroll(SPACING, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
+			unhandled->box(FL_BORDER_BOX);
+			unhandled->end();
+			handled = new MyScroll(SPACING * 2 + WINDOW_WIDTH / 2, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
+			handled->box(FL_BORDER_BOX);
+			handled->end();
+			Fl_Button* check_msg_button = new Fl_Button(SPACING, WINDOW_HEIGHT - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "Check msgs");
+			check_msg_button->user_data((void*)(&terminal));
+			check_msg_button->callback(check_msg_cb);
+			Fl_Button* process_msg_button = new Fl_Button(BUTTON_WIDTH + 2 * SPACING, WINDOW_HEIGHT - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "Process msgs");
+			process_msg_button->user_data((void*)(&terminal));
+			process_msg_button->callback(process_msg_cb);
+			Fl_Button* user_terminal_button = new Fl_Button(2 * BUTTON_WIDTH + 3 * SPACING, WINDOW_HEIGHT - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "User Terminal");
+			user_terminal_button->user_data((void*)(&terminal));
+			user_terminal_button->callback(user_terminal_cb);
+		}
+		msg_tab->end();
+		Fl_Group* report_tab = new Fl_Group(0, 2 * BAR_HEIGHT + SPACING, WINDOW_WIDTH, WINDOW_HEIGHT, "Reports");
+		{
 
-	//save
+		}
+		report_tab->end();
+		Fl_Group* english_tab = new Fl_Group(0, 2 * BAR_HEIGHT + SPACING, WINDOW_WIDTH, WINDOW_HEIGHT, "English");
+		{
 
-	save(&file_manager, &report_collection, &comp_list, &msg_handler, report_date, english_date);
-	
-	//close output files
-	file_manager.close_file(OUTPUT);
-	
-	std::wcout.rdbuf(old_buf);
+		}
+		english_tab->end();
+	}
+	tabs->end();
+	window->end();
+	window->show();
+	update_msg_scroll(&msg_handler);
+	Fl::run();
 	return 0;
 }

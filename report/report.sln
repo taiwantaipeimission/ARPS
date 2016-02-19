@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "report", "report\report.vcxproj", "{E890EC84-A241-4B81-A2B3-91FEADAAC6C7}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FltkTest", "FltkTest\FltkTest.vcxproj", "{7396AED4-AD14-4CF6-8D7A-27023E2E2F05}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -15,6 +17,10 @@ Global
 		{E890EC84-A241-4B81-A2B3-91FEADAAC6C7}.Debug|Win32.Build.0 = Debug|Win32
 		{E890EC84-A241-4B81-A2B3-91FEADAAC6C7}.Release|Win32.ActiveCfg = Release|Win32
 		{E890EC84-A241-4B81-A2B3-91FEADAAC6C7}.Release|Win32.Build.0 = Release|Win32
+		{7396AED4-AD14-4CF6-8D7A-27023E2E2F05}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7396AED4-AD14-4CF6-8D7A-27023E2E2F05}.Debug|Win32.Build.0 = Debug|Win32
+		{7396AED4-AD14-4CF6-8D7A-27023E2E2F05}.Release|Win32.ActiveCfg = Release|Win32
+		{7396AED4-AD14-4CF6-8D7A-27023E2E2F05}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

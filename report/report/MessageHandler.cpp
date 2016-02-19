@@ -152,11 +152,6 @@ void MessageHandler::process_messages(Terminal* terminal, ReportCollection* repo
 			}
 			else if (it->type == Message::TYPE_UNKNOWN)
 			{
-				Report report;
-				report.set_type(Report::TYPE_ENGLISH);
-				report.read_message(*it, english_date);
-				report_collection->reports[Report::TYPE_ENGLISH][ReportCollection::COMP].add_report(report);
-
 				processed_this_msg = true;
 			}
 		}
@@ -182,18 +177,21 @@ void MessageHandler::read_filed_msgs(std::wistream& input, bool handled)
 		{
 			std::wstring line;
 			std::getline(input, line, MSG_SEPARATOR);
-			Message msg;
-			read_filed_msg(&msg, line);
-			if (msg.concatenated)
+			if (!line.empty())
 			{
-				msgs_fragment[msg.concat_refnum].push_back(msg);
-			}
-			else
-			{
-				if (handled)
-					msgs_handled.push_back(msg);
+				Message msg;
+				read_filed_msg(&msg, line);
+				if (msg.concatenated)
+				{
+					msgs_fragment[msg.concat_refnum].push_back(msg);
+				}
 				else
-					msgs_unhandled.push_back(msg);
+				{
+					if (handled)
+						msgs_handled.push_back(msg);
+					else
+						msgs_unhandled.push_back(msg);
+				}
 			}
 		} while (input.good());
 	}

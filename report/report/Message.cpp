@@ -258,7 +258,7 @@ bool decode_msg(Message* msg, std::wstring input, CompList* comp_list)
 			udh.push_back(packed_data[5]);					//IED: concat index of this msg
 		}
 		std::wstring all_contents = unpack_septets(packed_data);
-		int udh_num_septets = (((udhl + 1) * 8) + 6) / 7;
+		int udh_num_septets = has_udh ? (((udhl + 1) * 8) + 6) / 7 : 0;
 		msg->contents = all_contents.substr(udh_num_septets, all_contents.length() - udh_num_septets);
 	}
 	if (has_udh)
