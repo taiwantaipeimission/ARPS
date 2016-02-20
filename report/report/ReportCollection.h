@@ -12,6 +12,8 @@ public:
 		COMP,					//Data by companionship
 		ZONE,					//Data by zone
 		ZONE_MONTH,				//Data by zone (monthly totals)
+		STAKE,
+		STAKE_MONTH,
 		MISSION,
 		MISSION_MONTH,
 		INDIV					//Data by individual

@@ -34,6 +34,22 @@ void ReportCollection::write_report(Report::Type type, DataOrder data_order, Fil
 	reports[type][data_order].print(file->file);
 }
 
+/* Takes the ID string of the current report and returns the string of its owner in the specified data order.
+
+	Valid conversions:
+
+ 	COMP->ZONE
+	COMP->STAKE
+	COMP->MISSION
+
+	ZONE->ZONE_MONTH
+	ZONE->MISSION
+
+	STAKE->STAKE_MONTH
+	STAKE->MISSION
+
+	MISSION->MISSION_MONTH
+*/
 std::wstring ReportCollection::get_owner_id_str(Report* rep, DataOrder from, DataOrder to, CompList* comp_list)
 {
 	if (from == COMP)
@@ -46,6 +62,15 @@ std::wstring ReportCollection::get_owner_id_str(Report* rep, DataOrder from, Dat
 				zone_name = rep->type == Report::TYPE_ENGLISH ? comp_list->areas[rep->sender_number].english_unit_name : comp_list->areas[rep->sender_number].zone_name;
 			}
 			return (rep->get_date() + L":" + zone_name);
+		}
+		else if (to == STAKE)
+		{
+			std::wstring stake_name = L"UNKNOWN";
+			if (comp_list->areas.count(rep->sender_number) > 0)
+			{
+				stake_name = comp_list->areas[rep->sender_number].stake_name;
+			}
+			return (rep->get_date() + L":" + stake_name);
 		}
 		else if (to == MISSION)
 		{
@@ -60,6 +85,20 @@ std::wstring ReportCollection::get_owner_id_str(Report* rep, DataOrder from, Dat
 			std::wstring zone_name = rep->get_sender_name();
 			std::wstring report_date_year_month = report_date.substr(0, report_date.find(L":", report_date.find(L":") + 1));
 			return (report_date_year_month + L":0:0:" + zone_name);
+		}
+		else if (to == MISSION)
+		{
+			return (rep->get_date() + L":" + L"MISSION");
+		}
+	}
+	else if (from == STAKE)
+	{
+		if (to == STAKE_MONTH)
+		{
+			std::wstring report_date = rep->get_date();
+			std::wstring stake_name = rep->get_sender_name();
+			std::wstring report_date_year_month = report_date.substr(0, report_date.find(L":", report_date.find(L":") + 1));
+			return (report_date_year_month + L":0:0:" + stake_name);
 		}
 		else if (to == MISSION)
 		{
@@ -124,7 +163,9 @@ void ReportCollection::total_reports(Report::Type type, DataOrder from, DataOrde
 void ReportCollection::total_all_reports(Report::Type type, CompList* comp_list, std::wstring date)
 {
 	total_reports(type, COMP, ZONE, comp_list, date);
+	total_reports(type, COMP, STAKE, comp_list, date);
 	total_reports(type, ZONE, ZONE_MONTH, comp_list, date);
 	total_reports(type, ZONE, MISSION, comp_list, date);
+	total_reports(type, STAKE, STAKE_MONTH, comp_list, date);
 	total_reports(type, MISSION, MISSION_MONTH, comp_list, date);
 }

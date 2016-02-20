@@ -8,8 +8,11 @@
 const std::wstring CompList::ph_number_header = L"PH_NUMBER";
 const std::wstring CompList::area_name_header = L"AREA_NAME";
 const std::wstring CompList::zone_name_header = L"ZONE_NAME";
+const std::wstring CompList::stake_name_header = L"STAKE_NAME";
 const std::wstring CompList::english_unit_name_header = L"ENGLISH_UNIT_NAME";
 const std::wstring CompList::geog_area_header = L"GEOG_AREAS";
+const std::wstring CompList::report_required_header = L"REPORT_REQUIRED";
+const std::wstring CompList::english_required_header = L"ENGLISH_REQUIRED";
 
 CompList::CompList()
 {
@@ -48,19 +51,31 @@ void CompList::load(std::wistream& input)
 			{
 				area_to_add.ph_number = *results_i;
 			}
-			if (*header_i == area_name_header)
+			else if (*header_i == area_name_header)
 			{
 				area_to_add.area_name = *results_i;
 			}
-			if (*header_i == zone_name_header)
+			else if (*header_i == zone_name_header)
 			{
 				area_to_add.zone_name = *results_i;
 			}
-			if (*header_i == english_unit_name_header)
+			else if (*header_i == stake_name_header)
+			{
+				area_to_add.stake_name = *results_i;
+			}
+			else if (*header_i == english_unit_name_header)
 			{
 				area_to_add.english_unit_name = *results_i;
 			}
-			if (*header_i == geog_area_header)
+			else if (*header_i == report_required_header)
+			{
+				area_to_add.report_required = (*results_i == L"1" ? true : false);
+			}
+			else if (*header_i == english_required_header)
+			{
+				area_to_add.english_required = (*results_i == L"1" ? true : false);
+			}
+			else if (*header_i == geog_area_header)
 			{
 				std::wstringstream ss(*results_i);
 				std::wstring geog_area_name = L"";
