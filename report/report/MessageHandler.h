@@ -11,7 +11,7 @@ class CompList;
 class MessageHandler
 {
 public:
-	std::map<int, std::vector<Message>> msgs_fragment;	//All fragments of concatenated messages, keyed by their concat_index
+	std::map<unsigned int, std::vector<Message>> msgs_fragment;	//All fragments of concatenated messages, keyed by their concat_num_msgs | (concat_refnum << 16)
 	std::vector<Message> msgs_unhandled;
 	std::vector<Message> msgs_handled;
 

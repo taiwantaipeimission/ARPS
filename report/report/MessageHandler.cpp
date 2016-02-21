@@ -28,7 +28,8 @@ void MessageHandler::parse_messages(Terminal* terminal, std::wstring raw_str, Co
 		
 		if (msg.concatenated)
 		{
-			msgs_fragment[msg.concat_refnum].push_back(msg);
+			unsigned int id = msg.concat_num_msgs | (msg.concat_refnum << 8);
+			msgs_fragment[id].push_back(msg);
 		}
 		else
 		{
@@ -40,7 +41,7 @@ void MessageHandler::parse_messages(Terminal* terminal, std::wstring raw_str, Co
 	}
 
 	//Attempt to piece together concatenated messages
-	for (std::map<int, std::vector<Message>>::iterator it = msgs_fragment.begin(); it != msgs_fragment.end(); )
+	for (std::map<unsigned int, std::vector<Message>>::iterator it = msgs_fragment.begin(); it != msgs_fragment.end(); )
 	{
 		std::vector<int> correct_order;					//List of the indeces of message fragments for this concat_id, arranged in proper order
 		int num_msgs = it->second[0].concat_num_msgs;

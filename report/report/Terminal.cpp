@@ -197,11 +197,7 @@ bool Terminal::update(double millis)
 	{
 		if (got_user)
 		{
-			if (user_ch == ',')
-			{
-				send_message(L"+886972576566", L"Hello there!");
-			}
-			else if (user_ch != 27)
+			if (user_ch != 27)
 			{
 				if (user_ch == '\r')
 					std::wcout << std::endl;
@@ -213,7 +209,7 @@ bool Terminal::update(double millis)
 		}
 		
 	}
-	if (got_modem && ms_to_wait <= 0)
+	if ((got_modem && ms_to_wait <= 0) || cmd_source == COMMAND_SOURCE_USER)
 	{
 		if (command_stream.size() > 0)
 		{
