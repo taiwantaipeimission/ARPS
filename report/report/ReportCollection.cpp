@@ -38,9 +38,13 @@ void ReportCollection::write_report(Report::Type type, DataOrder data_order, Fil
 
 	Valid conversions:
 
+	COMP->DISTRICT
  	COMP->ZONE
 	COMP->STAKE
 	COMP->MISSION
+
+	DISTRICT->DISTRICT_MONTH
+	DISTRICT->MISSION
 
 	ZONE->ZONE_MONTH
 	ZONE->MISSION
@@ -54,6 +58,15 @@ std::wstring ReportCollection::get_owner_id_str(Report* rep, DataOrder from, Dat
 {
 	if (from == COMP)
 	{
+		if (to == DISTRICT)
+		{
+			std::wstring district_name = L"UNKNOWN";
+			if (comp_list->areas.count(rep->sender_number) > 0)
+			{
+				district_name = comp_list->areas[rep->sender_number].district_name;
+			}
+			return (rep->get_date() + L":" + district_name);
+		}
 		if (to == ZONE)
 		{
 			std::wstring zone_name = L"UNKNOWN";
@@ -71,6 +84,20 @@ std::wstring ReportCollection::get_owner_id_str(Report* rep, DataOrder from, Dat
 				stake_name = comp_list->areas[rep->sender_number].stake_name;
 			}
 			return (rep->get_date() + L":" + stake_name);
+		}
+		else if (to == MISSION)
+		{
+			return (rep->get_date() + L":" + L"MISSION");
+		}
+	}
+	else if (from == DISTRICT)
+	{
+		if (to == DISTRICT_MONTH)
+		{
+			std::wstring report_date = rep->get_date();
+			std::wstring district_name = rep->get_sender_name();
+			std::wstring report_date_year_month = report_date.substr(0, report_date.find(L":", report_date.find(L":") + 1));
+			return (report_date_year_month + L":0:0:" + district_name);
 		}
 		else if (to == MISSION)
 		{
@@ -162,8 +189,10 @@ void ReportCollection::total_reports(Report::Type type, DataOrder from, DataOrde
 
 void ReportCollection::total_all_reports(Report::Type type, CompList* comp_list, std::wstring date)
 {
+	total_reports(type, COMP, DISTRICT, comp_list, date);
 	total_reports(type, COMP, ZONE, comp_list, date);
 	total_reports(type, COMP, STAKE, comp_list, date);
+	total_reports(type, DISTRICT, DISTRICT_MONTH, comp_list, date);
 	total_reports(type, ZONE, ZONE_MONTH, comp_list, date);
 	total_reports(type, ZONE, MISSION, comp_list, date);
 	total_reports(type, STAKE, STAKE_MONTH, comp_list, date);

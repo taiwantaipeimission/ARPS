@@ -13,6 +13,7 @@ public:
 
 	static const std::wstring ph_number_header;
 	static const std::wstring area_name_header;
+	static const std::wstring district_name_header;
 	static const std::wstring zone_name_header;
 	static const std::wstring stake_name_header; 
 	static const std::wstring english_unit_name_header;

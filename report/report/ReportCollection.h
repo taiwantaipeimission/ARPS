@@ -10,6 +10,8 @@ public:
 	enum DataOrder
 	{
 		COMP,					//Data by companionship
+		DISTRICT,				//Data by district
+		DISTRICT_MONTH,			//Data by district (monthly totals)
 		ZONE,					//Data by zone
 		ZONE_MONTH,				//Data by zone (monthly totals)
 		STAKE,
