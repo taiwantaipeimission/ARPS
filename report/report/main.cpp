@@ -62,8 +62,6 @@
 //Characters
 #define DATE_STAMP_SEPARATOR_CHAR L":"
 
-const double POLL_INTERVAL = 300.0f;
-
 const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 600;
 const int BAR_HEIGHT = 25;
@@ -433,7 +431,7 @@ void timer_cb(void* ptr)
 {
 	check_msg_cb(NULL, ptr);
 	process_msg_cb(NULL, ptr);
-	Fl::repeat_timeout(POLL_INTERVAL, timer_cb, ptr);
+	Fl::repeat_timeout(auto_check_s, timer_cb, ptr);
 }
 
 int main(int argc, char **argv)
@@ -466,7 +464,7 @@ int main(int argc, char **argv)
 	bool run_terminal = false;
 
 
-	Fl::add_timeout(POLL_INTERVAL, timer_cb, &terminal);
+	Fl::add_timeout(auto_check_s, timer_cb, &terminal);
 	Fl_Window* window = new Fl_Window(WINDOW_WIDTH, WINDOW_HEIGHT);
 	Fl_Menu_Bar* menu = new Fl_Menu_Bar(0, 0, WINDOW_WIDTH, BAR_HEIGHT);
 	{

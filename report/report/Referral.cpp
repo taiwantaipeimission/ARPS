@@ -40,6 +40,10 @@ void Referral::read_message(Message msg)
 	name = find_value(msg.contents, L"NAME");
 	number = find_value(msg.contents, L"NUMBER");
 	info = find_value(msg.contents, L"INFO");
+
+	//Convert dest_geog_area to uppercase
+	for (std::wstring::iterator it = dest_geog_area.begin(); it != dest_geog_area.end(); ++it)
+		*it = towupper(*it);
 }
 
 bool Referral::locate(CompList* list)

@@ -189,7 +189,8 @@ bool Terminal::update(double millis)
 					msg_handler->parse_messages(this, modem_str, comp_list);
 					modem_str = L"";
 				}
-				ret_value = false;
+				if (command_stream.size() <= 0)
+					ret_value = false;
 			}
 		}
 	}

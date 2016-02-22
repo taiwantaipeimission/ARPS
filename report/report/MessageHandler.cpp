@@ -115,18 +115,20 @@ void MessageHandler::process_messages(Terminal* terminal, ReportCollection* repo
 				Report bap_source;
 				bap_source.set_type(Report::TYPE_BAPTISM_SOURCE);
 				bap_source.id_str = report.id_str;
+				for (std::vector<std::wstring>::iterator it = bap_source.key_list.begin(); it != bap_source.key_list.end(); ++it)
+					bap_source.report_values.insert(std::pair<std::wstring, std::wstring>(*it, L"0"));	//Fill with zeros
 				if (choice == 1)
-					bap_source.report_values.insert(std::pair<std::wstring, std::wstring>(L"BAP_MISS_FIND", L"1"));
+					bap_source.report_values[L"BAP_MISS_FIND"] = L"1";
 				else if (choice == 2)
-					bap_source.report_values.insert(std::pair<std::wstring, std::wstring>(L"BAP_LA_REF", L"1"));
+					bap_source.report_values[L"BAP_LA_REF"] = L"1";
 				else if (choice == 3)
-					bap_source.report_values.insert(std::pair<std::wstring, std::wstring>(L"BAP_RC_REF", L"1"));
+					bap_source.report_values[L"BAP_RC_REF"] = L"1";
 				else if (choice == 4)
-					bap_source.report_values.insert(std::pair<std::wstring, std::wstring>(L"BAP_MEM_REF", L"1"));
+					bap_source.report_values[L"BAP_MEM_REF"] = L"1";
 				else if (choice == 5)
-					bap_source.report_values.insert(std::pair<std::wstring, std::wstring>(L"BAP_ENGLISH", L"1"));
+					bap_source.report_values[L"BAP_ENGLISH"] = L"1";
 				else if (choice == 6)
-					bap_source.report_values.insert(std::pair<std::wstring, std::wstring>(L"BAP_TOUR", L"1"));
+					bap_source.report_values[L"BAP_TOUR"] = L"1";
 
 				report_collection->reports[Report::TYPE_BAPTISM_SOURCE][ReportCollection::COMP].add_report(bap_source);
 

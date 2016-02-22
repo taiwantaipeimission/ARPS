@@ -55,6 +55,10 @@ void CompList::load(std::wistream& input)
 			else if (*header_i == area_name_header)
 			{
 				area_to_add.area_name = *results_i;
+				if (area_to_add.area_name == L"435")
+				{
+					int x = 1;
+				}
 			}
 			else if (*header_i == district_name_header)
 			{
