@@ -147,14 +147,14 @@ std::wstring ReportCollection::get_owner_id_str(Report* rep, DataOrder from, Dat
 void ReportCollection::total_reports(Report::Type type, DataOrder from, DataOrder to, CompList* comp_list, std::wstring date)
 {
 	//Remove all owner reports for the current date, so they can be updated
-	for (std::map<std::wstring, Report>::iterator it = reports[type][to].reports.begin(); it != reports[type][to].reports.end();)
+	/*for (std::map<std::wstring, Report>::iterator it = reports[type][to].reports.begin(); it != reports[type][to].reports.end();)
 	{
 		std::wstring report_date = it->second.get_date();
 		if (report_date == date)
 			it = reports[type][to].reports.erase(it);
 		else
 			++it;
-	}
+	}*/
 
 	std::map<std::wstring, Report> reports_to_add;
 
@@ -164,12 +164,8 @@ void ReportCollection::total_reports(Report::Type type, DataOrder from, DataOrde
 		if (comp_list->areas.count(it->second.sender_number) > 0)
 		{
 			std::wstring new_id_str = get_owner_id_str(&it->second, from, to, comp_list);
-
-			if (new_id_str == L"2016:2:0:0:WEST")
-			{
-				int x = 1;
-			}
-			if (reports[type][to].reports.count(new_id_str) <= 0)			//There is no report entered yet
+			std::wstring week_day_str = new_id_str.substr(new_id_str.find(L":", new_id_str.find(L":") + 1) + 1, 3);
+			if (reports[type][to].reports.count(new_id_str) <= 0 || comp_report_date == date || week_day_str == L"0:0")			//There is no report entered yet
 			{
 				if (reports_to_add.count(new_id_str) > 0)
 				{
