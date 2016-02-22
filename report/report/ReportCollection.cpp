@@ -165,6 +165,10 @@ void ReportCollection::total_reports(Report::Type type, DataOrder from, DataOrde
 		{
 			std::wstring new_id_str = get_owner_id_str(&it->second, from, to, comp_list);
 
+			if (new_id_str == L"2016:2:0:0:WEST")
+			{
+				int x = 1;
+			}
 			if (reports[type][to].reports.count(new_id_str) <= 0)			//There is no report entered yet
 			{
 				if (reports_to_add.count(new_id_str) > 0)
