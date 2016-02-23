@@ -31,8 +31,16 @@ int get_hex_value(std::wstring rep)
 int extract_hex_value(std::wstringstream& ss, int num_rep_chars)
 {
 	wchar_t chars[256];
-	std::wstring str;
+	size_t pos = ss.tellg();
+	if (pos == 208)
+		int x = 0;
 	ss.get(chars, num_rep_chars + 1);
+	bool good = ss.good();
+	bool eof = ss.eof();
+	bool bad = ss.bad();
+
+	if (!ss.good())
+		int x = 0;
 	return get_hex_value((std::wstring)chars);
 }
 
@@ -89,6 +97,7 @@ std::wstring unpack_septets(std::vector<int> data)
 {
 	std::wstring decoded_data = L"";
 
+	data.push_back(0);
 	int offset = 0;
 	int index = 0;
 	unsigned int base = 0u;
@@ -123,6 +132,7 @@ std::wstring unpack_septets(std::vector<int> data)
 		}
 		decoded_data.push_back((wchar_t)result);
 	}
+	decoded_data.resize(decoded_data.size() - 1);
 
 	return decoded_data;
 }
@@ -242,9 +252,13 @@ bool decode_msg(Message* msg, std::wstring input, CompList* comp_list)
 	else
 	{
 		std::vector<int> packed_data;
+		std::wstring str = ss.str();
+
+		int byte = extract_hex_value(ss, 2);
 		while (ss.good())
 		{
-			packed_data.push_back(extract_hex_value(ss, 2));
+			packed_data.push_back(byte);
+			byte = extract_hex_value(ss, 2);
 		}
 
 		int udhl = 0;

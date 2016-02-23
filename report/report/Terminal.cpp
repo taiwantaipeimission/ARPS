@@ -37,12 +37,12 @@ void Terminal::init_auto()
 		command_stream.pop();
 	push_command(L"AT");
 	push_command(COMMAND_NEWLINE_CHAR);
+	push_command(L"ATE0");
+	push_command(COMMAND_NEWLINE_CHAR);
 	push_command(L"AT+CMGF=0");
 	push_command(COMMAND_NEWLINE_CHAR);
 	push_command(L"AT+CMGL=4");
 	push_command(COMMAND_NEWLINE_CHAR);
-
-	//send_message(L"+886910358944", L"TYPE:REFERRAL\nZHONGSHAN\n歐巴馬\nThis guy is actually really cool. We met him on the street. He's black, and I think he's from America. He speaks really good English and is super 帥. This text message is also really long.");
 
 	got_modem = true;
 	ms_to_wait = 0;
@@ -53,11 +53,18 @@ void Terminal::init_user()
 	cmd_source = COMMAND_SOURCE_USER;
 	while (!command_stream.empty())
 		command_stream.pop();
+	push_command(L"AT");
+	push_command(COMMAND_NEWLINE_CHAR);
 	push_command(L"ATE0");
+	push_command(COMMAND_NEWLINE_CHAR);
+	push_command(L"AT+CMGF=0");
+	push_command(COMMAND_NEWLINE_CHAR);
+	push_command(L"AT+CMGL=4");
 	push_command(COMMAND_NEWLINE_CHAR);
 	
 	got_modem = true;
 	ms_to_wait = 0;
+	ms_until_timeout = 0;
 }
 
 void Terminal::add_reminder(Reminder reminder)
@@ -160,10 +167,18 @@ bool Terminal::update(double millis)
 		std::wcout << modem_ch_null;
 		output_file->file << modem_ch_null;
 		modem_str += modem_ch_null;
-		got_modem = true;
+		
+		if (modem_str.find(L"OK\r\n") != std::wstring::npos || modem_str.find(L">") != std::wstring::npos)
+			got_modem = true;
 
 		if (ms_to_wait > 0)
-			ms_to_wait = TIMEOUT_MS;	//reset wait timer: wait for another TIMOUT_MS ms before writing
+		{
+			ms_to_wait = RESPONSE_TIMEOUT_MS;	//reset wait timer: wait for another TIMOUT_MS ms before writing
+		}
+		if (ms_until_timeout > 0)
+		{
+			ms_until_timeout = NO_RESPONSE_TIMEOUT_MS;
+		}
 	}
 
 	//get char from user input
@@ -180,37 +195,42 @@ bool Terminal::update(double millis)
 
 	if (cmd_source == COMMAND_SOURCE_LOGIC)
 	{
-		if (got_modem && ms_to_wait <= 0)
+		if (got_modem)
 		{
 			if(command_stream.size() <= 0)	//eof
 			{
 				if (modem_str.find(L"+CMGL:") != std::wstring::npos)
 				{
 					msg_handler->parse_messages(this, modem_str, comp_list);
-					modem_str = L"";
 				}
 				if (command_stream.size() <= 0)
 					ret_value = false;
 			}
+			modem_str = L"";
 		}
 	}
 	else if (cmd_source == COMMAND_SOURCE_USER)
 	{
 		if (got_user)
 		{
-			if (user_ch != 27)
+			if (user_ch != 127)
 			{
-				if (user_ch == '\r')
+				/*if (user_ch == '\r')
 					std::wcout << std::endl;
-				std::wcout << user_ch;
+				std::wcout << user_ch;*/
 				command_stream.push(user_ch);
 			}
 			else
-				ret_value = false;
+			{
+				if (got_modem)
+					ret_value = false;
+				else
+					got_modem = true;
+			}
 		}
 		
 	}
-	if ((got_modem && ms_to_wait <= 0) || cmd_source == COMMAND_SOURCE_USER)
+	if (got_modem)// || cmd_source == COMMAND_SOURCE_USER)
 	{
 		if (command_stream.size() > 0)
 		{
@@ -218,18 +238,20 @@ bool Terminal::update(double millis)
 			std::wstring command_ch_str = L"";
 			command_ch_str += command_ch;
 			command_stream.pop();
-			if (cmd_source != COMMAND_SOURCE_USER)
+			//if (cmd_source != COMMAND_SOURCE_USER)
 				std::wcout << command_ch_str;
 			if (command_ch_str == COMMAND_NEWLINE_CHAR)
 			{
 				WriteFile(modem->file, COMMAND_NEWLINE_CHAR, 1, &written, NULL);
-				ms_to_wait = TIMEOUT_MS;
+				ms_to_wait = RESPONSE_TIMEOUT_MS;
+				ms_until_timeout = NO_RESPONSE_TIMEOUT_MS;
 				got_modem = false;
 			}
 			else if (command_ch_str == COMMAND_ESCAPE_CHAR)
 			{
 				WriteFile(modem->file, "\u001A", 1, &written, NULL);
-				ms_to_wait = MSG_TIMEOUT_MS;
+				ms_to_wait = RESPONSE_TIMEOUT_MS;
+				ms_until_timeout = NO_RESPONSE_TIMEOUT_MS;
 				got_modem = false;
 			}
 			else
@@ -238,7 +260,14 @@ bool Terminal::update(double millis)
 			}	
 		}
 	}
+	else if (ms_until_timeout <= 0)
+	{
+		std::wcout << L"TIMEOUT\n";
+		ret_value = false;
+	}
 	if (ms_to_wait > 0)
 		ms_to_wait = max(0, ms_to_wait - millis);
+	if (ms_until_timeout > 0)
+		ms_until_timeout = max(0, ms_until_timeout - millis);
 	return ret_value;
 }

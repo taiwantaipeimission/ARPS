@@ -27,8 +27,8 @@ public:
 		COMMAND_SOURCE_LOGIC
 	};
 
-	static const int TIMEOUT_MS = 2500;
-	static const int MSG_TIMEOUT_MS = 20000;
+	static const int RESPONSE_TIMEOUT_MS = 2500;
+	static const int NO_RESPONSE_TIMEOUT_MS = 20000;
 	
 
 	CommandSource cmd_source;
@@ -56,7 +56,8 @@ public:
 	bool got_modem = true;
 
 	DWORD read, written;				//number of bytes read/written to modem
-	double ms_to_wait;					//time to wait before sending data, in ms
+	double ms_to_wait;					//time to wait before sending data after response, in ms
+	double ms_until_timeout;			//time to wait before sending data if no response
 	time_t cur_time;
 
 	Terminal(std::wstring date_in, std::wstring english_date_in, Modem* modem_in, ReportCollection* report_collection_in, CompList* comp_list_in, MessageHandler* message_handler_in, File* output_file_in, FileManager* file_manager_in);

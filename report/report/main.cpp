@@ -57,6 +57,8 @@
 #define BAPTISM_SOURCE_ZONE_MONTH L"BAPTISM_SOURCE_ZONE_MONTH"
 #define BAPTISM_SOURCE_STAKE L"BAPTISM_SOURCE_STAKE"
 #define BAPTISM_SOURCE_STAKE_MONTH L"BAPTISM_SOURCE_STAKE_MONTH"
+#define BAPTISM_SOURCE_MISSION L"BAPTISM_SOURCE_MISSION"
+#define BAPTISM_SOURCE_MISSION_MONTH L"BAPTISM_SOURCE_MISSION_MONTH"
 #define REFERRAL_HISTORY L"REFERRAL_HISTORY"
 
 //Characters
@@ -112,6 +114,8 @@ bool save(FileManager* file_manager, ReportCollection* report_collection, CompLi
 		&& file_manager->open_file(REPORT_DATA_ZONE_MONTH, File::FILE_TYPE_OUTPUT)
 		&& file_manager->open_file(REPORT_DATA_STAKE, File::FILE_TYPE_OUTPUT)
 		&& file_manager->open_file(REPORT_DATA_STAKE_MONTH, File::FILE_TYPE_OUTPUT)
+		&& file_manager->open_file(REPORT_DATA_MISSION, File::FILE_TYPE_OUTPUT)
+		&& file_manager->open_file(REPORT_DATA_MISSION_MONTH, File::FILE_TYPE_OUTPUT)
 		&& file_manager->open_file(ENGLISH_DATA, File::FILE_TYPE_OUTPUT)
 		&& file_manager->open_file(ENGLISH_DATA_UNIT, File::FILE_TYPE_OUTPUT)
 		&& file_manager->open_file(BAPTISM_RECORD, File::FILE_TYPE_OUTPUT)
@@ -122,6 +126,8 @@ bool save(FileManager* file_manager, ReportCollection* report_collection, CompLi
 		&& file_manager->open_file(BAPTISM_SOURCE_ZONE_MONTH, File::FILE_TYPE_OUTPUT)
 		&& file_manager->open_file(BAPTISM_SOURCE_STAKE, File::FILE_TYPE_OUTPUT)
 		&& file_manager->open_file(BAPTISM_SOURCE_STAKE_MONTH, File::FILE_TYPE_OUTPUT)
+		&& file_manager->open_file(BAPTISM_SOURCE_MISSION, File::FILE_TYPE_OUTPUT)
+		&& file_manager->open_file(BAPTISM_SOURCE_MISSION_MONTH, File::FILE_TYPE_OUTPUT)
 		&& file_manager->open_file(MESSAGES_UNPROCESSED, File::FILE_TYPE_OUTPUT)
 		&& file_manager->open_file(MESSAGES_PROCESSED, File::FILE_TYPE_OUTPUT);
 
@@ -139,6 +145,8 @@ bool save(FileManager* file_manager, ReportCollection* report_collection, CompLi
 	report_collection->write_report(Report::TYPE_REGULAR, ReportCollection::ZONE_MONTH, file_manager->files[REPORT_DATA_ZONE_MONTH]);
 	report_collection->write_report(Report::TYPE_REGULAR, ReportCollection::STAKE, file_manager->files[REPORT_DATA_STAKE]);
 	report_collection->write_report(Report::TYPE_REGULAR, ReportCollection::STAKE_MONTH, file_manager->files[REPORT_DATA_STAKE_MONTH]);
+	report_collection->write_report(Report::TYPE_REGULAR, ReportCollection::MISSION, file_manager->files[REPORT_DATA_MISSION]);
+	report_collection->write_report(Report::TYPE_REGULAR, ReportCollection::MISSION_MONTH, file_manager->files[REPORT_DATA_MISSION_MONTH]);
 
 	report_collection->write_report(Report::TYPE_ENGLISH, ReportCollection::COMP, file_manager->files[ENGLISH_DATA]);
 	report_collection->total_all_reports(Report::TYPE_ENGLISH, comp_list, english_date);
@@ -154,6 +162,8 @@ bool save(FileManager* file_manager, ReportCollection* report_collection, CompLi
 	report_collection->write_report(Report::TYPE_BAPTISM_SOURCE, ReportCollection::ZONE_MONTH, file_manager->files[BAPTISM_SOURCE_ZONE_MONTH]);
 	report_collection->write_report(Report::TYPE_BAPTISM_SOURCE, ReportCollection::STAKE, file_manager->files[BAPTISM_SOURCE_STAKE]);
 	report_collection->write_report(Report::TYPE_BAPTISM_SOURCE, ReportCollection::STAKE_MONTH, file_manager->files[BAPTISM_SOURCE_STAKE_MONTH]);
+	report_collection->write_report(Report::TYPE_BAPTISM_SOURCE, ReportCollection::MISSION, file_manager->files[BAPTISM_SOURCE_MISSION]);
+	report_collection->write_report(Report::TYPE_BAPTISM_SOURCE, ReportCollection::MISSION_MONTH, file_manager->files[BAPTISM_SOURCE_MISSION_MONTH]);
 
 	file_manager->close_file(REPORT_DATA);
 	file_manager->close_file(REPORT_DATA_DISTRICT);
@@ -162,6 +172,8 @@ bool save(FileManager* file_manager, ReportCollection* report_collection, CompLi
 	file_manager->close_file(REPORT_DATA_ZONE_MONTH);
 	file_manager->close_file(REPORT_DATA_STAKE);
 	file_manager->close_file(REPORT_DATA_STAKE_MONTH);
+	file_manager->close_file(REPORT_DATA_MISSION);
+	file_manager->close_file(REPORT_DATA_MISSION_MONTH);
 	file_manager->close_file(ENGLISH_DATA);
 	file_manager->close_file(ENGLISH_DATA_UNIT);
 	file_manager->close_file(BAPTISM_RECORD);
@@ -172,6 +184,8 @@ bool save(FileManager* file_manager, ReportCollection* report_collection, CompLi
 	file_manager->close_file(BAPTISM_SOURCE_ZONE_MONTH);
 	file_manager->close_file(BAPTISM_SOURCE_STAKE);
 	file_manager->close_file(BAPTISM_SOURCE_STAKE_MONTH);
+	file_manager->close_file(BAPTISM_SOURCE_MISSION);
+	file_manager->close_file(BAPTISM_SOURCE_MISSION_MONTH);
 	file_manager->close_file(MESSAGES_UNPROCESSED);
 	file_manager->close_file(MESSAGES_PROCESSED);
 
@@ -191,6 +205,8 @@ bool load(FileManager* file_manager, ReportCollection* report_collection, CompLi
 	file_manager->open_file(REPORT_DATA_ZONE_MONTH, File::FILE_TYPE_INPUT);
 	file_manager->open_file(REPORT_DATA_STAKE, File::FILE_TYPE_INPUT);
 	file_manager->open_file(REPORT_DATA_STAKE_MONTH, File::FILE_TYPE_INPUT);
+	file_manager->open_file(REPORT_DATA_MISSION, File::FILE_TYPE_INPUT);
+	file_manager->open_file(REPORT_DATA_MISSION_MONTH, File::FILE_TYPE_INPUT);
 	file_manager->open_file(ENGLISH_DATA, File::FILE_TYPE_INPUT);
 	file_manager->open_file(ENGLISH_DATA_UNIT, File::FILE_TYPE_INPUT);
 	file_manager->open_file(BAPTISM_SOURCE, File::FILE_TYPE_INPUT);
@@ -200,6 +216,8 @@ bool load(FileManager* file_manager, ReportCollection* report_collection, CompLi
 	file_manager->open_file(BAPTISM_SOURCE_ZONE_MONTH, File::FILE_TYPE_INPUT);
 	file_manager->open_file(BAPTISM_SOURCE_STAKE, File::FILE_TYPE_INPUT);
 	file_manager->open_file(BAPTISM_SOURCE_STAKE_MONTH, File::FILE_TYPE_INPUT);
+	file_manager->open_file(BAPTISM_SOURCE_MISSION, File::FILE_TYPE_INPUT);
+	file_manager->open_file(BAPTISM_SOURCE_MISSION_MONTH, File::FILE_TYPE_INPUT);
 	file_manager->open_file(BAPTISM_RECORD, File::FILE_TYPE_INPUT);
 
 	file_manager->open_file(REPORT_DATA_OLD, File::FILE_TYPE_OUTPUT, true);
@@ -217,6 +235,8 @@ bool load(FileManager* file_manager, ReportCollection* report_collection, CompLi
 	report_collection->read_report(Report::TYPE_REGULAR, ReportCollection::ZONE_MONTH, file_manager->files[REPORT_DATA_ZONE_MONTH]);
 	report_collection->read_report(Report::TYPE_REGULAR, ReportCollection::STAKE, file_manager->files[REPORT_DATA_STAKE]);
 	report_collection->read_report(Report::TYPE_REGULAR, ReportCollection::STAKE_MONTH, file_manager->files[REPORT_DATA_STAKE_MONTH]);
+	report_collection->read_report(Report::TYPE_REGULAR, ReportCollection::MISSION, file_manager->files[REPORT_DATA_MISSION]);
+	report_collection->read_report(Report::TYPE_REGULAR, ReportCollection::MISSION_MONTH, file_manager->files[REPORT_DATA_MISSION_MONTH]);
 
 	report_collection->read_report(Report::TYPE_ENGLISH, ReportCollection::COMP, file_manager->files[ENGLISH_DATA]);
 	report_collection->read_report(Report::TYPE_ENGLISH, ReportCollection::ZONE, file_manager->files[ENGLISH_DATA_UNIT]);
@@ -227,6 +247,8 @@ bool load(FileManager* file_manager, ReportCollection* report_collection, CompLi
 	report_collection->read_report(Report::TYPE_BAPTISM_SOURCE, ReportCollection::ZONE_MONTH, file_manager->files[BAPTISM_SOURCE_ZONE_MONTH]);
 	report_collection->read_report(Report::TYPE_BAPTISM_SOURCE, ReportCollection::STAKE, file_manager->files[BAPTISM_SOURCE_STAKE]);
 	report_collection->read_report(Report::TYPE_BAPTISM_SOURCE, ReportCollection::STAKE_MONTH, file_manager->files[BAPTISM_SOURCE_STAKE_MONTH]);
+	report_collection->read_report(Report::TYPE_BAPTISM_SOURCE, ReportCollection::MISSION, file_manager->files[BAPTISM_SOURCE_MISSION]);
+	report_collection->read_report(Report::TYPE_BAPTISM_SOURCE, ReportCollection::MISSION_MONTH, file_manager->files[BAPTISM_SOURCE_MISSION_MONTH]);
 
 	report_collection->read_report(Report::TYPE_BAPTISM_RECORD, ReportCollection::COMP, file_manager->files[BAPTISM_RECORD]);
 
@@ -242,6 +264,8 @@ bool load(FileManager* file_manager, ReportCollection* report_collection, CompLi
 	file_manager->close_file(REPORT_DATA_ZONE_MONTH);
 	file_manager->close_file(REPORT_DATA_STAKE);
 	file_manager->close_file(REPORT_DATA_STAKE_MONTH);
+	file_manager->close_file(REPORT_DATA_MISSION);
+	file_manager->close_file(REPORT_DATA_MISSION_MONTH);
 	file_manager->close_file(ENGLISH_DATA);
 	file_manager->close_file(ENGLISH_DATA_UNIT);
 	file_manager->close_file(BAPTISM_SOURCE);
@@ -251,6 +275,8 @@ bool load(FileManager* file_manager, ReportCollection* report_collection, CompLi
 	file_manager->close_file(BAPTISM_SOURCE_ZONE_MONTH);
 	file_manager->close_file(BAPTISM_SOURCE_STAKE);
 	file_manager->close_file(BAPTISM_SOURCE_STAKE_MONTH);
+	file_manager->close_file(BAPTISM_SOURCE_MISSION);
+	file_manager->close_file(BAPTISM_SOURCE_MISSION_MONTH);
 	file_manager->close_file(BAPTISM_RECORD);
 
 	return true;
@@ -436,6 +462,22 @@ void timer_cb(void* ptr)
 
 int main(int argc, char **argv)
 {
+	Message msg;
+	decode_msg(&msg, L"\n0791889623048036200C9188962775569500006120221134942358D42CB4A893168D45A934C8544099C16151073A069FD8E4D379543883CDA20ED49CBB40D0B01BA470569BC2A25407CBCD6AB8188E568B29924EE353079AA3CBA0F41C242F87D9EC3C68FC7EB343", NULL);
+
+	decode_msg(&msg, L"\n0791889623048036240C9188960153984400006120224145442307D4F29C9E769F01", NULL);
+
+	decode_msg(&msg, L"\n0791889623048036240C9188960153984400006120225100522338D27298CDCE83D86FF719D42ECFE7E17319744FD3D1A076D89D07B5DFF232888E0EBB41F3B2BDEC068DD16179784C2FCBE7", NULL);
+
+
+
+
+
+
+
+
+
+
 	ReportCollection report_collection;
 	CompList comp_list;
 	MessageHandler msg_handler;

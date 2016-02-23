@@ -22,5 +22,7 @@ BAPTISM_SOURCE_ZONE=baptism/baptism_source_zone.txt
 BAPTISM_SOURCE_ZONE_MONTH=baptism/baptism_source_zone_month.txt
 BAPTISM_SOURCE_STAKE=baptism/baptism_source_stake.txt
 BAPTISM_SOURCE_STAKE_MONTH=baptism/baptism_source_stake_month.txt
+BAPTISM_SOURCE_MISSION=baptism/baptism_source_mission.txt
+BAPTISM_SOURCE_MISSION_MONTH=baptism/baptism_source_mission_month.txt
 MESSAGES_PROCESSED=messages/messages_processed.txt
 MESSAGES_UNPROCESSED=messages/messages_unprocessed.txt
