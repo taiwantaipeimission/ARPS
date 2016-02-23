@@ -5,6 +5,8 @@
 
 #include "Area.h"
 
+#define COMP_LIST_FILEPATH L"config/phone_list.txt"
+
 const std::wstring CompList::ph_number_header = L"PH_NUMBER";
 const std::wstring CompList::area_name_header = L"AREA_NAME";
 const std::wstring CompList::district_name_header = L"DISTRICT_NAME";
@@ -17,6 +19,7 @@ const std::wstring CompList::english_required_header = L"ENGLISH_REQUIRED";
 
 CompList::CompList()
 {
+	comp_list_file.filepath = COMP_LIST_FILEPATH;
 }
 
 
@@ -24,10 +27,11 @@ CompList::~CompList()
 {
 }
 
-void CompList::load(std::wistream& input)
+void CompList::load()
 {
+	comp_list_file.open(File::FILE_TYPE_INPUT);
 	std::wstring line;
-	std::getline(input, line);
+	std::getline(comp_list_file.file, line);
 
 	std::wstringstream strstr(line);
 
@@ -36,9 +40,9 @@ void CompList::load(std::wistream& input)
 	std::istream_iterator<std::wstring, wchar_t> end;
 	std::vector<std::wstring> header(it, end);
 
-	while (input.good())
+	while (comp_list_file.file.good())
 	{
-		std::getline(input, line);
+		std::getline(comp_list_file.file, line);
 		std::wstringstream linestr(line);
 		std::istream_iterator<std::wstring, wchar_t> line_it(linestr);
 		std::vector<std::wstring> results(line_it, end);
@@ -96,6 +100,7 @@ void CompList::load(std::wistream& input)
 			add_area(area_to_add);
 		}
 	}
+	comp_list_file.close();
 }
 
 void CompList::add_area(Area area)

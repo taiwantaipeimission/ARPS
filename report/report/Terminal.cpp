@@ -17,10 +17,9 @@
 #include "Reminder.h"
 #include "Referral.h"
 #include "MessageHandler.h"
-#include "FileManager.h"
 
-Terminal::Terminal(std::wstring date_in, std::wstring english_date_in, Modem* modem_in, ReportCollection* report_collection_in, CompList* comp_list_in, MessageHandler* message_handler_in, File* output_file_in, FileManager* file_manager_in)
-	: cmd_source(COMMAND_SOURCE_LOGIC), date(date_in), english_date(english_date_in), modem(modem_in), report_collection(report_collection_in), comp_list(comp_list_in), msg_handler(message_handler_in), output_file(output_file_in), file_manager(file_manager_in), reminders()
+Terminal::Terminal(std::wstring date_in, std::wstring english_date_in, Modem* modem_in, ReportCollection* report_collection_in, CompList* comp_list_in, MessageHandler* message_handler_in, File* output_file_in)
+	: cmd_source(COMMAND_SOURCE_LOGIC), date(date_in), english_date(english_date_in), modem(modem_in), report_collection(report_collection_in), comp_list(comp_list_in), msg_handler(message_handler_in), output_file(output_file_in), reminders()
 {
 	std::time(&cur_time);
 }
@@ -168,7 +167,7 @@ bool Terminal::update(double millis)
 		output_file->file << modem_ch_null;
 		modem_str += modem_ch_null;
 		
-		if (modem_str.find(L"OK\r\n") != std::wstring::npos || modem_str.find(L">") != std::wstring::npos)
+		if (modem_str.find(L"OK\r\n") != std::wstring::npos || modem_str.find(L"> ") != std::wstring::npos)
 			got_modem = true;
 
 		if (ms_to_wait > 0)

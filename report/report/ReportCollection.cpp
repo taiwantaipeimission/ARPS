@@ -5,10 +5,36 @@
 #include "File.h"
 #include "CompList.h"
 #include "Area.h"
+#include "FieldFile.h"
 
 ReportCollection::ReportCollection()
-	: reports()
 {
+	prefix[Report::TYPE_REGULAR] = L"report/report";
+	prefix[Report::TYPE_ENGLISH] = L"english/english";
+	prefix[Report::TYPE_BAPTISM_RECORD] = L"baptism/baptism_record";
+	prefix[Report::TYPE_BAPTISM_SOURCE] = L"baptism/baptism_source";
+
+	midfix[COMP] = L"";
+	midfix[DISTRICT] = L"_district";
+	midfix[DISTRICT_MONTH] = L"_district_month";
+	midfix[ZONE] = L"_zone";
+	midfix[ZONE_MONTH] = L"_zone_month";
+	midfix[STAKE] = L"_stake";
+	midfix[STAKE_MONTH] = L"_stake_month";
+	midfix[MISSION] = L"_mission";
+	midfix[MISSION_MONTH] = L"_mission_month";
+	midfix[INDIV] = L"_indiv";
+
+	suffix = L".txt";
+
+	for (int i = 0; i < Report::NUM_TYPES; i++)
+	{
+		for (int j = 0; j < NUM_DATA_ORDERS; j++)
+		{
+			report_files[(Report::Type)i][(DataOrder)j].filepath = prefix[(Report::Type)i] + midfix[(DataOrder)j] + suffix;
+		}
+	}
+
 	for (int i = 0; i <= Report::TYPE_BAPTISM_SOURCE; i++)
 	{
 		for (int j = 0; j <= INDIV; j++)
@@ -146,16 +172,6 @@ std::wstring ReportCollection::get_owner_id_str(Report* rep, DataOrder from, Dat
 
 void ReportCollection::total_reports(Report::Type type, DataOrder from, DataOrder to, CompList* comp_list, std::wstring date)
 {
-	//Remove all owner reports for the current date, so they can be updated
-	/*for (std::map<std::wstring, Report>::iterator it = reports[type][to].reports.begin(); it != reports[type][to].reports.end();)
-	{
-		std::wstring report_date = it->second.get_date();
-		if (report_date == date)
-			it = reports[type][to].reports.erase(it);
-		else
-			++it;
-	}*/
-
 	std::map<std::wstring, Report> reports_to_add;
 
 	for (std::map<std::wstring, Report>::iterator it = reports[type][from].reports.begin(); it != reports[type][from].reports.end(); ++it)
@@ -187,9 +203,8 @@ void ReportCollection::total_reports(Report::Type type, DataOrder from, DataOrde
 	}
 }
 
-void ReportCollection::total_all_reports(Report::Type type, CompList* comp_list, std::wstring date)
+void ReportCollection::total(Report::Type type, CompList* comp_list, std::wstring date)
 {
-	total_reports(type, COMP, DISTRICT, comp_list, date);
 	total_reports(type, COMP, ZONE, comp_list, date);
 	total_reports(type, COMP, STAKE, comp_list, date);
 	total_reports(type, DISTRICT, DISTRICT_MONTH, comp_list, date);
@@ -197,4 +212,39 @@ void ReportCollection::total_all_reports(Report::Type type, CompList* comp_list,
 	total_reports(type, ZONE, MISSION, comp_list, date);
 	total_reports(type, STAKE, STAKE_MONTH, comp_list, date);
 	total_reports(type, MISSION, MISSION_MONTH, comp_list, date);
+}
+
+void ReportCollection::total_all(CompList* comp_list, std::wstring date)
+{
+	total(Report::TYPE_REGULAR, comp_list, date);
+	total(Report::TYPE_ENGLISH, comp_list, date);
+	total(Report::TYPE_BAPTISM_SOURCE, comp_list, date);
+}
+
+bool ReportCollection::load_all()
+{
+	for (int i = 0; i < Report::NUM_TYPES; i++)
+	{
+		for (int j = 0; j < NUM_DATA_ORDERS; j++)
+		{
+			if (report_files[(Report::Type)i][(DataOrder)j].open(File::FILE_TYPE_INPUT))
+				reports[(Report::Type)i][(DataOrder)j].read_stored_all(report_files[(Report::Type)i][(DataOrder)j].file);
+			report_files[(Report::Type)i][(DataOrder)j].close();
+		}
+	}
+	return true;
+}
+
+bool ReportCollection::save_all()
+{
+	for (int i = 0; i < Report::NUM_TYPES; i++)
+	{
+		for (int j = 0; j < NUM_DATA_ORDERS; j++)
+		{
+			if (report_files[(Report::Type)i][(DataOrder)j].open(File::FILE_TYPE_OUTPUT))
+				reports[(Report::Type)i][(DataOrder)j].print(report_files[(Report::Type)i][(DataOrder)j].file);
+			report_files[(Report::Type)i][(DataOrder)j].close();
+		}
+	}
+	return true;
 }

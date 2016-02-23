@@ -6,6 +6,7 @@ class Area;
 #include <string>
 #include <istream>
 #include <vector>
+#include "File.h"
 
 class CompList
 {
@@ -21,7 +22,7 @@ public:
 	static const std::wstring report_required_header;
 	static const std::wstring english_required_header;
 	
-
+	File comp_list_file;
 	std::map<std::wstring, Area> areas;						// Keyed by phone number
 	std::multimap<std::wstring, std::wstring> by_area_name;
 	std::multimap<std::wstring, std::wstring> by_zone_name;
@@ -30,7 +31,7 @@ public:
 	CompList();
 	virtual ~CompList();
 
-	void load(std::wistream& input);
+	void load();
 	void add_area(Area area);
 };
 

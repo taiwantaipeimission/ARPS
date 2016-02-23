@@ -16,13 +16,10 @@ public:
 	FileType file_type;
 	std::wfstream file;
 
-	File(std::wstring filepath_in, FileType file_type_in, bool append = false);
 	File();
 	virtual ~File();
 
-	bool open(bool append = false);
-	void close();
-	
-	std::wfstream* get_file();
+	virtual bool open(FileType type, bool append = false);
+	virtual void close();
 };
 

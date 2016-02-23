@@ -1,12 +1,5 @@
 #include "FieldFile.h"
 
-
-FieldFile::FieldFile(std::wstring filepath_in)
-: File(filepath_in, FILE_TYPE_INPUT)
-{
-	open();
-}
-
 FieldFile::FieldFile()
 	: File()
 {
@@ -16,9 +9,9 @@ FieldFile::~FieldFile()
 {
 }
 
-bool FieldFile::open()
+bool FieldFile::open(FileType type_in, bool append)
 {
-	File::open();
+	File::open(FILE_TYPE_INPUT);
 	std::wstring line;
 	std::wstring key;
 	std::wstring value;

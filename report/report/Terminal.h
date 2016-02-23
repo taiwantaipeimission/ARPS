@@ -7,7 +7,6 @@ class Message;
 class File;
 class Reminder;
 class MessageHandler;
-class FileManager;
 
 #include <sstream>
 #include <vector>
@@ -38,7 +37,6 @@ public:
 	CompList* comp_list;
 	File* output_file;
 	MessageHandler* msg_handler;
-	FileManager* file_manager;
 	std::wstring date;					//current date string for saving regular reports
 	std::wstring english_date;			//current date string for saving English reports
 	std::vector<Reminder> reminders;
@@ -60,7 +58,7 @@ public:
 	double ms_until_timeout;			//time to wait before sending data if no response
 	time_t cur_time;
 
-	Terminal(std::wstring date_in, std::wstring english_date_in, Modem* modem_in, ReportCollection* report_collection_in, CompList* comp_list_in, MessageHandler* message_handler_in, File* output_file_in, FileManager* file_manager_in);
+	Terminal(std::wstring date_in, std::wstring english_date_in, Modem* modem_in, ReportCollection* report_collection_in, CompList* comp_list_in, MessageHandler* message_handler_in, File* output_file_in);
 	virtual ~Terminal();
 
 	void init_auto();

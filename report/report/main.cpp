@@ -21,7 +21,6 @@
 #include <FL/fl_ask.H>
 
 #include "Modem.h"
-#include "FileManager.h"
 #include "ReportCollection.h"
 #include "CompList.h"
 #include "Terminal.h"
@@ -29,36 +28,13 @@
 #include "Reminder.h"
 #include "Message.h"
 #include "MessageHandler.h"
+#include "FieldFile.h"
 
 // File handles
 #define OUTPUT L"OUTPUT"
 #define PH_LIST L"PH_LIST"
 #define MESSAGES_PROCESSED L"MESSAGES_PROCESSED"
 #define MESSAGES_UNPROCESSED L"MESSAGES_UNPROCESSED"
-#define REPORT_DATA L"REPORT_DATA"
-#define REPORT_DATA_OLD L"REPORT_DATA_OLD"
-#define REPORT_DATA_DISTRICT L"REPORT_DATA_DISTRICT"
-#define REPORT_DATA_DISTRICT_MONTH L"REPORT_DATA_DISTRICT_MONTH"
-#define REPORT_DATA_ZONE L"REPORT_DATA_ZONE"
-#define REPORT_DATA_ZONE_MONTH L"REPORT_DATA_ZONE_MONTH"
-#define REPORT_DATA_STAKE L"REPORT_DATA_STAKE"
-#define REPORT_DATA_STAKE_MONTH L"REPORT_DATA_STAKE_MONTH"
-#define REPORT_DATA_MISSION L"REPORT_DATA_MISSION"
-#define REPORT_DATA_MISSION_MONTH L"REPORT_DATA_MISSION_MONTH"
-#define ENGLISH_DATA L"ENGLISH_DATA"
-#define ENGLISH_DATA_OLD L"ENGLISH_DATA_OLD"
-#define ENGLISH_DATA_UNIT L"ENGLISH_DATA_UNIT"
-
-#define BAPTISM_RECORD L"BAPTISM_RECORD"
-#define BAPTISM_SOURCE L"BAPTISM_SOURCE"
-#define BAPTISM_SOURCE_DISTRICT L"BAPTISM_SOURCE_DISTRICT"
-#define BAPTISM_SOURCE_DISTRICT_MONTH L"BAPTISM_SOURCE_DISTRICT_MONTH"
-#define BAPTISM_SOURCE_ZONE L"BAPTISM_SOURCE_ZONE"
-#define BAPTISM_SOURCE_ZONE_MONTH L"BAPTISM_SOURCE_ZONE_MONTH"
-#define BAPTISM_SOURCE_STAKE L"BAPTISM_SOURCE_STAKE"
-#define BAPTISM_SOURCE_STAKE_MONTH L"BAPTISM_SOURCE_STAKE_MONTH"
-#define BAPTISM_SOURCE_MISSION L"BAPTISM_SOURCE_MISSION"
-#define BAPTISM_SOURCE_MISSION_MONTH L"BAPTISM_SOURCE_MISSION_MONTH"
 #define REFERRAL_HISTORY L"REFERRAL_HISTORY"
 
 //Characters
@@ -84,6 +60,12 @@ std::wstring tos(int x)
 	return str;
 }
 
+std::string tostr(std::wstring str)
+{
+	std::string st(str.begin(), str.end());
+	return st;
+}
+
 void show_report_status(ReportCollection* report_collection, CompList* comp_list, std::wstring date, bool english = false)
 {
 	std::cout << "Received\t\tNot received\n=============================================" << std::endl;
@@ -104,180 +86,24 @@ void show_report_status(ReportCollection* report_collection, CompList* comp_list
 	}
 }
 
-bool save(FileManager* file_manager, ReportCollection* report_collection, CompList* comp_list, MessageHandler* message_handler, std::wstring date, std::wstring english_date)
+bool save(ReportCollection* report_collection, CompList* comp_list, MessageHandler* message_handler, std::wstring date, std::wstring english_date)
 {
-	//open output files
-	bool success = file_manager->open_file(REPORT_DATA, File::FILE_TYPE_OUTPUT)
-		&& file_manager->open_file(REPORT_DATA_DISTRICT, File::FILE_TYPE_OUTPUT)
-		&& file_manager->open_file(REPORT_DATA_DISTRICT_MONTH, File::FILE_TYPE_OUTPUT)
-		&& file_manager->open_file(REPORT_DATA_ZONE, File::FILE_TYPE_OUTPUT)
-		&& file_manager->open_file(REPORT_DATA_ZONE_MONTH, File::FILE_TYPE_OUTPUT)
-		&& file_manager->open_file(REPORT_DATA_STAKE, File::FILE_TYPE_OUTPUT)
-		&& file_manager->open_file(REPORT_DATA_STAKE_MONTH, File::FILE_TYPE_OUTPUT)
-		&& file_manager->open_file(REPORT_DATA_MISSION, File::FILE_TYPE_OUTPUT)
-		&& file_manager->open_file(REPORT_DATA_MISSION_MONTH, File::FILE_TYPE_OUTPUT)
-		&& file_manager->open_file(ENGLISH_DATA, File::FILE_TYPE_OUTPUT)
-		&& file_manager->open_file(ENGLISH_DATA_UNIT, File::FILE_TYPE_OUTPUT)
-		&& file_manager->open_file(BAPTISM_RECORD, File::FILE_TYPE_OUTPUT)
-		&& file_manager->open_file(BAPTISM_SOURCE, File::FILE_TYPE_OUTPUT)
-		&& file_manager->open_file(BAPTISM_SOURCE_DISTRICT, File::FILE_TYPE_OUTPUT)
-		&& file_manager->open_file(BAPTISM_SOURCE_DISTRICT_MONTH, File::FILE_TYPE_OUTPUT)
-		&& file_manager->open_file(BAPTISM_SOURCE_ZONE, File::FILE_TYPE_OUTPUT)
-		&& file_manager->open_file(BAPTISM_SOURCE_ZONE_MONTH, File::FILE_TYPE_OUTPUT)
-		&& file_manager->open_file(BAPTISM_SOURCE_STAKE, File::FILE_TYPE_OUTPUT)
-		&& file_manager->open_file(BAPTISM_SOURCE_STAKE_MONTH, File::FILE_TYPE_OUTPUT)
-		&& file_manager->open_file(BAPTISM_SOURCE_MISSION, File::FILE_TYPE_OUTPUT)
-		&& file_manager->open_file(BAPTISM_SOURCE_MISSION_MONTH, File::FILE_TYPE_OUTPUT)
-		&& file_manager->open_file(MESSAGES_UNPROCESSED, File::FILE_TYPE_OUTPUT)
-		&& file_manager->open_file(MESSAGES_PROCESSED, File::FILE_TYPE_OUTPUT);
-
-	if (!success)
-		return false;
-
-	message_handler->write_filed_msgs(file_manager->files[MESSAGES_UNPROCESSED]->file, false);
-	message_handler->write_filed_msgs(file_manager->files[MESSAGES_PROCESSED]->file, true);
-
-	report_collection->write_report(Report::TYPE_REGULAR, ReportCollection::COMP, file_manager->files[REPORT_DATA]);
-	report_collection->total_all_reports(Report::TYPE_REGULAR, comp_list, date);
-	report_collection->write_report(Report::TYPE_REGULAR, ReportCollection::DISTRICT, file_manager->files[REPORT_DATA_DISTRICT]);
-	report_collection->write_report(Report::TYPE_REGULAR, ReportCollection::DISTRICT_MONTH, file_manager->files[REPORT_DATA_DISTRICT_MONTH]);
-	report_collection->write_report(Report::TYPE_REGULAR, ReportCollection::ZONE, file_manager->files[REPORT_DATA_ZONE]);
-	report_collection->write_report(Report::TYPE_REGULAR, ReportCollection::ZONE_MONTH, file_manager->files[REPORT_DATA_ZONE_MONTH]);
-	report_collection->write_report(Report::TYPE_REGULAR, ReportCollection::STAKE, file_manager->files[REPORT_DATA_STAKE]);
-	report_collection->write_report(Report::TYPE_REGULAR, ReportCollection::STAKE_MONTH, file_manager->files[REPORT_DATA_STAKE_MONTH]);
-	report_collection->write_report(Report::TYPE_REGULAR, ReportCollection::MISSION, file_manager->files[REPORT_DATA_MISSION]);
-	report_collection->write_report(Report::TYPE_REGULAR, ReportCollection::MISSION_MONTH, file_manager->files[REPORT_DATA_MISSION_MONTH]);
-
-	report_collection->write_report(Report::TYPE_ENGLISH, ReportCollection::COMP, file_manager->files[ENGLISH_DATA]);
-	report_collection->total_all_reports(Report::TYPE_ENGLISH, comp_list, english_date);
-	report_collection->write_report(Report::TYPE_ENGLISH, ReportCollection::ZONE, file_manager->files[ENGLISH_DATA_UNIT]);
-
-	report_collection->write_report(Report::TYPE_BAPTISM_RECORD, ReportCollection::COMP, file_manager->files[BAPTISM_RECORD]);
-
-	report_collection->write_report(Report::TYPE_BAPTISM_SOURCE, ReportCollection::COMP, file_manager->files[BAPTISM_SOURCE]);
-	report_collection->total_all_reports(Report::TYPE_BAPTISM_SOURCE, comp_list, date);
-	report_collection->write_report(Report::TYPE_BAPTISM_SOURCE, ReportCollection::DISTRICT, file_manager->files[BAPTISM_SOURCE_DISTRICT]);
-	report_collection->write_report(Report::TYPE_BAPTISM_SOURCE, ReportCollection::DISTRICT_MONTH, file_manager->files[BAPTISM_SOURCE_DISTRICT_MONTH]);
-	report_collection->write_report(Report::TYPE_BAPTISM_SOURCE, ReportCollection::ZONE, file_manager->files[BAPTISM_SOURCE_ZONE]);
-	report_collection->write_report(Report::TYPE_BAPTISM_SOURCE, ReportCollection::ZONE_MONTH, file_manager->files[BAPTISM_SOURCE_ZONE_MONTH]);
-	report_collection->write_report(Report::TYPE_BAPTISM_SOURCE, ReportCollection::STAKE, file_manager->files[BAPTISM_SOURCE_STAKE]);
-	report_collection->write_report(Report::TYPE_BAPTISM_SOURCE, ReportCollection::STAKE_MONTH, file_manager->files[BAPTISM_SOURCE_STAKE_MONTH]);
-	report_collection->write_report(Report::TYPE_BAPTISM_SOURCE, ReportCollection::MISSION, file_manager->files[BAPTISM_SOURCE_MISSION]);
-	report_collection->write_report(Report::TYPE_BAPTISM_SOURCE, ReportCollection::MISSION_MONTH, file_manager->files[BAPTISM_SOURCE_MISSION_MONTH]);
-
-	file_manager->close_file(REPORT_DATA);
-	file_manager->close_file(REPORT_DATA_DISTRICT);
-	file_manager->close_file(REPORT_DATA_DISTRICT_MONTH);
-	file_manager->close_file(REPORT_DATA_ZONE);
-	file_manager->close_file(REPORT_DATA_ZONE_MONTH);
-	file_manager->close_file(REPORT_DATA_STAKE);
-	file_manager->close_file(REPORT_DATA_STAKE_MONTH);
-	file_manager->close_file(REPORT_DATA_MISSION);
-	file_manager->close_file(REPORT_DATA_MISSION_MONTH);
-	file_manager->close_file(ENGLISH_DATA);
-	file_manager->close_file(ENGLISH_DATA_UNIT);
-	file_manager->close_file(BAPTISM_RECORD);
-	file_manager->close_file(BAPTISM_SOURCE);
-	file_manager->close_file(BAPTISM_SOURCE_DISTRICT);
-	file_manager->close_file(BAPTISM_SOURCE_DISTRICT_MONTH);
-	file_manager->close_file(BAPTISM_SOURCE_ZONE);
-	file_manager->close_file(BAPTISM_SOURCE_ZONE_MONTH);
-	file_manager->close_file(BAPTISM_SOURCE_STAKE);
-	file_manager->close_file(BAPTISM_SOURCE_STAKE_MONTH);
-	file_manager->close_file(BAPTISM_SOURCE_MISSION);
-	file_manager->close_file(BAPTISM_SOURCE_MISSION_MONTH);
-	file_manager->close_file(MESSAGES_UNPROCESSED);
-	file_manager->close_file(MESSAGES_PROCESSED);
+	report_collection->total_all(comp_list, date);
+	report_collection->save_all();
+	message_handler->save();
 
 	return true;
+
 }
 
-bool load(FileManager* file_manager, ReportCollection* report_collection, CompList* comp_list, MessageHandler* message_handler)
+bool load(ReportCollection* report_collection, CompList* comp_list, MessageHandler* message_handler, FieldFile* config, File* output)
 {
-	file_manager->open_file(PH_LIST, File::FILE_TYPE_INPUT);
-	file_manager->open_file(MESSAGES_UNPROCESSED, File::FILE_TYPE_INPUT);
-	file_manager->open_file(MESSAGES_PROCESSED, File::FILE_TYPE_INPUT);
+	report_collection->load_all();
+	comp_list->load();
+	message_handler->load();
 
-	file_manager->open_file(REPORT_DATA, File::FILE_TYPE_INPUT);
-	file_manager->open_file(REPORT_DATA_DISTRICT, File::FILE_TYPE_INPUT);
-	file_manager->open_file(REPORT_DATA_DISTRICT_MONTH, File::FILE_TYPE_INPUT);
-	file_manager->open_file(REPORT_DATA_ZONE, File::FILE_TYPE_INPUT);
-	file_manager->open_file(REPORT_DATA_ZONE_MONTH, File::FILE_TYPE_INPUT);
-	file_manager->open_file(REPORT_DATA_STAKE, File::FILE_TYPE_INPUT);
-	file_manager->open_file(REPORT_DATA_STAKE_MONTH, File::FILE_TYPE_INPUT);
-	file_manager->open_file(REPORT_DATA_MISSION, File::FILE_TYPE_INPUT);
-	file_manager->open_file(REPORT_DATA_MISSION_MONTH, File::FILE_TYPE_INPUT);
-	file_manager->open_file(ENGLISH_DATA, File::FILE_TYPE_INPUT);
-	file_manager->open_file(ENGLISH_DATA_UNIT, File::FILE_TYPE_INPUT);
-	file_manager->open_file(BAPTISM_SOURCE, File::FILE_TYPE_INPUT);
-	file_manager->open_file(BAPTISM_SOURCE_DISTRICT, File::FILE_TYPE_INPUT);
-	file_manager->open_file(BAPTISM_SOURCE_DISTRICT_MONTH, File::FILE_TYPE_INPUT);
-	file_manager->open_file(BAPTISM_SOURCE_ZONE, File::FILE_TYPE_INPUT);
-	file_manager->open_file(BAPTISM_SOURCE_ZONE_MONTH, File::FILE_TYPE_INPUT);
-	file_manager->open_file(BAPTISM_SOURCE_STAKE, File::FILE_TYPE_INPUT);
-	file_manager->open_file(BAPTISM_SOURCE_STAKE_MONTH, File::FILE_TYPE_INPUT);
-	file_manager->open_file(BAPTISM_SOURCE_MISSION, File::FILE_TYPE_INPUT);
-	file_manager->open_file(BAPTISM_SOURCE_MISSION_MONTH, File::FILE_TYPE_INPUT);
-	file_manager->open_file(BAPTISM_RECORD, File::FILE_TYPE_INPUT);
-
-	file_manager->open_file(REPORT_DATA_OLD, File::FILE_TYPE_OUTPUT, true);
-	file_manager->files[REPORT_DATA_OLD]->file << "=========================";
-	file_manager->files[REPORT_DATA_OLD]->file << file_manager->files[REPORT_DATA]->file.rdbuf();
-	file_manager->close_file(REPORT_DATA_OLD);
-
-	message_handler->read_filed_msgs(file_manager->files[MESSAGES_UNPROCESSED]->file, false);
-	message_handler->read_filed_msgs(file_manager->files[MESSAGES_PROCESSED]->file, true);
-
-	report_collection->read_report(Report::TYPE_REGULAR, ReportCollection::COMP, file_manager->files[REPORT_DATA]);
-	report_collection->read_report(Report::TYPE_REGULAR, ReportCollection::DISTRICT, file_manager->files[REPORT_DATA_DISTRICT]);
-	report_collection->read_report(Report::TYPE_REGULAR, ReportCollection::DISTRICT_MONTH, file_manager->files[REPORT_DATA_DISTRICT_MONTH]);
-	report_collection->read_report(Report::TYPE_REGULAR, ReportCollection::ZONE, file_manager->files[REPORT_DATA_ZONE]);
-	report_collection->read_report(Report::TYPE_REGULAR, ReportCollection::ZONE_MONTH, file_manager->files[REPORT_DATA_ZONE_MONTH]);
-	report_collection->read_report(Report::TYPE_REGULAR, ReportCollection::STAKE, file_manager->files[REPORT_DATA_STAKE]);
-	report_collection->read_report(Report::TYPE_REGULAR, ReportCollection::STAKE_MONTH, file_manager->files[REPORT_DATA_STAKE_MONTH]);
-	report_collection->read_report(Report::TYPE_REGULAR, ReportCollection::MISSION, file_manager->files[REPORT_DATA_MISSION]);
-	report_collection->read_report(Report::TYPE_REGULAR, ReportCollection::MISSION_MONTH, file_manager->files[REPORT_DATA_MISSION_MONTH]);
-
-	report_collection->read_report(Report::TYPE_ENGLISH, ReportCollection::COMP, file_manager->files[ENGLISH_DATA]);
-	report_collection->read_report(Report::TYPE_ENGLISH, ReportCollection::ZONE, file_manager->files[ENGLISH_DATA_UNIT]);
-	report_collection->read_report(Report::TYPE_BAPTISM_SOURCE, ReportCollection::COMP, file_manager->files[BAPTISM_SOURCE]);
-	report_collection->read_report(Report::TYPE_BAPTISM_SOURCE, ReportCollection::DISTRICT, file_manager->files[BAPTISM_SOURCE_DISTRICT]);
-	report_collection->read_report(Report::TYPE_BAPTISM_SOURCE, ReportCollection::DISTRICT_MONTH, file_manager->files[BAPTISM_SOURCE_DISTRICT_MONTH]);
-	report_collection->read_report(Report::TYPE_BAPTISM_SOURCE, ReportCollection::ZONE, file_manager->files[BAPTISM_SOURCE_ZONE]);
-	report_collection->read_report(Report::TYPE_BAPTISM_SOURCE, ReportCollection::ZONE_MONTH, file_manager->files[BAPTISM_SOURCE_ZONE_MONTH]);
-	report_collection->read_report(Report::TYPE_BAPTISM_SOURCE, ReportCollection::STAKE, file_manager->files[BAPTISM_SOURCE_STAKE]);
-	report_collection->read_report(Report::TYPE_BAPTISM_SOURCE, ReportCollection::STAKE_MONTH, file_manager->files[BAPTISM_SOURCE_STAKE_MONTH]);
-	report_collection->read_report(Report::TYPE_BAPTISM_SOURCE, ReportCollection::MISSION, file_manager->files[BAPTISM_SOURCE_MISSION]);
-	report_collection->read_report(Report::TYPE_BAPTISM_SOURCE, ReportCollection::MISSION_MONTH, file_manager->files[BAPTISM_SOURCE_MISSION_MONTH]);
-
-	report_collection->read_report(Report::TYPE_BAPTISM_RECORD, ReportCollection::COMP, file_manager->files[BAPTISM_RECORD]);
-
-	comp_list->load(file_manager->files[PH_LIST]->file);
-
-	file_manager->close_file(PH_LIST);
-	file_manager->close_file(MESSAGES_UNPROCESSED);
-	file_manager->close_file(MESSAGES_PROCESSED);
-	file_manager->close_file(REPORT_DATA);
-	file_manager->close_file(REPORT_DATA_DISTRICT);
-	file_manager->close_file(REPORT_DATA_DISTRICT_MONTH);
-	file_manager->close_file(REPORT_DATA_ZONE);
-	file_manager->close_file(REPORT_DATA_ZONE_MONTH);
-	file_manager->close_file(REPORT_DATA_STAKE);
-	file_manager->close_file(REPORT_DATA_STAKE_MONTH);
-	file_manager->close_file(REPORT_DATA_MISSION);
-	file_manager->close_file(REPORT_DATA_MISSION_MONTH);
-	file_manager->close_file(ENGLISH_DATA);
-	file_manager->close_file(ENGLISH_DATA_UNIT);
-	file_manager->close_file(BAPTISM_SOURCE);
-	file_manager->close_file(BAPTISM_SOURCE_DISTRICT);
-	file_manager->close_file(BAPTISM_SOURCE_DISTRICT_MONTH);
-	file_manager->close_file(BAPTISM_SOURCE_ZONE);
-	file_manager->close_file(BAPTISM_SOURCE_ZONE_MONTH);
-	file_manager->close_file(BAPTISM_SOURCE_STAKE);
-	file_manager->close_file(BAPTISM_SOURCE_STAKE_MONTH);
-	file_manager->close_file(BAPTISM_SOURCE_MISSION);
-	file_manager->close_file(BAPTISM_SOURCE_MISSION_MONTH);
-	file_manager->close_file(BAPTISM_RECORD);
+	config->filepath = L"config/config.txt";
+	config->open(File::FILE_TYPE_INPUT, false);
 
 	return true;
 }
@@ -349,7 +175,7 @@ void run_terminal_commands(Terminal* terminal)
 void save_cb(Fl_Widget* wg, void* ptr)
 {
 	Terminal* terminal = (Terminal*)ptr;
-	save(terminal->file_manager, terminal->report_collection, terminal->comp_list, terminal->msg_handler, terminal->date, terminal->english_date);
+	save(terminal->report_collection, terminal->comp_list, terminal->msg_handler, terminal->date, terminal->english_date);
 	saved = true;
 }
 
@@ -366,51 +192,50 @@ void user_terminal_cb(Fl_Widget* wg, void* ptr)
 	run_terminal_commands(terminal);
 }
 
-class MessageScrollItem : public Fl_Group {
-	Fl_Check_Button *fixedBox;
-	Fl_Box *stretchBox;
-public:
-	MessageScrollItem(int X, int Y, int W, int H, Message* msg) : Fl_Group(X, Y, W, H, 0) {
-		begin();
-		// Fixed width box
-		
-		// Stretchy box
-		std::wstring box_contents = msg->sender_name + L": " + msg->contents;
-		std::string str(box_contents.begin(), box_contents.end());
+class ScrollItem : public Fl_Group
+{
+		Fl_Check_Button *checkbox;
+		Fl_Box *contentbox;
 
-		fixedBox = new Fl_Check_Button(X, Y, CHECKBOX_WIDTH, H);
-		stretchBox = new Fl_Box(X + CHECKBOX_WIDTH, Y, W - CHECKBOX_WIDTH, H);
-		stretchBox->copy_label(str.c_str());
-		stretchBox->box(FL_UP_BOX);
-		stretchBox->align(FL_ALIGN_INSIDE | FL_ALIGN_LEFT | FL_ALIGN_TOP);
-		resizable(stretchBox);
-		end();
-	}
+	public:
+
+		ScrollItem(int X, int Y, int W, int H, std::wstring contents)
+			: Fl_Group(X, Y, W, H, 0)
+		{
+			begin();
+			checkbox = new Fl_Check_Button(X, Y, CHECKBOX_WIDTH, H);
+			contentbox = new Fl_Box(X + CHECKBOX_WIDTH, Y, W - CHECKBOX_WIDTH, H);
+			contentbox->copy_label(tostr(contents).c_str());
+			contentbox->box(FL_UP_BOX);
+			contentbox->align(FL_ALIGN_INSIDE | FL_ALIGN_LEFT | FL_ALIGN_TOP);
+			end();
+		}
 };
 
-// Custom scroll that tells children to follow scroll's width when resized
-class MessageScroll : public Fl_Scroll {
+class ScrollBox : public Fl_Scroll {
 public:
 	int cur_y;
 
-	MessageScroll(int X, int Y, int W, int H, const char* L = 0)
+	ScrollBox(int X, int Y, int W, int H, const char* L = 0)
 		: Fl_Scroll(X, Y, W, H, L), cur_y(0)
 	{
 	}
 
-	// Append new message to bottom
-	void AddItem(Message* msg) {
+	// Append new item to bottom
+	void AddItem(std::wstring contents)
+	{
 		int X = x() + 1;
 		int Y = y() - yposition() + cur_y + 1;
 		int W = w() - 20;                           // -20: compensate for vscroll bar
-		int H = (std::count(msg->contents.begin(), msg->contents.end(), '\n') + 1) * BAR_HEIGHT;
+		int H = (std::count(contents.begin(), contents.end(), '\n') + 1) * BAR_HEIGHT;
 		Fl_Widget* w = child(0);
-		MessageScrollItem* item = new MessageScrollItem(X, Y, W, H, msg);
+		ScrollItem* item = new ScrollItem(X, Y, W, H, contents);
 		add(item);
 		redraw();
 		cur_y += H;
 	}
 
+	// Remove all items from the scroll box
 	void clear()
 	{
 		Fl_Scroll::clear();
@@ -418,8 +243,8 @@ public:
 	}
 };
 
-MessageScroll* unhandled;
-MessageScroll* handled;
+ScrollBox* unhandled;
+ScrollBox* handled;
 
 void update_msg_scroll(MessageHandler* msg_handler)
 {
@@ -427,12 +252,14 @@ void update_msg_scroll(MessageHandler* msg_handler)
 	handled->clear();
 	for (int i = 0; i < msg_handler->msgs_unhandled.size(); i++)
 	{
-		unhandled->AddItem(&msg_handler->msgs_unhandled[i]);
+		unhandled->AddItem(msg_handler->msgs_unhandled[i].sender_name + L":" + msg_handler->msgs_unhandled[i].contents);
 	}
 	for (int i = 0; i < msg_handler->msgs_handled.size(); i++)
 	{
-		handled->AddItem(&msg_handler->msgs_handled[i]);
+		handled->AddItem(msg_handler->msgs_handled[i].sender_name + L":" + msg_handler->msgs_handled[i].contents);
 	}
+	unhandled->redraw();
+	handled->redraw();
 }
 
 void check_msg_cb(Fl_Widget* wg, void* ptr)
@@ -462,49 +289,21 @@ void timer_cb(void* ptr)
 
 int main(int argc, char **argv)
 {
-	Message msg;
-	decode_msg(&msg, L"\n0791889623048036200C9188962775569500006120221134942358D42CB4A893168D45A934C8544099C16151073A069FD8E4D379543883CDA20ED49CBB40D0B01BA470569BC2A25407CBCD6AB8188E568B29924EE353079AA3CBA0F41C242F87D9EC3C68FC7EB343", NULL);
-
-	decode_msg(&msg, L"\n0791889623048036240C9188960153984400006120224145442307D4F29C9E769F01", NULL);
-
-	decode_msg(&msg, L"\n0791889623048036240C9188960153984400006120225100522338D27298CDCE83D86FF719D42ECFE7E17319744FD3D1A076D89D07B5DFF232888E0EBB41F3B2BDEC068DD16179784C2FCBE7", NULL);
-
-
-
-
-
-
-
-
-
-
 	ReportCollection report_collection;
 	CompList comp_list;
 	MessageHandler msg_handler;
 	Modem modem;
+	FieldFile config;
+	File output;
 
 	std::wcout << "Loading..." << std::endl;
-	FileManager file_manager(L"paths.txt");
-	file_manager.open_file(OUTPUT, File::FILE_TYPE_OUTPUT, true);
-	load(&file_manager, &report_collection, &comp_list, &msg_handler);
-	std::wstring report_wday = file_manager.config_file.values[L"REPORT_WDAY"];
-	std::wstring english_wday = file_manager.config_file.values[L"ENGLISH_WDAY"];
-	Reminder report_reminder(file_manager.config_file.values[L"REPORT_REMINDER"]);
-	Reminder english_reminder(file_manager.config_file.values[L"ENGLISH_REMINDER"]);
-	english_reminder.english = true;
+	load(&report_collection, &comp_list, &msg_handler, &config, &output);
+	std::wstring report_wday = config.values[L"REPORT_WDAY"];
+	std::wstring english_wday = config.values[L"ENGLISH_WDAY"];
 	std::wstring report_date = get_report_date_str(report_wday);
 	std::wstring english_date = get_report_date_str(english_wday);
 
-	
-	Terminal terminal(report_date, english_date, &modem, &report_collection, &comp_list, &msg_handler, file_manager.files[OUTPUT], &file_manager);
-	terminal.add_reminder(report_reminder);
-	terminal.add_reminder(english_reminder);
-
-	// process string
-
-	bool quit = false;
-	bool run_terminal = false;
-
+	Terminal terminal(report_date, english_date, &modem, &report_collection, &comp_list, &msg_handler, &output);
 
 	Fl::add_timeout(auto_check_s, timer_cb, &terminal);
 	Fl_Window* window = new Fl_Window(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -517,31 +316,83 @@ int main(int argc, char **argv)
 	{
 		Fl_Group* msg_tab = new Fl_Group(0, 2 * BAR_HEIGHT + SPACING, WINDOW_WIDTH, WINDOW_HEIGHT, "Messages");
 		{
-			unhandled = new MessageScroll(SPACING, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
-			unhandled->box(FL_BORDER_BOX);
-			unhandled->end();
-			handled = new MessageScroll(SPACING * 2 + WINDOW_WIDTH / 2, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
-			handled->box(FL_BORDER_BOX);
-			handled->end();
+			unhandled = new ScrollBox(SPACING, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
+			{
+				unhandled->box(FL_BORDER_BOX);
+				unhandled->end();
+			}
+			handled = new ScrollBox(SPACING * 2 + WINDOW_WIDTH / 2, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
+			{
+				handled->box(FL_BORDER_BOX);
+				handled->end();
+			}
 			Fl_Button* check_msg_button = new Fl_Button(SPACING, WINDOW_HEIGHT - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "Check msgs");
-			check_msg_button->user_data((void*)(&terminal));
-			check_msg_button->callback(check_msg_cb);
+			{
+				check_msg_button->user_data((void*)(&terminal));
+				check_msg_button->callback(check_msg_cb);
+			}
 			Fl_Button* process_msg_button = new Fl_Button(BUTTON_WIDTH + 2 * SPACING, WINDOW_HEIGHT - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "Process msgs");
-			process_msg_button->user_data((void*)(&terminal));
-			process_msg_button->callback(process_msg_cb);
+			{
+				process_msg_button->user_data((void*)(&terminal));
+				process_msg_button->callback(process_msg_cb);
+			}
 			Fl_Button* user_terminal_button = new Fl_Button(2 * BUTTON_WIDTH + 3 * SPACING, WINDOW_HEIGHT - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "User Terminal");
-			user_terminal_button->user_data((void*)(&terminal));
-			user_terminal_button->callback(user_terminal_cb);
+			{
+				user_terminal_button->user_data((void*)(&terminal));
+				user_terminal_button->callback(user_terminal_cb);
+			}
 		}
 		msg_tab->end();
 		Fl_Group* report_tab = new Fl_Group(0, 2 * BAR_HEIGHT + SPACING, WINDOW_WIDTH, WINDOW_HEIGHT, "Reports");
 		{
+			ScrollBox* unreceived = new ScrollBox(SPACING, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
+			unreceived->box(FL_BORDER_BOX);
+			unreceived->end();
+			ScrollBox* received = new ScrollBox(SPACING * 2 + WINDOW_WIDTH / 2, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
+			received->box(FL_BORDER_BOX);
+			received->end();
 
+			int i = 0;
+			for (std::map<std::wstring, Area>::iterator it = comp_list.areas.begin(); it != comp_list.areas.end(); ++it, i++)
+			{
+				std::wstring id_str = report_date + L":" + it->second.area_name;
+				if (report_collection.reports[Report::TYPE_REGULAR][ReportCollection::COMP].reports.count(id_str) > 0)
+				{
+					received->AddItem(it->second.area_name);
+				}
+				else if (it->second.report_required)
+				{
+					unreceived->AddItem(it->second.area_name);
+				}
+			}
+			unreceived->redraw();
+			received->redraw();
 		}
 		report_tab->end();
 		Fl_Group* english_tab = new Fl_Group(0, 2 * BAR_HEIGHT + SPACING, WINDOW_WIDTH, WINDOW_HEIGHT, "English");
 		{
+			ScrollBox* unreceived = new ScrollBox(SPACING, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
+			unreceived->box(FL_BORDER_BOX);
+			unreceived->end();
+			ScrollBox* received = new ScrollBox(SPACING * 2 + WINDOW_WIDTH / 2, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
+			received->box(FL_BORDER_BOX);
+			received->end();
 
+			int i = 0;
+			for (std::map<std::wstring, Area>::iterator it = comp_list.areas.begin(); it != comp_list.areas.end(); ++it, i++)
+			{
+				std::wstring id_str = english_date + L":" + it->second.area_name;
+				if (report_collection.reports[Report::TYPE_ENGLISH][ReportCollection::COMP].reports.count(id_str) > 0)
+				{
+					received->AddItem(it->second.area_name);
+				}
+				else if (it->second.english_required)
+				{
+					unreceived->AddItem(it->second.area_name);
+				}
+			}
+			unreceived->redraw();
+			received->redraw();
 		}
 		english_tab->end();
 	}

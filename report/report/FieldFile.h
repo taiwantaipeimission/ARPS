@@ -11,11 +11,10 @@ class FieldFile :
 public:
 	std::map<std::wstring, std::wstring> values;
 
-	FieldFile(std::wstring filepath_in);
 	FieldFile();
 	virtual ~FieldFile();
 
-	bool FieldFile::open();
+	bool FieldFile::open(FileType type_in, bool append);
 	void FieldFile::close();
 	
 	std::wstring get_field(std::wstring field_name);

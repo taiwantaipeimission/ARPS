@@ -5,9 +5,12 @@
 #include "Terminal.h"
 #include "ReportCollection.h"
 #include "Referral.h"
+#include "File.h"
 
 MessageHandler::MessageHandler()
 {
+	handled_file.filepath = L"messages/handled.txt";
+	unhandled_file.filepath = L"messages/unhandled.txt";
 }
 
 
@@ -170,16 +173,14 @@ void MessageHandler::process_messages(Terminal* terminal, ReportCollection* repo
 	}
 }
 
-void MessageHandler::read_filed_msgs(std::wistream& input, bool handled)
+void MessageHandler::load(File* file, bool handled)
 {
-	input.clear();
-	input.seekg(0, std::ios::beg);
-	if (input.good())
+	if (file->file.good())
 	{
 		do
 		{
 			std::wstring line;
-			std::getline(input, line, MSG_SEPARATOR);
+			std::getline(file->file, line, MSG_SEPARATOR);
 			if (!line.empty())
 			{
 				Message msg;
@@ -196,15 +197,34 @@ void MessageHandler::read_filed_msgs(std::wistream& input, bool handled)
 						msgs_unhandled.push_back(msg);
 				}
 			}
-		} while (input.good());
+		} while (file->file.good());
 	}
 }
 
-void MessageHandler::write_filed_msgs(std::wostream& output, bool handled)
+void MessageHandler::save(File* file, bool handled)
 {
-	std::vector<Message>* list_ptr = handled ? &msgs_handled : &msgs_unhandled;
-	for (std::vector<Message>::iterator it = list_ptr->begin(); it != list_ptr->end(); ++it)
+	for (std::vector<Message>::iterator it = (handled ? msgs_handled.begin() : msgs_unhandled.begin()); it != (handled ? msgs_handled.end() : msgs_unhandled.end()); ++it)
 	{
-		output << write_filed_msg(&*it) << MSG_SEPARATOR;
+		file->file << write_filed_msg(&*it) << MSG_SEPARATOR;
 	}
+}
+
+void MessageHandler::save()
+{
+	handled_file.open(File::FILE_TYPE_OUTPUT);
+	save(&handled_file, true);
+	handled_file.close();
+	unhandled_file.open(File::FILE_TYPE_OUTPUT);
+	save(&unhandled_file, false);
+	unhandled_file.close();
+}
+
+void MessageHandler::load()
+{
+	handled_file.open(File::FILE_TYPE_INPUT);
+	load(&handled_file, true);
+	handled_file.close();
+	unhandled_file.open(File::FILE_TYPE_INPUT);
+	load(&unhandled_file, false);
+	unhandled_file.close();
 }

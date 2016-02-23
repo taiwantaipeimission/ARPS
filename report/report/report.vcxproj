@@ -72,7 +72,6 @@
     <ClCompile Include="CompList.cpp" />
     <ClCompile Include="FieldFile.cpp" />
     <ClCompile Include="File.cpp" />
-    <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Message.cpp" />
     <ClCompile Include="MessageHandler.cpp" />
@@ -86,10 +85,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Area.h" />
+    <ClInclude Include="codes.h" />
     <ClInclude Include="CompList.h" />
     <ClInclude Include="FieldFile.h" />
     <ClInclude Include="File.h" />
-    <ClInclude Include="FileManager.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="MessageHandler.h" />
     <ClInclude Include="Modem.h" />

@@ -1,12 +1,6 @@
 #include "File.h"
 #include <codecvt>
 
-File::File(std::wstring filepath_in, FileType file_type_in, bool append)
-	: filepath(filepath_in), file_type(file_type_in)
-{
-	open(append);
-}
-
 File::File()
 	: filepath(L""), file_type(FILE_TYPE_INPUT)
 {
@@ -17,8 +11,9 @@ File::~File()
 	file.close();
 }
 
-bool File::open(bool append)
+bool File::open(FileType type_in, bool append)
 {
+	file_type = type_in;
 	if (!file.is_open())
 	{
 		std::ios_base::openmode mode = 0;
@@ -31,7 +26,8 @@ bool File::open(bool append)
 		file.open(filepath, mode);
 		file.imbue(std::locale(file.getloc(), new std::codecvt_utf8<wchar_t, 0x10ffff, std::little_endian>()));
 	}
-	return file.good();
+	bool good = file.good();
+	return good;
 }
 
 void File::close()
@@ -40,9 +36,4 @@ void File::close()
 	{
 		file.close();
 	}
-}
-
-std::wfstream* File::get_file()
-{
-	return &file;
 }
