@@ -19,7 +19,7 @@
 #include "MessageHandler.h"
 
 Terminal::Terminal(std::wstring date_in, std::wstring english_date_in, Modem* modem_in, ReportCollection* report_collection_in, CompList* comp_list_in, MessageHandler* message_handler_in, File* output_file_in)
-	: cmd_source(COMMAND_SOURCE_LOGIC), date(date_in), english_date(english_date_in), modem(modem_in), report_collection(report_collection_in), comp_list(comp_list_in), msg_handler(message_handler_in), output_file(output_file_in), reminders()
+	: cmd_source(COMMAND_SOURCE_LOGIC), date(date_in), english_date(english_date_in), modem(modem_in), report_collection(report_collection_in), comp_list(comp_list_in), msg_handler(message_handler_in), output_file(output_file_in)
 {
 	std::time(&cur_time);
 }
@@ -66,54 +66,27 @@ void Terminal::init_user()
 	ms_until_timeout = 0;
 }
 
-void Terminal::add_reminder(Reminder reminder)
+void Terminal::send_reminders(bool english)
 {
-	reminders.push_back(reminder);
-}
-
-bool Terminal::send_reminders()
-{
-	bool sent = false;
-	struct tm cur_time_st;
-	localtime_s(&cur_time_st, &cur_time);
-	for (std::vector<Reminder>::iterator it = reminders.begin(); it != reminders.end(); ++it)
+	for (std::map<std::wstring, Area>::iterator ci = comp_list->areas.begin(); ci != comp_list->areas.end(); ++ci)
 	{
-		if (it->tm_wday == cur_time_st.tm_wday && (it->tm_hour * 60 + it->tm_min) < (cur_time_st.tm_hour * 60 + cur_time_st.tm_min))
+		bool send_it = false;
+		if (english)
 		{
-			if (!it->sent)
-			{
-				for (std::map<std::wstring, Area>::iterator ci = comp_list->areas.begin(); ci != comp_list->areas.end(); ++ci)
-				{
-					bool send_it = false;
-					if (it->english)
-					{
-						if (ci->first != L"" && report_collection->reports[Report::TYPE_ENGLISH][ReportCollection::ZONE].reports.count(english_date + L":" + ci->second.area_name) <= 0 && ci->second.english_required)
-							send_it = true;
-					}
-					else
-					{
-						if (ci->first != L"" && report_collection->reports[Report::TYPE_REGULAR][ReportCollection::ZONE].reports.count(date + L":" + ci->second.area_name) <= 0 && ci->second.report_required)
-							send_it = true;
-					}
-					if (send_it)
-					{
-						send_message(ci->first, L"\nPlease remember to send in your key indicators.");
-						it->sent = true;
-						sent = true;
-					}
-				}
-			}
+			if (ci->first != L"" && report_collection->reports[Report::TYPE_ENGLISH][ReportCollection::COMP].reports.count(english_date + L":" + ci->second.area_name) <= 0 && ci->second.english_required)
+				send_it = true;
 		}
 		else
 		{
-			it->sent = false;
+			if (ci->first != L"" && report_collection->reports[Report::TYPE_REGULAR][ReportCollection::COMP].reports.count(date + L":" + ci->second.area_name) <= 0 && ci->second.report_required)
+				send_it = true;
+		}
+		if (send_it)
+		{
+			send_message(ci->first, L"\nPlease remember to send in your key indicators.");
 		}
 	}
-	return sent;
 }
-
-
-
 
 void Terminal::send_message(std::wstring dest_ph_number, std::wstring msg_contents)
 {

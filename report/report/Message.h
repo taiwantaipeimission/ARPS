@@ -9,33 +9,18 @@
 #define MSG_FILE_FIELD_SEPARATOR L'|'
 #define MSG_SEPARATOR L';'
 
-class Message;
-
-std::wstring encode_hex_value(std::wstring chars, int rep_num_chars);
-std::wstring unpack_septets(std::vector<int> packed_data);
-std::wstring encode_phone_number(std::wstring phone_number);
-std::wstring extract_phone_number(std::wstringstream&ss, int length);
-int get_hex_value(std::wstring hex_rep);
-
-std::vector<std::wstring> encode_msg(Message* msg);
-bool decode_msg(Message* msg, std::wstring raw_input, CompList* comp_list);
-
-void read_filed_msg(Message* msg, std::wstring input);
-std::wstring write_filed_msg(Message* msg);
+enum MessageType
+{
+	TYPE_REPORT,
+	TYPE_REPORT_ENGLISH,
+	TYPE_REPORT_BAPTISM,
+	TYPE_REFERRAL,
+	TYPE_UNKNOWN
+};
 
 class Message
 {
-public:
-	
-	enum MessageType
-	{
-		TYPE_REPORT,
-		TYPE_REPORT_ENGLISH,
-		TYPE_REPORT_BAPTISM,
-		TYPE_REFERRAL,
-		TYPE_UNKNOWN
-	};
-
+	public:
 	//Fields deducted from PDU content
 	std::wstring raw_pdu;
 	std::wstring sender_number;
@@ -57,9 +42,18 @@ public:
 	
 	//Fields used in encoding a send request only
 	std::wstring dest_number;
-	
-	
-	Message();
-	virtual ~Message();
 };
+
+std::wstring encode_hex_value(std::wstring chars, int rep_num_chars);
+std::wstring unpack_septets(std::vector<int> packed_data);
+std::wstring encode_phone_number(std::wstring phone_number);
+std::wstring extract_phone_number(std::wstringstream&ss, int length);
+int get_hex_value(std::wstring hex_rep);
+
+std::vector<std::wstring> encode_msg(Message* msg);
+bool decode_msg(Message* msg, std::wstring raw_input, CompList* comp_list);
+
+void read_filed_msg(Message* msg, std::wstring input);
+std::wstring write_filed_msg(Message* msg);
+
 

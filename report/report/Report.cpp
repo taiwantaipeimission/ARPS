@@ -15,11 +15,11 @@ void Report::read_message(Message msg, std::wstring date)
 	id_str = date + L":" + msg.sender_name;
 	sender_number = msg.sender_number;
 
-	if (msg.type == Message::TYPE_REPORT)
+	if (msg.type == TYPE_REPORT)
 		set_type(TYPE_REGULAR);
-	else if (msg.type == Message::TYPE_REPORT_ENGLISH)
+	else if (msg.type == TYPE_REPORT_ENGLISH)
 		set_type(TYPE_ENGLISH);
-	else if (msg.type == Message::TYPE_REPORT_BAPTISM)
+	else if (msg.type == TYPE_REPORT_BAPTISM)
 		set_type(TYPE_BAPTISM_RECORD);
 
 	std::wstring value;

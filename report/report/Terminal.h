@@ -3,7 +3,6 @@
 class Modem;
 class ReportCollection;
 class CompList;
-class Message;
 class File;
 class Reminder;
 class MessageHandler;
@@ -39,7 +38,6 @@ public:
 	MessageHandler* msg_handler;
 	std::wstring date;					//current date string for saving regular reports
 	std::wstring english_date;			//current date string for saving English reports
-	std::vector<Reminder> reminders;
 
 	std::queue<wchar_t> command_stream;
 
@@ -65,8 +63,7 @@ public:
 	void init_user();
 	void send_message(std::wstring dest_number, std::wstring message_contents);
 	void delete_message_from_sim(int msg_cmg_id);
-	void add_reminder(Reminder reminder);
-	bool send_reminders();
+	void send_reminders(bool english = false);
 	void push_command(std::wstring cmd);
 	bool update(double millis);		//returns false when it wants to quit
 };

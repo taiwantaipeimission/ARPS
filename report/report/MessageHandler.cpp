@@ -16,6 +16,10 @@ MessageHandler::MessageHandler()
 
 MessageHandler::~MessageHandler()
 {
+	for (std::vector<Message*>::iterator it = msgs_handled.begin(); it != msgs_handled.end(); ++it)
+		delete *it;
+	for (std::vector<Message*>::iterator it = msgs_unhandled.begin(); it != msgs_unhandled.end(); ++it)
+		delete *it;
 }
 
 void MessageHandler::parse_messages(Terminal* terminal, std::wstring raw_str, CompList* comp_list)
@@ -25,13 +29,13 @@ void MessageHandler::parse_messages(Terminal* terminal, std::wstring raw_str, Co
 	int end = raw_str.find(L"+CMGL:", start + 1) - 1;
 	while (start != std::wstring::npos)
 	{
-		Message msg;
+		Message* msg = new Message();
 		std::wstring msg_str = raw_str.substr(start, end - start + 1);	//String containing message info as well as CMGL response of the modem
-		decode_msg(&msg, msg_str, comp_list);
+		decode_msg(msg, msg_str, comp_list);
 		
-		if (msg.concatenated)
+		if (msg->concatenated)
 		{
-			unsigned int id = msg.concat_num_msgs | (msg.concat_refnum << 8);
+			unsigned int id = msg->concat_num_msgs | (msg->concat_refnum << 8);
 			msgs_fragment[id].push_back(msg);
 		}
 		else
@@ -40,27 +44,27 @@ void MessageHandler::parse_messages(Terminal* terminal, std::wstring raw_str, Co
 		}
 		start = end + 1;
 		end = raw_str.find(L"+CMGL:", start + 1) - 1;
-		terminal->delete_message_from_sim(msg.cmgl_ids[0]);
+		terminal->delete_message_from_sim(msg->cmgl_ids[0]);
 	}
 
 	//Attempt to piece together concatenated messages
-	for (std::map<unsigned int, std::vector<Message>>::iterator it = msgs_fragment.begin(); it != msgs_fragment.end(); )
+	for (std::map<unsigned int, std::vector<Message*>>::iterator it = msgs_fragment.begin(); it != msgs_fragment.end(); )
 	{
 		std::vector<int> correct_order;					//List of the indeces of message fragments for this concat_id, arranged in proper order
-		int num_msgs = it->second[0].concat_num_msgs;
+		int num_msgs = it->second[0]->concat_num_msgs;
 		correct_order.assign(num_msgs, -1);				//Fill with -1s so we can see if any msgs are missing
-		for (int i = 0; i < it->second.size(); i++)
+		for (size_t i = 0; i < it->second.size(); i++)
 		{
-			correct_order[it->second[i].concat_index - 1] = i;					//Concat indeces inside msg start from 1, so subtract 1
+			correct_order[it->second[i]->concat_index - 1] = i;					//Concat indeces inside msg start from 1, so subtract 1
 		}
 		if (std::count(correct_order.begin(), correct_order.end(), -1) == 0)	//All sub-msgs found that make up this concat msg
 		{
 			for (unsigned int i = 1; i < correct_order.size(); i++)
 			{
-				it->second[correct_order[0]].contents += it->second[correct_order[i]].contents;
-				it->second[correct_order[0]].cmgl_ids.push_back(it->second[correct_order[i]].cmgl_ids[0]);
+				it->second[correct_order[0]]->contents += it->second[correct_order[i]]->contents;
+				it->second[correct_order[0]]->cmgl_ids.push_back(it->second[correct_order[i]]->cmgl_ids[0]);
 			}
-			it->second[correct_order[0]].concatenated = false;
+			it->second[correct_order[0]]->concatenated = false;
 			msgs_unhandled.push_back(it->second[correct_order[0]]);
 			it = msgs_fragment.erase(it);
 		}
@@ -74,19 +78,16 @@ void MessageHandler::parse_messages(Terminal* terminal, std::wstring raw_str, Co
 }
 
 
-void MessageHandler::process_messages(Terminal* terminal, ReportCollection* report_collection, CompList* comp_list, std::wstring date, std::wstring english_date)
+void MessageHandler::process_msg(Message* msg, Terminal* terminal, ReportCollection* report_collection, CompList* comp_list, std::wstring date, std::wstring english_date)
 {
-	std::wstring command_string = L"";
-	for (std::vector<Message>::iterator it = msgs_unhandled.begin(); it != msgs_unhandled.end();)
-	{
 		bool processed_this_msg = false;
-		if (!it->concatenated)
+		if (!msg->concatenated)
 		{
-			if (it->type == Message::TYPE_REPORT)
+			if (msg->type == TYPE_REPORT)
 			{
 				Report report;
 				report.set_type(Report::TYPE_REGULAR);
-				report.read_message(*it, date);
+				report.read_message(*msg, date);
 				report_collection->reports[Report::TYPE_REGULAR][ReportCollection::COMP].add_report(report);
 
 				processed_this_msg = true;
@@ -94,24 +95,24 @@ void MessageHandler::process_messages(Terminal* terminal, ReportCollection* repo
 				int baptisms = _wtoi(report.report_values[L"BAP"].c_str());
 				if (baptisms > 0)
 				{
-					terminal->send_message(it->sender_number, L"Congratulations on your baptism[s]! Please send in one copy of this template per baptism.");
-					terminal->send_message(it->sender_number, L"TYPE:BAPTISM\nCONV_NAME:\nBP_DATE:\nCONF_DATE:\nWARD:\nHOME_ADDR:\nPH_NUM:\nBAP_SOURCE:\n1=Missionary contacting\n2=LA referral\n3=RC referral\n4=Active member referral\n5=English class\n6=Temple tour");
+					terminal->send_message(msg->sender_number, L"Congratulations on your baptism[s]! Please send in one copy of this template per baptism.");
+					terminal->send_message(msg->sender_number, L"TYPE:BAPTISM\nCONV_NAME:\nBP_DATE:\nCONF_DATE:\nWARD:\nHOME_ADDR:\nPH_NUM:\nBAP_SOURCE:\n1=Missionary contacting\n2=LA referral\n3=RC referral\n4=Active member referral\n5=English class\n6=Temple tour");
 				}
 			}
-			else if (it->type == Message::TYPE_REPORT_ENGLISH)
+			else if (msg->type == TYPE_REPORT_ENGLISH)
 			{
 				Report report;
 				report.set_type(Report::TYPE_ENGLISH);
-				report.read_message(*it, english_date);
+				report.read_message(*msg, english_date);
 				report_collection->reports[Report::TYPE_ENGLISH][ReportCollection::COMP].add_report(report);
 
 				processed_this_msg = true;
 			}
-			else if (it->type == Message::TYPE_REPORT_BAPTISM)
+			else if (msg->type == TYPE_REPORT_BAPTISM)
 			{
 				Report report;
 				report.set_type(Report::TYPE_BAPTISM_RECORD);
-				report.read_message(*it, date);
+				report.read_message(*msg, date);
 				report_collection->reports[Report::TYPE_BAPTISM_RECORD][ReportCollection::COMP].add_report(report);
 
 				int choice = _wtoi(report.report_values[L"BAP_SOURCE"].c_str());
@@ -137,38 +138,52 @@ void MessageHandler::process_messages(Terminal* terminal, ReportCollection* repo
 
 				processed_this_msg = true;
 			}
-			else if (it->type == Message::TYPE_REFERRAL)
+			else if (msg->type == TYPE_REFERRAL)
 			{
 				Referral referral;
-				referral.read_message(*it);
+				referral.read_message(*msg);
 				referral.locate(comp_list);
 				if (referral.found_dest())
 				{
-					it->dest_number = referral.dest_number;
-					terminal->send_message(it->dest_number, it->contents);
+					terminal->send_message(referral.dest_number, msg->contents);
 					//referral_list.add_sent(referral);
 				}
 				else
 				{
-					terminal->send_message(L"+886972576566", it->contents);	//Send it to the recorder!
+					terminal->send_message(L"+886972576566", msg->contents);	//Send it to the recorder!
 					//referral_list.add_unsent(referral);
 				}
 
 				processed_this_msg = true;
 			}
-			else if (it->type == Message::TYPE_UNKNOWN)
+			else if (msg->type == TYPE_UNKNOWN)
 			{
 				processed_this_msg = true;
 			}
 		}
 		if (processed_this_msg)
 		{
-			msgs_handled.push_back(*it);
-			it = msgs_unhandled.erase(it);
+			msgs_handled.push_back(msg);
+			for (int i = 0, erased = 0; i < msgs_unhandled.size() && erased == 0; i++)
+			{
+				if (msgs_unhandled[i] == msg)
+				{
+					msgs_unhandled.erase(msgs_unhandled.begin() + i);
+					erased = true;
+				}
+			}
 		}
-		else
+}
+
+void MessageHandler::unprocess_msg(Message* msg)
+{
+	msgs_unhandled.push_back(msg);
+	for (int i = 0, found = 0; i < msgs_handled.size() && found == 0; i++)
+	{
+		if (msgs_handled[i] == msg)
 		{
-			++it;
+			msgs_handled.erase(msgs_handled.begin() + i);
+			found = true;
 		}
 	}
 }
@@ -183,11 +198,11 @@ void MessageHandler::load(File* file, bool handled)
 			std::getline(file->file, line, MSG_SEPARATOR);
 			if (!line.empty())
 			{
-				Message msg;
-				read_filed_msg(&msg, line);
-				if (msg.concatenated)
+				Message* msg = new Message();
+				read_filed_msg(msg, line);
+				if (msg->concatenated)
 				{
-					msgs_fragment[msg.concat_refnum].push_back(msg);
+					msgs_fragment[msg->concat_refnum].push_back(msg);
 				}
 				else
 				{
@@ -203,9 +218,9 @@ void MessageHandler::load(File* file, bool handled)
 
 void MessageHandler::save(File* file, bool handled)
 {
-	for (std::vector<Message>::iterator it = (handled ? msgs_handled.begin() : msgs_unhandled.begin()); it != (handled ? msgs_handled.end() : msgs_unhandled.end()); ++it)
+	for (std::vector<Message*>::iterator it = (handled ? msgs_handled.begin() : msgs_unhandled.begin()); it != (handled ? msgs_handled.end() : msgs_unhandled.end()); ++it)
 	{
-		file->file << write_filed_msg(&*it) << MSG_SEPARATOR;
+		file->file << write_filed_msg(*it) << MSG_SEPARATOR;
 	}
 }
 

@@ -4,15 +4,6 @@
 #include <iomanip>
 #include <algorithm>
 
-Message::Message()
-{
-}
-
-
-Message::~Message()
-{
-}
-
 int get_hex_value(std::wstring rep)
 {
 	std::wstringstream conversion_stream;
@@ -31,16 +22,7 @@ int get_hex_value(std::wstring rep)
 int extract_hex_value(std::wstringstream& ss, int num_rep_chars)
 {
 	wchar_t chars[256];
-	size_t pos = ss.tellg();
-	if (pos == 208)
-		int x = 0;
 	ss.get(chars, num_rep_chars + 1);
-	bool good = ss.good();
-	bool eof = ss.eof();
-	bool bad = ss.bad();
-
-	if (!ss.good())
-		int x = 0;
 	return get_hex_value((std::wstring)chars);
 }
 
@@ -99,7 +81,7 @@ std::wstring unpack_septets(std::vector<int> data)
 
 	data.push_back(0);
 	int offset = 0;
-	int index = 0;
+	unsigned int index = 0;
 	unsigned int base = 0u;
 	unsigned int adder = 0u;
 	unsigned int result = 0u;
@@ -304,19 +286,19 @@ bool decode_msg(Message* msg, std::wstring input, CompList* comp_list)
 		int type_end = msg->contents.find(L"\n", type_start);
 		std::wstring type_str = msg->contents.substr(type_start, type_end - type_start);
 		if (type_str == L"REPORT")
-			msg->type = Message::TYPE_REPORT;
+			msg->type = TYPE_REPORT;
 		else if (type_str == L"ENGLISH")
-			msg->type = Message::TYPE_REPORT_ENGLISH;
+			msg->type = TYPE_REPORT_ENGLISH;
 		else if (type_str == L"BAPTISM")
-			msg->type = Message::TYPE_REPORT_BAPTISM;
+			msg->type = TYPE_REPORT_BAPTISM;
 		else if (type_str == L"REFERRAL")
-			msg->type = Message::TYPE_REFERRAL;
+			msg->type = TYPE_REFERRAL;
 		else
-			msg->type = Message::TYPE_UNKNOWN;
+			msg->type = TYPE_UNKNOWN;
 	}
 	else
 	{
-		msg->type = Message::TYPE_UNKNOWN;
+		msg->type = TYPE_UNKNOWN;
 	}
 
 	int cmgl_id_start = input.find(L"CMGL: ");
@@ -341,7 +323,7 @@ void read_filed_msg(Message* msg, std::wstring input)
 	std::getline(ss, msg->sender_number, MSG_FILE_FIELD_SEPARATOR);
 	std::wstring msg_type;
 	std::getline(ss, msg_type, MSG_FILE_FIELD_SEPARATOR);
-	msg->type = (Message::MessageType)_wtoi(msg_type.c_str()); 
+	msg->type = (MessageType)_wtoi(msg_type.c_str()); 
 	std::getline(ss, msg->contents, MSG_FILE_FIELD_SEPARATOR);
 	std::getline(ss, msg->sent_date, MSG_FILE_FIELD_SEPARATOR);
 	std::wstring data_coding;

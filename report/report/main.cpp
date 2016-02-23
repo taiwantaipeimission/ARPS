@@ -19,6 +19,7 @@
 #include <FL/Fl_Check_Button.h>
 #include <FL/Fl_Timer.H>
 #include <FL/fl_ask.H>
+#include <FL/Fl_Multi_Browser.H>
 
 #include "Modem.h"
 #include "ReportCollection.h"
@@ -192,59 +193,22 @@ void user_terminal_cb(Fl_Widget* wg, void* ptr)
 	run_terminal_commands(terminal);
 }
 
-class ScrollItem : public Fl_Group
+void send_reminder_cb(Fl_Widget* wg, void* ptr)
 {
-		Fl_Check_Button *checkbox;
-		Fl_Box *contentbox;
+	Terminal* terminal = (Terminal*)ptr;
+	terminal->send_reminders();
+	run_terminal_commands(terminal);
+}
 
-	public:
+void send_english_reminder_cb(Fl_Widget* wg, void*ptr)
+{
+	Terminal* terminal = (Terminal*)ptr;
+	terminal->send_reminders(true);
+	run_terminal_commands(terminal);
+}
 
-		ScrollItem(int X, int Y, int W, int H, std::wstring contents)
-			: Fl_Group(X, Y, W, H, 0)
-		{
-			begin();
-			checkbox = new Fl_Check_Button(X, Y, CHECKBOX_WIDTH, H);
-			contentbox = new Fl_Box(X + CHECKBOX_WIDTH, Y, W - CHECKBOX_WIDTH, H);
-			contentbox->copy_label(tostr(contents).c_str());
-			contentbox->box(FL_UP_BOX);
-			contentbox->align(FL_ALIGN_INSIDE | FL_ALIGN_LEFT | FL_ALIGN_TOP);
-			end();
-		}
-};
-
-class ScrollBox : public Fl_Scroll {
-public:
-	int cur_y;
-
-	ScrollBox(int X, int Y, int W, int H, const char* L = 0)
-		: Fl_Scroll(X, Y, W, H, L), cur_y(0)
-	{
-	}
-
-	// Append new item to bottom
-	void AddItem(std::wstring contents)
-	{
-		int X = x() + 1;
-		int Y = y() - yposition() + cur_y + 1;
-		int W = w() - 20;                           // -20: compensate for vscroll bar
-		int H = (std::count(contents.begin(), contents.end(), '\n') + 1) * BAR_HEIGHT;
-		Fl_Widget* w = child(0);
-		ScrollItem* item = new ScrollItem(X, Y, W, H, contents);
-		add(item);
-		redraw();
-		cur_y += H;
-	}
-
-	// Remove all items from the scroll box
-	void clear()
-	{
-		Fl_Scroll::clear();
-		cur_y = 0;
-	}
-};
-
-ScrollBox* unhandled;
-ScrollBox* handled;
+Fl_Multi_Browser* unhandled;
+Fl_Multi_Browser* handled;
 
 void update_msg_scroll(MessageHandler* msg_handler)
 {
@@ -252,11 +216,12 @@ void update_msg_scroll(MessageHandler* msg_handler)
 	handled->clear();
 	for (int i = 0; i < msg_handler->msgs_unhandled.size(); i++)
 	{
-		unhandled->AddItem(msg_handler->msgs_unhandled[i].sender_name + L":" + msg_handler->msgs_unhandled[i].contents);
+		unhandled->add(tostr(msg_handler->msgs_unhandled[i]->sender_name + L":" + msg_handler->msgs_unhandled[i]->contents).c_str(), (void*)msg_handler->msgs_unhandled[i]);
 	}
+
 	for (int i = 0; i < msg_handler->msgs_handled.size(); i++)
 	{
-		handled->AddItem(msg_handler->msgs_handled[i].sender_name + L":" + msg_handler->msgs_handled[i].contents);
+		handled->add(tostr(msg_handler->msgs_handled[i]->sender_name + L":").c_str(), (void*)msg_handler->msgs_handled[i]);
 	}
 	unhandled->redraw();
 	handled->redraw();
@@ -273,9 +238,37 @@ void check_msg_cb(Fl_Widget* wg, void* ptr)
 
 void process_msg_cb(Fl_Widget* wg, void* ptr)
 {
+	wcout << "Before processing:\n";
+	for (int i = 1; i <= unhandled->size(); i++)
+	{
+		wcout << i << ":" << ((Message*)unhandled->data(i))->contents << endl;
+	}
+
+	wcout << "During processing:\n";
 	Terminal* terminal = (Terminal*)ptr;
-	terminal->msg_handler->process_messages(terminal, terminal->report_collection, terminal->comp_list, terminal->date, terminal->english_date);
+	for (int j = 1; j <= unhandled->size(); j++)
+	{
+		if (unhandled->selected(j))
+		{
+			wcout << j << L":" << ((Message*)unhandled->data(j))->contents << endl;
+			terminal->msg_handler->process_msg((Message*)unhandled->data(j), terminal, terminal->report_collection, terminal->comp_list, terminal->date, terminal->english_date);
+		}
+	}
 	run_terminal_commands(terminal);
+	update_msg_scroll(terminal->msg_handler);
+	saved = false;
+}
+
+void unprocess_msg_cb(Fl_Widget* wg, void* ptr)
+{
+	Terminal* terminal = (Terminal*)ptr;
+	for (int i = 1; i <= handled->size(); i++)
+	{
+		if (handled->selected(i))
+		{
+			terminal->msg_handler->unprocess_msg((Message*)handled->data(i));
+		}
+	}
 	update_msg_scroll(terminal->msg_handler);
 	saved = false;
 }
@@ -316,12 +309,12 @@ int main(int argc, char **argv)
 	{
 		Fl_Group* msg_tab = new Fl_Group(0, 2 * BAR_HEIGHT + SPACING, WINDOW_WIDTH, WINDOW_HEIGHT, "Messages");
 		{
-			unhandled = new ScrollBox(SPACING, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
+			unhandled = new Fl_Multi_Browser(SPACING, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
 			{
 				unhandled->box(FL_BORDER_BOX);
 				unhandled->end();
 			}
-			handled = new ScrollBox(SPACING * 2 + WINDOW_WIDTH / 2, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
+			handled = new Fl_Multi_Browser(SPACING * 2 + WINDOW_WIDTH / 2, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
 			{
 				handled->box(FL_BORDER_BOX);
 				handled->end();
@@ -336,7 +329,12 @@ int main(int argc, char **argv)
 				process_msg_button->user_data((void*)(&terminal));
 				process_msg_button->callback(process_msg_cb);
 			}
-			Fl_Button* user_terminal_button = new Fl_Button(2 * BUTTON_WIDTH + 3 * SPACING, WINDOW_HEIGHT - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "User Terminal");
+			Fl_Button* unprocess_msg_button = new Fl_Button(2 * BUTTON_WIDTH + 3 * SPACING, WINDOW_HEIGHT - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "Mark as unprocessed");
+			{
+				unprocess_msg_button->user_data((void*)(&terminal));
+				unprocess_msg_button->callback(unprocess_msg_cb);
+			}
+			Fl_Button* user_terminal_button = new Fl_Button(3 * BUTTON_WIDTH + 4 * SPACING, WINDOW_HEIGHT - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "User Terminal");
 			{
 				user_terminal_button->user_data((void*)(&terminal));
 				user_terminal_button->callback(user_terminal_cb);
@@ -345,10 +343,10 @@ int main(int argc, char **argv)
 		msg_tab->end();
 		Fl_Group* report_tab = new Fl_Group(0, 2 * BAR_HEIGHT + SPACING, WINDOW_WIDTH, WINDOW_HEIGHT, "Reports");
 		{
-			ScrollBox* unreceived = new ScrollBox(SPACING, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
+			Fl_Multi_Browser* unreceived = new Fl_Multi_Browser(SPACING, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
 			unreceived->box(FL_BORDER_BOX);
 			unreceived->end();
-			ScrollBox* received = new ScrollBox(SPACING * 2 + WINDOW_WIDTH / 2, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
+			Fl_Multi_Browser* received = new Fl_Multi_Browser(SPACING * 2 + WINDOW_WIDTH / 2, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
 			received->box(FL_BORDER_BOX);
 			received->end();
 
@@ -358,23 +356,29 @@ int main(int argc, char **argv)
 				std::wstring id_str = report_date + L":" + it->second.area_name;
 				if (report_collection.reports[Report::TYPE_REGULAR][ReportCollection::COMP].reports.count(id_str) > 0)
 				{
-					received->AddItem(it->second.area_name);
+					received->add(tostr(it->second.area_name).c_str());
 				}
 				else if (it->second.report_required)
 				{
-					unreceived->AddItem(it->second.area_name);
+					unreceived->add(tostr(it->second.area_name).c_str());
 				}
 			}
 			unreceived->redraw();
 			received->redraw();
+
+			Fl_Button* reminder_button = new Fl_Button(SPACING, WINDOW_HEIGHT - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "Remind 'em");
+			{
+				reminder_button->user_data((void*)&terminal);
+				reminder_button->callback(send_reminder_cb);
+			}
 		}
 		report_tab->end();
 		Fl_Group* english_tab = new Fl_Group(0, 2 * BAR_HEIGHT + SPACING, WINDOW_WIDTH, WINDOW_HEIGHT, "English");
 		{
-			ScrollBox* unreceived = new ScrollBox(SPACING, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
+			Fl_Multi_Browser* unreceived = new Fl_Multi_Browser(SPACING, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
 			unreceived->box(FL_BORDER_BOX);
 			unreceived->end();
-			ScrollBox* received = new ScrollBox(SPACING * 2 + WINDOW_WIDTH / 2, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
+			Fl_Multi_Browser* received = new Fl_Multi_Browser(SPACING * 2 + WINDOW_WIDTH / 2, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
 			received->box(FL_BORDER_BOX);
 			received->end();
 
@@ -384,15 +388,21 @@ int main(int argc, char **argv)
 				std::wstring id_str = english_date + L":" + it->second.area_name;
 				if (report_collection.reports[Report::TYPE_ENGLISH][ReportCollection::COMP].reports.count(id_str) > 0)
 				{
-					received->AddItem(it->second.area_name);
+					received->add(tostr(it->second.area_name).c_str());
 				}
 				else if (it->second.english_required)
 				{
-					unreceived->AddItem(it->second.area_name);
+					unreceived->add(tostr(it->second.area_name).c_str());
 				}
 			}
 			unreceived->redraw();
 			received->redraw();
+
+			Fl_Button* reminder_button = new Fl_Button(SPACING, WINDOW_HEIGHT - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "Remind 'em");
+			{
+				reminder_button->user_data((void*)&terminal);
+				reminder_button->callback(send_english_reminder_cb);
+			}
 		}
 		english_tab->end();
 	}
