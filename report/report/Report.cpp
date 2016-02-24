@@ -21,7 +21,6 @@ void Report::read_message(Message msg, std::wstring date)
 		set_type(TYPE_BAPTISM_RECORD);
 
 	sender_name = msg.sender_name;
-	sender_number = msg.sender_number;
 
 	std::wstring value;
 

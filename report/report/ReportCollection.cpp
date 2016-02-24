@@ -87,38 +87,46 @@ Report ReportCollection::transform_report(Report rep, DataOrder from, DataOrder 
 	{
 		if (to == DISTRICT)
 		{
-			std::wstring district_name = L"UNKNOWN";
-			if (comp_list->areas.count(rep.sender_name) > 0)
+			std::wstring district_name;
+			if (comp_list->by_area_name.count(rep.sender_name) > 0)
 			{
 				district_name = comp_list->by_area_name[rep.sender_name][0].district_name;
 			}
+			else
+			{
+				district_name = L"UNKNOWN";
+			}
 			rep.sender_name = district_name;
-			rep.sender_number = L"-";
 		}
 		if (to == ZONE)
 		{
-			std::wstring zone_name = L"UNKNOWN";
+			std::wstring zone_name;
 			if (comp_list->by_area_name.count(rep.sender_name) > 0)
 			{
 				zone_name = rep.type == Report::TYPE_ENGLISH ? comp_list->by_area_name[rep.sender_name][0].english_unit_name : comp_list->by_area_name[rep.sender_name][0].zone_name;
 			}
+			else
+			{
+				zone_name = L"UNKNOWN";
+			}
 			rep.sender_name = zone_name;
-			rep.sender_number = L"-";
 		}
 		else if (to == STAKE)
 		{
-			std::wstring stake_name = L"UNKNOWN";
+			std::wstring stake_name;
 			if (comp_list->by_area_name.count(rep.sender_name) > 0)
 			{
 				stake_name = comp_list->by_area_name[rep.sender_name][0].stake_name;
 			}
+			else
+			{
+				stake_name = L"UNKNOWN";
+			}
 			rep.sender_name = stake_name;
-			rep.sender_number = L"-";
 		}
 		else if (to == MISSION)
 		{
 			rep.sender_name = L"MISSION";
-			rep.sender_number = L"-";
 		}
 	}
 	else if (from == DISTRICT)
@@ -180,7 +188,7 @@ void ReportCollection::total_reports(Report::Type type, DataOrder from, DataOrde
 		Report transformed = transform_report(it->second, from, to, comp_list);
 		int transformed_date_month = transformed.date_month;
 
-		if (reports[type][to].reports.count(transformed.get_id_str()) <= 0						//Conditions for writing/overwriting a new report: no existing report
+		if ((transformed.sender_name != L"UNKNOWN" && reports[type][to].reports.count(transformed.get_id_str()) <= 0)						//Conditions for writing/overwriting a new report: no existing report
 			|| transformed.get_date() == date														//Still receiving reports for today and updating sums
 			|| (transformed.date_month == date_month && transformed.date_wday == 0))				//We're adding a monthly report for the current month
 		{
