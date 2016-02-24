@@ -211,18 +211,31 @@ void send_english_reminder_cb(Fl_Widget* wg, void*ptr)
 Fl_Multi_Browser* unhandled;
 Fl_Multi_Browser* handled;
 
+std::wstring get_browser_display_txt(std::wstring str)
+{
+	size_t pos = 0;
+	while ((pos = str.find('\n', pos)) != std::wstring::npos)
+	{
+		str.replace(pos, 1, L" ");
+	}
+	str.resize(100);
+	return str;
+}
+
 void update_msg_scroll(MessageHandler* msg_handler)
 {
 	unhandled->clear();
 	handled->clear();
 	for (int i = 0; i < msg_handler->msgs_unhandled.size(); i++)
 	{
-		unhandled->add(tostr(msg_handler->msgs_unhandled[i]->sender_name + L":" + msg_handler->msgs_unhandled[i]->contents).c_str(), (void*)msg_handler->msgs_unhandled[i]);
+		std::wstring display_txt = get_browser_display_txt(msg_handler->msgs_unhandled[i]->sender_name + L":" + msg_handler->msgs_unhandled[i]->contents);
+		unhandled->add(tostr(display_txt).c_str(), msg_handler->msgs_unhandled[i]);
 	}
 
 	for (int i = 0; i < msg_handler->msgs_handled.size(); i++)
 	{
-		handled->add(tostr(msg_handler->msgs_handled[i]->sender_name + L":").c_str(), (void*)msg_handler->msgs_handled[i]);
+		std::wstring display_txt = get_browser_display_txt(msg_handler->msgs_handled[i]->sender_name + L":" + msg_handler->msgs_handled[i]->contents);
+		handled->add(tostr(display_txt).c_str(), msg_handler->msgs_handled[i]);
 	}
 	unhandled->redraw();
 	handled->redraw();
@@ -239,19 +252,11 @@ void check_msg_cb(Fl_Widget* wg, void* ptr)
 
 void process_msg_cb(Fl_Widget* wg, void* ptr)
 {
-	//wcout << "Before processing:\n";
-	for (int i = 1; i <= unhandled->size(); i++)
-	{
-		//wcout << i << ":" << ((Message*)unhandled->data(i))->contents << endl;
-	}
-
-	//wcout << "During processing:\n";
 	Terminal* terminal = (Terminal*)ptr;
 	for (int j = 1; j <= unhandled->size(); j++)
 	{
 		if (unhandled->selected(j))
 		{
-			//wcout << j << L":" << ((Message*)unhandled->data(j))->contents << endl;
 			terminal->msg_handler->process_msg((Message*)unhandled->data(j), terminal, terminal->report_collection, terminal->comp_list, terminal->date, terminal->english_date);
 		}
 	}
@@ -277,6 +282,8 @@ void unprocess_msg_cb(Fl_Widget* wg, void* ptr)
 void timer_cb(void* ptr)
 {
 	check_msg_cb(NULL, ptr);
+	for (int i = 1; i <= unhandled->size(); i++)
+		unhandled->select(i);
 	process_msg_cb(NULL, ptr);
 	Fl::repeat_timeout(auto_check_s, timer_cb, ptr);
 }
@@ -325,17 +332,17 @@ int main(int argc, char **argv)
 				check_msg_button->user_data((void*)(&terminal));
 				check_msg_button->callback(check_msg_cb);
 			}
-			Fl_Button* process_msg_button = new Fl_Button(BUTTON_WIDTH + 2 * SPACING, WINDOW_HEIGHT - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "Process msgs");
+			Fl_Button* process_msg_button = new Fl_Button(BUTTON_WIDTH + 2 * SPACING, WINDOW_HEIGHT - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "Process");
 			{
 				process_msg_button->user_data((void*)(&terminal));
 				process_msg_button->callback(process_msg_cb);
 			}
-			Fl_Button* unprocess_msg_button = new Fl_Button(2 * BUTTON_WIDTH + 3 * SPACING, WINDOW_HEIGHT - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "Mark as unprocessed");
+			Fl_Button* unprocess_msg_button = new Fl_Button(2 * BUTTON_WIDTH + 3 * SPACING, WINDOW_HEIGHT - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "Un-process");
 			{
 				unprocess_msg_button->user_data((void*)(&terminal));
 				unprocess_msg_button->callback(unprocess_msg_cb);
 			}
-			Fl_Button* user_terminal_button = new Fl_Button(3 * BUTTON_WIDTH + 4 * SPACING, WINDOW_HEIGHT - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "User Terminal");
+			Fl_Button* user_terminal_button = new Fl_Button(3 * BUTTON_WIDTH + 4 * SPACING, WINDOW_HEIGHT - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "Terminal");
 			{
 				user_terminal_button->user_data((void*)(&terminal));
 				user_terminal_button->callback(user_terminal_cb);

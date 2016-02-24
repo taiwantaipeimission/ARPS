@@ -109,6 +109,7 @@ Report ReportCollection::transform_report(Report rep, DataOrder from, DataOrder 
 			{
 				zone_name = L"UNKNOWN";
 			}
+			rep.sub_id = 0;
 			rep.sender_name = zone_name;
 		}
 		else if (to == STAKE)

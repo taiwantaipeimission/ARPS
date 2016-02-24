@@ -21,6 +21,11 @@ void Report::read_message(Message msg, std::wstring date)
 		set_type(TYPE_BAPTISM_RECORD);
 
 	sender_name = msg.sender_name;
+	std::vector<std::wstring> date_strs = tokenize(date, ':');
+	date_year = _wtoi(date_strs[0].c_str());
+	date_month = _wtoi(date_strs[1].c_str());
+	date_week = _wtoi(date_strs[2].c_str());
+	date_wday = _wtoi(date_strs[3].c_str());
 
 	std::wstring value;
 
