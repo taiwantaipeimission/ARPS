@@ -24,9 +24,9 @@ public:
 	
 	File comp_list_file;
 	std::map<std::wstring, Area> areas;						// Keyed by phone number
-	std::multimap<std::wstring, std::wstring> by_area_name;
-	std::multimap<std::wstring, std::wstring> by_zone_name;
-	std::multimap<std::wstring, std::wstring> by_english_unit_name;
+	std::map<std::wstring, std::vector<Area>> by_area_name;
+	std::map<std::wstring, std::vector<Area>> by_zone_name;
+	std::map<std::wstring, std::vector<Area>> by_english_unit_name;
 
 	CompList();
 	virtual ~CompList();

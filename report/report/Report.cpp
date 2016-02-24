@@ -3,6 +3,7 @@
 #include <sstream>
 #include <algorithm>
 
+#include "utility.h"
 #include "Message.h"
 
 Report::Report()
@@ -12,15 +13,15 @@ Report::Report()
 
 void Report::read_message(Message msg, std::wstring date)
 {
-	id_str = date + L":" + msg.sender_name;
-	sender_number = msg.sender_number;
-
 	if (msg.type == TYPE_REPORT)
 		set_type(TYPE_REGULAR);
 	else if (msg.type == TYPE_REPORT_ENGLISH)
 		set_type(TYPE_ENGLISH);
 	else if (msg.type == TYPE_REPORT_BAPTISM)
 		set_type(TYPE_BAPTISM_RECORD);
+
+	sender_name = msg.sender_name;
+	sender_number = msg.sender_number;
 
 	std::wstring value;
 
@@ -51,10 +52,14 @@ Report::~Report()
 void Report::set_type(Type new_type)
 {
 	type = new_type;
+	use_sub_id = false;
 	if (type == TYPE_REGULAR)
 		key_list = { L"A", L"B", L"C", L"D", L"NEXTWEEKBAP", L"BAP", L"CONF", L"BD", L"SAC", L"PK", L"OL", L"NIMISSFIND", L"NIMEMREF", L"RCLA", L"LAC", L"RCT"};
 	else if (type == TYPE_ENGLISH)
+	{
+		use_sub_id = true;
 		key_list = { L"CLASSLEVEL", L"TOTALSTUDENTS", L"TOTALNONMEM", L"NEWSTUDENTS", L"NEWINV" };
+	}
 	else if (type == TYPE_BAPTISM_RECORD)
 		key_list = { L"CONV_NAME", L"BP_DATE", L"CONF_DATE", L"WARD", L"HOME_ADDR", L"PH_NUM", L"BAP_SOURCE" };
 	else if (type == TYPE_BAPTISM_SOURCE)
@@ -63,26 +68,23 @@ void Report::set_type(Type new_type)
 
 std::wstring Report::get_id_str()
 {
-	return id_str;
+	return get_date() + L":" + (use_sub_id ? tos(sub_id) + L":" + sender_name : sender_name);
 }
 
 std::wstring Report::get_date()
 {
-	int last_colon_pos = id_str.find_last_of(L":");
-	std::wstring date = id_str.substr(0, last_colon_pos);
+	std::wstring date = tos(date_year) + L":" + tos(date_month) + L":" + tos(date_week) + L":" + tos(date_wday);
 	return date;
 }
 
 std::wstring Report::get_sender_name()
 {
-	int name_begin_pos = id_str.find_last_of(L":") + 1;
-	std::wstring name = id_str.substr(name_begin_pos, id_str.length() - name_begin_pos);
-	return name;
+	return sender_name;
 }
 
 bool Report::operator==(Report& other)
 {
-	if (other.id_str != this->id_str)
+	if (other.get_id_str() != this->get_id_str())
 		return false;
 	
 	// sender number and cmgl_id don't matter; not retained
@@ -128,6 +130,10 @@ void Report::operator+=(Report& other)
 				_itow_s(new_value, intstr, 8, 10);
 				this->report_values[i->first] = std::wstring(intstr);
 			}
+			else
+			{
+				this->report_values[i->first] = L"-";
+			}
 		}
 		else
 		{
@@ -149,9 +155,29 @@ void Report::remove_field(std::wstring key)
 void Report::read_processed(std::wstring input)
 {
 	std::wstringstream stream(input);
+	std::wstring id_str;
 	stream >> id_str;
-	stream >> sender_number;
 
+	sender_name = L"-";
+
+	//Tokenize the ID string to get the date stamp, name, and sub-ID if applicable
+	std::vector<std::wstring> id_str_tokens = tokenize(id_str, ':');
+	if (id_str_tokens.size() >= 5)
+	{
+		int i = 0;
+		date_year = _wtoi(id_str_tokens[i++].c_str());
+		date_month = _wtoi(id_str_tokens[i++].c_str());
+		date_week = _wtoi(id_str_tokens[i++].c_str());
+		date_wday = _wtoi(id_str_tokens[i++].c_str());
+		if (id_str_tokens.size() == 6)
+		{
+			use_sub_id = true;
+			sub_id = _wtoi(id_str_tokens[i++].c_str());
+		}
+		sender_name = id_str_tokens[i++];
+	}
+
+	//Extract all of the keyed report values
 	std::wstring key_name;
 	std::wstring value;
 	for (int i = 0; i < key_list.size(); i++)
@@ -169,7 +195,10 @@ void Report::read_processed(std::wstring input)
 
 void Report::print(std::wostream& output)
 {
-	output << id_str << L"\t" << sender_number;
+	std::wstring str = get_id_str();
+	if (sender_name == L"0")
+		int x = 0;
+	output << get_id_str();
 	for (int i = 0; i < key_list.size(); i++)
 	{
 		std::wstring value = report_values[key_list[i]];

@@ -38,7 +38,7 @@ public:
 	void total(Report::Type type, CompList* comp_list, std::wstring date);
 	void read_report(Report::Type type, DataOrder data_order, File* file);
 	void write_report(Report::Type type, DataOrder data_order, File* file);
-	std::wstring get_owner_id_str(Report* rep, DataOrder from, DataOrder to, CompList* comp_list);
+	Report transform_report(Report rep, DataOrder from, DataOrder to, CompList* comp_list);
 	void total_reports(Report::Type type, DataOrder from, DataOrder to, CompList* comp_list, std::wstring date);
 };
 

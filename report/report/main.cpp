@@ -30,6 +30,7 @@
 #include "Message.h"
 #include "MessageHandler.h"
 #include "FieldFile.h"
+#include "utility.h"
 
 // File handles
 #define OUTPUT L"OUTPUT"
@@ -54,12 +55,12 @@ bool saved = true;
 bool auto_check = true;
 double auto_check_s = 300.0f;
 
-std::wstring tos(int x)
+/*std::wstring tos(int x)
 {
 	wchar_t str[256] = L"";
 	_itow_s(x, str, 256, 10);
 	return str;
-}
+}*/
 
 std::string tostr(std::wstring str)
 {
@@ -238,19 +239,19 @@ void check_msg_cb(Fl_Widget* wg, void* ptr)
 
 void process_msg_cb(Fl_Widget* wg, void* ptr)
 {
-	wcout << "Before processing:\n";
+	//wcout << "Before processing:\n";
 	for (int i = 1; i <= unhandled->size(); i++)
 	{
-		wcout << i << ":" << ((Message*)unhandled->data(i))->contents << endl;
+		//wcout << i << ":" << ((Message*)unhandled->data(i))->contents << endl;
 	}
 
-	wcout << "During processing:\n";
+	//wcout << "During processing:\n";
 	Terminal* terminal = (Terminal*)ptr;
 	for (int j = 1; j <= unhandled->size(); j++)
 	{
 		if (unhandled->selected(j))
 		{
-			wcout << j << L":" << ((Message*)unhandled->data(j))->contents << endl;
+			//wcout << j << L":" << ((Message*)unhandled->data(j))->contents << endl;
 			terminal->msg_handler->process_msg((Message*)unhandled->data(j), terminal, terminal->report_collection, terminal->comp_list, terminal->date, terminal->english_date);
 		}
 	}

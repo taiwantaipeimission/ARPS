@@ -116,9 +116,9 @@ void MessageHandler::process_msg(Message* msg, Terminal* terminal, ReportCollect
 				report_collection->reports[Report::TYPE_BAPTISM_RECORD][ReportCollection::COMP].add_report(report);
 
 				int choice = _wtoi(report.report_values[L"BAP_SOURCE"].c_str());
-				Report bap_source;
+				Report bap_source = report;
+				bap_source.report_values.clear();
 				bap_source.set_type(Report::TYPE_BAPTISM_SOURCE);
-				bap_source.id_str = report.id_str;
 				for (std::vector<std::wstring>::iterator it = bap_source.key_list.begin(); it != bap_source.key_list.end(); ++it)
 					bap_source.report_values.insert(std::pair<std::wstring, std::wstring>(*it, L"0"));	//Fill with zeros
 				if (choice == 1)

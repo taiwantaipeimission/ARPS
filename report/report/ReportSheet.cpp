@@ -1,6 +1,7 @@
 #include "ReportSheet.h"
 #include <sstream>
 #include <iostream>
+#include "utility.h"
 
 ReportSheet::ReportSheet()
 	: reports()
@@ -14,9 +15,17 @@ ReportSheet::~ReportSheet()
 
 void ReportSheet::add_report(Report report)
 {
-	if (report.id_str != L"")
+	if (report.get_id_str() != L"")
 	{
-		reports[report.id_str] = report;
+		if (report_type == Report::TYPE_ENGLISH)
+		{
+			report.sub_id = 0;										//The starting value for the English class level sub-id
+			while (reports.count(report.get_id_str()) > 0 && reports[report.get_id_str()].report_values[L"CLASSLEVEL"] != report.report_values[L"CLASSLEVEL"])
+			{
+				report.sub_id++;
+			}
+		}
+		reports[report.get_id_str()] = report;
 	}
 }
 
@@ -39,21 +48,27 @@ void ReportSheet::read_stored_all(std::wistream& input)
 		std::wstring id_str;
 		std::wstring date;
 
-		do
+		wchar_t line[2028] = L"";
+		
+		while (input.good())
 		{
-			wchar_t line[2028] = L"";
 			input.get(line, 2028, '\n');
 			input.ignore(1, '\n');
+
 			id_str = line;
-			bool eof = input.eof();
-			bool good = input.good();
-			bool fail = input.fail();
-			bool bad = input.bad();
-			Report report;
-			report.set_type(report_type);
-			report.read_processed(id_str);
-			add_report(report);
-		} while (input.good());
+
+			if (id_str.length() > 0)
+			{
+				Report report;
+				report.set_type(report_type);
+				report.read_processed(id_str);
+				reports[report.get_id_str()] = report;
+			}
+			else
+			{
+				int x = 0;
+			}
+		}
 	}
 }
 

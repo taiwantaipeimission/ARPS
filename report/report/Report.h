@@ -21,8 +21,14 @@ public:
 	};
 
 	Type type;
-	std::wstring id_str;
-	std::wstring sender_number;
+	
+	int date_year;
+	int date_month;
+	int date_week;
+	int date_wday;
+	std::wstring sender_name;
+	int sub_id;							//Used to differentiate English reports for different class levels, same date, same companionship.  Other report types don't use
+	bool use_sub_id;
 	bool is_new;
 
 	std::vector<std::wstring> key_list;
@@ -33,8 +39,6 @@ public:
 
 	virtual void set_type(Type type);
 	virtual void read_message(Message msg, std::wstring date);
-
-	
 
 	virtual std::wstring get_id_str();
 	virtual std::wstring get_date();

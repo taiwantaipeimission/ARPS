@@ -106,7 +106,7 @@ void CompList::load()
 void CompList::add_area(Area area)
 {
 	areas.insert(std::pair<std::wstring, Area>(area.ph_number, area));
-	by_area_name.insert(std::pair<std::wstring, std::wstring>(area.area_name, area.ph_number));
-	by_zone_name.insert(std::pair<std::wstring, std::wstring>(area.zone_name, area.ph_number));
-	by_english_unit_name.insert(std::pair<std::wstring, std::wstring>(area.english_unit_name, area.ph_number));
+	by_area_name[area.area_name].push_back(area);
+	by_zone_name[area.zone_name].push_back(area);
+	by_english_unit_name[area.english_unit_name].push_back(area);
 }

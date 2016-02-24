@@ -2,6 +2,7 @@
 #include <map>
 #include <sstream>
 
+#include "utility.h"
 #include "File.h"
 #include "CompList.h"
 #include "Area.h"
@@ -35,7 +36,7 @@ ReportCollection::ReportCollection()
 		}
 	}
 
-	for (int i = 0; i <= Report::TYPE_BAPTISM_SOURCE; i++)
+	for (int i = 0; i < Report::NUM_TYPES; i++)
 	{
 		for (int j = 0; j <= INDIV; j++)
 		{
@@ -80,119 +81,116 @@ void ReportCollection::write_report(Report::Type type, DataOrder data_order, Fil
 
 	MISSION->MISSION_MONTH
 */
-std::wstring ReportCollection::get_owner_id_str(Report* rep, DataOrder from, DataOrder to, CompList* comp_list)
+Report ReportCollection::transform_report(Report rep, DataOrder from, DataOrder to, CompList* comp_list)
 {
 	if (from == COMP)
 	{
 		if (to == DISTRICT)
 		{
 			std::wstring district_name = L"UNKNOWN";
-			if (comp_list->areas.count(rep->sender_number) > 0)
+			if (comp_list->areas.count(rep.sender_name) > 0)
 			{
-				district_name = comp_list->areas[rep->sender_number].district_name;
+				district_name = comp_list->by_area_name[rep.sender_name][0].district_name;
 			}
-			return (rep->get_date() + L":" + district_name);
+			rep.sender_name = district_name;
+			rep.sender_number = L"-";
 		}
 		if (to == ZONE)
 		{
 			std::wstring zone_name = L"UNKNOWN";
-			if (comp_list->areas.count(rep->sender_number) > 0)
+			if (comp_list->by_area_name.count(rep.sender_name) > 0)
 			{
-				zone_name = rep->type == Report::TYPE_ENGLISH ? comp_list->areas[rep->sender_number].english_unit_name : comp_list->areas[rep->sender_number].zone_name;
+				zone_name = rep.type == Report::TYPE_ENGLISH ? comp_list->by_area_name[rep.sender_name][0].english_unit_name : comp_list->by_area_name[rep.sender_name][0].zone_name;
 			}
-			return (rep->get_date() + L":" + zone_name);
+			rep.sender_name = zone_name;
+			rep.sender_number = L"-";
 		}
 		else if (to == STAKE)
 		{
 			std::wstring stake_name = L"UNKNOWN";
-			if (comp_list->areas.count(rep->sender_number) > 0)
+			if (comp_list->by_area_name.count(rep.sender_name) > 0)
 			{
-				stake_name = comp_list->areas[rep->sender_number].stake_name;
+				stake_name = comp_list->by_area_name[rep.sender_name][0].stake_name;
 			}
-			return (rep->get_date() + L":" + stake_name);
+			rep.sender_name = stake_name;
+			rep.sender_number = L"-";
 		}
 		else if (to == MISSION)
 		{
-			return (rep->get_date() + L":" + L"MISSION");
+			rep.sender_name = L"MISSION";
+			rep.sender_number = L"-";
 		}
 	}
 	else if (from == DISTRICT)
 	{
 		if (to == DISTRICT_MONTH)
 		{
-			std::wstring report_date = rep->get_date();
-			std::wstring district_name = rep->get_sender_name();
-			std::wstring report_date_year_month = report_date.substr(0, report_date.find(L":", report_date.find(L":") + 1));
-			return (report_date_year_month + L":0:0:" + district_name);
+			rep.date_week = 0;
+			rep.date_wday = 0;
 		}
 		else if (to == MISSION)
 		{
-			return (rep->get_date() + L":" + L"MISSION");
+			rep.sender_name = L"MISSION";
 		}
 	}
 	else if (from == ZONE)
 	{
 		if (to == ZONE_MONTH)
 		{
-			std::wstring report_date = rep->get_date();
-			std::wstring zone_name = rep->get_sender_name();
-			std::wstring report_date_year_month = report_date.substr(0, report_date.find(L":", report_date.find(L":") + 1));
-			return (report_date_year_month + L":0:0:" + zone_name);
+			rep.date_week = 0;
+			rep.date_wday = 0;
 		}
 		else if (to == MISSION)
 		{
-			return (rep->get_date() + L":" + L"MISSION");
+			rep.sender_name = L"MISSION";
 		}
 	}
 	else if (from == STAKE)
 	{
 		if (to == STAKE_MONTH)
 		{
-			std::wstring report_date = rep->get_date();
-			std::wstring stake_name = rep->get_sender_name();
-			std::wstring report_date_year_month = report_date.substr(0, report_date.find(L":", report_date.find(L":") + 1));
-			return (report_date_year_month + L":0:0:" + stake_name);
+			rep.date_week = 0;
+			rep.date_wday = 0;
 		}
 		else if (to == MISSION)
 		{
-			return (rep->get_date() + L":" + L"MISSION");
+			rep.sender_name = L"MISSION";
 		}
 	}
 	else if (from == MISSION)
 	{
 		if (to == MISSION_MONTH)
 		{
-			std::wstring report_date = rep->get_date();
-			std::wstring zone_name = rep->get_sender_name();
-			std::wstring report_date_year_month = report_date.substr(0, report_date.find(L":", report_date.find(L":") + 1));
-			return (report_date_year_month + L":0:0:MISSION");
+			rep.date_week = 0;
+			rep.date_wday = 0;
 		}
 	}
+
+	return rep;
 }
 
 void ReportCollection::total_reports(Report::Type type, DataOrder from, DataOrder to, CompList* comp_list, std::wstring date)
 {
 	std::map<std::wstring, Report> reports_to_add;
+	std::vector<std::wstring> tokens = tokenize(date, ':');
+	int date_month = _wtoi(tokenize(date, L':')[1].c_str());
 
 	for (std::map<std::wstring, Report>::iterator it = reports[type][from].reports.begin(); it != reports[type][from].reports.end(); ++it)
 	{
-		std::wstring comp_report_date = it->second.get_date();
-		if (comp_list->areas.count(it->second.sender_number) > 0)
+		Report transformed = transform_report(it->second, from, to, comp_list);
+		int transformed_date_month = transformed.date_month;
+
+		if (reports[type][to].reports.count(transformed.get_id_str()) <= 0						//Conditions for writing/overwriting a new report: no existing report
+			|| transformed.get_date() == date														//Still receiving reports for today and updating sums
+			|| (transformed.date_month == date_month && transformed.date_wday == 0))				//We're adding a monthly report for the current month
 		{
-			std::wstring new_id_str = get_owner_id_str(&it->second, from, to, comp_list);
-			std::wstring week_day_str = new_id_str.substr(new_id_str.find(L":", new_id_str.find(L":") + 1) + 1, 3);
-			if (reports[type][to].reports.count(new_id_str) <= 0 || comp_report_date == date || week_day_str == L"0:0")			//There is no report entered yet
+			if (reports_to_add.count(transformed.get_id_str()) > 0)
 			{
-				if (reports_to_add.count(new_id_str) > 0)
-				{
-					reports_to_add[new_id_str] += it->second;
-				}
-				else
-				{
-					Report report = it->second;
-					report.id_str = new_id_str;
-					reports_to_add[report.id_str] = report;						//Start adding a new report
-				}
+				reports_to_add[transformed.get_id_str()] += transformed;
+			}
+			else
+			{
+				reports_to_add[transformed.get_id_str()] = transformed;						//Start adding a new report
 			}
 		}
 	}
@@ -205,12 +203,13 @@ void ReportCollection::total_reports(Report::Type type, DataOrder from, DataOrde
 
 void ReportCollection::total(Report::Type type, CompList* comp_list, std::wstring date)
 {
+	total_reports(type, COMP, DISTRICT, comp_list, date);
 	total_reports(type, COMP, ZONE, comp_list, date);
 	total_reports(type, COMP, STAKE, comp_list, date);
 	total_reports(type, DISTRICT, DISTRICT_MONTH, comp_list, date);
 	total_reports(type, ZONE, ZONE_MONTH, comp_list, date);
-	total_reports(type, ZONE, MISSION, comp_list, date);
 	total_reports(type, STAKE, STAKE_MONTH, comp_list, date);
+	total_reports(type, ZONE, MISSION, comp_list, date);
 	total_reports(type, MISSION, MISSION_MONTH, comp_list, date);
 }
 
