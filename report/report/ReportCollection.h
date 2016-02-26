@@ -33,7 +33,7 @@ public:
 
 	bool load_all();
 	bool save_all();
-	void total_all(CompList* comp_list, std::wstring date);
+	void total_all(CompList* comp_list, std::wstring date, std::wstring english_date);
 
 	void total(Report::Type type, CompList* comp_list, std::wstring date);
 	void read_report(Report::Type type, DataOrder data_order, File* file);

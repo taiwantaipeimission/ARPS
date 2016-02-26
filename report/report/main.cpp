@@ -90,7 +90,7 @@ void show_report_status(ReportCollection* report_collection, CompList* comp_list
 
 bool save(ReportCollection* report_collection, CompList* comp_list, MessageHandler* message_handler, std::wstring date, std::wstring english_date)
 {
-	report_collection->total_all(comp_list, date);
+	report_collection->total_all(comp_list, date, english_date);
 	report_collection->save_all();
 	message_handler->save();
 
@@ -393,7 +393,7 @@ int main(int argc, char **argv)
 			int i = 0;
 			for (std::map<std::wstring, Area>::iterator it = comp_list.areas.begin(); it != comp_list.areas.end(); ++it, i++)
 			{
-				std::wstring id_str = english_date + L":" + it->second.area_name;
+				std::wstring id_str = english_date + L":0:" + it->second.area_name;
 				if (report_collection.reports[Report::TYPE_ENGLISH][ReportCollection::COMP].reports.count(id_str) > 0)
 				{
 					received->add(tostr(it->second.area_name).c_str());

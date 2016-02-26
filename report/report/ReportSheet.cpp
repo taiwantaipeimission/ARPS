@@ -76,7 +76,6 @@ void ReportSheet::print(std::wostream& output)
 {
 	Report header_ref;
 	header_ref.set_type(report_type);
-	output << L"\t";
 	for (int i = 0; i < header_ref.key_list.size(); i++)
 	{
 		output << L"\t" << header_ref.key_list[i];

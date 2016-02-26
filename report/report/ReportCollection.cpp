@@ -103,6 +103,8 @@ Report ReportCollection::transform_report(Report rep, DataOrder from, DataOrder 
 			std::wstring zone_name;
 			if (comp_list->by_area_name.count(rep.sender_name) > 0)
 			{
+				if (rep.sender_name == L"SANXIA_A")
+					int x = 0;
 				zone_name = rep.type == Report::TYPE_ENGLISH ? comp_list->by_area_name[rep.sender_name][0].english_unit_name : comp_list->by_area_name[rep.sender_name][0].zone_name;
 			}
 			else
@@ -222,10 +224,10 @@ void ReportCollection::total(Report::Type type, CompList* comp_list, std::wstrin
 	total_reports(type, MISSION, MISSION_MONTH, comp_list, date);
 }
 
-void ReportCollection::total_all(CompList* comp_list, std::wstring date)
+void ReportCollection::total_all(CompList* comp_list, std::wstring date, std::wstring english_date)
 {
 	total(Report::TYPE_REGULAR, comp_list, date);
-	total(Report::TYPE_ENGLISH, comp_list, date);
+	total(Report::TYPE_ENGLISH, comp_list, english_date);
 	total(Report::TYPE_BAPTISM_SOURCE, comp_list, date);
 }
 
