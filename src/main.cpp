@@ -33,16 +33,7 @@
 #include "utility.h"
 #include "FileManager.h"
 
-// File handles
-#define OUTPUT L"OUTPUT"
-#define PH_LIST L"PH_LIST"
-#define MESSAGES_HANDLED L"MESSAGES_HANDLED"
-#define MESSAGES_UNHANDLED L"MESSAGES_UNHANDLED"
-#define REFERRALS L"REFERRALS"
-#define REFERRAL_HISTORY L"REFERRAL_HISTORY"
-
 //Characters
-#define DATE_STAMP_SEPARATOR_CHAR L":"
 
 const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 600;
@@ -125,9 +116,9 @@ std::wstring get_report_date_str(std::wstring report_wday)
 	if (cur_wday == _wtoi(report_wday.c_str()))
 	{
 		report_date = tos(1900 + curtime_st.tm_year)
-			+ DATE_STAMP_SEPARATOR_CHAR + tos(curtime_st.tm_mon + 1)
-			+ DATE_STAMP_SEPARATOR_CHAR + tos((curtime_st.tm_mday + 6) / 7)
-			+ DATE_STAMP_SEPARATOR_CHAR + report_wday;
+			+ ID_STR_SEPARATOR + tos(curtime_st.tm_mon + 1)
+			+ ID_STR_SEPARATOR + tos((curtime_st.tm_mday + 6) / 7)
+			+ ID_STR_SEPARATOR + report_wday;
 	}
 	else
 	{
@@ -136,9 +127,9 @@ std::wstring get_report_date_str(std::wstring report_wday)
 		time_t last_week_tm = mktime(&last_week_tm_st);
 		localtime_s(&last_week_tm_st, &last_week_tm);
 		report_date = tos(1900 + last_week_tm_st.tm_year)
-			+ DATE_STAMP_SEPARATOR_CHAR + tos(last_week_tm_st.tm_mon + 1)
-			+ DATE_STAMP_SEPARATOR_CHAR + tos((last_week_tm_st.tm_mday + 6) / 7)
-			+ DATE_STAMP_SEPARATOR_CHAR + report_wday;
+			+ ID_STR_SEPARATOR + tos(last_week_tm_st.tm_mon + 1)
+			+ ID_STR_SEPARATOR + tos((last_week_tm_st.tm_mday + 6) / 7)
+			+ ID_STR_SEPARATOR + report_wday;
 	}
 	return report_date;
 }
@@ -207,7 +198,17 @@ void send_english_reminder_cb(Fl_Widget* wg, void*ptr)
 
 Fl_Multi_Browser* unhandled;
 Fl_Multi_Browser* handled;
+Fl_Multi_Browser* unreceived_reports;
+Fl_Multi_Browser* received_reports;
+Fl_Multi_Browser* unreceived_english;
+Fl_Multi_Browser* received_english;
+
 File referral_file;
+ReportCollection report_collection(L"../data/");
+CompList comp_list;
+
+std::wstring report_date;
+std::wstring english_date;
 
 std::wstring get_browser_display_txt(std::wstring str)
 {
@@ -226,17 +227,53 @@ void update_msg_scroll(MessageHandler* msg_handler)
 	handled->clear();
 	for (int i = 0; i < msg_handler->msgs_unhandled.size(); i++)
 	{
-		std::wstring display_txt = get_browser_display_txt(msg_handler->msgs_unhandled[i]->sender_name + L":" + msg_handler->msgs_unhandled[i]->contents);
+		std::wstring display_txt = get_browser_display_txt(msg_handler->msgs_unhandled[i]->sender_name + DISPLAY_TEXT_SEPARATOR + msg_handler->msgs_unhandled[i]->contents);
 		unhandled->add(tos(display_txt).c_str(), msg_handler->msgs_unhandled[i]);
 	}
 
 	for (int i = 0; i < msg_handler->msgs_handled.size(); i++)
 	{
-		std::wstring display_txt = get_browser_display_txt(msg_handler->msgs_handled[i]->sender_name + L":" + msg_handler->msgs_handled[i]->contents);
+		std::wstring display_txt = get_browser_display_txt(msg_handler->msgs_handled[i]->sender_name + DISPLAY_TEXT_SEPARATOR + msg_handler->msgs_handled[i]->contents);
 		handled->add(tos(display_txt).c_str(), msg_handler->msgs_handled[i]);
 	}
 	unhandled->redraw();
 	handled->redraw();
+}
+
+void update_report_scrolls(ReportCollection* reports)
+{
+	int i = 0;
+	unreceived_reports->clear();
+	received_reports->clear();
+	unreceived_english->clear();
+	received_english->clear();
+	for (std::map<std::wstring, Area>::iterator it = comp_list.areas.begin(); it != comp_list.areas.end(); ++it, i++)
+	{
+		std::wstring id_str = report_date + ID_STR_SEPARATOR + it->second.area_name;
+		if (report_collection.reports[Report::TYPE_REGULAR][ReportCollection::COMP].reports.count(id_str) > 0)
+		{
+			received_reports->add(tos(it->second.area_name).c_str());
+		}
+		else if (it->second.report_required)
+		{
+			unreceived_reports->add(tos(it->second.area_name).c_str());
+		}
+
+		id_str = english_date + ID_STR_SEPARATOR + L"0" + ID_STR_SEPARATOR + it->second.area_name;
+		if (report_collection.reports[Report::TYPE_ENGLISH][ReportCollection::COMP].reports.count(id_str) > 0)
+		{
+			received_english->add(tos(it->second.area_name).c_str());
+		}
+		else if (it->second.english_required)
+		{
+			unreceived_english->add(tos(it->second.area_name).c_str());
+		}
+
+	}
+	unreceived_reports->redraw();
+	received_reports->redraw();
+	unreceived_english->redraw();
+	received_english->redraw();
 }
 
 void check_msg_cb(Fl_Widget* wg, void* ptr)
@@ -245,6 +282,7 @@ void check_msg_cb(Fl_Widget* wg, void* ptr)
 	terminal->init_auto();
 	run_terminal_commands(terminal);
 	update_msg_scroll(terminal->msg_handler);
+	update_report_scrolls(&report_collection);
 	saved = false;
 }
 
@@ -295,17 +333,17 @@ int main(int argc, char **argv)
 		
 		file_manager.load(PATHS_FILEPATH);
 
-		ReportCollection report_collection(L"../data/");
-		CompList comp_list;
+		
+		
 		MessageHandler msg_handler;
 		Modem modem;
 		FieldCollection config;
 		
 		load(&report_collection, &comp_list, &msg_handler, &config, &file_manager);
-		std::wstring report_wday = config.values[L"REPORT_WDAY"];
-		std::wstring english_wday = config.values[L"ENGLISH_WDAY"];
-		std::wstring report_date = get_report_date_str(report_wday);
-		std::wstring english_date = get_report_date_str(english_wday);
+		std::wstring report_wday = config.values[CONFIG_FIELD_REPORT_WDAY];
+		std::wstring english_wday = config.values[CONFIG_FIELD_ENGLISH_WDAY];
+		report_date = get_report_date_str(report_wday);
+		english_date = get_report_date_str(english_wday);
 
 		Terminal terminal(report_date, english_date, &modem, &report_collection, &comp_list, &msg_handler, &file_manager.files[L"OUTPUT"]);
 
@@ -354,29 +392,13 @@ int main(int argc, char **argv)
 			msg_tab->end();
 			Fl_Group* report_tab = new Fl_Group(0, 2 * BAR_HEIGHT + SPACING, WINDOW_WIDTH, WINDOW_HEIGHT, "Reports");
 			{
-				Fl_Multi_Browser* unreceived = new Fl_Multi_Browser(SPACING, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
-				unreceived->box(FL_BORDER_BOX);
-				unreceived->end();
-				Fl_Multi_Browser* received = new Fl_Multi_Browser(SPACING * 2 + WINDOW_WIDTH / 2, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
-				received->box(FL_BORDER_BOX);
-				received->end();
-
-				int i = 0;
-				for (std::map<std::wstring, Area>::iterator it = comp_list.areas.begin(); it != comp_list.areas.end(); ++it, i++)
-				{
-					std::wstring id_str = report_date + L":" + it->second.area_name;
-					if (report_collection.reports[Report::TYPE_REGULAR][ReportCollection::COMP].reports.count(id_str) > 0)
-					{
-						received->add(tos(it->second.area_name).c_str());
-					}
-					else if (it->second.report_required)
-					{
-						unreceived->add(tos(it->second.area_name).c_str());
-					}
-				}
-				unreceived->redraw();
-				received->redraw();
-
+				unreceived_reports = new Fl_Multi_Browser(SPACING, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
+				unreceived_reports->box(FL_BORDER_BOX);
+				unreceived_reports->end();
+				received_reports = new Fl_Multi_Browser(SPACING * 2 + WINDOW_WIDTH / 2, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
+				received_reports->box(FL_BORDER_BOX);
+				received_reports->end();
+				
 				Fl_Button* reminder_button = new Fl_Button(SPACING, WINDOW_HEIGHT - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "Remind 'em");
 				{
 					reminder_button->user_data((void*)&terminal);
@@ -386,28 +408,12 @@ int main(int argc, char **argv)
 			report_tab->end();
 			Fl_Group* english_tab = new Fl_Group(0, 2 * BAR_HEIGHT + SPACING, WINDOW_WIDTH, WINDOW_HEIGHT, "English");
 			{
-				Fl_Multi_Browser* unreceived = new Fl_Multi_Browser(SPACING, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
-				unreceived->box(FL_BORDER_BOX);
-				unreceived->end();
-				Fl_Multi_Browser* received = new Fl_Multi_Browser(SPACING * 2 + WINDOW_WIDTH / 2, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
-				received->box(FL_BORDER_BOX);
-				received->end();
-
-				int i = 0;
-				for (std::map<std::wstring, Area>::iterator it = comp_list.areas.begin(); it != comp_list.areas.end(); ++it, i++)
-				{
-					std::wstring id_str = english_date + L":0:" + it->second.area_name;
-					if (report_collection.reports[Report::TYPE_ENGLISH][ReportCollection::COMP].reports.count(id_str) > 0)
-					{
-						received->add(tos(it->second.area_name).c_str());
-					}
-					else if (it->second.english_required)
-					{
-						unreceived->add(tos(it->second.area_name).c_str());
-					}
-				}
-				unreceived->redraw();
-				received->redraw();
+				unreceived_english = new Fl_Multi_Browser(SPACING, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
+				unreceived_english->box(FL_BORDER_BOX);
+				unreceived_english->end();
+				received_english = new Fl_Multi_Browser(SPACING * 2 + WINDOW_WIDTH / 2, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
+				received_english->box(FL_BORDER_BOX);
+				received_english->end();
 
 				Fl_Button* reminder_button = new Fl_Button(SPACING, WINDOW_HEIGHT - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "Remind 'em");
 				{
@@ -421,6 +427,7 @@ int main(int argc, char **argv)
 		window->end();
 		window->show();
 		update_msg_scroll(&msg_handler);
+		update_report_scrolls(&report_collection);
 		Fl::run();
 		referral_file.close();
 	}

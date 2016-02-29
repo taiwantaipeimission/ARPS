@@ -1,3 +1,4 @@
+#include "codes.h"
 #include "CompList.h"
 
 #include <iostream>
@@ -26,9 +27,9 @@ CompList::~CompList()
 
 void CompList::load(FileManager* file_manager)
 {
-	file_manager->files[L"PH_LIST"].open(File::FILE_TYPE_INPUT);
+	file_manager->files[FILE_PH_LIST].open(File::FILE_TYPE_INPUT);
 	std::wstring line;
-	std::getline(file_manager->files[L"PH_LIST"].file, line);
+	std::getline(file_manager->files[FILE_PH_LIST].file, line);
 
 	std::wstringstream strstr(line);
 
@@ -37,9 +38,9 @@ void CompList::load(FileManager* file_manager)
 	std::istream_iterator<std::wstring, wchar_t> end;
 	std::vector<std::wstring> header(it, end);
 
-	while (file_manager->files[L"PH_LIST"].file.good())
+	while (file_manager->files[FILE_PH_LIST].file.good())
 	{
-		std::getline(file_manager->files[L"PH_LIST"].file, line);
+		std::getline(file_manager->files[FILE_PH_LIST].file, line);
 		std::wstringstream linestr(line);
 		std::istream_iterator<std::wstring, wchar_t> line_it(linestr);
 		std::vector<std::wstring> results(line_it, end);
@@ -97,7 +98,7 @@ void CompList::load(FileManager* file_manager)
 			add_area(area_to_add);
 		}
 	}
-	file_manager->files[L"PH_LIST"].close();
+	file_manager->files[FILE_PH_LIST].close();
 }
 
 void CompList::add_area(Area area)

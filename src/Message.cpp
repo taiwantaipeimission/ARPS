@@ -1,3 +1,4 @@
+#include "codes.h"
 #include "Message.h"
 #include "Area.h"
 #include <sstream>
@@ -56,7 +57,7 @@ std::wstring encode_phone_number(std::wstring ph_num_str)
 
 std::wstring extract_phone_number(std::wstringstream& ss, int ph_num_length)
 {
-	std::wstring number = L"+";
+	std::wstring number = PH_NUMBER_HEAD;
 	int ph_num_octets = (ph_num_length + 1) / 2;
 
 	{
@@ -279,19 +280,19 @@ bool decode_msg(Message* msg, std::wstring input, CompList* comp_list)
 	else
 		msg->sender_name = msg->sender_number;
 
-	int type_start = msg->contents.find(L"TYPE:");
+	int type_start = msg->contents.find(TYPE_KEY);
 	if (type_start != std::wstring::npos)
 	{
 		type_start = msg->contents.find_first_not_of(' ', type_start + 5);
-		int type_end = msg->contents.find(L"\n", type_start);
+		int type_end = msg->contents.find(KEY_END_CHAR, type_start);
 		std::wstring type_str = msg->contents.substr(type_start, type_end - type_start);
-		if (type_str == L"REPORT")
+		if (type_str == TYPE_REPORT_STR)
 			msg->type = TYPE_REPORT;
-		else if (type_str == L"ENGLISH")
+		else if (type_str == TYPE_ENGLISH_STR)
 			msg->type = TYPE_REPORT_ENGLISH;
-		else if (type_str == L"BAPTISM")
+		else if (type_str == TYPE_BAPTISM_STR)
 			msg->type = TYPE_REPORT_BAPTISM;
-		else if (type_str == L"REFERRAL")
+		else if (type_str == TYPE_REFERRAL_STR)
 			msg->type = TYPE_REFERRAL;
 		else
 			msg->type = TYPE_UNKNOWN;

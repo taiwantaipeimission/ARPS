@@ -1,3 +1,4 @@
+#include "codes.h"
 #include "MessageHandler.h"
 #include "CompList.h"
 #include "Message.h"
@@ -90,11 +91,11 @@ void MessageHandler::process_msg(Message* msg, Terminal* terminal, ReportCollect
 
 				processed_this_msg = true;
 
-				int baptisms = _wtoi(report.report_values[L"BAP"].c_str());
+				int baptisms = _wtoi(report.report_values[REP_KEY_BAP].c_str());
 				if (baptisms > 0)
 				{
-					terminal->send_message(msg->sender_number, L"Congratulations on your baptism[s]! Please send in one copy of this template per baptism.");
-					terminal->send_message(msg->sender_number, L"TYPE:BAPTISM\nCONV_NAME:\nBP_DATE:\nCONF_DATE:\nWARD:\nHOME_ADDR:\nPH_NUM:\nBAP_SOURCE:\n1=Missionary contacting\n2=LA referral\n3=RC referral\n4=Active member referral\n5=English class\n6=Temple tour");
+					terminal->send_message(msg->sender_number, BAPTISM_RESPONSE_MSG);
+					terminal->send_message(msg->sender_number, BAPTISM_REPORT_TEMPLATE);
 				}
 			}
 			else if (msg->type == TYPE_REPORT_ENGLISH)
@@ -113,24 +114,24 @@ void MessageHandler::process_msg(Message* msg, Terminal* terminal, ReportCollect
 				report.read_message(*msg, date);
 				report_collection->reports[Report::TYPE_BAPTISM_RECORD][ReportCollection::COMP].add_report(report);
 
-				int choice = _wtoi(report.report_values[L"BAP_SOURCE"].c_str());
+				int choice = _wtoi(report.report_values[REP_KEY_BAP_SOURCE].c_str());
 				Report bap_source = report;
 				bap_source.report_values.clear();
 				bap_source.set_type(Report::TYPE_BAPTISM_SOURCE);
 				for (std::vector<std::wstring>::iterator it = bap_source.key_list.begin(); it != bap_source.key_list.end(); ++it)
 					bap_source.report_values.insert(std::pair<std::wstring, std::wstring>(*it, L"0"));	//Fill with zeros
 				if (choice == 1)
-					bap_source.report_values[L"BAP_MISS_FIND"] = L"1";
+					bap_source.report_values[REP_KEY_BAP_MISS_FIND] = L"1";
 				else if (choice == 2)
-					bap_source.report_values[L"BAP_LA_REF"] = L"1";
+					bap_source.report_values[REP_KEY_BAP_LA_REF] = L"1";
 				else if (choice == 3)
-					bap_source.report_values[L"BAP_RC_REF"] = L"1";
+					bap_source.report_values[REP_KEY_BAP_RC_REF] = L"1";
 				else if (choice == 4)
-					bap_source.report_values[L"BAP_MEM_REF"] = L"1";
+					bap_source.report_values[REP_KEY_BAP_MEM_REF] = L"1";
 				else if (choice == 5)
-					bap_source.report_values[L"BAP_ENGLISH"] = L"1";
+					bap_source.report_values[REP_KEY_BAP_ENGLISH] = L"1";
 				else if (choice == 6)
-					bap_source.report_values[L"BAP_TOUR"] = L"1";
+					bap_source.report_values[REP_KEY_BAP_TOUR] = L"1";
 
 				report_collection->reports[Report::TYPE_BAPTISM_SOURCE][ReportCollection::COMP].add_report(bap_source);
 
@@ -148,7 +149,7 @@ void MessageHandler::process_msg(Message* msg, Terminal* terminal, ReportCollect
 				}
 				else
 				{
-					terminal->send_message(L"+886972576566", msg->contents);	//Send it to the recorder!
+					terminal->send_message(LOST_REFERRAL_HANDLER, msg->contents);	//Send it to the recorder!
 					referral_file->file << referral.print(date) << std::endl;
 				}
 
@@ -224,22 +225,22 @@ void MessageHandler::save(File* file, bool handled)
 
 void MessageHandler::save(FileManager* file_manager)
 {
-	file_manager->files[L"MESSAGES_HANDLED"].open(File::FILE_TYPE_OUTPUT);
-	save(&file_manager->files[L"MESSAGES_HANDLED"], true);
-	file_manager->files[L"MESSAGES_HANDLED"].close();
+	file_manager->files[FILE_MESSAGES_HANDLED].open(File::FILE_TYPE_OUTPUT);
+	save(&file_manager->files[FILE_MESSAGES_HANDLED], true);
+	file_manager->files[FILE_MESSAGES_HANDLED].close();
 
-	file_manager->files[L"MESSAGES_UNHANDLED"].open(File::FILE_TYPE_OUTPUT);
-	save(&file_manager->files[L"MESSAGES_UNHANDLED"], false);
-	file_manager->files[L"MESSAGES_UNHANDLED"].close();
+	file_manager->files[FILE_MESSAGES_UNHANDLED].open(File::FILE_TYPE_OUTPUT);
+	save(&file_manager->files[FILE_MESSAGES_UNHANDLED], false);
+	file_manager->files[FILE_MESSAGES_UNHANDLED].close();
 }
 
 void MessageHandler::load(FileManager* file_manager)
 {
-	file_manager->files[L"MESSAGES_HANDLED"].open(File::FILE_TYPE_INPUT);
-	load(&file_manager->files[L"MESSAGES_HANDLED"], true);
-	file_manager->files[L"MESSAGES_HANDLED"].close();
+	file_manager->files[FILE_MESSAGES_HANDLED].open(File::FILE_TYPE_INPUT);
+	load(&file_manager->files[FILE_MESSAGES_HANDLED], true);
+	file_manager->files[FILE_MESSAGES_HANDLED].close();
 
-	file_manager->files[L"MESSAGES_UNHANDLED"].open(File::FILE_TYPE_INPUT);
-	load(&file_manager->files[L"MESSAGES_UNHANDLED"], false);
-	file_manager->files[L"MESSAGES_UNHANDLED"].close();
+	file_manager->files[FILE_MESSAGES_UNHANDLED].open(File::FILE_TYPE_INPUT);
+	load(&file_manager->files[FILE_MESSAGES_UNHANDLED], false);
+	file_manager->files[FILE_MESSAGES_UNHANDLED].close();
 }
