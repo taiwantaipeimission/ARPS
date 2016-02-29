@@ -51,4 +51,12 @@
 #define TYPE_BAPTISM_STR L"BAPTISM"
 #define TYPE_REFERRAL_STR L"REFERRAL"
 
+//Graphics options
+#define WINDOW_WIDTH 800
+#define WINDOW_HEIGHT 600
+#define BAR_HEIGHT 25
+#define BUTTON_WIDTH 100
+#define CHECKBOX_WIDTH 25
+#define SPACING 5
+
 #endif

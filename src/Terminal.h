@@ -35,13 +35,11 @@ public:
 	ReportCollection* report_collection;
 	CompList* comp_list;
 	File* output_file;
-	MessageHandler* msg_handler;
 	std::wstring date;					//current date string for saving regular reports
 	std::wstring english_date;			//current date string for saving English reports
 
 	std::queue<wchar_t> command_stream;
 
-	
 	bool got_user = false;
 
 	wchar_t command_ch = 0;				//command stream input
@@ -52,19 +50,18 @@ public:
 	bool got_modem = true;
 
 	DWORD read, written;				//number of bytes read/written to modem
-	double ms_to_wait;					//time to wait before sending data after response, in ms
 	double ms_until_timeout;			//time to wait before sending data if no response
-	time_t cur_time;
 
-	Terminal(std::wstring date_in, std::wstring english_date_in, Modem* modem_in, ReportCollection* report_collection_in, CompList* comp_list_in, MessageHandler* message_handler_in, File* output_file_in);
+	Terminal();
 	virtual ~Terminal();
 
+	void init(std::wstring report_date_in, std::wstring english_date_in, Modem* modem_in, ReportCollection* report_collection_in, CompList* comp_list_in, File* output_file_in);
 	void init_auto();
 	void init_user();
 	void send_message(std::wstring dest_number, std::wstring message_contents);
 	void delete_message_from_sim(int msg_cmg_id);
 	void send_reminders(bool english = false);
 	void push_command(std::wstring cmd);
-	bool update(double millis);		//returns false when it wants to quit
+	bool update(double millis, MessageHandler* msg_handler);		//returns false when it wants to quit
 };
 

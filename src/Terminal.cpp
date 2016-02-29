@@ -18,15 +18,23 @@
 #include "Referral.h"
 #include "MessageHandler.h"
 
-Terminal::Terminal(std::wstring date_in, std::wstring english_date_in, Modem* modem_in, ReportCollection* report_collection_in, CompList* comp_list_in, MessageHandler* message_handler_in, File* output_file_in)
-	: cmd_source(COMMAND_SOURCE_LOGIC), date(date_in), english_date(english_date_in), modem(modem_in), report_collection(report_collection_in), comp_list(comp_list_in), msg_handler(message_handler_in), output_file(output_file_in)
+Terminal::Terminal()
 {
-	std::time(&cur_time);
 }
 
 
 Terminal::~Terminal()
 {
+}
+
+void Terminal::init(std::wstring report_date_in, std::wstring english_date_in, Modem* modem_in, ReportCollection* report_collection_in, CompList* comp_list_in, File* output_file_in)
+{
+	date = report_date_in;
+	english_date = english_date_in;
+	modem = modem_in;
+	report_collection = report_collection_in;
+	comp_list = comp_list_in;
+	output_file = output_file_in;
 }
 
 void Terminal::init_auto()
@@ -44,7 +52,7 @@ void Terminal::init_auto()
 	push_command(COMMAND_NEWLINE_CHAR);
 
 	got_modem = true;
-	ms_to_wait = 0;
+	ms_until_timeout = 0;
 }
 
 void Terminal::init_user()
@@ -62,7 +70,6 @@ void Terminal::init_user()
 	push_command(COMMAND_NEWLINE_CHAR);
 	
 	got_modem = true;
-	ms_to_wait = 0;
 	ms_until_timeout = 0;
 }
 
@@ -124,12 +131,11 @@ void Terminal::push_command(std::wstring cmd)
 	}
 }
 
-bool Terminal::update(double millis)
+bool Terminal::update(double millis, MessageHandler* msg_handler)
 {
 	bool ret_value = true;
 	ReadFile(modem->file, &modem_ch, 1, &read, NULL);
 
-	time(&cur_time);
 
 	//get char from modem
 	if (read)
@@ -143,10 +149,6 @@ bool Terminal::update(double millis)
 		if (modem_str.find(L"OK\r\n") != std::wstring::npos || modem_str.find(L"> ") != std::wstring::npos)
 			got_modem = true;
 
-		if (ms_to_wait > 0)
-		{
-			ms_to_wait = RESPONSE_TIMEOUT_MS;	//reset wait timer: wait for another TIMOUT_MS ms before writing
-		}
 		if (ms_until_timeout > 0)
 		{
 			ms_until_timeout = NO_RESPONSE_TIMEOUT_MS;
@@ -187,9 +189,6 @@ bool Terminal::update(double millis)
 		{
 			if (user_ch != 127)
 			{
-				/*if (user_ch == '\r')
-					std::wcout << std::endl;
-				std::wcout << user_ch;*/
 				command_stream.push(user_ch);
 			}
 			else
@@ -202,7 +201,7 @@ bool Terminal::update(double millis)
 		}
 		
 	}
-	if (got_modem)// || cmd_source == COMMAND_SOURCE_USER)
+	if (got_modem)
 	{
 		if (command_stream.size() > 0)
 		{
@@ -215,14 +214,12 @@ bool Terminal::update(double millis)
 			if (command_ch_str == COMMAND_NEWLINE_CHAR)
 			{
 				WriteFile(modem->file, COMMAND_NEWLINE_CHAR, 1, &written, NULL);
-				ms_to_wait = RESPONSE_TIMEOUT_MS;
 				ms_until_timeout = NO_RESPONSE_TIMEOUT_MS;
 				got_modem = false;
 			}
 			else if (command_ch_str == COMMAND_ESCAPE_CHAR)
 			{
 				WriteFile(modem->file, "\u001A", 1, &written, NULL);
-				ms_to_wait = RESPONSE_TIMEOUT_MS;
 				ms_until_timeout = NO_RESPONSE_TIMEOUT_MS;
 				got_modem = false;
 			}
@@ -235,10 +232,8 @@ bool Terminal::update(double millis)
 	else if (ms_until_timeout <= 0)
 	{
 		std::wcout << L"TIMEOUT\n";
-		ret_value = false;
+		got_modem = true;
 	}
-	if (ms_to_wait > 0)
-		ms_to_wait = max(0, ms_to_wait - millis);
 	if (ms_until_timeout > 0)
 		ms_until_timeout = max(0, ms_until_timeout - millis);
 	return ret_value;

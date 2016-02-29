@@ -30,8 +30,10 @@ public:
 	std::map<Report::Type, std::map<DataOrder, ReportSheet>> reports;		//Keyed by a combination of report type and data order
 	std::map<Report::Type, std::map<DataOrder, File>> report_files;			//File paths; organized same as report sheets above
 
-	ReportCollection(std::wstring global_prefix_in);
+	ReportCollection();
 	virtual ~ReportCollection();
+
+	void init(std::wstring global_prefix_in);
 
 	bool load_all();
 	bool save_all();

@@ -7,9 +7,18 @@
 #include "CompList.h"
 #include "Area.h"
 
-ReportCollection::ReportCollection(std::wstring global_prefix_in)
-	:global_prefix(global_prefix_in)
+ReportCollection::ReportCollection()
 {
+}
+
+
+ReportCollection::~ReportCollection()
+{
+}
+
+void ReportCollection::init(std::wstring global_prefix_in)
+{
+	global_prefix = global_prefix_in;
 
 	prefix[Report::TYPE_REGULAR] = L"report/report";
 	prefix[Report::TYPE_ENGLISH] = L"english/english";
@@ -44,11 +53,6 @@ ReportCollection::ReportCollection(std::wstring global_prefix_in)
 			reports[(Report::Type)i][(DataOrder)j].report_type = (Report::Type)i;
 		}
 	}
-}
-
-
-ReportCollection::~ReportCollection()
-{
 }
 
 void ReportCollection::read_report(Report::Type type, DataOrder data_order, File* file)
