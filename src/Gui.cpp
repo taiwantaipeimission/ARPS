@@ -83,7 +83,7 @@ void process_msg_cb(Fl_Widget* wg, void* ptr)
 		}
 	}
 	gui->run_terminal_commands();
-	gui->update_report_scrolls();
+	gui->update_msg_scroll();
 	gui->saved = false;
 }
 
@@ -127,14 +127,16 @@ Gui::~Gui()
 
 void Gui::init()
 {
+	auto_check_s = 300.0f;
+
 	terminal.init(report_date, english_date, &modem, &report_collection, &comp_list, &file_manager.files[L"OUTPUT"]);
 
-	Fl::add_timeout(auto_check_s, timer_cb, &terminal);
+	Fl::add_timeout(auto_check_s, timer_cb, this);
 	Fl_Window* window = new Fl_Window(WINDOW_WIDTH, WINDOW_HEIGHT);
 	Fl_Menu_Bar* menu = new Fl_Menu_Bar(0, 0, WINDOW_WIDTH, BAR_HEIGHT);
 	{
-		menu->add("File/Save", FL_CTRL + 's', save_cb, &terminal);
-		menu->add("File/Quit", FL_CTRL + 'q', quit_cb);
+		menu->add("File/Save", FL_CTRL + 's', save_cb, this);
+		menu->add("File/Quit", FL_CTRL + 'q', quit_cb, this);
 	}
 	Fl_Tabs* tabs = new Fl_Tabs(0, BAR_HEIGHT + SPACING, WINDOW_WIDTH, WINDOW_HEIGHT - BAR_HEIGHT - SPACING);
 	{
@@ -152,22 +154,22 @@ void Gui::init()
 			}
 			Fl_Button* check_msg_button = new Fl_Button(SPACING, WINDOW_HEIGHT - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "Check msgs");
 			{
-				check_msg_button->user_data((void*)(&terminal));
+				check_msg_button->user_data((void*)this);
 				check_msg_button->callback(check_msg_cb);
 			}
 			Fl_Button* process_msg_button = new Fl_Button(BUTTON_WIDTH + 2 * SPACING, WINDOW_HEIGHT - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "Process");
 			{
-				process_msg_button->user_data((void*)(&terminal));
+				process_msg_button->user_data((void*)this);
 				process_msg_button->callback(process_msg_cb);
 			}
 			Fl_Button* unprocess_msg_button = new Fl_Button(2 * BUTTON_WIDTH + 3 * SPACING, WINDOW_HEIGHT - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "Un-process");
 			{
-				unprocess_msg_button->user_data((void*)(&terminal));
+				unprocess_msg_button->user_data((void*)this);
 				unprocess_msg_button->callback(unprocess_msg_cb);
 			}
 			Fl_Button* user_terminal_button = new Fl_Button(3 * BUTTON_WIDTH + 4 * SPACING, WINDOW_HEIGHT - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "Terminal");
 			{
-				user_terminal_button->user_data((void*)(&terminal));
+				user_terminal_button->user_data((void*)this);
 				user_terminal_button->callback(user_terminal_cb);
 			}
 		}
@@ -183,7 +185,7 @@ void Gui::init()
 
 			Fl_Button* reminder_button = new Fl_Button(SPACING, WINDOW_HEIGHT - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "Remind 'em");
 			{
-				reminder_button->user_data((void*)&terminal);
+				reminder_button->user_data((void*)this);
 				reminder_button->callback(send_reminder_cb);
 			}
 		}
@@ -199,7 +201,7 @@ void Gui::init()
 
 			Fl_Button* reminder_button = new Fl_Button(SPACING, WINDOW_HEIGHT - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "Remind 'em");
 			{
-				reminder_button->user_data((void*)&terminal);
+				reminder_button->user_data((void*)this);
 				reminder_button->callback(send_english_reminder_cb);
 			}
 		}

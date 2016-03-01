@@ -157,6 +157,7 @@ void MessageHandler::process_msg(Message* msg, Terminal* terminal, ReportCollect
 			}
 			else if (msg->type == TYPE_UNKNOWN)
 			{
+				terminal->send_message(LOST_REFERRAL_HANDLER, msg->contents);	//Send it to the recorder!
 				processed_this_msg = true;
 			}
 		}

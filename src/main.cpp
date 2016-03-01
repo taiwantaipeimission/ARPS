@@ -43,6 +43,7 @@ int main(int argc, char **argv)
 	try
 	{
 		Gui gui;
+		gui.load();
 		gui.init();
 		gui.run();
 	}

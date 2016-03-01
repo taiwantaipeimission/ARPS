@@ -65,7 +65,7 @@ bool Referral::locate(CompList* list)
 	if (potential_areas.size() > 0)
 	{
 		size_t choice = rand() % potential_areas.size();
-		dest_number = potential_areas[choice].area_name;
+		dest_number = potential_areas[choice].ph_number;
 		dest_zone = potential_areas[choice].zone_name;
 		return true;
 	}
