@@ -21,7 +21,7 @@
 #define REP_KEY_BAP_TOUR L"BAP_TOUR"
 
 //Phone numbers
-#define LOST_REFERRAL_HANDLER L"+886972576566"
+#define LOST_REFERRAL_HANDLER L"+886910358944"
 
 //File paths
 #define PATH_PATH_FILE L"paths.txt"
@@ -42,6 +42,8 @@
 #define PH_NUMBER_HEAD L"+"
 #define DISPLAY_TEXT_SEPARATOR L":"
 #define ID_STR_SEPARATOR L":"
+#define COMMAND_NEWLINE_CHAR L"\r"
+#define COMMAND_ESCAPE_CHAR L";"
 
 //Message constants
 #define TYPE_KEY L"TYPE"

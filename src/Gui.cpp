@@ -2,6 +2,7 @@
 #include "utility.h"
 #include "codes.h"
 #include "Area.h"
+#include "Referral.h"
 
 #include <FL/FL.h>
 #include <FL/FL_Window.h>
@@ -44,29 +45,27 @@ void quit_cb(Fl_Widget* wg, void* ptr)
 void user_terminal_cb(Fl_Widget* wg, void* ptr)
 {
 	Gui* gui = (Gui*)ptr;
-	gui->terminal.init_user();
-	gui->run_terminal_commands();
+	//gui->terminal->init_user();
+	//gui->run_terminal_commands();
 }
 
 void send_reminder_cb(Fl_Widget* wg, void* ptr)
 {
 	Gui* gui = (Gui*)ptr;
-	gui->terminal.send_reminders();
-	gui->run_terminal_commands();
+	gui->send_reminders(false);
 }
 
 void send_english_reminder_cb(Fl_Widget* wg, void*ptr)
 {
 	Gui* gui = (Gui*)ptr;
-	gui->terminal.send_reminders(true);
-	gui->run_terminal_commands();
+	gui->send_reminders(true);
 }
 
 void check_msg_cb(Fl_Widget* wg, void* ptr)
 {
 	Gui* gui = (Gui*)ptr;
-	gui->terminal.init_auto();
-	gui->run_terminal_commands();
+	gui->poll_msgs();
+	gui->check_msgs();
 	gui->update_msg_scroll();
 	gui->update_report_scrolls();
 	gui->saved = false;
@@ -79,10 +78,9 @@ void process_msg_cb(Fl_Widget* wg, void* ptr)
 	{
 		if (gui->unhandled->selected(j))
 		{
-			gui->msg_handler.process_msg((Message*)gui->unhandled->data(j), &gui->terminal, &gui->report_collection, &gui->comp_list, &gui->file_manager.files[FILE_REFERRALS], gui->report_date, gui->english_date);
+			gui->process_msg((Message*)gui->unhandled->data(j));
 		}
 	}
-	gui->run_terminal_commands();
 	gui->update_msg_scroll();
 	gui->saved = false;
 }
@@ -94,7 +92,7 @@ void unprocess_msg_cb(Fl_Widget* wg, void* ptr)
 	{
 		if (gui->handled->selected(i))
 		{
-			gui->msg_handler.unprocess_msg((Message*)gui->handled->data(i));
+			gui->unprocess_msg((Message*)gui->handled->data(i));
 		}
 	}
 	gui->update_msg_scroll();
@@ -118,18 +116,21 @@ void select_all_cb(Fl_Widget* wg, void* ptr)
 
 Gui::Gui()
 {
+	std::wcout << L"Constructing" << std::endl;
 }
 
 
 Gui::~Gui()
 {
+	std::wcout << L"Destructing" << std::endl;
 }
 
-void Gui::init()
+void Gui::init(ModemData* modem_data_in)
 {
+	modem_data = modem_data_in;
 	auto_check_s = 300.0f;
 
-	terminal.init(report_date, english_date, &modem, &report_collection, &comp_list, &file_manager.files[L"OUTPUT"]);
+	
 
 	Fl::add_timeout(auto_check_s, timer_cb, this);
 	Fl_Window* window = new Fl_Window(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -216,7 +217,11 @@ void Gui::init()
 
 void Gui::run()
 {
+	std::wcout << "Running\n";
+	Fl::lock();
 	Fl::run();
+	Fl::unlock();
+	//Fl::run();
 }
 
 void Gui::save()
@@ -246,17 +251,6 @@ void Gui::load()
 	report_date = get_report_date_str(report_wday);
 	english_date = get_report_date_str(english_wday);
 	saved = true;
-}
-
-void Gui::run_terminal_commands()
-{
-	clock_t start = clock();
-	clock_t end = start;
-	while (terminal.update(double(end - start) / (double)CLOCKS_PER_SEC * 1000.0f, &msg_handler))
-	{
-		start = end;
-		end = clock();
-	}
 }
 
 void Gui::update_report_scrolls()
@@ -312,4 +306,201 @@ void Gui::update_msg_scroll()
 	}
 	unhandled->redraw();
 	handled->redraw();
+}
+
+void Gui::send_reminders(bool english)
+{
+	for (std::map<std::wstring, Area>::iterator ci = comp_list.areas.begin(); ci != comp_list.areas.end(); ++ci)
+	{
+		bool send_it = false;
+		if (english)
+		{
+			if (ci->first != L"" && report_collection.reports[Report::TYPE_ENGLISH][ReportCollection::COMP].reports.count(english_date + L":" + ci->second.area_name) <= 0 && ci->second.english_required)
+				send_it = true;
+		}
+		else
+		{
+			if (ci->first != L"" && report_collection.reports[Report::TYPE_REGULAR][ReportCollection::COMP].reports.count(report_date + L":" + ci->second.area_name) <= 0 && ci->second.report_required)
+				send_it = true;
+		}
+		if (send_it)
+		{
+			send_message(ci->first, L"Please remember to send in your key indicators.");
+		}
+	}
+}
+
+void Gui::poll_msgs()
+{
+	modem_data->clear_command_stream();
+	modem_data->push_command(L"AT");
+	modem_data->push_command(COMMAND_NEWLINE_CHAR);
+	modem_data->push_command(L"ATE0");
+	modem_data->push_command(COMMAND_NEWLINE_CHAR);
+	modem_data->push_command(L"AT+CMGF=0");
+	modem_data->push_command(COMMAND_NEWLINE_CHAR);
+	modem_data->push_command(L"AT+CMGL=4");
+	modem_data->push_command(COMMAND_NEWLINE_CHAR);
+}
+
+void Gui::send_message(std::wstring dest_ph_number, std::wstring msg_contents)
+{
+	Message msg;
+	msg.contents = msg_contents;
+	msg.dest_number = dest_ph_number;
+	std::vector<std::wstring> strings = encode_msg(&msg);
+	for (int i = 0; i < strings.size(); i++)
+	{
+		std::wstringstream cmd;
+		cmd << L"AT+CMGS=";
+		cmd << std::dec << (int)(strings[i].length() / 2 - 1);
+		cmd << COMMAND_NEWLINE_CHAR;
+		cmd << strings[i];
+		cmd << COMMAND_ESCAPE_CHAR;
+		std::wstring cmd_str = cmd.str();
+		modem_data->push_command(cmd.str());
+	}
+}
+
+void Gui::delete_message_from_sim(int msg_cmg_id)
+{
+	std::wstringstream cmgl_id(L"");
+	cmgl_id << std::dec << msg_cmg_id;
+	modem_data->push_command(L"AT+CMGD=");
+	modem_data->push_command(cmgl_id.str());
+	modem_data->push_command(COMMAND_NEWLINE_CHAR);
+}
+
+void Gui::check_msgs()
+{
+	std::wstring modem_str = modem_data->get_modem_str();
+	if (modem_str.find(L"+CMGL:") != std::wstring::npos)
+	{
+		msg_handler.parse_messages(modem_str, this);
+		modem_data->clear_modem_str();
+	}
+	/*if (got_user)
+	{
+		if (user_ch != 127)
+		{
+			command_stream.push(user_ch);
+		}
+		else
+		{
+			if (got_modem)
+				ret_value = false;
+			else
+				got_modem = true;
+		}
+	}*/
+}
+
+void Gui::process_msg(Message* msg)
+{
+	bool processed_this_msg = false;
+	if (!msg->concatenated)
+	{
+		if (msg->type == TYPE_REPORT)
+		{
+			Report report;
+			report.set_type(Report::TYPE_REGULAR);
+			report.read_message(*msg, report_date);
+			report_collection.reports[Report::TYPE_REGULAR][ReportCollection::COMP].add_report(report);
+
+			processed_this_msg = true;
+
+			int baptisms = _wtoi(report.report_values[REP_KEY_BAP].c_str());
+			if (baptisms > 0)
+			{
+				send_message(msg->sender_number, BAPTISM_RESPONSE_MSG);
+				send_message(msg->sender_number, BAPTISM_REPORT_TEMPLATE);
+			}
+		}
+		else if (msg->type == TYPE_REPORT_ENGLISH)
+		{
+			Report report;
+			report.set_type(Report::TYPE_ENGLISH);
+			report.read_message(*msg, english_date);
+			report_collection.reports[Report::TYPE_ENGLISH][ReportCollection::COMP].add_report(report);
+
+			processed_this_msg = true;
+		}
+		else if (msg->type == TYPE_REPORT_BAPTISM)
+		{
+			Report report;
+			report.set_type(Report::TYPE_BAPTISM_RECORD);
+			report.read_message(*msg, report_date);
+			report_collection.reports[Report::TYPE_BAPTISM_RECORD][ReportCollection::COMP].add_report(report);
+
+			int choice = _wtoi(report.report_values[REP_KEY_BAP_SOURCE].c_str());
+			Report bap_source = report;
+			bap_source.report_values.clear();
+			bap_source.set_type(Report::TYPE_BAPTISM_SOURCE);
+			for (std::vector<std::wstring>::iterator it = bap_source.key_list.begin(); it != bap_source.key_list.end(); ++it)
+				bap_source.report_values.insert(std::pair<std::wstring, std::wstring>(*it, L"0"));	//Fill with zeros
+			if (choice == 1)
+				bap_source.report_values[REP_KEY_BAP_MISS_FIND] = L"1";
+			else if (choice == 2)
+				bap_source.report_values[REP_KEY_BAP_LA_REF] = L"1";
+			else if (choice == 3)
+				bap_source.report_values[REP_KEY_BAP_RC_REF] = L"1";
+			else if (choice == 4)
+				bap_source.report_values[REP_KEY_BAP_MEM_REF] = L"1";
+			else if (choice == 5)
+				bap_source.report_values[REP_KEY_BAP_ENGLISH] = L"1";
+			else if (choice == 6)
+				bap_source.report_values[REP_KEY_BAP_TOUR] = L"1";
+
+			report_collection.reports[Report::TYPE_BAPTISM_SOURCE][ReportCollection::COMP].add_report(bap_source);
+
+			processed_this_msg = true;
+		}
+		else if (msg->type == TYPE_REFERRAL)
+		{
+			Referral referral;
+			referral.read_message(*msg);
+			referral.locate(&comp_list);
+			if (referral.found_dest())
+			{
+				send_message(referral.dest_number, msg->contents);
+			}
+			else
+			{
+				send_message(LOST_REFERRAL_HANDLER, msg->contents);	//Send it to the recorder!
+			}
+			file_manager.files[FILE_REFERRALS].file << referral.print(report_date) << std::endl;
+
+			processed_this_msg = true;
+		}
+		else if (msg->type == TYPE_UNKNOWN)
+		{
+			send_message(LOST_REFERRAL_HANDLER, msg->contents);	//Send it to the recorder!
+			processed_this_msg = true;
+		}
+	}
+	if (processed_this_msg)
+	{
+		msg_handler.msgs_handled.push_back(msg);
+		for (int i = 0, erased = 0; i < msg_handler.msgs_unhandled.size() && erased == 0; i++)
+		{
+			if (msg_handler.msgs_unhandled[i] == msg)
+			{
+				msg_handler.msgs_unhandled.erase(msg_handler.msgs_unhandled.begin() + i);
+				erased = true;
+			}
+		}
+	}
+}
+
+void Gui::unprocess_msg(Message* msg)
+{
+	msg_handler.msgs_unhandled.push_back(msg);
+	for (int i = 0, found = 0; i < msg_handler.msgs_handled.size() && found == 0; i++)
+	{
+		if (msg_handler.msgs_handled[i] == msg)
+		{
+			msg_handler.msgs_handled.erase(msg_handler.msgs_handled.begin() + i);
+			found = true;
+		}
+	}
 }

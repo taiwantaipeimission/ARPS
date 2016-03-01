@@ -1,19 +1,14 @@
 #pragma once
 
-class Modem;
-class ReportCollection;
-class CompList;
-class File;
-class Reminder;
-class MessageHandler;
+#include "Modem.h"
+
+#include "ModemData.h"
+#include "File.h"
 
 #include <sstream>
 #include <vector>
 #include <queue>
 #include <Windows.h>
-
-#define COMMAND_NEWLINE_CHAR L"\r"
-#define COMMAND_ESCAPE_CHAR L";"
 
 class Terminal
 {
@@ -31,22 +26,15 @@ public:
 
 	CommandSource cmd_source;
 
-	Modem* modem;
-	ReportCollection* report_collection;
-	CompList* comp_list;
+	Modem modem;
+	ModemData* modem_data;
 	File* output_file;
-	std::wstring date;					//current date string for saving regular reports
-	std::wstring english_date;			//current date string for saving English reports
 
-	std::queue<wchar_t> command_stream;
+	std::wstring modem_reply;
 
 	bool got_user = false;
-
-	wchar_t command_ch = 0;				//command stream input
 	bool got_command = false;
 
-	wchar_t modem_ch;						//character received
-	std::wstring modem_str;			//string of consecutive chars received
 	bool got_modem = true;
 
 	DWORD read, written;				//number of bytes read/written to modem
@@ -55,13 +43,9 @@ public:
 	Terminal();
 	virtual ~Terminal();
 
-	void init(std::wstring report_date_in, std::wstring english_date_in, Modem* modem_in, ReportCollection* report_collection_in, CompList* comp_list_in, File* output_file_in);
-	void init_auto();
-	void init_user();
-	void send_message(std::wstring dest_number, std::wstring message_contents);
-	void delete_message_from_sim(int msg_cmg_id);
-	void send_reminders(bool english = false);
-	void push_command(std::wstring cmd);
-	bool update(double millis, MessageHandler* msg_handler);		//returns false when it wants to quit
+	void init(ModemData* modem_data_in, File* output_file_in);
+	
+	bool update(double millis);
+	void run();
 };
 

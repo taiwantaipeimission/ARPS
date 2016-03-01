@@ -3,8 +3,8 @@
 #include "CompList.h"
 #include "MessageHandler.h"
 #include "Modem.h"
+#include "ModemData.h"
 #include "ReportCollection.h"
-#include "Terminal.h"
 
 #include <FL/Fl_Multi_Browser.H>
 
@@ -30,8 +30,7 @@ public:
 	MessageHandler msg_handler;
 	ReportCollection report_collection;
 	CompList comp_list;
-	Terminal terminal;
-	Modem modem;
+	ModemData* modem_data;
 	FieldCollection config;
 
 	Fl_Multi_Browser* unhandled;
@@ -53,11 +52,20 @@ public:
 	Gui();
 	virtual ~Gui();
 
-	void init();
+	void init(ModemData* modem_data_in);
 	void run();
 	void save();
 	void load();
-	void run_terminal_commands();
+	
+	void send_message(std::wstring ph_num, std::wstring contents);
+	void send_reminders(bool english);
+
+	void delete_message_from_sim(int msg_cmg_id);
+
+	void poll_msgs();
+	void check_msgs();
+	void process_msg(Message* msg);
+	void unprocess_msg(Message* msg);
 	void update_msg_scroll();
 	void update_report_scrolls();
 };

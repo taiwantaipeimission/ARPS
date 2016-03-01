@@ -7,12 +7,14 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <thread>
 
 #include <codecvt>
 
 
 #include "codes.h"
 #include "Gui.h"
+#include "Terminal.h"
 
 
 /* Create the date stamp for a reporting period, based on the current time and the weekday of reporting.
@@ -38,14 +40,26 @@ public:
 	}
 };
 
+void run_terminal_func(Terminal* terminal)
+{
+	terminal->run();
+}
+
 int main(int argc, char **argv)
 {
 	try
 	{
 		Gui gui;
+		Terminal terminal;
+		ModemData modem_data;
+
 		gui.load();
-		gui.init();
+		gui.init(&modem_data);
+		terminal.init(&modem_data, &gui.file_manager.files[L"OUTPUT"]);
+
+		std::thread terminal_thread(run_terminal_func, &terminal);
 		gui.run();
+		terminal_thread.join();
 	}
 	catch(std::exception e)
 	{

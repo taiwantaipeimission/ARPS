@@ -11,6 +11,13 @@ File::File()
 
 }
 
+File::File(File& file_in)
+{
+	filepath = file_in.filepath;
+	file_type = file_in.file_type;
+	append = file_in.append;
+}
+
 File::~File()
 {
 	file.close();

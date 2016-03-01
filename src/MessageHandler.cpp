@@ -7,21 +7,23 @@
 #include "ReportCollection.h"
 #include "Referral.h"
 #include "File.h"
+#include "Gui.h"
 
 MessageHandler::MessageHandler()
 {
+	int x = 0;
 }
 
 
 MessageHandler::~MessageHandler()
 {
-	for (std::vector<Message*>::iterator it = msgs_handled.begin(); it != msgs_handled.end(); ++it)
-		delete *it;
+	for (int i = 0; i < msgs_handled.size(); i++)
+		delete msgs_handled[i];
 	for (std::vector<Message*>::iterator it = msgs_unhandled.begin(); it != msgs_unhandled.end(); ++it)
 		delete *it;
 }
 
-void MessageHandler::parse_messages(Terminal* terminal, std::wstring raw_str, CompList* comp_list)
+void MessageHandler::parse_messages(std::wstring raw_str, Gui* gui)
 {
 	//parses messages from the raw_str modem output string
 	int start = raw_str.find(L"+CMGL:");
@@ -30,7 +32,7 @@ void MessageHandler::parse_messages(Terminal* terminal, std::wstring raw_str, Co
 	{
 		Message* msg = new Message();
 		std::wstring msg_str = raw_str.substr(start, end - start + 1);	//String containing message info as well as CMGL response of the modem
-		decode_msg(msg, msg_str, comp_list);
+		decode_msg(msg, msg_str, &gui->comp_list);
 		
 		if (msg->concatenated)
 		{
@@ -43,7 +45,7 @@ void MessageHandler::parse_messages(Terminal* terminal, std::wstring raw_str, Co
 		}
 		start = end + 1;
 		end = raw_str.find(L"+CMGL:", start + 1) - 1;
-		terminal->delete_message_from_sim(msg->cmgl_ids[0]);
+		gui->delete_message_from_sim(msg->cmgl_ids[0]);
 	}
 
 	//Attempt to piece together concatenated messages
@@ -76,8 +78,8 @@ void MessageHandler::parse_messages(Terminal* terminal, std::wstring raw_str, Co
 	return;
 }
 
-
-void MessageHandler::process_msg(Message* msg, Terminal* terminal, ReportCollection* report_collection, CompList* comp_list, File* referral_file, std::wstring date, std::wstring english_date)
+/*
+void MessageHandler::process_msg(Message* msg, Gui* gui)
 {
 		bool processed_this_msg = false;
 		if (!msg->concatenated)
@@ -86,7 +88,7 @@ void MessageHandler::process_msg(Message* msg, Terminal* terminal, ReportCollect
 			{
 				Report report;
 				report.set_type(Report::TYPE_REGULAR);
-				report.read_message(*msg, date);
+				report.read_message(*msg, gui->report_date);
 				report_collection->reports[Report::TYPE_REGULAR][ReportCollection::COMP].add_report(report);
 
 				processed_this_msg = true;
@@ -186,7 +188,7 @@ void MessageHandler::unprocess_msg(Message* msg)
 			found = true;
 		}
 	}
-}
+}*/
 
 void MessageHandler::load(File* file, bool handled)
 {

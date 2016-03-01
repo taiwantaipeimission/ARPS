@@ -10,12 +10,14 @@ public:
 	COMMTIMEOUTS timeouts;
 	DCB port;
 	char port_name[128];		// "\\\\.\\COM4";
-	char init[128];					// e.g., "ATZ" to completely reset a modem.
 	DWORD read, written;
+	bool initialized;
 
 	static void system_error(char *name);
 public:
 	Modem();
 	virtual ~Modem();
+
+	void init();
 };
 

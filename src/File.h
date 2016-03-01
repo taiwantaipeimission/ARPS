@@ -18,6 +18,7 @@ public:
 	std::wfstream file;
 
 	File();
+	File(File& file);
 	virtual ~File();
 
 	virtual bool open(File::FileType file_type_in);

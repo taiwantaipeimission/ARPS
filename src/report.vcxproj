@@ -80,6 +80,7 @@
     <ClCompile Include="Message.cpp" />
     <ClCompile Include="MessageHandler.cpp" />
     <ClCompile Include="Modem.cpp" />
+    <ClCompile Include="ModemData.cpp" />
     <ClCompile Include="Referral.cpp" />
     <ClCompile Include="Reminder.cpp" />
     <ClCompile Include="ReportCollection.cpp" />
@@ -98,6 +99,7 @@
     <ClInclude Include="Message.h" />
     <ClInclude Include="MessageHandler.h" />
     <ClInclude Include="Modem.h" />
+    <ClInclude Include="ModemData.h" />
     <ClInclude Include="Referral.h" />
     <ClInclude Include="Reminder.h" />
     <ClInclude Include="ReportCollection.h" />

@@ -27,7 +27,20 @@ void Modem::system_error(char *name) {
 }
 
 Modem::Modem()
+ : initialized(false)
 {
+}
+
+
+Modem::~Modem()
+{
+	if (initialized)
+		CloseHandle(file);
+}
+
+void Modem::init()
+{
+	initialized = true;
 	// open the comm port.
 	file = CreateFile(
 		L"\\\\.\\COM1",     // address of name of the communications device
@@ -72,10 +85,4 @@ Modem::Modem()
 	Sleep(200);
 	if (!EscapeCommFunction(file, SETDTR))
 		system_error("setting DTR");
-}
-
-
-Modem::~Modem()
-{
-	CloseHandle(file);
 }

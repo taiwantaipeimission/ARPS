@@ -3,6 +3,7 @@
 class Terminal;
 class ReportCollection;
 class CompList;
+class Gui;
 #include "File.h"
 #include "Message.h"
 #include "FileManager.h"
@@ -20,12 +21,11 @@ public:
 	MessageHandler();
 	virtual ~MessageHandler();
 
-	void parse_messages(Terminal* terminal, std::wstring raw_str, CompList* comp_list);
-	void process_msg(Message* msg, Terminal* terminal, ReportCollection* report_collection, CompList* comp_list, File* referral_file, std::wstring date, std::wstring english_date);
-	void unprocess_msg(Message* msg);
 	void save(File* file, bool handled);
 	void load(File* file, bool handled);
 	void save(FileManager* file_manager);
 	void load(FileManager* file_manager);
+
+	void MessageHandler::parse_messages(std::wstring raw_str, Gui* gui);
 };
 

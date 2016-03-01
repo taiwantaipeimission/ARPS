@@ -1,6 +1,6 @@
 #pragma once
 
-class Area;
+#include "Area.h"
 
 #include <map>
 #include <string>
