@@ -61,10 +61,15 @@ void send_english_reminder_cb(Fl_Widget* wg, void*ptr)
 	gui->send_reminders(true);
 }
 
-void check_msg_cb(Fl_Widget* wg, void* ptr)
+void poll_msg_cb(Fl_Widget* wg, void* ptr)
 {
 	Gui* gui = (Gui*)ptr;
 	gui->poll_msgs();
+}
+
+void check_msg_cb(void* ptr)
+{
+	Gui* gui = (Gui*)ptr;
 	gui->check_msgs();
 	gui->update_msg_scroll();
 	gui->update_report_scrolls();
@@ -82,6 +87,7 @@ void process_msg_cb(Fl_Widget* wg, void* ptr)
 		}
 	}
 	gui->update_msg_scroll();
+	gui->update_report_scrolls();
 	gui->saved = false;
 }
 
@@ -101,12 +107,12 @@ void unprocess_msg_cb(Fl_Widget* wg, void* ptr)
 
 void timer_cb(void* ptr)
 {
-	Gui* gui = (Gui*)ptr;
+	/*Gui* gui = (Gui*)ptr;
 	check_msg_cb(NULL, ptr);
 	for (int i = 1; i <= gui->unhandled->size(); i++)
 		gui->unhandled->select(i);
 	process_msg_cb(NULL, ptr);
-	Fl::repeat_timeout(gui->auto_check_s, timer_cb, ptr);
+	Fl::repeat_timeout(gui->auto_check_s, timer_cb, ptr);*/
 }
 
 void select_all_cb(Fl_Widget* wg, void* ptr)
@@ -130,8 +136,7 @@ void Gui::init(ModemData* modem_data_in)
 	modem_data = modem_data_in;
 	auto_check_s = 300.0f;
 
-	
-
+	Fl::add_awake_handler_(check_msg_cb, (void*)this);
 	Fl::add_timeout(auto_check_s, timer_cb, this);
 	Fl_Window* window = new Fl_Window(WINDOW_WIDTH, WINDOW_HEIGHT);
 	Fl_Menu_Bar* menu = new Fl_Menu_Bar(0, 0, WINDOW_WIDTH, BAR_HEIGHT);
@@ -156,7 +161,7 @@ void Gui::init(ModemData* modem_data_in)
 			Fl_Button* check_msg_button = new Fl_Button(SPACING, WINDOW_HEIGHT - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "Check msgs");
 			{
 				check_msg_button->user_data((void*)this);
-				check_msg_button->callback(check_msg_cb);
+				check_msg_button->callback(poll_msg_cb);
 			}
 			Fl_Button* process_msg_button = new Fl_Button(BUTTON_WIDTH + 2 * SPACING, WINDOW_HEIGHT - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "Process");
 			{
@@ -349,7 +354,7 @@ void Gui::send_message(std::wstring dest_ph_number, std::wstring msg_contents)
 	msg.contents = msg_contents;
 	msg.dest_number = dest_ph_number;
 	std::vector<std::wstring> strings = encode_msg(&msg);
-	for (int i = 0; i < strings.size(); i++)
+	for (size_t i = 0; i < strings.size(); i++)
 	{
 		std::wstringstream cmd;
 		cmd << L"AT+CMGS=";
@@ -481,7 +486,7 @@ void Gui::process_msg(Message* msg)
 	if (processed_this_msg)
 	{
 		msg_handler.msgs_handled.push_back(msg);
-		for (int i = 0, erased = 0; i < msg_handler.msgs_unhandled.size() && erased == 0; i++)
+		for (size_t i = 0, erased = 0; i < msg_handler.msgs_unhandled.size() && erased == 0; i++)
 		{
 			if (msg_handler.msgs_unhandled[i] == msg)
 			{
@@ -495,7 +500,7 @@ void Gui::process_msg(Message* msg)
 void Gui::unprocess_msg(Message* msg)
 {
 	msg_handler.msgs_unhandled.push_back(msg);
-	for (int i = 0, found = 0; i < msg_handler.msgs_handled.size() && found == 0; i++)
+	for (size_t i = 0, found = 0; i < msg_handler.msgs_handled.size() && found == 0; i++)
 	{
 		if (msg_handler.msgs_handled[i] == msg)
 		{

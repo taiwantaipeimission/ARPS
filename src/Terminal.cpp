@@ -18,6 +18,9 @@
 #include "Reminder.h"
 #include "Referral.h"
 #include "MessageHandler.h"
+#include "Gui.h"
+
+#include "FL/Fl.H"
 
 Terminal::Terminal()
 {
@@ -28,10 +31,11 @@ Terminal::~Terminal()
 {
 }
 
-void Terminal::init(ModemData* modem_data_in, File* output_file_in)
+void Terminal::init(ModemData* modem_data_in, File* output_file_in, Gui* gui_in)
 {
 	modem_data = modem_data_in;
 	output_file = output_file_in;
+	gui = gui_in;
 
 	modem.init();
 }
@@ -56,6 +60,7 @@ bool Terminal::update(double millis)
 		{
 			modem_reply = L"";
 			got_modem = true;
+			Fl::awake(check_msg_cb, (void*)gui);
 		}
 
 		if (ms_until_timeout > 0)
@@ -138,6 +143,10 @@ bool Terminal::update(double millis)
 				WriteFile(modem.file, command_ch_str.c_str(), 1, &written, NULL);
 			}	
 		}
+		else
+		{
+			ret_value = false;
+		}
 	}
 	else if (ms_until_timeout <= 0)
 	{
@@ -154,8 +163,9 @@ void Terminal::run()
 {
 	clock_t start = clock();
 	clock_t end = start;
-	while (update(double(end - start) / (double)CLOCKS_PER_SEC * 1000.0f))
+	while (1)
 	{
+		update(double(end - start) / (double)CLOCKS_PER_SEC * 1000.0f);
 		start = end;
 		end = clock();
 	}

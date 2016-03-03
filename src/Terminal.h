@@ -1,5 +1,7 @@
 #pragma once
 
+class Gui;
+
 #include "Modem.h"
 
 #include "ModemData.h"
@@ -29,6 +31,7 @@ public:
 	Modem modem;
 	ModemData* modem_data;
 	File* output_file;
+	Gui* gui;
 
 	std::wstring modem_reply;
 
@@ -43,7 +46,7 @@ public:
 	Terminal();
 	virtual ~Terminal();
 
-	void init(ModemData* modem_data_in, File* output_file_in);
+	void init(ModemData* modem_data_in, File* output_file_in, Gui* gui_in);
 	
 	bool update(double millis);
 	void run();
