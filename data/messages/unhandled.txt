@@ -1,0 +1,199 @@
+TAO_1_A|+886972576556|3|TYPE:REFERRAL
+PLACE:八德
+NAME:陳狗本
+NUMBER:0979724319
+INFO:在桃園區後火車站遇到||8|130|0|0|0|0;LUZHOU_B_E|+886965008522|3|TYPE:REFERRAL
+PLACE:SHILIN
+NAME: Peter 林 
+NUMBER:0979240072
+INFO:||8|130|0|0|0|0;YULI_E|+886972576594|3|TYPE:REFERRAL
+PLACE:TAIBEI
+NAME:Andy
+NUMBER:0988777013
+INFO:really cool college student.  Likes music a lot. ||0|109|0|0|0|0;TAIDONG_2_E|+886972576593|3|TYPE:REFERRAL
+PLACE:高雄
+NAME:邱弟兄
+NUMBER:0978971221
+INFO:||8|110|0|0|0|0;TAIDONG_2_E|+886972576593|3|TYPE:REFERRAL
+PLACE:台南
+NAME:林文淋
+NUMBER:0905188288
+INFO:||8|110|0|0|0|0;TAIDONG_2_E|+886972576593|3|TYPE:REFERRAL
+PLACE:新義區
+NAME:劉彥椿
+NUMBER:0958907068
+INFO:||8|112|0|0|0|0;TAIDONG_2_E|+886972576593|3|TYPE:REFERRAL
+PLACE:高雄
+NAME:Jacob
+NUMBER:0953455821
+INFO:||8|114|0|0|0|0;XINZHU_1_S|+886972576569|3|TYPE:REFERRAL
+PLACE: DAAN
+NAME:古廷安 Tina
+NUMBER:0928541900
+INFO:She is a college student at tai da. She is from xin zhu. ||8|140|0|17|2|1;WANDA_B_S|+886963932617|3|TYPE:REFERRAL
+PLACE:信義區
+NAME:游富傑
+NUMBER: 0972007180
+INFO: met him walking to meet up with his friends and was too busy to talk so we got his phone number. Probably in his 20's||8|140|0|49|3|1;WANDA_B_S|+886963932617|3|TYPE:REFERRAL
+PLACE:JIAYI
+NAME:林信志
+NUMBER: 0933121935
+INFO: was in taibei for 2 weeks for some work and we met him on the street. Was busy but was willing to give us his number||8|140|0|50|3|1;SHILIN_E|+886972576564|3|TYPE:REFERRAL
+PLACE:三重區
+NAME:Ryan 楊
+NUMBER:0935566413
+INFO:Nice dude had one prayer. Loves his wife and kid who is only one. Good fashion sense. ||8|140|0|60|3|1;BEITOU_E|+886972576546|3|TYPE:REFERRAL
+PLACE:BANQIAO
+NAME:Melvin王
+NUMBER:0909269148
+INFO:Awesome guy, not today in 北投, is changing jobs this week and believes that prayer and god can help him deal with all his changes. Is married and speaks english cause if went over to canada for a little while||8|140|0|96|5|1;BEITOU_E|+886972576546|3|TYPE:REFERRAL
+PLACE:ZHONGLI
+NAME:謝couple
+NUMBER:0932037589
+INFO: we saw them eating at a restrant we were at, started talking about us missionaries. We got their number and now to you! GL!||8|140|0|97|3|1;LUODONG_B_E|+886963912027|3|TYPE:REFERRAL
+PLACE:士林區
+NAME:郭庭恩
+NUMBER:0986531196
+INFO:Less active member. Baptized a few years ago. 13 year old girl (warning, she is mistaken by almost all as a boy). She lives away from her family (family is in luodong) in order to play tennis competetively. Highly recommend seek permission to call luodong B to more fully discuss her.||8|140|0|87|6|1;BEITOU_E|+886972576546|3|TYPE:REFERRAL
+PLACE:BANQIAO
+NAME:Max柯
+NUMBER:0953236699
+INFO:sorry that meltin guy was wrong, that info was actually for this max guy, he's the awesome guy, meltin doe||8|140|0|98|3|1;XINPU_E|+886972576504|3|TYPE:REFERRAL
+PLACE:DONGSHAN
+NAME:陳qing2wei1
+NUMBER:0939077881
+INFO:we were calling our formers and she said she had moved and was willing to meet with missionaries. (Elder Seemans is a 帥哥！）||8|140|0|8|3|1;SANXIA_A|+886963917982|3|TYPE:REFERRAL
+PLACE:danshui
+NAME:jerry王
+NUMBER:0917924376
+INFO:super nice guy. Married with two kids. Moved to danshui recently. Likes english and has some questions about religion.||8|140|0|30|3|1;SONGSHAN_E|+886963938192|3|TYPE:REFERRAL
+PLACE: PING DONG 
+NAME: 林弟兄
+NUMBER:0981782747
+INFO: cool guy quick contact in tai bei in ping dong for a year ||8|140|0|83|2|1;SONGSHAN_E|+886963938192|3|TYPE:REFERRAL
+PLACE:NEI HU 
+NAME:chen li ying
+NUMBER:0910785978
+INFO:nice person lives in mei li hua ||0|101|0|0|0|0;SONGSHAN_E|+886963938192|3|TYPE:REFERRAL
+PLACE:LU ZHOU
+NAME:周祐安
+NUMBER:0984274450
+INFO: officially the coolest 6th grader ever! ||8|140|0|85|2|1;SONGSHAN_E|+886963938192|3|TYPE:REFERRAL
+PLACE: VISCIAS PHILIPPINES 
+NAME:cheryl janagap
+NUMBER:09205174269
+INFO:nice lady speaks tagalog||0|110|0|0|0|0;XINAN_S|+886972576561|3|TYPE:REFERRAL
+PLACE: ZHONGLI
+NAME: Leo
+NUMBER: 0936771917
+INFO: Really quick contact. No prayer or anything. Off to a meeting. English is pretty good.||0|150|0|0|0|0;TAO_4_E|+886972576578|3|TYPE:REFERRAL
+PLACE:TAIZHONGCENTRAL
+NAME:
+NUMBER:0975285236
+INFO:really nice guy, very tall and likes to play volleyball. Sorry about not knowing his name.||0|156|0|0|0|0;TAO_4_E|+886972576578|3|TYPE:REFERRAL
+PLACE:XINZHUANG
+NAME:zhou
+NUMBER:0926196163
+INFO:nice guy ||0|71|0|0|0|0;BEITOU_E|+886972576546|3|TYPE:REFERRAL
+PLACE:SANCHONG
+NAME:白宗義baizongyi
+NUMBER:0972857772
+INFO:member referral from beitou, he's 50, WOW problems, doesnt feel much love, but talks a lot with the member here (徐laoshi) tell him you are xulaoshi's friend, call in the afternoon. GL!||8|140|0|110|4|1;BEITOU_E|+886972576546|3|TYPE:REFERRAL
+PLACE:BANQIAO
+NAME:余小組
+NUMBER:0973558522
+INFO:met in beitou, another: Jerry黃0920065424 has two kids, likes bball, works in beitou as an engineer||8|140|0|112|3|1;XINAN_S|+886972576561|3|TYPE:REFERRAL
+PLACE: XINDIAN
+NAME: Joe 
+NUMBER: 0986953516
+INFO: Meet him at a stop light. Very good english and also catholic. We were running late to a lesson so on prayer but interested learning more. ||0|160|0|172|2|1;TAO_2_E|+886963539987|3|TYPE:REFERRAL
+PLACE: DAYUAN
+NAME: 游先生
+NUMBER:0936340595
+INFO: pretty quick, family, two kids.||8|140|0|231|2|1;ZHONGLI_2_E|+886972576584|3|TYPE:REFERRAL
+PLACE:XINZHUANG
+NAME:李佳欣
+NUMBER:0979650467
+INFO: no religious background, call a week from Feb.26||8|140|0|241|2|1;ZHONGLI_2_E|+886972576584|3|TYPE:REFERRAL
+PLACE:JILONG
+NAME:莊小姐
+NUMBER:0927936003
+INFO:Nice girl, "almost Christian," has boyfriend. 加油！||8|140|0|242|2|1;XINZHU_3_E|+886972576563|3|TYPE:REFERRAL
+PLACE:XIANGSHAN
+NAME:鍾昆展
+NUMBER:0975569253
+INFO: Scooter guy who pulled over for us, super cool, willing to be baptized, pretty familiar with the catholic church but never joined because he never felt it. Student. Call him up!||8|140|0|249|4|1;TAO_2_E|+886963539987|3|TYPE:REFERRAL
+PLACE:BANQIAO
+NAME: 謝宗佑
+NUMBER:0960103225
+INFO: pretty cool. Hurt hand. Here in 桃園 working. Shared a little from the family proclamation. Interested in families.||8|140|0|232|3|1;TAO_2_E|+886963539987|3|TYPE:REFERRAL
+PLACE: WANHUA
+NAME:長佳盈
+NUMBER:0973094320
+INFO:super awesome! She's really interested in the book of mormon. She was fascinated in the questions of the soul. Asked for a book of mormon. Lesson.||8|140|0|233|4|1;BEITOU_E|+886972576546|3|TYPE:REFERRAL
+PLACE:XINZHUANG
+NAME:林先生
+NUMBER:0988816112
+INFO:||8|124|0|0|0|0;JIAN_E|+886972576592|3|TYPE:REFERRAL
+PLACE:ZHONGLI
+NAME:賴立軒Larry
+NUMBER:0937912533
+INFO:We had a lesson, he is in college and came back to 花蓮for a few days. ||8|140|0|95|2|1;TAO_2_E|+886963539987|3|TYPE:REFERRAL
+PLACE: ZHONGLI
+NAME:吳先生
+NUMBER:0958137773
+INFO: pretty quick, here in 桃園 working.||8|140|0|234|2|1;BEITOU_E|+886972576546|3|TYPE:REFERRAL
+PLACE:MUZHA
+NAME:Zheng4ting2yuan2
+NUMBER:0963639761
+INFO: ||0|71|0|0|0|0;JIAN_E|+886972576592|3|TYPE:REFERRAL
+PLACE:NEIHU
+NAME:林宗毅
+NUMBER:0978268097
+INFO:Really nice, his girlfriend is really prepared.||8|140|0|96|2|1;XIZHI_A_E|+886972576509|3|TYPE:REFERRAL
+PLACE:WANHUA
+NAME:Queenie陳 
+NUMBER:0955780849
+INF we met her and taught about prayer. She is super nice and open to learn more a really happy person||8|140|0|107|3|1;BEITOU_E|+886972576546|3|TYPE:REFERRAL
+PLACE:TIANMU
+NAME:RoyJia1
+NUMBER:0936609781
+INFO:had a lesson, if prayed for his (future)son if hoped his son could learn about Jesus.
+Andy陳0975108314younger college guy. PS you could be my cinderella||0|0|0|0|0|0;BEITOU_E|+886972576546|3|TYPE:REFERRAL
+PLACE:泰山
+NAME:Eva林緯莉
+NUMBER:0958936465
+INFO:met outside a 7, had a kid interested in english, already christian||8|140|0|117|2|1;WANDA_A_S|+886972576559|3|TYPE:REFERRAL
+PLACE: Hong Kong
+NAME: Jennith Saband
+NUMBER: 97305784
+INFO: she is Filipino.  She is Catholic.  She is in Taiwan for vacation, but will be back on March fifth.||0|160|0|167|2|1;WANDA_A_S|+886972576559|3|TYPE:REFERRAL
+PLACE:ZHONGHE 
+NAME:XU 
+NUMBER:0972813789
+INFO: Set a baptism date for 4/9 he is said he will get baptized if he feels it.  Been sick recently. He really needs this. He bai bai's but thinks they are all good.  ||0|160|0|168|2|1;TAO_1_A|+886972576556|3|TYPE:REFERRAL
+PLACE:西區
+NAME:鄭家寧
+NUMBER:0989388536
+INFO: moved to 台中 about 6 months ago. She's LA, busy with work but get in touch with her.  She was baptized here in 桃園市 but hasn't changed her records.  Help her!  ~Elder Tang and Shi ||8|140|0|16|4|1;WANDA_A_S|+886972576559|3|TYPE:REFERRAL
+PLACE:TAINAN
+NAME:du wei quan
+NUMBER:0989924643
+INFO:son of a woman we contacted. His mom was really touched and wants her sons to be involved in this church. ||0|160|0|169|2|1;WANDA_A_S|+886972576559|3|TYPE:REFERRAL
+PLACE:TAINAN
+NAME:du wei jun  
+NUMBER:0925778520
+INFO:son of a woman we contacted. His mom was really touched and wants her sons to be involved in this church. ||0|160|0|170|2|1;SHILIN_S|+886972576543|1|TYPE:ENGLISH
+CLASSLEVEL:kids
+TOTALSTUDENTS:2
+TOTALNONMEM:2
+NEWSTUDENTS:0
+NEWINV:0||0|81|0|0|0|0;SHILIN_E|+886972576564|3|TYPE:REFERRAL
+PLACE:中和區
+NAME:余福根
+NUMBER:0982320924
+INFO:a little against organized churches. Willing to meet and to pray. 30 years old 吧. No date but said ok to invitation. Said a long prayer in but the middle part was 內心的。||8|140|0|66|4|1;XINZHU_3_E|+886972576563|3|TYPE:REFERRAL
+PLACE: xinyi
+NAME:黃小姐
+NUMBER:0988274551
+INFO:Just started her job in the field of stem bell research. No religion. Willing to 聽看看。||8|140|0|251|3|1;
