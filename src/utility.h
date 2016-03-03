@@ -30,6 +30,10 @@ static const std::vector<std::wstring> tokenize(std::wstring str, wchar_t delim)
 	return results;
 }
 
+static const inline int positive_modulo(int i, int n) {
+	return (i % n + n) % n;
+}
+
 static const std::wstring get_report_date_str(std::wstring report_wday)
 {
 	std::wstring report_date;
@@ -37,9 +41,11 @@ static const std::wstring get_report_date_str(std::wstring report_wday)
 	tm curtime_st;
 	time(&curtime);
 	localtime_s(&curtime_st, &curtime);
+	int i_report_wday = _wtoi(report_wday.c_str());
 
 	int cur_wday = (curtime_st.tm_wday == 0 ? 7 : curtime_st.tm_wday);
-	if (cur_wday == _wtoi(report_wday.c_str()))
+	
+	if (cur_wday == i_report_wday)
 	{
 		report_date = tos(1900 + curtime_st.tm_year)
 			+ ID_STR_SEPARATOR + tos(curtime_st.tm_mon + 1)
@@ -48,8 +54,9 @@ static const std::wstring get_report_date_str(std::wstring report_wday)
 	}
 	else
 	{
+		int days_since_last_report = positive_modulo(cur_wday - i_report_wday, 7);
 		tm last_week_tm_st = curtime_st;
-		last_week_tm_st.tm_mday -= 7;
+		last_week_tm_st.tm_mday -= days_since_last_report;
 		time_t last_week_tm = mktime(&last_week_tm_st);
 		localtime_s(&last_week_tm_st, &last_week_tm);
 		report_date = tos(1900 + last_week_tm_st.tm_year)
