@@ -45,7 +45,8 @@ void MessageHandler::parse_messages(std::wstring raw_str, Gui* gui)
 		}
 		start = end + 1;
 		end = raw_str.find(L"+CMGL:", start + 1) - 1;
-		gui->delete_message_from_sim(msg->cmgl_ids[0]);
+		if(msg->cmgl_ids.size() > 0)
+			gui->delete_message_from_sim(msg->cmgl_ids[0]);
 	}
 
 	//Attempt to piece together concatenated messages
@@ -208,10 +209,16 @@ void MessageHandler::load(File* file, bool handled)
 				}
 				else
 				{
-					if (handled)
-						msgs_handled.push_back(msg);
-					else
-						msgs_unhandled.push_back(msg);
+					bool duplicate = false;
+					std::vector<Message*>* target_vector = handled ? &msgs_handled : &msgs_unhandled;
+
+					for (std::vector<Message*>::iterator it = target_vector->begin(); it != target_vector->end() && !duplicate; ++it)
+					{
+						if ((*it)->sender_name == msg->sender_name && (*it)->contents == msg->contents)
+							duplicate = true;
+					}
+					if (!duplicate)
+						target_vector->push_back(msg);
 				}
 			}
 		} while (file->file.good());
