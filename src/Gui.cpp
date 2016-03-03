@@ -250,6 +250,9 @@ void Gui::load()
 	config.read_fields(&file_manager.files[L"CONFIG"]);
 	file_manager.files[L"CONFIG"].close();
 
+	file_manager.files[FILE_OUTPUT].open(File::FILE_TYPE_OUTPUT);
+	file_manager.files[FILE_REFERRALS].open(File::FILE_TYPE_OUTPUT);
+
 	report_wday = config.values[CONFIG_FIELD_REPORT_WDAY];
 	english_wday = config.values[CONFIG_FIELD_ENGLISH_WDAY];
 
