@@ -107,12 +107,12 @@ void unprocess_msg_cb(Fl_Widget* wg, void* ptr)
 
 void timer_cb(void* ptr)
 {
-	/*Gui* gui = (Gui*)ptr;
-	check_msg_cb(NULL, ptr);
+	Gui* gui = (Gui*)ptr;
+	poll_msg_cb(NULL, ptr);
 	for (int i = 1; i <= gui->unhandled->size(); i++)
 		gui->unhandled->select(i);
 	process_msg_cb(NULL, ptr);
-	Fl::repeat_timeout(gui->auto_check_s, timer_cb, ptr);*/
+	Fl::repeat_timeout(gui->auto_check_s, timer_cb, ptr);
 }
 
 void select_all_cb(Fl_Widget* wg, void* ptr)
@@ -122,21 +122,22 @@ void select_all_cb(Fl_Widget* wg, void* ptr)
 
 Gui::Gui()
 {
-	std::wcout << L"Constructing" << std::endl;
 }
 
 
 Gui::~Gui()
 {
-	std::wcout << L"Destructing" << std::endl;
 }
 
 void Gui::init(ModemData* modem_data_in)
 {
 	modem_data = modem_data_in;
 	auto_check_s = 300.0f;
+	file_manager.files[FILE_OUTPUT].append = true;
+	file_manager.files[FILE_OUTPUT].open(File::FILE_TYPE_OUTPUT);
+	file_manager.files[FILE_REFERRALS].append = true;
+	file_manager.files[FILE_REFERRALS].open(File::FILE_TYPE_OUTPUT);
 
-	Fl::add_awake_handler_(check_msg_cb, (void*)this);
 	Fl::add_timeout(auto_check_s, timer_cb, this);
 	Fl_Window* window = new Fl_Window(WINDOW_WIDTH, WINDOW_HEIGHT);
 	Fl_Menu_Bar* menu = new Fl_Menu_Bar(0, 0, WINDOW_WIDTH, BAR_HEIGHT);
@@ -222,11 +223,9 @@ void Gui::init(ModemData* modem_data_in)
 
 void Gui::run()
 {
-	std::wcout << "Running\n";
 	Fl::lock();
 	Fl::run();
 	Fl::unlock();
-	//Fl::run();
 }
 
 void Gui::save()
@@ -249,9 +248,6 @@ void Gui::load()
 	file_manager.files[L"CONFIG"].open(File::FILE_TYPE_INPUT);
 	config.read_fields(&file_manager.files[L"CONFIG"]);
 	file_manager.files[L"CONFIG"].close();
-
-	file_manager.files[FILE_OUTPUT].open(File::FILE_TYPE_OUTPUT);
-	file_manager.files[FILE_REFERRALS].open(File::FILE_TYPE_OUTPUT);
 
 	report_wday = config.values[CONFIG_FIELD_REPORT_WDAY];
 	english_wday = config.values[CONFIG_FIELD_ENGLISH_WDAY];
@@ -381,11 +377,13 @@ void Gui::delete_message_from_sim(int msg_cmg_id)
 
 void Gui::check_msgs()
 {
-	std::wstring modem_str = modem_data->get_modem_str();
-	if (modem_str.find(L"+CMGL:") != std::wstring::npos)
+	while (modem_data->get_modem_strs().size() > 0)
 	{
-		msg_handler.parse_messages(modem_str, this);
-		modem_data->clear_modem_str();
+		std::wstring modem_str = modem_data->pop_modem_str();
+		if (modem_str.find(L"+CMGL:") != std::wstring::npos)
+		{
+			msg_handler.parse_messages(modem_str, this);
+		}
 	}
 	/*if (got_user)
 	{

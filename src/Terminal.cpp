@@ -53,14 +53,14 @@ bool Terminal::update(double millis)
 		modem_ch_null += modem_ch;
 		std::wcout << modem_ch_null;
 		output_file->file << modem_ch_null;
-		modem_data->push_modem_str(modem_ch_null);
 		modem_reply += modem_ch_null;
 
 		if (modem_reply.find(L"OK\r\n") != std::wstring::npos || modem_reply.find(L"> ") != std::wstring::npos)
 		{
-			modem_reply = L"";
-			got_modem = true;
+			modem_data->push_modem_str(modem_reply);
 			Fl::awake(check_msg_cb, (void*)gui);
+			got_modem = true;
+			modem_reply = L"";
 		}
 
 		if (ms_until_timeout > 0)
