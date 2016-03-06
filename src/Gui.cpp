@@ -420,6 +420,16 @@ void Gui::process_msg(Message* msg)
 			{
 				send_message(msg->sender_number, BAPTISM_RESPONSE_MSG);
 				send_message(msg->sender_number, BAPTISM_REPORT_TEMPLATE);
+
+				for (int i = 0; i < baptisms; i++)
+				{
+					//Add a blank baptism record, so we can see if data is missing
+					Report bap_record = report;
+					bap_record.report_values.clear();
+					bap_record.set_type(Report::TYPE_BAPTISM_SOURCE);
+					bap_record.sub_id = i;
+					report_collection.reports[Report::TYPE_BAPTISM_RECORD][ReportCollection::COMP].add_report(report);
+				}
 			}
 		}
 		else if (msg->type == TYPE_REPORT_ENGLISH)
@@ -457,7 +467,16 @@ void Gui::process_msg(Message* msg)
 			else if (choice == 6)
 				bap_source.report_values[REP_KEY_BAP_TOUR] = L"1";
 
-			report_collection.reports[Report::TYPE_BAPTISM_SOURCE][ReportCollection::COMP].add_report(bap_source);
+			if (report_collection.reports[Report::TYPE_BAPTISM_SOURCE][ReportCollection::COMP].reports.count(bap_source.get_id_str()) > 0)
+			{
+				//Add on to the existing baptism source report
+				report_collection.reports[Report::TYPE_BAPTISM_SOURCE][ReportCollection::COMP].reports[bap_source.get_id_str()] += report;
+			}
+			else
+			{
+				//Create a new baptism source report
+				report_collection.reports[Report::TYPE_BAPTISM_SOURCE][ReportCollection::COMP].add_report(bap_source);
+			}
 
 			processed_this_msg = true;
 		}

@@ -68,7 +68,10 @@ void Report::set_type(Type new_type)
 		key_list = { L"CLASSLEVEL", L"TOTALSTUDENTS", L"TOTALNONMEM", L"NEWSTUDENTS", L"NEWINV" };
 	}
 	else if (type == TYPE_BAPTISM_RECORD)
+	{
+		use_sub_id = true;
 		key_list = { L"CONV_NAME", L"BP_DATE", L"CONF_DATE", L"WARD", L"HOME_ADDR", L"PH_NUM", L"BAP_SOURCE" };
+	}
 	else if (type == TYPE_BAPTISM_SOURCE)
 		key_list = { L"BAP_MISS_FIND", L"BAP_LA_REF", L"BAP_RC_REF", L"BAP_MEM_REF", L"BAP_ENGLISH", L"BAP_TOUR" };
 }
