@@ -250,16 +250,20 @@ void ReportCollection::total_reports(Report::Type type, DataOrder from, DataOrde
 
 void ReportCollection::total(Report::Type type, CompList* comp_list, std::wstring date)
 {
-	total_reports(type, COMP, DISTRICT, comp_list, date);
-	total_reports(type, COMP, ZONE, comp_list, date);
-	total_reports(type, COMP, WARD, comp_list, date);
-	total_reports(type, COMP, STAKE, comp_list, date);
-	total_reports(type, DISTRICT, DISTRICT_MONTH, comp_list, date);
-	total_reports(type, ZONE, ZONE_MONTH, comp_list, date);
-	total_reports(type, WARD, WARD_MONTH, comp_list, date);
-	total_reports(type, STAKE, STAKE_MONTH, comp_list, date);
-	total_reports(type, ZONE, MISSION, comp_list, date);
-	total_reports(type, MISSION, MISSION_MONTH, comp_list, date);
+	//Don't total text report
+	if (type != Report::TYPE_BAPTISM_RECORD)
+	{
+		total_reports(type, COMP, DISTRICT, comp_list, date);
+		total_reports(type, COMP, ZONE, comp_list, date);
+		total_reports(type, COMP, WARD, comp_list, date);
+		total_reports(type, COMP, STAKE, comp_list, date);
+		total_reports(type, DISTRICT, DISTRICT_MONTH, comp_list, date);
+		total_reports(type, ZONE, ZONE_MONTH, comp_list, date);
+		total_reports(type, WARD, WARD_MONTH, comp_list, date);
+		total_reports(type, STAKE, STAKE_MONTH, comp_list, date);
+		total_reports(type, ZONE, MISSION, comp_list, date);
+		total_reports(type, MISSION, MISSION_MONTH, comp_list, date);
+	}
 }
 
 void ReportCollection::total_all(CompList* comp_list, std::wstring date, std::wstring english_date)
@@ -275,9 +279,13 @@ bool ReportCollection::load_all()
 	{
 		for (int j = 0; j < NUM_DATA_ORDERS; j++)
 		{
-			if (report_files[(Report::Type)i][(DataOrder)j].open(File::FILE_TYPE_INPUT))
-				reports[(Report::Type)i][(DataOrder)j].read_stored_all(report_files[(Report::Type)i][(DataOrder)j].file);
-			report_files[(Report::Type)i][(DataOrder)j].close();
+			//Don't bother with baptism record for district, zone, etc. since it is a text report
+			if (i != Report::TYPE_BAPTISM_RECORD || j == COMP)
+			{
+				if (report_files[(Report::Type)i][(DataOrder)j].open(File::FILE_TYPE_INPUT))
+					reports[(Report::Type)i][(DataOrder)j].read_stored_all(report_files[(Report::Type)i][(DataOrder)j].file);
+				report_files[(Report::Type)i][(DataOrder)j].close();
+			}
 		}
 	}
 	return true;
@@ -289,9 +297,13 @@ bool ReportCollection::save_all()
 	{
 		for (int j = 0; j < NUM_DATA_ORDERS; j++)
 		{
-			if (report_files[(Report::Type)i][(DataOrder)j].open(File::FILE_TYPE_OUTPUT))
-				reports[(Report::Type)i][(DataOrder)j].print(report_files[(Report::Type)i][(DataOrder)j].file);
-			report_files[(Report::Type)i][(DataOrder)j].close();
+			//Don't bother with baptism record for district, zone, etc. since it is a text report
+			if (i != Report::TYPE_BAPTISM_RECORD || j == COMP)
+			{
+				if (report_files[(Report::Type)i][(DataOrder)j].open(File::FILE_TYPE_OUTPUT))
+					reports[(Report::Type)i][(DataOrder)j].print(report_files[(Report::Type)i][(DataOrder)j].file);
+				report_files[(Report::Type)i][(DataOrder)j].close();
+			}
 		}
 	}
 	return true;
