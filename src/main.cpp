@@ -56,7 +56,6 @@ int main(int argc, char **argv)
 		gui.load();
 		gui.init(&modem_data);
 		terminal.init(&modem_data, &gui.file_manager.files[L"OUTPUT"], &gui);
-
 		std::thread terminal_thread(run_terminal_func, &terminal);
 		gui.run();
 		terminal_thread.join();
@@ -64,6 +63,8 @@ int main(int argc, char **argv)
 	catch(std::exception e)
 	{
 		std::wcout << L"Error: " << e.what() << L"\n";
+		wchar_t c;
+		std::wcin >> c;
 	}
 	return 0;
 }

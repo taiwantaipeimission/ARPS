@@ -8,6 +8,7 @@
 #include <sstream>
 #include <vector>
 #include <ctime>
+#include <algorithm>
 
 static const std::wstring tos(int x)
 {
@@ -20,6 +21,14 @@ static const std::string tos(std::wstring str)
 {
 	std::string st(str.begin(), str.end());
 	return st;
+}
+
+static void strip_chars(std::wstring& str, std::wstring chars_to_remove)
+{
+	for (unsigned int i = 0; i < chars_to_remove.length(); ++i)
+	{
+		str.erase(std::remove(str.begin(), str.end(), chars_to_remove[i]), str.end());
+	}
 }
 
 static const std::vector<std::wstring> tokenize(std::wstring str, wchar_t delim)

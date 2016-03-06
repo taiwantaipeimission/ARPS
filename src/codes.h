@@ -51,6 +51,9 @@
 #define TYPE_ENGLISH_STR L"ENGLISH"
 #define TYPE_BAPTISM_STR L"BAPTISM"
 #define TYPE_REFERRAL_STR L"REFERRAL"
+#define MAX_MSG_LEN 134 	//140 characters of message (for 8-bit encoding); take away 6 bits for possible UDH data
+#define MSG_FILE_FIELD_SEPARATOR L'|'
+#define MSG_SEPARATOR L'\\'
 
 //Graphics options
 #define WINDOW_WIDTH 800

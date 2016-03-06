@@ -1,6 +1,7 @@
 #include "codes.h"
 #include "Message.h"
 #include "Area.h"
+#include "utility.h"
 #include <sstream>
 #include <iomanip>
 #include <algorithm>
@@ -258,6 +259,10 @@ bool decode_msg(Message* msg, std::wstring input, CompList* comp_list)
 		int udh_num_septets = has_udh ? (((udhl + 1) * 8) + 6) / 7 : 0;
 		msg->contents = all_contents.substr(udh_num_septets, all_contents.length() - udh_num_septets);
 	}
+	std::wstring forbidden_chars = L"";
+	forbidden_chars += MSG_FILE_FIELD_SEPARATOR;
+	forbidden_chars += MSG_SEPARATOR;
+	strip_chars(msg->contents, forbidden_chars);
 	if (has_udh)
 	{
 		msg->concatenated = (udh[0] == 0x0) || (udh[0] == 0x8);

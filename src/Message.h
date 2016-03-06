@@ -1,13 +1,10 @@
 #pragma once
 
+#include "codes.h"
+
 #include <string>
 
 #include "CompList.h"
-
-
-#define MAX_MSG_LEN 134 	//140 characters of message (for 8-bit encoding); take away 6 bits for possible UDH data
-#define MSG_FILE_FIELD_SEPARATOR L'|'
-#define MSG_SEPARATOR L';'
 
 enum MessageType
 {
@@ -20,7 +17,7 @@ enum MessageType
 
 class Message
 {
-	public:
+public:
 	//Fields deducted from PDU content
 	std::wstring raw_pdu;
 	std::wstring sender_number;
