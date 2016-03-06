@@ -1,3 +1,5 @@
+#pragma once
+
 #include "codes.h"
 
 #include <string>

@@ -12,6 +12,7 @@ public:
 	
 	std::wstring district_name;
 	std::wstring zone_name;
+	std::wstring ward_name;
 	std::wstring stake_name;
 	std::wstring english_unit_name;
 	bool report_required;

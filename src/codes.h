@@ -1,5 +1,4 @@
-#ifndef CODES
-#define CODES
+#pragma once
 
 //Filepaths
 
@@ -60,5 +59,3 @@
 #define BUTTON_WIDTH 100
 #define CHECKBOX_WIDTH 25
 #define SPACING 5
-
-#endif

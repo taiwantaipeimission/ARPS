@@ -15,6 +15,8 @@ public:
 		DISTRICT_MONTH,			//Data by district (monthly totals)
 		ZONE,					//Data by zone
 		ZONE_MONTH,				//Data by zone (monthly totals)
+		WARD,					//Ward
+		WARD_MONTH,
 		STAKE,
 		STAKE_MONTH,
 		MISSION,

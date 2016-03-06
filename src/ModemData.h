@@ -1,6 +1,4 @@
 #pragma once
-#ifndef MODEM_DATA_H
-#define MODEM_DATA_H
 
 #include <queue>
 #include <string>
@@ -27,5 +25,3 @@ public:
 	std::wstring pop_modem_str();
 	void clear_modem_strs();
 };
-
-#endif

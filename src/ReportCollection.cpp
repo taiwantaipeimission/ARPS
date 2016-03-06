@@ -30,6 +30,8 @@ void ReportCollection::init(std::wstring global_prefix_in)
 	midfix[DISTRICT_MONTH] = L"_district_month";
 	midfix[ZONE] = L"_zone";
 	midfix[ZONE_MONTH] = L"_zone_month";
+	midfix[WARD] = L"_ward";
+	midfix[WARD_MONTH] = L"_ward_month";
 	midfix[STAKE] = L"_stake";
 	midfix[STAKE_MONTH] = L"_stake_month";
 	midfix[MISSION] = L"_mission";
@@ -72,6 +74,7 @@ void ReportCollection::write_report(Report::Type type, DataOrder data_order, Fil
 
 	COMP->DISTRICT
  	COMP->ZONE
+	COMP->WARD
 	COMP->STAKE
 	COMP->MISSION
 
@@ -80,6 +83,9 @@ void ReportCollection::write_report(Report::Type type, DataOrder data_order, Fil
 
 	ZONE->ZONE_MONTH
 	ZONE->MISSION
+
+	WARD->WARD_MONTH
+	WARD->MISSION
 
 	STAKE->STAKE_MONTH
 	STAKE->MISSION
@@ -119,6 +125,19 @@ Report ReportCollection::transform_report(Report rep, DataOrder from, DataOrder 
 			rep.sub_id = 0;
 			rep.sender_name = zone_name;
 		}
+		else if (to == WARD)
+		{
+			std::wstring ward_name;
+			if (comp_list->by_area_name.count(rep.sender_name) > 0)
+			{
+				ward_name = comp_list->by_area_name[rep.sender_name][0].ward_name;
+			}
+			else
+			{
+				ward_name = L"UNKNOWN";
+			}
+			rep.sender_name = ward_name;
+		}
 		else if (to == STAKE)
 		{
 			std::wstring stake_name;
@@ -152,6 +171,18 @@ Report ReportCollection::transform_report(Report rep, DataOrder from, DataOrder 
 	else if (from == ZONE)
 	{
 		if (to == ZONE_MONTH)
+		{
+			rep.date_week = 0;
+			rep.date_wday = 0;
+		}
+		else if (to == MISSION)
+		{
+			rep.sender_name = L"MISSION";
+		}
+	}
+	else if (from == WARD)
+	{
+		if (to == WARD_MONTH)
 		{
 			rep.date_week = 0;
 			rep.date_wday = 0;
@@ -221,9 +252,11 @@ void ReportCollection::total(Report::Type type, CompList* comp_list, std::wstrin
 {
 	total_reports(type, COMP, DISTRICT, comp_list, date);
 	total_reports(type, COMP, ZONE, comp_list, date);
+	total_reports(type, COMP, WARD, comp_list, date);
 	total_reports(type, COMP, STAKE, comp_list, date);
 	total_reports(type, DISTRICT, DISTRICT_MONTH, comp_list, date);
 	total_reports(type, ZONE, ZONE_MONTH, comp_list, date);
+	total_reports(type, WARD, WARD_MONTH, comp_list, date);
 	total_reports(type, STAKE, STAKE_MONTH, comp_list, date);
 	total_reports(type, ZONE, MISSION, comp_list, date);
 	total_reports(type, MISSION, MISSION_MONTH, comp_list, date);
