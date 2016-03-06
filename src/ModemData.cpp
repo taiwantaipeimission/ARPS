@@ -46,6 +46,7 @@ void ModemData::clear_command_stream()
 
 std::queue<std::wstring> ModemData::get_modem_strs()
 {
+	std::lock_guard<std::mutex> guard(mu);
 	return modem_str;
 }
 
