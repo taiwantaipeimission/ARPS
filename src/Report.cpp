@@ -32,23 +32,13 @@ void Report::read_message(Message msg, std::wstring date)
 
 	std::wstring value;
 
-	for (unsigned int i = 0; i < key_list.size(); i++)
+	for (unsigned int i = 0; i < int_key_list.size(); i++)
 	{
-		int key_pos = msg.contents.find(L"\n" + key_list[i] + L":");
-		int value_pos = msg.contents.find(':', key_pos) + 1;
-		int value_end_pos = std::min(msg.contents.find('\n', value_pos), msg.contents.find('\r', value_pos));
-
-		value = L"0";
-		if (key_pos != std::wstring::npos && value_pos != std::wstring::npos)
-		{
-			if (value_pos != value_end_pos)
-			{
-				value = msg.contents.substr(value_pos, value_end_pos - value_pos);
-				value.erase(std::remove(value.begin(), value.end(), ' '), value.end());		//Strip whitespace from string
-				value.erase(std::remove(value.begin(), value.end(), '\n'), value.end());
-			}
-		}
-		report_values[key_list[i]] = value;
+		int_values[int_key_list[i]] = _wtoi(get_msg_key_val(msg.contents, int_key_list[i], ':', '\n').c_str());
+	}
+	for (unsigned int i = 0; i < string_key_list.size(); i++)
+	{
+		string_values[string_key_list[i]] = get_msg_key_val(msg.contents, string_key_list[i], ':', '\n');
 	}
 }
 
@@ -61,19 +51,27 @@ void Report::set_type(Type new_type)
 	type = new_type;
 	use_sub_id = false;
 	if (type == TYPE_REGULAR)
-		key_list = { L"A", L"B", L"C", L"D", L"NEXTWEEKBAP", L"BAP", L"CONF", L"BD", L"SAC", L"PK", L"OL", L"NIMISSFIND", L"NIMEMREF", L"RCLA", L"LAC", L"RCT"};
+	{
+		string_key_list = {};
+		int_key_list = { L"A", L"B", L"C", L"D", L"NEXTWEEKBAP", L"BAP", L"CONF", L"BD", L"SAC", L"PK", L"OL", L"NIMISSFIND", L"NIMEMREF", L"RCLA", L"LAC", L"RCT" };
+	}
 	else if (type == TYPE_ENGLISH)
 	{
 		use_sub_id = true;
-		key_list = { L"CLASSLEVEL", L"TOTALSTUDENTS", L"TOTALNONMEM", L"NEWSTUDENTS", L"NEWINV" };
+		string_key_list = { L"CLASSLEVEL" };
+		int_key_list = { L"TOTALSTUDENTS", L"TOTALNONMEM", L"NEWSTUDENTS", L"NEWINV" };
 	}
 	else if (type == TYPE_BAPTISM_RECORD)
 	{
 		use_sub_id = true;
-		key_list = { L"CONV_NAME", L"BP_DATE", L"CONF_DATE", L"WARD", L"HOME_ADDR", L"PH_NUM", L"BAP_SOURCE" };
+		string_key_list = { L"CONV_NAME", L"BP_DATE", L"CONF_DATE", L"WARD", L"HOME_ADDR", L"PH_NUM"};
+		int_key_list = { L"BAP_SOURCE" };
 	}
 	else if (type == TYPE_BAPTISM_SOURCE)
-		key_list = { L"BAP_MISS_FIND", L"BAP_LA_REF", L"BAP_RC_REF", L"BAP_MEM_REF", L"BAP_ENGLISH", L"BAP_TOUR" };
+	{
+		string_key_list = {};
+		int_key_list = { L"BAP_MISS_FIND", L"BAP_LA_REF", L"BAP_RC_REF", L"BAP_MEM_REF", L"BAP_ENGLISH", L"BAP_TOUR" };
+	}
 }
 
 std::wstring Report::get_id_str()
@@ -99,16 +97,10 @@ bool Report::operator==(Report& other)
 	
 	// sender number and cmgl_id don't matter; not retained
 
-	if (other.key_list.size() != this->key_list.size())
+	if (this->string_values != other.string_values || this->int_values != other.int_values)
 		return false;
 
-	for (int i = 0; i < key_list.size(); i++)
-	{
-		if (other.key_list[i] != this->key_list[i])
-			return false;
-		if (other.report_values[key_list[i]] != this->report_values[key_list[i]])
-			return false;
-	}
+
 	return true;
 }
 
@@ -119,47 +111,43 @@ bool Report::operator!=(Report& other)
 
 void Report::operator+=(Report& other)
 {
-	for (std::map<std::wstring, std::wstring>::iterator i = other.report_values.begin(); i != other.report_values.end(); ++i)
+	for (std::map<std::wstring, int>::iterator i = other.int_values.begin(); i != other.int_values.end(); ++i)
 	{
-		if (this->report_values.count(i->first) > 0)	//Existing value for this report field
+		if (this->int_values.count(i->first) > 0)	//Existing value for this report field
 		{
-			std::wstringstream this_ss;
-			std::wstringstream other_ss;
-
-			this_ss.str(this->report_values[i->first]);
-			other_ss.str(i->second);
-			int this_value;
-			int other_value;
-			this_ss >> this_value;
-			other_ss >> other_value;
-
-			if (!this_ss.fail() && !other_ss.fail())
-			{
-				int new_value = this_value + other_value;
-				wchar_t intstr[8];
-				_itow_s(new_value, intstr, 8, 10);
-				this->report_values[i->first] = std::wstring(intstr);
-			}
-			else
-			{
-				this->report_values[i->first] = L"-";
-			}
+			this->int_values[i->first] += i->second;
 		}
 		else
 		{
-			this->add_field(i->first, i->second);
+			this->add_int(i->first, i->second);
 		}
 	}
 }
 
-void Report::add_field(std::wstring key, std::wstring value)
+void Report::add_int(std::wstring key, int value)
 {
-	report_values[key] = value;
+	int_values[key] = value;
 }
 
-void Report::remove_field(std::wstring key)
+void Report::add_string(std::wstring key, std::wstring value)
 {
-	report_values.erase(key);
+	string_values[key] = value;
+}
+
+void Report::remove_int(std::wstring key)
+{
+	int_values.erase(key);
+}
+
+void Report::remove_string(std::wstring key)
+{
+	string_values.erase(key);
+}
+
+void Report::clear_values()
+{
+	string_values.clear();
+	int_values.clear();
 }
 
 void Report::read_processed(std::wstring input)
@@ -188,14 +176,19 @@ void Report::read_processed(std::wstring input)
 	}
 
 	//Extract all of the keyed report values
-	std::wstring key_name;
-	std::wstring value;
-	for (int i = 0; i < key_list.size(); i++)
+	for (int i = 0; i < string_key_list.size(); i++)
 	{
-		value = L"0";
+		std::wstring value = L"0";
 		if (stream.good())
 			stream >> value;
-		report_values[key_list[i]] = value;
+		string_values[string_key_list[i]] = value;
+	}
+	for (int i = 0; i < int_key_list.size(); i++)
+	{
+		int value = 0;
+		if (stream.good())
+			stream >> value;
+		int_values[int_key_list[i]] = value;
 	}
 
 	is_new = false;
@@ -205,15 +198,14 @@ void Report::read_processed(std::wstring input)
 
 void Report::print(std::wostream& output)
 {
-	std::wstring str = get_id_str();
-	if (sender_name == L"0")
-		int x = 0;
 	output << get_id_str();
-	for (int i = 0; i < key_list.size(); i++)
+	for (int i = 0; i < string_key_list.size(); i++)
 	{
-		std::wstring value = report_values[key_list[i]];
-		output << L'\t';
-		output << value;
+		output << L'\t' << string_values[string_key_list[i]];
 	}
-	output << std::endl;
+	for (int i = 0; i < int_key_list.size(); i++)
+	{
+		output << L'\t' << int_values[int_key_list[i]];
+	}
+	output << L'\n';
 }

@@ -20,7 +20,7 @@ void ReportSheet::add_report(Report report)
 		if (report_type == Report::TYPE_ENGLISH)
 		{
 			report.sub_id = 0;										//The starting value for the English class level sub-id
-			while (reports.count(report.get_id_str()) > 0 && reports[report.get_id_str()].report_values[L"CLASSLEVEL"] != report.report_values[L"CLASSLEVEL"])
+			while (reports.count(report.get_id_str()) > 0 && reports[report.get_id_str()].string_values[L"CLASSLEVEL"] != report.string_values[L"CLASSLEVEL"])
 			{
 				//Keep incrementing until we find 1) an ID for which no record exists; 2) a an english class level name the same as this one.
 				report.sub_id++;
@@ -29,7 +29,7 @@ void ReportSheet::add_report(Report report)
 		if (report_type == Report::TYPE_BAPTISM_RECORD)
 		{
 			report.sub_id = 0;										//The starting value for the baptism record sub-id
-			while (reports.count(report.get_id_str()) > 0 && reports[report.get_id_str()].report_values[L"CONV_NAME"] != L"" && reports[report.get_id_str()].report_values[L"CONV_NAME"] != report.report_values[L"CONV_NAME"])
+			while (reports.count(report.get_id_str()) > 0 && reports[report.get_id_str()].string_values[L"CONV_NAME"] != L"" && reports[report.get_id_str()].string_values[L"CONV_NAME"] != report.string_values[L"CONV_NAME"])
 			{
 				//Keep incrementing until we find 1) an ID for which no record exists; 2) a blank convert name (indicates unsubmitted report); 3) a convert name the same as this one.
 				report.sub_id++;
@@ -86,9 +86,13 @@ void ReportSheet::print(std::wostream& output)
 {
 	Report header_ref;
 	header_ref.set_type(report_type);
-	for (int i = 0; i < header_ref.key_list.size(); i++)
+	for (int i = 0; i < header_ref.string_key_list.size(); i++)
 	{
-		output << L"\t" << header_ref.key_list[i];
+		output << L"\t" << header_ref.string_key_list[i];
+	}
+	for (int i = 0; i < header_ref.int_key_list.size(); i++)
+	{
+		output << L"\t" << header_ref.int_key_list[i];
 	}
 	output << L"\n";
 	for (std::map<std::wstring, Report>::iterator it = reports.begin(); it != reports.end(); ++it)

@@ -423,7 +423,7 @@ void Gui::process_msg(Message* msg)
 
 			processed_this_msg = true;
 
-			int baptisms = _wtoi(report.report_values[REP_KEY_BAP].c_str());
+			int baptisms = report.int_values[REP_KEY_BAP];
 			if (baptisms > 0)
 			{
 				send_message(msg->sender_number, BAPTISM_RESPONSE_MSG);
@@ -433,7 +433,7 @@ void Gui::process_msg(Message* msg)
 				{
 					//Add a blank baptism record, so we can see if data is missing
 					Report bap_record = report;
-					bap_record.report_values.clear();
+					bap_record.clear_values();
 					bap_record.set_type(Report::TYPE_BAPTISM_SOURCE);
 					bap_record.sub_id = i;
 					report_collection.reports[Report::TYPE_BAPTISM_RECORD][ReportCollection::COMP].add_report(report);
@@ -456,24 +456,24 @@ void Gui::process_msg(Message* msg)
 			report.read_message(*msg, report_date);
 			report_collection.reports[Report::TYPE_BAPTISM_RECORD][ReportCollection::COMP].add_report(report);
 
-			int choice = _wtoi(report.report_values[REP_KEY_BAP_SOURCE].c_str());
+			int choice = report.int_values[REP_KEY_BAP_SOURCE];
 			Report bap_source = report;
-			bap_source.report_values.clear();
+			bap_source.clear_values();
 			bap_source.set_type(Report::TYPE_BAPTISM_SOURCE);
-			for (std::vector<std::wstring>::iterator it = bap_source.key_list.begin(); it != bap_source.key_list.end(); ++it)
-				bap_source.report_values.insert(std::pair<std::wstring, std::wstring>(*it, L"0"));	//Fill with zeros
+			for (std::vector<std::wstring>::iterator it = bap_source.int_key_list.begin(); it != bap_source.int_key_list.end(); ++it)
+				bap_source.int_values[*it] = 0;	//Fill with zeros
 			if (choice == 1)
-				bap_source.report_values[REP_KEY_BAP_MISS_FIND] = L"1";
+				bap_source.int_values[REP_KEY_BAP_MISS_FIND] = 1;
 			else if (choice == 2)
-				bap_source.report_values[REP_KEY_BAP_LA_REF] = L"1";
+				bap_source.int_values[REP_KEY_BAP_LA_REF] = 1;
 			else if (choice == 3)
-				bap_source.report_values[REP_KEY_BAP_RC_REF] = L"1";
+				bap_source.int_values[REP_KEY_BAP_RC_REF] = 1;
 			else if (choice == 4)
-				bap_source.report_values[REP_KEY_BAP_MEM_REF] = L"1";
+				bap_source.int_values[REP_KEY_BAP_MEM_REF] = 1;
 			else if (choice == 5)
-				bap_source.report_values[REP_KEY_BAP_ENGLISH] = L"1";
+				bap_source.int_values[REP_KEY_BAP_ENGLISH] = 1;
 			else if (choice == 6)
-				bap_source.report_values[REP_KEY_BAP_TOUR] = L"1";
+				bap_source.int_values[REP_KEY_BAP_TOUR] = 1;
 
 			if (report_collection.reports[Report::TYPE_BAPTISM_SOURCE][ReportCollection::COMP].reports.count(bap_source.get_id_str()) > 0)
 			{

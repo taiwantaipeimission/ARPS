@@ -2,13 +2,13 @@
 
 #include "codes.h"
 
+#include <algorithm>
 #include <string>
 #include <iostream>
 #include <string>
 #include <sstream>
 #include <vector>
 #include <ctime>
-#include <algorithm>
 
 static const std::wstring tos(int x)
 {
@@ -39,6 +39,25 @@ static const std::vector<std::wstring> tokenize(std::wstring str, wchar_t delim)
 	while (std::getline(ss, token, delim))
 		results.push_back(token);
 	return results;
+}
+
+static const std::wstring get_msg_key_val(std::wstring contents, std::wstring key, wchar_t separator, wchar_t val_delim)
+{
+	int key_pos = contents.find(val_delim + key + separator);
+	int value_pos = contents.find(separator, key_pos) + 1;
+	int value_end_pos = (std::min)(0, 1);// contents.find(val_delim, value_pos), contents.find('\r', value_pos));
+
+	std::wstring value = L"0";
+	if (key_pos != std::wstring::npos && value_pos != std::wstring::npos)
+	{
+		if (value_pos != value_end_pos)
+		{
+			value = contents.substr(value_pos, value_end_pos - value_pos);
+			value.erase(std::remove(value.begin(), value.end(), ' '), value.end());		//Strip whitespace from string
+			value.erase(std::remove(value.begin(), value.end(), '\n'), value.end());
+		}
+	}
+	return value;
 }
 
 static const inline int positive_modulo(int i, int n) {

@@ -24,8 +24,8 @@ std::wstring find_value(std::wstring msg_contents, std::wstring key)
 		if (value_pos != value_end_pos)
 		{
 			value = msg_contents.substr(value_pos, value_end_pos - value_pos);
-			value.erase(std::remove(value.begin(), value.end(), ' '), value.end());		//Strip whitespace from string
-			value.erase(std::remove(value.begin(), value.end(), '\n'), value.end());
+			//value.erase(std::remove(value.begin(), value.end(), ' '), value.end());		//Strip whitespace from string
+			//value.erase(std::remove(value.begin(), value.end(), '\n'), value.end());
 		}
 	}
 	return value;
