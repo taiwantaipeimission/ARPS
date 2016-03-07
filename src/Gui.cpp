@@ -230,9 +230,17 @@ void Gui::run()
 
 void Gui::save()
 {
+	clock_t start = clock();
 	report_collection.total_all(&comp_list, report_date, english_date);
+	clock_t total = clock();
 	report_collection.save_all();
 	msg_handler.save(&file_manager);
+	clock_t save = clock() - total;
+
+
+
+
+
 	saved = true;
 }
 
@@ -470,7 +478,7 @@ void Gui::process_msg(Message* msg)
 			if (report_collection.reports[Report::TYPE_BAPTISM_SOURCE][ReportCollection::COMP].reports.count(bap_source.get_id_str()) > 0)
 			{
 				//Add on to the existing baptism source report
-				report_collection.reports[Report::TYPE_BAPTISM_SOURCE][ReportCollection::COMP].reports[bap_source.get_id_str()] += report;
+				report_collection.reports[Report::TYPE_BAPTISM_SOURCE][ReportCollection::COMP].reports[bap_source.get_id_str()] += bap_source;
 			}
 			else
 			{

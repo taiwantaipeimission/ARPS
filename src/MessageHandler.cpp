@@ -57,7 +57,9 @@ void MessageHandler::parse_messages(std::wstring raw_str, Gui* gui)
 		correct_order.assign(num_msgs, -1);				//Fill with -1s so we can see if any msgs are missing
 		for (size_t i = 0; i < it->second.size(); i++)
 		{
-			correct_order[it->second[i]->concat_index - 1] = i;					//Concat indeces inside msg start from 1, so subtract 1
+			size_t index = it->second[i]->concat_index - 1;					//Concat indeces inside msg start from 1, so subtract 1
+			if (index < correct_order.size())
+				correct_order[index] = i;
 		}
 		if (std::count(correct_order.begin(), correct_order.end(), -1) == 0)	//All sub-msgs found that make up this concat msg
 		{
