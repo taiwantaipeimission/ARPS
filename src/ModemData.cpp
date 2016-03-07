@@ -10,25 +10,23 @@ ModemData::~ModemData()
 {
 }
 
-void ModemData::push_command(std::wstring cmd)
+void ModemData::push_command(std::wstring cmd, std::wstring terminator)
 {
 	std::lock_guard<std::mutex> guard(mu);
-	for (unsigned int i = 0; i < cmd.length(); i++)
-	{
-		command_stream.push(cmd[i]);
-	}
+	std::wstring str = cmd + terminator;
+	command_stream.push(str);
 }
 
-wchar_t ModemData::pop_command_ch()
+std::wstring ModemData::pop_command_str()
 {
 	std::lock_guard<std::mutex> guard(mu);
-	wchar_t command_ch = ' ';
+	std::wstring command_str = L"";
 	if (command_stream.size() > 0)
 	{
-		command_ch = command_stream.front();
+		command_str = command_stream.front();
 		command_stream.pop();
 	}
-	return command_ch;
+	return command_str;
 }
 
 size_t ModemData::get_command_stream_size()

@@ -42,7 +42,7 @@
 #define DISPLAY_TEXT_SEPARATOR L":"
 #define ID_STR_SEPARATOR L":"
 #define COMMAND_NEWLINE_CHAR L"\r"
-#define COMMAND_ESCAPE_CHAR L";"
+#define COMMAND_ESCAPE_CHAR L"\u001A\r"		//The CTRL-Z character used at the end of PDU payload data
 
 //Message constants
 #define TYPE_KEY L"TYPE"
@@ -54,6 +54,9 @@
 #define MAX_MSG_LEN 134 	//140 characters of message (for 8-bit encoding); take away 6 bits for possible UDH data
 #define MSG_FILE_FIELD_SEPARATOR L'|'
 #define MSG_SEPARATOR L'\\'
+
+//Serial constants
+#define MAX_NUM_TRIES 64		//Try this many times to get a character across the serial cable before quitting
 
 //Graphics options
 #define WINDOW_WIDTH 800

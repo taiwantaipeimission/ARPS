@@ -340,7 +340,7 @@ void read_filed_msg(Message* msg, std::wstring input)
 	msg->msg_length = _wtoi(msg_length.c_str());
 	std::wstring concatenated;
 	std::getline(ss, concatenated, MSG_FILE_FIELD_SEPARATOR);
-	msg->concatenated = _wtoi(concatenated.c_str());
+	msg->concatenated = _wtoi(concatenated.c_str()) == 0 ? false : true;
 	std::wstring concat_refnum;
 	std::getline(ss, concat_refnum, MSG_FILE_FIELD_SEPARATOR);
 	msg->concat_refnum = _wtoi(concat_refnum.c_str());

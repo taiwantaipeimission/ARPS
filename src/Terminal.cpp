@@ -7,6 +7,7 @@
 #include <string>
 #include <iostream>
 
+#include "utility.h"
 #include "codes.h"
 #include "Terminal.h"
 #include "Modem.h"
@@ -21,6 +22,16 @@
 #include "Gui.h"
 
 #include "FL/Fl.H"
+
+static const bool is_final_line(std::wstring line)
+{
+	return line.find(L"OK\r\n") != std::wstring::npos || line.find(L"> ") != std::wstring::npos || line.find(L"ERROR") != std::wstring::npos;
+}
+
+static const bool is_error(std::wstring line)
+{
+	return line.find(L"ERROR") != std::wstring::npos;
+}
 
 Terminal::Terminal()
 {
@@ -55,7 +66,7 @@ bool Terminal::update(double millis)
 		output_file->file << modem_ch_null;
 		modem_reply += modem_ch_null;
 
-		if (modem_reply.find(L"OK\r\n") != std::wstring::npos || modem_reply.find(L"> ") != std::wstring::npos)
+		if (is_final_line(modem_reply))
 		{
 			modem_data->push_modem_str(modem_reply);
 			Fl::awake(check_msg_cb, (void*)gui);
@@ -106,9 +117,9 @@ bool Terminal::update(double millis)
 	{
 		if (user_ch != 127)
 		{
-			std::wstring user_str(L"");
+			std::wstring user_str;
 			user_str += user_ch;
-			modem_data->push_command(user_str);
+			modem_data->push_command(user_str, L"");
 		}
 		else
 		{
@@ -122,26 +133,34 @@ bool Terminal::update(double millis)
 	{
 		if (modem_data->get_command_stream_size() > 0)
 		{
-			std::wstring command_ch_str = L"";
-			command_ch_str += modem_data->pop_command_ch();
+			std::wstring command_ch_str = modem_data->pop_command_str();
+			if (command_ch_str.find(COMMAND_ESCAPE_CHAR) != std::wstring::npos)
+			{
+				ms_until_timeout = NO_RESPONSE_TIMEOUT_MS;
+				got_modem = false;
+			}
+			if (command_ch_str.find(COMMAND_NEWLINE_CHAR) != std::wstring::npos)
+			{
+				ms_until_timeout = NO_RESPONSE_TIMEOUT_MS;
+				got_modem = false;
+			}
+
+			std::string narrowed = tos(command_ch_str);
+
+			size_t len = narrowed.length();
 			//if (cmd_source != COMMAND_SOURCE_USER)
-				std::wcout << command_ch_str;
-			if (command_ch_str == COMMAND_NEWLINE_CHAR)
+			std::wcout << command_ch_str;
+
+
+			for (size_t i = 0; i < narrowed.length(); i++)
 			{
-				WriteFile(modem.file, COMMAND_NEWLINE_CHAR, 1, &written, NULL);
-				ms_until_timeout = NO_RESPONSE_TIMEOUT_MS;
-				got_modem = false;
+				std::wstring str = L"";
+				str += narrowed[i];
+				written = 0;
+				for (int i = 0; i < MAX_NUM_TRIES && written == 0; i++)
+					WriteFile(modem.file, tos(str).c_str(), 1, &written, NULL);
 			}
-			else if (command_ch_str == COMMAND_ESCAPE_CHAR)
-			{
-				WriteFile(modem.file, "\u001A", 1, &written, NULL);
-				ms_until_timeout = NO_RESPONSE_TIMEOUT_MS;
-				got_modem = false;
-			}
-			else
-			{
-				WriteFile(modem.file, command_ch_str.c_str(), 1, &written, NULL);
-			}	
+
 		}
 		else
 		{
@@ -150,8 +169,8 @@ bool Terminal::update(double millis)
 	}
 	else if (ms_until_timeout <= 0)
 	{
-		std::wcout << L"TIMEOUT\n";
-		got_modem = true;
+		//std::wcout << L"TIMEOUT\n";
+		//got_modem = true;
 	}
 	if (ms_until_timeout > 0)
 		ms_until_timeout = max(0, ms_until_timeout - millis);

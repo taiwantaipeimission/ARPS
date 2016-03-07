@@ -31,6 +31,15 @@ static void strip_chars(std::wstring& str, std::wstring chars_to_remove)
 	}
 }
 
+static void replace_chars(std::wstring& str, std::wstring find, std::wstring replace)
+{
+	size_t pos;
+	while ((pos = str.find(find)) != std::wstring::npos)
+	{
+		str.replace(pos, find.length(), replace);
+	}
+}
+
 static const std::vector<std::wstring> tokenize(std::wstring str, wchar_t delim)
 {
 	std::wstring token;

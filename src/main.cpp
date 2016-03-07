@@ -1,5 +1,7 @@
 ﻿#define WIN32
 
+#include "utility.h"
+
 #include <string.h>
 #include <iostream>
 
@@ -56,6 +58,7 @@ int main(int argc, char **argv)
 		gui.load();
 		gui.init(&modem_data);
 		terminal.init(&modem_data, &gui.file_manager.files[L"OUTPUT"], &gui);
+
 		std::thread terminal_thread(run_terminal_func, &terminal);
 		gui.run();
 		terminal_thread.join();

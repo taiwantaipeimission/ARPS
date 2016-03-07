@@ -346,13 +346,9 @@ void Gui::poll_msgs()
 {
 	modem_data->clear_command_stream();
 	modem_data->push_command(L"AT");
-	modem_data->push_command(COMMAND_NEWLINE_CHAR);
 	modem_data->push_command(L"ATE0");
-	modem_data->push_command(COMMAND_NEWLINE_CHAR);
 	modem_data->push_command(L"AT+CMGF=0");
-	modem_data->push_command(COMMAND_NEWLINE_CHAR);
 	modem_data->push_command(L"AT+CMGL=4");
-	modem_data->push_command(COMMAND_NEWLINE_CHAR);
 }
 
 void Gui::send_message(std::wstring dest_ph_number, std::wstring msg_contents)
@@ -366,21 +362,22 @@ void Gui::send_message(std::wstring dest_ph_number, std::wstring msg_contents)
 		std::wstringstream cmd;
 		cmd << L"AT+CMGS=";
 		cmd << std::dec << (int)(strings[i].length() / 2 - 1);
-		cmd << COMMAND_NEWLINE_CHAR;
-		cmd << strings[i];
-		cmd << COMMAND_ESCAPE_CHAR;
-		std::wstring cmd_str = cmd.str();
 		modem_data->push_command(cmd.str());
+
+		cmd.str(L"");
+		cmd.clear();
+		cmd << strings[i];
+		modem_data->push_command(cmd.str(), COMMAND_ESCAPE_CHAR);
 	}
 }
 
 void Gui::delete_message_from_sim(int msg_cmg_id)
 {
-	std::wstringstream cmgl_id(L"");
-	cmgl_id << std::dec << msg_cmg_id;
-	modem_data->push_command(L"AT+CMGD=");
-	modem_data->push_command(cmgl_id.str());
-	modem_data->push_command(COMMAND_NEWLINE_CHAR);
+	std::wstringstream cmd_str(L"");
+	cmd_str << std::dec << msg_cmg_id;
+	std::wstring str_to_push = L"AT+CMGD=";
+	str_to_push += cmd_str.str();
+	modem_data->push_command(str_to_push);
 }
 
 void Gui::check_msgs()
