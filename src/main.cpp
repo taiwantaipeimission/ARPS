@@ -19,6 +19,14 @@
 #include "Terminal.h"
 
 
+
+#include <string.h>
+#include <FL/Fl.H>
+#include <FL/Fl_Window.H>
+#include <FL/Fl_Choice.H>
+#include <FL/Fl_Multiline_Output.H>
+
+
 /* Create the date stamp for a reporting period, based on the current time and the weekday of reporting.
  * All days up to the day of reporting return back to the previous reporting period (e.g. Thursday-Tuesday will be counted as reports
  * for English reporting session which began on the Wednesday previous).

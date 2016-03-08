@@ -9,6 +9,8 @@
 #include <sstream>
 #include <vector>
 #include <ctime>
+#include <codecvt>
+#include <locale>
 
 static const std::wstring tos(int x)
 {
@@ -19,7 +21,10 @@ static const std::wstring tos(int x)
 
 static const std::string tos(std::wstring str)
 {
-	std::string st(str.begin(), str.end());
+	typedef std::codecvt_utf8<wchar_t> convert_type;
+	std::wstring_convert<convert_type, wchar_t> converter;
+
+	std::string st = converter.to_bytes(str);
 	return st;
 }
 

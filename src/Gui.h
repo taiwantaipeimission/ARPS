@@ -39,6 +39,7 @@ public:
 	ModemData* modem_data;
 	FieldCollection config;
 
+	Fl_Window* window;
 	Fl_Multi_Browser* unhandled;
 	Fl_Multi_Browser* handled;
 	Fl_Multi_Browser* unreceived_reports;

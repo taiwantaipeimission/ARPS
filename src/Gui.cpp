@@ -176,7 +176,7 @@ void Gui::init(ModemData* modem_data_in)
 	file_manager.files[FILE_OUTPUT].open(File::FILE_TYPE_OUTPUT);
 
 	Fl::add_timeout(auto_check_s, timer_cb, this);
-	Fl_Window* window = new Fl_Window(WINDOW_WIDTH, WINDOW_HEIGHT);
+	window = new Fl_Window(WINDOW_WIDTH, WINDOW_HEIGHT);
 	Fl_Menu_Bar* menu = new Fl_Menu_Bar(0, 0, WINDOW_WIDTH, BAR_HEIGHT);
 	{
 		menu->add("File/Save", FL_CTRL + 's', save_cb, this);
@@ -270,7 +270,9 @@ void Gui::run()
 
 void Gui::total_reports(Report::Type type)
 {
+	window->cursor(FL_CURSOR_WAIT);
 	report_collection.total(type, &comp_list, type == Report::TYPE_ENGLISH ? english_date : report_date);
+	window->cursor(FL_CURSOR_DEFAULT);
 }
 
 bool Gui::is_saved()
@@ -280,6 +282,7 @@ bool Gui::is_saved()
 
 void Gui::save()
 {
+	window->cursor(FL_CURSOR_WAIT);
 	clock_t start = clock();
 	if (!report_collection.is_saved())
 		report_collection.save_all();
@@ -293,6 +296,7 @@ void Gui::save()
 		referral_list.save(&file_manager.files[FILE_REFERRALS], report_date);
 		file_manager.files[FILE_REFERRALS].close();
 	}
+	window->cursor(FL_CURSOR_DEFAULT);
 }
 
 void Gui::load()
