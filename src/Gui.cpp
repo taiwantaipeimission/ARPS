@@ -56,7 +56,31 @@ void save_cb(Fl_Widget* wg, void* ptr)
 void quit_cb(Fl_Widget* wg, void* ptr)
 {
 	Gui* gui = (Gui*)ptr;
-	if (gui->saved || fl_ask("Unsaved changes! Are you sure you want to quit?"))
+
+	bool save = false;
+	bool quit = true;
+	if (!gui->is_saved())
+	{
+		int choice = fl_choice("Save changes before quit?", "Cancel", "Save", "Don't save");
+		if (choice == 0)
+		{
+			save = false;
+			quit = false;
+		}
+		else if (choice == 1)
+		{
+			save = true;
+			quit = true;
+		}
+		else if (choice == 2)
+		{
+			save = false;
+			quit = true;
+		}
+	}
+	if (save)
+		gui->save();
+	if (quit)
 		exit(0);
 }
 
@@ -91,7 +115,6 @@ void check_msg_cb(void* ptr)
 	gui->check_msgs();
 	gui->update_msg_scroll();
 	gui->update_report_scrolls();
-	gui->saved = false;
 }
 
 void process_msg_cb(Fl_Widget* wg, void* ptr)
@@ -106,7 +129,6 @@ void process_msg_cb(Fl_Widget* wg, void* ptr)
 	}
 	gui->update_msg_scroll();
 	gui->update_report_scrolls();
-	gui->saved = false;
 }
 
 void unprocess_msg_cb(Fl_Widget* wg, void* ptr)
@@ -120,7 +142,6 @@ void unprocess_msg_cb(Fl_Widget* wg, void* ptr)
 		}
 	}
 	gui->update_msg_scroll();
-	gui->saved = false;
 }
 
 void timer_cb(void* ptr)
@@ -252,18 +273,26 @@ void Gui::total_reports(Report::Type type)
 	report_collection.total(type, &comp_list, type == Report::TYPE_ENGLISH ? english_date : report_date);
 }
 
+bool Gui::is_saved()
+{
+	return report_collection.is_saved() && msg_handler.is_saved() && referral_list.is_saved();
+}
+
 void Gui::save()
 {
 	clock_t start = clock();
-	report_collection.save_all();
-	msg_handler.save(&file_manager);
+	if (!report_collection.is_saved())
+		report_collection.save_all();
+	if (!msg_handler.is_saved())
+		msg_handler.save(&file_manager);
 	clock_t save = clock() - start;
 
-	file_manager.files[FILE_REFERRALS].open(File::FILE_TYPE_OUTPUT);
-	referral_list.save(&file_manager.files[FILE_REFERRALS], report_date);
-	file_manager.files[FILE_REFERRALS].close();
-
-	saved = true;
+	if (!referral_list.is_saved())
+	{
+		file_manager.files[FILE_REFERRALS].open(File::FILE_TYPE_OUTPUT);
+		referral_list.save(&file_manager.files[FILE_REFERRALS], report_date);
+		file_manager.files[FILE_REFERRALS].close();
+	}
 }
 
 void Gui::load()
@@ -288,7 +317,6 @@ void Gui::load()
 
 	report_date = get_report_date_str(report_wday);
 	english_date = get_report_date_str(english_wday);
-	saved = true;
 }
 
 void Gui::update_report_scrolls()
@@ -559,4 +587,5 @@ void Gui::unprocess_msg(Message* msg)
 			found = true;
 		}
 	}
+	msg_handler.changed = true;
 }

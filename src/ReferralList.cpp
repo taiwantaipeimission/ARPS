@@ -2,12 +2,24 @@
 
 
 ReferralList::ReferralList()
+: changed(false)
 {
 }
 
 
 ReferralList::~ReferralList()
 {
+}
+
+bool ReferralList::is_saved()
+{
+	return !changed;
+}
+
+void ReferralList::push_back(Referral ref)
+{
+	std::vector<Referral>::push_back(ref);
+	changed = true;
 }
 
 void ReferralList::load(File* file)
@@ -19,6 +31,7 @@ void ReferralList::load(File* file)
 		ref.load(line);
 		push_back(ref);
 	}
+	changed = false;
 }
 
 void ReferralList::save(File* file, std::wstring date)
@@ -27,4 +40,5 @@ void ReferralList::save(File* file, std::wstring date)
 	{
 		file->file << it->print(date) << L"\n";
 	}
+	changed = false;
 }

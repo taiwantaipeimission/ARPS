@@ -82,6 +82,7 @@ void ReportSheet::read_stored_all(std::wistream& input)
 			}
 		}
 	}
+	changed = false;
 }
 
 void ReportSheet::print(std::wostream& output)

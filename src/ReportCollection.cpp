@@ -107,6 +107,7 @@ Report ReportCollection::transform_report(Report rep, DataOrder from, DataOrder 
 			{
 				district_name = L"UNKNOWN";
 			}
+			rep.sub_id = 0;
 			rep.sender_name = district_name;
 		}
 		if (to == ZONE)
@@ -136,6 +137,7 @@ Report ReportCollection::transform_report(Report rep, DataOrder from, DataOrder 
 			{
 				ward_name = L"UNKNOWN";
 			}
+			rep.sub_id = 0;
 			rep.sender_name = ward_name;
 		}
 		else if (to == STAKE)
@@ -149,6 +151,7 @@ Report ReportCollection::transform_report(Report rep, DataOrder from, DataOrder 
 			{
 				stake_name = L"UNKNOWN";
 			}
+			rep.sub_id = 0;
 			rep.sender_name = stake_name;
 		}
 		else if (to == MISSION)
@@ -244,7 +247,7 @@ void ReportCollection::total_reports(Report::Type type, DataOrder from, DataOrde
 
 	for (std::map<std::wstring, Report>::iterator it = reports_to_add.begin(); it != reports_to_add.end(); ++it)
 	{
-		reports[type][to].reports[it->first] = it->second;
+		reports[type][to].add_report(it->second);
 	}
 }
 
@@ -289,6 +292,20 @@ bool ReportCollection::load_all()
 		}
 	}
 	return true;
+}
+
+bool ReportCollection::is_saved()
+{
+	bool saved = true;
+	for (int i = 0; i < Report::NUM_TYPES && saved; i++)
+	{
+		for (int j = 0; j < NUM_DATA_ORDERS && saved; j++)
+		{
+			if (reports[(Report::Type)i][(DataOrder)j].changed)
+				saved = false;
+		}
+	}
+	return saved;
 }
 
 bool ReportCollection::save_all()

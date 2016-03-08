@@ -51,7 +51,6 @@ public:
 	std::wstring report_wday;
 	std::wstring english_wday;
 
-	bool saved;
 	bool auto_check;
 	double auto_check_s;
 
@@ -61,6 +60,7 @@ public:
 	void init(ModemData* modem_data_in);
 	void run();
 	void total_reports(Report::Type type);
+	bool is_saved();
 	void save();
 	void load();
 	

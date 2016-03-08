@@ -18,9 +18,12 @@ public:
 	std::vector<Message*> msgs_unhandled;
 	std::vector<Message*> msgs_handled;
 
+	bool changed;
+
 	MessageHandler();
 	virtual ~MessageHandler();
 
+	bool is_saved();
 	void save(File* file, bool handled);
 	void load(File* file, bool handled);
 	void save(FileManager* file_manager);

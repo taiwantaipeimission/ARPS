@@ -37,6 +37,7 @@ public:
 
 	void init(std::wstring global_prefix_in);
 
+	bool is_saved();
 	bool load_all();
 	bool save_all();
 	void total_all(CompList* comp_list, std::wstring date, std::wstring english_date);

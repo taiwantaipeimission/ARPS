@@ -12,6 +12,7 @@
 MessageHandler::MessageHandler()
 {
 	int x = 0;
+	changed = false;
 }
 
 
@@ -47,6 +48,7 @@ void MessageHandler::parse_messages(std::wstring raw_str, Gui* gui)
 		end = raw_str.find(L"+CMGL:", start + 1) - 1;
 		if(msg->cmgl_ids.size() > 0)
 			gui->delete_message_from_sim(msg->cmgl_ids[0]);
+		changed = true;
 	}
 
 	//Attempt to piece together concatenated messages
@@ -71,6 +73,7 @@ void MessageHandler::parse_messages(std::wstring raw_str, Gui* gui)
 			it->second[correct_order[0]]->concatenated = false;
 			msgs_unhandled.push_back(it->second[correct_order[0]]);
 			it = msgs_fragment.erase(it);
+			changed = true;
 		}
 		else
 		{
@@ -220,10 +223,13 @@ void MessageHandler::load(File* file, bool handled)
 							duplicate = true;
 					}
 					if (!duplicate)
+					{
 						target_vector->push_back(msg);
+					}
 				}
 			}
 		} while (file->file.good());
+		changed = false;
 	}
 }
 
@@ -235,6 +241,11 @@ void MessageHandler::save(File* file, bool handled)
 	}
 }
 
+bool MessageHandler::is_saved()
+{
+	return !changed;
+}
+
 void MessageHandler::save(FileManager* file_manager)
 {
 	file_manager->files[FILE_MESSAGES_HANDLED].open(File::FILE_TYPE_OUTPUT);
@@ -244,6 +255,7 @@ void MessageHandler::save(FileManager* file_manager)
 	file_manager->files[FILE_MESSAGES_UNHANDLED].open(File::FILE_TYPE_OUTPUT);
 	save(&file_manager->files[FILE_MESSAGES_UNHANDLED], false);
 	file_manager->files[FILE_MESSAGES_UNHANDLED].close();
+	changed = false;
 }
 
 void MessageHandler::load(FileManager* file_manager)
@@ -255,4 +267,5 @@ void MessageHandler::load(FileManager* file_manager)
 	file_manager->files[FILE_MESSAGES_UNHANDLED].open(File::FILE_TYPE_INPUT);
 	load(&file_manager->files[FILE_MESSAGES_UNHANDLED], false);
 	file_manager->files[FILE_MESSAGES_UNHANDLED].close();
+	changed = false;
 }
