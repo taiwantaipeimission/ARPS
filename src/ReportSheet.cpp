@@ -4,7 +4,7 @@
 #include "utility.h"
 
 ReportSheet::ReportSheet()
-	: reports()
+	: reports(), changed(false)
 {
 }
 
@@ -36,6 +36,7 @@ void ReportSheet::add_report(Report report)
 			}
 		}
 		reports[report.get_id_str()] = report;
+		changed = true;
 	}
 }
 
@@ -44,6 +45,7 @@ void ReportSheet::remove_report(std::wstring id_str)
 	if (reports.count(id_str) > 0)
 	{
 		reports.erase(id_str);
+		changed = true;
 	}
 }
 
@@ -72,7 +74,7 @@ void ReportSheet::read_stored_all(std::wistream& input)
 				Report report;
 				report.set_type(report_type);
 				report.read_processed(id_str);
-				reports[report.get_id_str()] = report;
+				add_report(report);
 			}
 			else
 			{

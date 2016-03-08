@@ -29,6 +29,24 @@ std::wstring get_browser_display_txt(std::wstring str)
 	return str;
 }
 
+void total_report_cb(Fl_Widget* wg, void* ptr)
+{
+	Gui* gui = (Gui*)ptr;
+	gui->total_reports(Report::TYPE_REGULAR);
+}
+
+void total_english_cb(Fl_Widget* wg, void* ptr)
+{
+	Gui* gui = (Gui*)ptr;
+	gui->total_reports(Report::TYPE_ENGLISH);
+}
+
+void total_baptism_source_cb(Fl_Widget* wg, void* ptr)
+{
+	Gui* gui = (Gui*)ptr;
+	gui->total_reports(Report::TYPE_BAPTISM_SOURCE);
+}
+
 void save_cb(Fl_Widget* wg, void* ptr)
 {
 	Gui* gui = (Gui*)ptr;
@@ -135,8 +153,6 @@ void Gui::init(ModemData* modem_data_in)
 	auto_check_s = 300.0f;
 	file_manager.files[FILE_OUTPUT].append = true;
 	file_manager.files[FILE_OUTPUT].open(File::FILE_TYPE_OUTPUT);
-	file_manager.files[FILE_REFERRALS].append = true;
-	file_manager.files[FILE_REFERRALS].open(File::FILE_TYPE_OUTPUT);
 
 	Fl::add_timeout(auto_check_s, timer_cb, this);
 	Fl_Window* window = new Fl_Window(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -144,6 +160,9 @@ void Gui::init(ModemData* modem_data_in)
 	{
 		menu->add("File/Save", FL_CTRL + 's', save_cb, this);
 		menu->add("File/Quit", FL_CTRL + 'q', quit_cb, this);
+		menu->add("Edit/Total reports", FL_CTRL + 'r', total_report_cb, this);
+		menu->add("Edit/Total English", FL_CTRL + 'e', total_english_cb, this);
+		menu->add("Edit/Total baptism source", FL_CTRL + 'b', total_baptism_source_cb, this);
 	}
 	Fl_Tabs* tabs = new Fl_Tabs(0, BAR_HEIGHT + SPACING, WINDOW_WIDTH, WINDOW_HEIGHT - BAR_HEIGHT - SPACING);
 	{
@@ -228,18 +247,21 @@ void Gui::run()
 	Fl::unlock();
 }
 
+void Gui::total_reports(Report::Type type)
+{
+	report_collection.total(type, &comp_list, type == Report::TYPE_ENGLISH ? english_date : report_date);
+}
+
 void Gui::save()
 {
 	clock_t start = clock();
-	report_collection.total_all(&comp_list, report_date, english_date);
-	clock_t total = clock();
 	report_collection.save_all();
 	msg_handler.save(&file_manager);
-	clock_t save = clock() - total;
+	clock_t save = clock() - start;
 
-
-
-
+	file_manager.files[FILE_REFERRALS].open(File::FILE_TYPE_OUTPUT);
+	referral_list.save(&file_manager.files[FILE_REFERRALS], report_date);
+	file_manager.files[FILE_REFERRALS].close();
 
 	saved = true;
 }
@@ -252,6 +274,10 @@ void Gui::load()
 	report_collection.init(L"../data/");
 	report_collection.load_all();
 	msg_handler.load(&file_manager);
+
+	file_manager.files[FILE_REFERRALS].open(File::FILE_TYPE_INPUT);
+	referral_list.load(&file_manager.files[FILE_REFERRALS]);
+	file_manager.files[FILE_REFERRALS].close();
 
 	file_manager.files[L"CONFIG"].open(File::FILE_TYPE_INPUT);
 	config.read_fields(&file_manager.files[L"CONFIG"]);
@@ -498,7 +524,7 @@ void Gui::process_msg(Message* msg)
 			{
 				send_message(LOST_REFERRAL_HANDLER, msg->contents);	//Send it to the recorder!
 			}
-			file_manager.files[FILE_REFERRALS].file << referral.print(report_date) << std::endl;
+			referral_list.push_back(referral);
 
 			processed_this_msg = true;
 		}

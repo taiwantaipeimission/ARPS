@@ -20,6 +20,7 @@ public:
 
 	void read_message(Message msg);
 	std::wstring print(std::wstring date);
+	void load(std::wstring line);
 
 	bool locate(CompList* list);
 	bool found_dest();

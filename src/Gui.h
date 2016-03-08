@@ -5,6 +5,7 @@
 #include "Modem.h"
 #include "ModemData.h"
 #include "ReportCollection.h"
+#include "ReferralList.h"
 
 #include <FL/Fl_Multi_Browser.H>
 
@@ -12,6 +13,9 @@
 
 std::wstring get_browser_display_txt(std::wstring str);
 
+void total_report_cb(Fl_Widget* wg, void* ptr);
+void total_english_cb(Fl_Widget* wg, void* ptr);
+void total_baptism_source_cb(Fl_Widget* wg, void* ptr);
 void save_cb(Fl_Widget* wg, void* ptr);
 void quit_cb(Fl_Widget* wg, void* ptr);
 void user_terminal_cb(Fl_Widget* wg, void* ptr);
@@ -30,6 +34,7 @@ public:
 	FileManager file_manager;
 	MessageHandler msg_handler;
 	ReportCollection report_collection;
+	ReferralList referral_list;
 	CompList comp_list;
 	ModemData* modem_data;
 	FieldCollection config;
@@ -55,6 +60,7 @@ public:
 
 	void init(ModemData* modem_data_in);
 	void run();
+	void total_reports(Report::Type type);
 	void save();
 	void load();
 	

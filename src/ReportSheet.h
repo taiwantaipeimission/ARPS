@@ -12,6 +12,9 @@ public:
 	Report::Type report_type;
 
 	std::map<std::wstring, Report> reports;
+	
+	//Does the report sheet need to be re-saved?
+	bool changed;
 
 	ReportSheet();
 	virtual ~ReportSheet();

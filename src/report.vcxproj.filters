@@ -66,6 +66,9 @@
     <ClCompile Include="ModemData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ReferralList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Modem.h">
@@ -120,6 +123,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ModemData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ReferralList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

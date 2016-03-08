@@ -56,6 +56,26 @@ std::wstring Referral::print(std::wstring date)
 	return return_val;
 }
 
+void Referral::load(std::wstring line)
+{
+	std::wstring date;
+
+	std::vector<std::wstring> tokens = tokenize(line, '\t');
+
+	if (tokens.size() >= 8)
+	{
+		int i = 0;
+		date = tokens[i++];
+		dest_zone = tokens[i++];
+		src_number = tokens[i++];
+		src_name = tokens[i++];
+		dest_geog_area = tokens[i++];
+		name = tokens[i++];
+		number = tokens[i++];
+		info = tokens[i++];
+	}
+}
+
 bool Referral::locate(CompList* list)
 {
 	std::vector<Area> potential_areas;

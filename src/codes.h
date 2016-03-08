@@ -20,7 +20,7 @@
 #define REP_KEY_BAP_TOUR L"BAP_TOUR"
 
 //Phone numbers
-#define LOST_REFERRAL_HANDLER L"+886910358944"
+#define LOST_REFERRAL_HANDLER L"+886972576566"
 
 //File paths
 #define PATH_PATH_FILE L"paths.txt"

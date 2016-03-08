@@ -300,8 +300,11 @@ bool ReportCollection::save_all()
 			//Don't bother with baptism record for district, zone, etc. since it is a text report
 			if (i != Report::TYPE_BAPTISM_RECORD || j == COMP)
 			{
-				if (report_files[(Report::Type)i][(DataOrder)j].open(File::FILE_TYPE_OUTPUT))
+				if (reports[(Report::Type)i][(DataOrder)j].changed && report_files[(Report::Type)i][(DataOrder)j].open(File::FILE_TYPE_OUTPUT))
+				{
 					reports[(Report::Type)i][(DataOrder)j].print(report_files[(Report::Type)i][(DataOrder)j].file);
+					reports[(Report::Type)i][(DataOrder)j].changed = false;
+				}
 				report_files[(Report::Type)i][(DataOrder)j].close();
 			}
 		}
