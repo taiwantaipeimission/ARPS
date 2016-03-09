@@ -281,3 +281,5 @@
 2016:3:1:3:1:SIYUAN_E	advanced	11	0	0	0
 2016:3:1:3:1:SONGSHAN_S	children	8	6	0	0
 2016:3:1:3:1:XIZHI_A_E	intermediate	7	6	1	0
+2016:3:2:3:0:BEITOU_S	ADVANCED	5	2	0	0
+2016:3:2:3:0:XINPU_S	beginner	9	8	1	0

@@ -11,7 +11,7 @@
 2016:3:1:7	TAOYUAN	+886972576590	TOUFEN_E	TAOYUAN	SYLVIA XIE XING RUI	0987232020	FORMER FROM 2013. 26, she is super nice and used to pray all the time. Only really had an htbt lesson.
 2016:3:1:7	EAST	+886972576590	TOUFEN_E	SONGSHAN	林瑞長	0985781385	 STRAIGHT HOMIE! Former from 2014. Hes christian and has had the first lesson.
 2016:3:1:7	CENTRAL	+886963938192	SONGSHAN_E	ZHONGSHAN	Lin Mu Yun	0919818235	super awesome. Younger lady. She's great. Good luck.
-2016:3:1:7	TAIZHONG_SOUTH	+886972576585	GUISHAN_E	桃源區	陳弟兄	0976552535	
+2016:3:1:7							
 2016:3:1:7	CENTRAL	+886972576156	XIZHI_B_E	WANHUA	蔡文彬	0917165863	成員回條，成員黃春錫的弟弟住在
 2016:3:1:7	TAIZHONG_SOUTH	+886972576585	GUISHAN_E	彰化市	qiu bo yi	0923576828	had a lesson, likes the atonement but busy with school
 2016:3:1:7	WEST	+886972576153	SANXIA_B	板橋區	黃先生	0935758696	 huang dx. in a rush, left his business card. 
@@ -22,8 +22,8 @@
 2016:3:1:7	NORTH	+886972576570	NEIHU_E	SHILIN	王俊雄	0915605900,0985185900	a marine who is currently serving in 大直. Asked him about his job, he was like: it's hard to explain and you dont want to know it. From gao xiong, met missionaries a long time ago. Was a investigator but he forgot all of the teachings 
 2016:3:1:7	SOUTH	+886963790682	BEITOU_S	ZHONGHE	RIC CAI	0919567515	 for zhonghe elders. met him on the street he didnt have much time so we dont know much about him but he lives in zhonghe pretty close to the chapel! Go teach him repentance and baptize him! 
 2016:3:1:7	TAIZHONG_SOUTH	+886972576594	YULI_E	GAOXIONG	 Gao hua yi	 0970326144	 christian lady, 23ish, is going to move to australia to get married. Don't know when though
-2016:3:1:7	NORTH	+886972576585	GUISHAN_E	士林區	林弟兄	0963939926	
-2016:3:1:7	NORTH	+886972576585	GUISHAN_E	士林區	林弟兄	0963939926	
+2016:3:1:7							
+2016:3:1:7							
 2016:3:1:7	ZHUNAN	+886963539987	TAO_2_E	MIAOLI	mr. Zhu	 0903549971	been to a church in gui shan, not sure on beliefs
 2016:3:1:7	SOUTH	+886972576585	GUISHAN_E	中和	Sam康	0917431955	COOL
 2016:3:1:7	TAOYUAN	+886972576585	GUISHAN_E	中壢區	黃文洪	0955888449	call at night
@@ -36,3 +36,5 @@
 2016:3:1:7	TAOYUAN	+886972576507	TUCHENG_B_S	中壢	王聰聰	0905483235	From china,here for 6 months studying. Walked onto temple square with friend (also from china). Said they'd come back to do temples tours he they had time. Interested in learning about christianity. She's really short! 
 2016:3:1:7	WEST	+886972576500	ASSISTANTS	LINKOU	蘇帥哥	0975609539	super nice guy wants to hear more!
 2016:3:1:7	CENTRAL	+886972576562	WANDA_E	SANCHONG	林弟兄	0975165701	He is a member who wants to meet with the missionaries he also really wants to be a musician!帥！
+2016:3:1:7	WEST	+886963790682	BEITOU_S	BANQIAO	CHEN陳姊妹	0975668416	TEXTHERNOW!Textfirsttoletherknowyouaremissionariesorshewontanswerherphone.Sheisanewinvestigatorforyou!Sheissetuptomeetwithyouonfriday3/11at8pm,whenyoutalktoheryoucansetupaplace.Herbaptismaldateisfor4/9.Shehasabomandcommittedtoreadandpraydaily!Contacthernow!
+2016:3:1:7	SOUTH	+886963790682	BEITOU_S	ZHONGHE	RICCAI	0919567515	forzhongheelders.methimonthestreethedidnthavemuchtimesowedontknowmuchabouthimbuthelivesinzhongheprettyclosetothechapel!Goteachhimrepentanceandbaptizehim!
