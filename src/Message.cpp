@@ -148,7 +148,7 @@ std::vector<std::wstring> encode_msg(Message* msg)
 
 
 		std::wstringstream ss;
-		ss << "00"
+		ss	<< "00"
 			<< std::hex << std::setfill(L'0') << std::setw(2) << pdu_header
 			<< "00"
 			<< std::hex << std::setfill(L'0') << std::setw(2) << num_length
@@ -160,7 +160,7 @@ std::vector<std::wstring> encode_msg(Message* msg)
 			<< std::hex << std::setfill(L'0') << std::setw(2) << all_msg_data_length;
 		if (num_concat_msgs > 1)
 		{
-			ss << "05"
+			ss	<< "05"
 				<< "00"
 				<< "03"
 				<< "ff"
@@ -285,27 +285,18 @@ bool decode_msg(Message* msg, std::wstring input, CompList* comp_list)
 	else
 		msg->sender_name = msg->sender_number;
 
-	int type_start = msg->contents.find(TYPE_KEY);
-	if (type_start != std::wstring::npos)
-	{
-		type_start = msg->contents.find_first_not_of(' ', type_start + 5);
-		int type_end = msg->contents.find(KEY_END_CHAR, type_start);
-		std::wstring type_str = msg->contents.substr(type_start, type_end - type_start);
-		if (type_str == TYPE_REPORT_STR)
-			msg->type = TYPE_REPORT;
-		else if (type_str == TYPE_ENGLISH_STR)
-			msg->type = TYPE_REPORT_ENGLISH;
-		else if (type_str == TYPE_BAPTISM_STR)
-			msg->type = TYPE_REPORT_BAPTISM;
-		else if (type_str == TYPE_REFERRAL_STR)
-			msg->type = TYPE_REFERRAL;
-		else
-			msg->type = TYPE_UNKNOWN;
-	}
+	std::wstring type_str = get_msg_key_val(msg->contents, TYPE_KEY, ':', '\n');
+
+	if (type_str == TYPE_REPORT_STR)
+		msg->type = TYPE_REPORT;
+	else if (type_str == TYPE_ENGLISH_STR)
+		msg->type = TYPE_REPORT_ENGLISH;
+	else if (type_str == TYPE_BAPTISM_STR)
+		msg->type = TYPE_REPORT_BAPTISM;
+	else if (type_str == TYPE_REFERRAL_STR)
+		msg->type = TYPE_REFERRAL;
 	else
-	{
 		msg->type = TYPE_UNKNOWN;
-	}
 
 	int cmgl_id_start = input.find(L"CMGL: ");
 	if (cmgl_id_start != std::wstring::npos)
@@ -318,6 +309,7 @@ bool decode_msg(Message* msg, std::wstring input, CompList* comp_list)
 	{
 		msg->cmgl_ids.clear();
 	}
+	return true;
 }
 
 void read_filed_msg(Message* msg, std::wstring input)

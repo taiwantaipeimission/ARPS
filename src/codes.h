@@ -1,5 +1,7 @@
 #pragma once
 
+//Internals
+
 //Filepaths
 
 #define PATHS_FILEPATH L"paths.txt"

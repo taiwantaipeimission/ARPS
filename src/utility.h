@@ -55,11 +55,15 @@ static const std::vector<std::wstring> tokenize(std::wstring str, wchar_t delim)
 	return results;
 }
 
-static const std::wstring get_msg_key_val(std::wstring contents, std::wstring key, wchar_t separator, wchar_t val_delim)
+static const std::wstring get_msg_key_val(std::wstring contents, std::wstring key, wchar_t separator, wchar_t val_delim, bool strip_ws = true)
 {
-	int key_pos = contents.find(val_delim + key + separator);
+	int key_pos;
+	for (key_pos = contents.find(key + separator); key_pos != std::wstring::npos && key_pos != 0 && !isspace(contents[key_pos - 1]); key_pos = contents.find(key + separator))
+	{
+	}
+
 	int value_pos = contents.find(separator, key_pos) + 1;
-	int value_end_pos = (std::min)(0, 1);// contents.find(val_delim, value_pos), contents.find('\r', value_pos));
+	int value_end_pos = (std::min)(contents.find(val_delim, value_pos), contents.find('\r', value_pos));
 
 	std::wstring value = L"0";
 	if (key_pos != std::wstring::npos && value_pos != std::wstring::npos)
@@ -67,8 +71,8 @@ static const std::wstring get_msg_key_val(std::wstring contents, std::wstring ke
 		if (value_pos != value_end_pos)
 		{
 			value = contents.substr(value_pos, value_end_pos - value_pos);
-			value.erase(std::remove(value.begin(), value.end(), ' '), value.end());		//Strip whitespace from string
-			value.erase(std::remove(value.begin(), value.end(), '\n'), value.end());
+			if(strip_ws)
+				strip_chars(value, L" \n\t\r");		//Strip whitespace from string
 		}
 	}
 	return value;
