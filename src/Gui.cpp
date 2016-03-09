@@ -577,6 +577,7 @@ void Gui::process_msg(Message* msg)
 				erased = true;
 			}
 		}
+		msg_handler.changed = true;
 	}
 }
 
