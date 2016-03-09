@@ -94,13 +94,21 @@ void user_terminal_cb(Fl_Widget* wg, void* ptr)
 void send_reminder_cb(Fl_Widget* wg, void* ptr)
 {
 	Gui* gui = (Gui*)ptr;
-	gui->send_reminders(false);
+	for (int i = 1; i <= gui->unreceived_reports->size(); i++)
+	{
+		if(gui->unreceived_reports->selected(i))
+			gui->send_reminder((Area*)gui->unreceived_reports->data(i));
+	}
 }
 
 void send_english_reminder_cb(Fl_Widget* wg, void*ptr)
 {
 	Gui* gui = (Gui*)ptr;
-	gui->send_reminders(true);
+	for (int i = 1; i <= gui->unreceived_english->size(); i++)
+	{
+		if(gui->unreceived_english->selected(i))
+			gui->send_reminder((Area*)gui->unreceived_english->data(i));
+	}
 }
 
 void poll_msg_cb(Fl_Widget* wg, void* ptr)
@@ -335,7 +343,7 @@ void Gui::update_report_scrolls()
 		std::wstring id_str = report_date + ID_STR_SEPARATOR + it->second.area_name;
 		if (report_collection.reports[Report::TYPE_REGULAR][ReportCollection::COMP].reports.count(id_str) > 0)
 		{
-			received_reports->add(tos(it->second.area_name).c_str());
+			received_reports->add(tos(it->second.area_name).c_str(), (void*)&it->second);
 		}
 		else if (it->second.report_required)
 		{
@@ -345,11 +353,11 @@ void Gui::update_report_scrolls()
 		id_str = english_date + ID_STR_SEPARATOR + L"0" + ID_STR_SEPARATOR + it->second.area_name;
 		if (report_collection.reports[Report::TYPE_ENGLISH][ReportCollection::COMP].reports.count(id_str) > 0)
 		{
-			received_english->add(tos(it->second.area_name).c_str());
+			received_english->add(tos(it->second.area_name).c_str(), (void*)&it->second);
 		}
-		else if (it->second.english_required)
+		else// if (it->second.english_required)
 		{
-			unreceived_english->add(tos(it->second.area_name).c_str());
+			unreceived_english->add(tos(it->second.area_name).c_str(), (void*)&it->second);
 		}
 
 	}
@@ -378,26 +386,9 @@ void Gui::update_msg_scroll()
 	handled->redraw();
 }
 
-void Gui::send_reminders(bool english)
+void Gui::send_reminder(Area* area)
 {
-	for (std::map<std::wstring, Area>::iterator ci = comp_list.areas.begin(); ci != comp_list.areas.end(); ++ci)
-	{
-		bool send_it = false;
-		if (english)
-		{
-			if (ci->first != L"" && report_collection.reports[Report::TYPE_ENGLISH][ReportCollection::COMP].reports.count(english_date + L":" + ci->second.area_name) <= 0 && ci->second.english_required)
-				send_it = true;
-		}
-		else
-		{
-			if (ci->first != L"" && report_collection.reports[Report::TYPE_REGULAR][ReportCollection::COMP].reports.count(report_date + L":" + ci->second.area_name) <= 0 && ci->second.report_required)
-				send_it = true;
-		}
-		if (send_it)
-		{
-			send_message(ci->first, L"Please remember to send in your key indicators.");
-		}
-	}
+	send_message(area->ph_number, L"Please remember to send in your key indicators.");
 }
 
 void Gui::poll_msgs()
@@ -448,20 +439,6 @@ void Gui::check_msgs()
 			msg_handler.parse_messages(modem_str, this);
 		}
 	}
-	/*if (got_user)
-	{
-		if (user_ch != 127)
-		{
-			command_stream.push(user_ch);
-		}
-		else
-		{
-			if (got_modem)
-				ret_value = false;
-			else
-				got_modem = true;
-		}
-	}*/
 }
 
 void Gui::process_msg(Message* msg)
