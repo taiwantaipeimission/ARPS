@@ -19,9 +19,12 @@ void Referral::read_message(Message msg)
 	src_name = msg.sender_name;
 
 	dest_geog_area = get_msg_key_val(msg.contents, L"PLACE", ':', '\n');
-	name = get_msg_key_val(msg.contents, L"NAME", ':', '\n');
+	name = get_msg_key_val(msg.contents, L"NAME", ':', '\n', false);
 	number = get_msg_key_val(msg.contents, L"NUMBER", ':', '\n');
-	info = get_msg_key_val(msg.contents, L"INFO", ':', '\n');
+	info = get_msg_key_val(msg.contents, L"INFO", ':', '\n', false);
+
+	strip_chars(name, L"\t\n");
+	strip_chars(info, L"\t\n");
 
 	//Convert dest_geog_area to uppercase
 	for (std::wstring::iterator it = dest_geog_area.begin(); it != dest_geog_area.end(); ++it)
@@ -30,7 +33,7 @@ void Referral::read_message(Message msg)
 
 std::wstring Referral::print(std::wstring date)
 {
-	std::wstring return_val = date + L"\t" + dest_zone + L"\t" + src_number + L"\t" + src_name + L"\t" + dest_geog_area + L"\t" + name + L"\t" + number + L"\t" + info;
+	std::wstring return_val = date + L"\t" + dest_zone + L"\t" + src_number + L"\t" + src_name + L"\t" + dest_geog_area + L"\t" + name + L"\t" + number + L"\t" + info + L"\t" + contact_state;
 	return return_val;
 }
 
@@ -40,7 +43,7 @@ void Referral::load(std::wstring line)
 
 	std::vector<std::wstring> tokens = tokenize(line, '\t');
 
-	if (tokens.size() >= 8)
+	if (tokens.size() >= 9)
 	{
 		int i = 0;
 		date = tokens[i++];
@@ -51,6 +54,7 @@ void Referral::load(std::wstring line)
 		name = tokens[i++];
 		number = tokens[i++];
 		info = tokens[i++];
+		contact_state = tokens[i++];
 	}
 }
 

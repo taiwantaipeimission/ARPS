@@ -4,7 +4,7 @@
 #include <vector>
 
 class ReferralList :
-	private std::vector<Referral>
+	public std::vector<Referral>
 {
 public:
 	

@@ -47,12 +47,25 @@ static void replace_chars(std::wstring& str, std::wstring find, std::wstring rep
 
 static const std::vector<std::wstring> tokenize(std::wstring str, wchar_t delim)
 {
-	std::wstring token;
-	std::vector<std::wstring> results;
-	std::wstringstream ss(str);
-	while (std::getline(ss, token, delim))
-		results.push_back(token);
-	return results;
+	std::vector<std::wstring> result;
+	std::wstring::iterator it = str.begin();
+	bool finished = false;
+	do
+	{
+		std::wstring::iterator begin = it;
+
+		while (it != str.end() && *it != delim)
+			++it;
+
+		result.push_back(std::wstring(begin, it));
+
+		if (it != str.end())
+			++it;
+		else
+			finished = true;
+	} while (!finished);
+
+	return result;
 }
 
 static const std::wstring get_msg_key_val(std::wstring contents, std::wstring key, wchar_t separator, wchar_t val_delim, bool strip_ws = true)

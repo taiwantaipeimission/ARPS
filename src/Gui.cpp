@@ -525,21 +525,31 @@ void Gui::process_msg(Message* msg)
 			Referral referral;
 			referral.read_message(*msg);
 			referral.locate(&comp_list);
-			if (referral.found_dest())
-			{
-				send_message(referral.dest_number, msg->contents);
-			}
-			else
-			{
-				send_message(LOST_REFERRAL_HANDLER, msg->contents);	//Send it to the recorder!
-			}
+			if (!referral.found_dest())
+				referral.dest_number = LOST_REFERRAL_HANDLER;	//Send it to the recorder!
+			send_message(referral.dest_number, msg->contents);
 			referral_list.push_back(referral);
 
 			processed_this_msg = true;
 		}
 		else if (msg->type == TYPE_UNKNOWN)
 		{
-			send_message(LOST_REFERRAL_HANDLER, msg->contents);	//Send it to the recorder!
+			bool found = false;
+			for (ReferralList::iterator it = referral_list.begin(); it != referral_list.end() && !found; ++it)
+			{
+				if (it->dest_number == msg->sender_number)
+				{
+					std::wstring result = get_msg_key_val(msg->contents, it->name, ':', '\n');
+					if (!result.empty())
+					{
+						strip_chars(result, L"\t\n");
+						it->contact_state = result;
+						found = true;
+					}
+				}
+			}
+			if(!found)
+				send_message(LOST_REFERRAL_HANDLER, msg->contents);	//Send it to the recorder!
 			processed_this_msg = true;
 		}
 	}

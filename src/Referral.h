@@ -14,6 +14,7 @@ public:
 	std::wstring name;
 	std::wstring number;
 	std::wstring info;
+	std::wstring contact_state;
 
 	Referral();
 	virtual ~Referral();
