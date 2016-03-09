@@ -355,7 +355,7 @@ void Gui::update_report_scrolls()
 		{
 			received_english->add(tos(it->second.area_name).c_str(), (void*)&it->second);
 		}
-		else// if (it->second.english_required)
+		else if (it->second.english_required)
 		{
 			unreceived_english->add(tos(it->second.area_name).c_str(), (void*)&it->second);
 		}
