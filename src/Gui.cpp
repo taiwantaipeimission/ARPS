@@ -15,6 +15,7 @@
 #include <FL/Fl_Timer.H>
 #include <FL/fl_ask.H>
 #include <FL/Fl_Multi_Browser.H>
+#include <FL/Fl_PNG_Image.H>
 
 #include <ctime>
 
@@ -183,8 +184,10 @@ void Gui::init(ModemData* modem_data_in)
 	file_manager.files[FILE_OUTPUT].append = true;
 	file_manager.files[FILE_OUTPUT].open(File::FILE_TYPE_OUTPUT);
 
+	Fl_PNG_Image* image = new Fl_PNG_Image("../res/logo.png");
 	Fl::add_timeout(auto_check_s, timer_cb, this);
-	window = new Fl_Window(WINDOW_WIDTH, WINDOW_HEIGHT);
+	window = new Fl_Window(WINDOW_WIDTH, WINDOW_HEIGHT, "ARPS");
+	window->default_icon(image);
 	Fl_Menu_Bar* menu = new Fl_Menu_Bar(0, 0, WINDOW_WIDTH, BAR_HEIGHT);
 	{
 		menu->add("File/Save", FL_CTRL + 's', save_cb, this);
