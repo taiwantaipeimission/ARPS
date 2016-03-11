@@ -21,6 +21,7 @@ void quit_cb(Fl_Widget* wg, void* ptr);
 void user_terminal_cb(Fl_Widget* wg, void* ptr);
 void send_reminder_cb(Fl_Widget* wg, void* ptr);
 void send_english_reminder_cb(Fl_Widget* wg, void* ptr);
+void send_verify_text_cb(Fl_Widget* wg, void* ptr);
 void poll_msg_cb(Fl_Widget* wg, void* ptr);
 void check_msg_cb(void* ptr);
 void process_msg_cb(Fl_Widget* wg, void* ptr);

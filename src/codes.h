@@ -22,7 +22,8 @@
 #define REP_KEY_BAP_TOUR L"BAP_TOUR"
 
 //Phone numbers
-#define LOST_REFERRAL_HANDLER L"+886972576566"
+#define LOST_REFERRAL_HANDLER L"0972576566"
+#define INT_PH_NUM_PREFIX L"+886"
 
 //File paths
 #define PATH_PATH_FILE L"paths.txt"
@@ -44,7 +45,7 @@
 #define DISPLAY_TEXT_SEPARATOR L":"
 #define ID_STR_SEPARATOR L":"
 #define COMMAND_NEWLINE_CHAR L"\r"
-#define COMMAND_ESCAPE_CHAR L"\u001A\r"		//The CTRL-Z character used at the end of PDU payload data
+#define COMMAND_ESCAPE_CHAR L"\u001A"		//The CTRL-Z character used at the end of PDU payload data
 
 //Message constants
 #define TYPE_KEY L"TYPE"

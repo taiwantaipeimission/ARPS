@@ -1,5 +1,6 @@
 #include "codes.h"
 #include "CompList.h"
+#include "utility.h"
 
 #include <iostream>
 #include <sstream>
@@ -32,20 +33,12 @@ void CompList::load(FileManager* file_manager)
 	file_manager->files[FILE_PH_LIST].open(File::FILE_TYPE_INPUT);
 	std::wstring line;
 	std::getline(file_manager->files[FILE_PH_LIST].file, line);
-
-	std::wstringstream strstr(line);
-
-	// use stream iterators to copy the stream to the vector as whitespace separated strings
-	std::istream_iterator<std::wstring, wchar_t> it(strstr);
-	std::istream_iterator<std::wstring, wchar_t> end;
-	std::vector<std::wstring> header(it, end);
+	std::vector<std::wstring> header = tokenize(line, '\t');
 
 	while (file_manager->files[FILE_PH_LIST].file.good())
 	{
 		std::getline(file_manager->files[FILE_PH_LIST].file, line);
-		std::wstringstream linestr(line);
-		std::istream_iterator<std::wstring, wchar_t> line_it(linestr);
-		std::vector<std::wstring> results(line_it, end);
+		std::vector<std::wstring> results = tokenize(line, '\t');
 		std::vector<std::wstring>::iterator results_i = results.begin();
 		std::vector<std::wstring>::iterator header_i = header.begin();
 
@@ -54,7 +47,10 @@ void CompList::load(FileManager* file_manager)
 		{
 			if (*header_i == ph_number_header)
 			{
-				area_to_add.ph_number = *results_i;
+				if (results_i->length() > 0)
+					area_to_add.ph_number = INT_PH_NUM_PREFIX + results_i->substr(1, results_i->length() - 1);
+				else
+					area_to_add.ph_number = L"";
 			}
 			else if (*header_i == area_name_header)
 			{

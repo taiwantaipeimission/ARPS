@@ -25,12 +25,12 @@
 
 static const bool is_final_line(std::wstring line)
 {
-	return line.find(L"OK\r\n") != std::wstring::npos || line.find(L"> ") != std::wstring::npos || line.find(L"ERROR") != std::wstring::npos;
+	return line.find(L"OK\r\n") != std::wstring::npos || line.find(L"> ") != std::wstring::npos || line.find(L"ERROR\r\n") != std::wstring::npos;
 }
 
 static const bool is_error(std::wstring line)
 {
-	return line.find(L"ERROR") != std::wstring::npos;
+	return line.find(L"ERROR\r\n") != std::wstring::npos;
 }
 
 Terminal::Terminal()

@@ -112,6 +112,26 @@ void send_english_reminder_cb(Fl_Widget* wg, void*ptr)
 	}
 }
 
+void send_verify_text_cb(Fl_Widget* wg, void* ptr)
+{
+	Gui* gui = (Gui*)ptr;
+	for (std::map<std::wstring, Area>::iterator it = gui->comp_list.areas.begin(); it != gui->comp_list.areas.end(); ++it)
+	{
+		if (!it->first.empty() && !it->second.district_name.empty())
+		{
+			std::wstring msg_text = L"Just checking: this phone belongs to the "
+				+ it->second.area_name
+				+ L", in the "
+				+ it->second.zone_name
+				+ L" zone, in the "
+				+ it->second.district_name
+				+ L" district.\nIf not, please call the Operations Assistant.";
+			if(it->second.area_name == L"OFFICE_E")
+				gui->send_message(it->first, msg_text);
+		}
+	}
+}
+
 void poll_msg_cb(Fl_Widget* wg, void* ptr)
 {
 	Gui* gui = (Gui*)ptr;
@@ -195,6 +215,7 @@ void Gui::init(ModemData* modem_data_in)
 		menu->add("Edit/Total reports", FL_CTRL + 'r', total_report_cb, this);
 		menu->add("Edit/Total English", FL_CTRL + 'e', total_english_cb, this);
 		menu->add("Edit/Total baptism source", FL_CTRL + 'b', total_baptism_source_cb, this);
+		menu->add("Areas/Send verification text", NULL, send_verify_text_cb, this);
 	}
 	Fl_Tabs* tabs = new Fl_Tabs(0, BAR_HEIGHT + SPACING, WINDOW_WIDTH, WINDOW_HEIGHT - BAR_HEIGHT - SPACING);
 	{

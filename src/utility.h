@@ -71,7 +71,7 @@ static const std::vector<std::wstring> tokenize(std::wstring str, wchar_t delim)
 static const std::wstring get_msg_key_val(std::wstring contents, std::wstring key, wchar_t separator, wchar_t val_delim, bool strip_ws = true)
 {
 	int key_pos;
-	for (key_pos = contents.find(key + separator); key_pos != std::wstring::npos && key_pos != 0 && !isspace(contents[key_pos - 1]); key_pos = contents.find(key + separator))
+	for (key_pos = contents.find(key + separator); key_pos != std::wstring::npos && key_pos != 0 && !isspace(contents[key_pos - 1]); key_pos = contents.find(key + separator, key_pos + 1))
 	{
 	}
 
