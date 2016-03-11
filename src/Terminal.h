@@ -16,23 +16,20 @@ class Terminal
 {
 public:
 
-	enum CommandSource
+	enum CommandResult
 	{
-		COMMAND_SOURCE_USER,
-		COMMAND_SOURCE_LOGIC
+		RESULT_SUCCESS,
+		RESULT_ERROR
 	};
 
-	static const int RESPONSE_TIMEOUT_MS = 2500;
 	static const int NO_RESPONSE_TIMEOUT_MS = 25000;
-	
-
-	CommandSource cmd_source;
 
 	Modem modem;
 	ModemData* modem_data;
 	File* output_file;
 	Gui* gui;
 
+	std::wstring cur_command;
 	std::wstring modem_reply;
 
 	bool got_user = false;

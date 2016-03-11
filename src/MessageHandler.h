@@ -29,6 +29,7 @@ public:
 	void save(FileManager* file_manager);
 	void load(FileManager* file_manager);
 
-	void MessageHandler::parse_messages(std::wstring raw_str, Gui* gui);
+	void parse_messages(std::wstring raw_str, Gui* gui);
+	void erase_message(Message* msg, bool handled);
 };
 

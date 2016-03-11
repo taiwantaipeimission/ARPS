@@ -157,3 +157,19 @@ void MessageHandler::load(FileManager* file_manager)
 	file_manager->files[FILE_MESSAGES_UNHANDLED].close();
 	changed = false;
 }
+
+void MessageHandler::erase_message(Message* msg, bool handled)
+{
+	if (handled)
+	{
+		size_t before_size = msgs_handled.size();
+		msgs_handled.erase(std::remove(msgs_handled.begin(), msgs_handled.end(), msg), msgs_handled.end());
+		changed = msgs_handled.size() != before_size;
+	}
+	else
+	{
+		size_t before_size = msgs_unhandled.size();
+		msgs_unhandled.erase(std::remove(msgs_unhandled.begin(), msgs_unhandled.end(), msg), msgs_unhandled.end());
+		changed = msgs_unhandled.size() != before_size;
+	}
+}

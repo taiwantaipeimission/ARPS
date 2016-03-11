@@ -131,6 +131,47 @@ void send_verify_text_cb(Fl_Widget* wg, void* ptr)
 	}
 }
 
+void delete_msg_cb(Fl_Widget* wg, void* ptr)
+{
+	MessageBrowser* browser = (MessageBrowser*)ptr;
+	Gui* gui = browser->gui;
+
+	int n_selected = 0;
+	for (int i = 1; i <= browser->size(); n_selected += browser->selected(i++) ? 1 : 0)
+	{ }
+
+	std::wstring prompt = L"Are you sure you want to delete " + tos(n_selected) + L" messages?";
+	if (n_selected > 0 && fl_choice(tos(prompt).c_str(), NULL, "Cancel", "OK") == 2)
+	{
+
+		std::vector<Message*>handled_to_erase;
+		std::vector<Message*>unhandled_to_erase;
+		for (int i = 1; i <= browser->size(); i++)
+		{
+			if (browser->selected(i))
+			{
+				Message* msg = (Message*)browser->data(i);
+				if (browser->handled)
+					handled_to_erase.push_back(msg);
+				else
+					unhandled_to_erase.push_back(msg);
+				//browser->remove(i - 1);
+				gui->msg_handler.changed = true;
+			}
+		}
+		for (int i = 0; i < handled_to_erase.size(); i++)
+		{
+			gui->msg_handler.erase_message(handled_to_erase[i], true);
+		}
+		for (int i = 0; i < unhandled_to_erase.size(); i++)
+		{
+			gui->msg_handler.erase_message(unhandled_to_erase[i], false);
+		}
+		//browser->redraw();
+		gui->update_msg_scroll();
+	}
+}
+
 void poll_msg_cb(Fl_Widget* wg, void* ptr)
 {
 	Gui* gui = (Gui*)ptr;
@@ -187,6 +228,55 @@ void select_all_cb(Fl_Widget* wg, void* ptr)
 
 }
 
+MessageBrowser::MessageBrowser(Gui* gui_in, bool handled_in, int x, int y, int w, int h, const char* label)
+	: Fl_Multi_Browser(x, y, w, h, label), gui(gui_in), handled(handled_in)
+{
+}
+
+int MessageBrowser::handle(int event)
+{
+	int handled = 0;
+	if (event == FL_PUSH)
+	{
+		if (Fl::event_button() == FL_RIGHT_MOUSE)
+		{
+			if (item_selected(find_item(Fl::event_y())))
+			{
+				handled = 1;
+			}
+		}
+	}
+	else if(event == FL_RELEASE)
+	{
+		if (Fl::event_button() == FL_RIGHT_MOUSE)
+		{
+			if (num_selected() > 0)
+			{
+				Fl_Menu_Item rclick_menu[] = {
+					{ "Delete", 0, delete_msg_cb, (void*)this },
+					{ 0 }
+				};
+				const Fl_Menu_Item* m = rclick_menu->popup(Fl::event_x(), Fl::event_y(), 0, 0, 0);
+				if (m)
+					m->do_callback(0, m->user_data());
+				handled = 1;
+			}
+		}
+	}
+	if(!handled)
+		handled = Fl_Multi_Browser::handle(event);
+	return handled;
+}
+
+int MessageBrowser::num_selected()
+{
+	int n_selected = 0;
+	for (int i = 1; i <= size(); n_selected += selected(i++) ? 1 : 0)
+	{
+	}
+	return n_selected;
+}
+
 Gui::Gui()
 {
 }
@@ -220,12 +310,12 @@ void Gui::init(ModemData* modem_data_in)
 	{
 		Fl_Group* msg_tab = new Fl_Group(0, 2 * BAR_HEIGHT + SPACING, WINDOW_WIDTH, WINDOW_HEIGHT, "Messages");
 		{
-			unhandled = new Fl_Multi_Browser(SPACING, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
+			unhandled = new MessageBrowser(this, false, SPACING, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
 			{
 				unhandled->box(FL_BORDER_BOX);
 				unhandled->end();
 			}
-			handled = new Fl_Multi_Browser(SPACING * 2 + WINDOW_WIDTH / 2, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
+			handled = new MessageBrowser(this, true, SPACING * 2 + WINDOW_WIDTH / 2, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
 			{
 				handled->box(FL_BORDER_BOX);
 				handled->end();

@@ -22,12 +22,23 @@ void user_terminal_cb(Fl_Widget* wg, void* ptr);
 void send_reminder_cb(Fl_Widget* wg, void* ptr);
 void send_english_reminder_cb(Fl_Widget* wg, void* ptr);
 void send_verify_text_cb(Fl_Widget* wg, void* ptr);
+void delete_msg_cb(Fl_Widget* wg, void* ptr);
 void poll_msg_cb(Fl_Widget* wg, void* ptr);
 void check_msg_cb(void* ptr);
 void process_msg_cb(Fl_Widget* wg, void* ptr);
 void unprocess_msg_cb(Fl_Widget* wg, void* ptr);
 void timer_cb(void* ptr);
 void select_all_cb(Fl_Widget* wg, void* ptr);
+
+class MessageBrowser : public Fl_Multi_Browser
+{
+public:
+	Gui* gui;
+	bool handled;
+	MessageBrowser(Gui* gui_in, bool handled_in, int x, int y, int w, int h, const char* label = 0);
+	int handle(int event);
+	int num_selected();
+};
 
 class Gui
 {
@@ -41,8 +52,8 @@ public:
 	FieldCollection config;
 
 	Fl_Window* window;
-	Fl_Multi_Browser* unhandled;
-	Fl_Multi_Browser* handled;
+	MessageBrowser* unhandled;
+	MessageBrowser* handled;
 	Fl_Multi_Browser* unreceived_reports;
 	Fl_Multi_Browser* received_reports;
 	Fl_Multi_Browser* unreceived_english;

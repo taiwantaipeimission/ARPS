@@ -133,24 +133,24 @@ bool Terminal::update(double millis)
 	{
 		if (modem_data->get_command_stream_size() > 0)
 		{
-			std::wstring command_ch_str = modem_data->pop_command_str();
-			if (command_ch_str.find(COMMAND_ESCAPE_CHAR) != std::wstring::npos)
+			cur_command = modem_data->pop_command_str();
+			if (cur_command.find(COMMAND_ESCAPE_CHAR) != std::wstring::npos)
 			{
 				ms_until_timeout = NO_RESPONSE_TIMEOUT_MS;
 				got_modem = false;
 			}
-			if (command_ch_str.find(COMMAND_NEWLINE_CHAR) != std::wstring::npos)
+			if (cur_command.find(COMMAND_NEWLINE_CHAR) != std::wstring::npos)
 			{
 				ms_until_timeout = NO_RESPONSE_TIMEOUT_MS;
 				got_modem = false;
 			}
 
-			std::string narrowed = tos(command_ch_str);
+			std::string narrowed = tos(cur_command);
 
 			size_t len = narrowed.length();
 			//if (cmd_source != COMMAND_SOURCE_USER)
-			std::wcout << command_ch_str;
-
+			std::wcout << cur_command;
+			
 
 			for (size_t i = 0; i < narrowed.length(); i++)
 			{
