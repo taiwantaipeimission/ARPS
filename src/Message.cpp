@@ -130,6 +130,7 @@ std::vector<std::wstring> encode_msg(Message* msg)
 	std::wstring remaining_contents(msg->contents);
 	std::vector<std::wstring> strings;
 
+	int msg_id = rand() % 256;
 	for (int i = 0; i < num_concat_msgs; i++)
 	{
 		int this_msg_length = std::min(remaining_contents.length(), (size_t)(MAX_MSG_LEN / 2));
@@ -160,10 +161,10 @@ std::vector<std::wstring> encode_msg(Message* msg)
 			<< std::hex << std::setfill(L'0') << std::setw(2) << all_msg_data_length;
 		if (num_concat_msgs > 1)
 		{
-			ss	<< "05"
+			ss << "05"
 				<< "00"
 				<< "03"
-				<< "ff"
+				<< std::hex << std::setfill(L'0') << std::setw(2) << msg_id
 				<< std::hex << std::setfill(L'0') << std::setw(2) << num_concat_msgs
 				<< std::hex << std::setfill(L'0') << std::setw(2) << ( i + 1);
 		}

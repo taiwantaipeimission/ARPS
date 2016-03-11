@@ -68,3 +68,4 @@
 2016:3:1:7	TAOYUAN	+886963719073	TAO_2_S	ZHONGLI	 ye xs	0916046789	he was just sitting on his bike and it was a quick contact and said the missionaries could call him. He was nice and willing to listen	
 2016:3:1:7	CENTRAL	+886963719073	TAO_2_S	TAIBEI	hong xs	0930810681	 met him on the way to the bank with 30 missionaries. He knew who the mormons were and was interested in my companion marrying his son. 	
 2016:3:1:7	ZHUNAN	+886972576155	ZHUNAN_S	HOULONG	 林	0937242915	 male	
+2016:3:1:7	ZHUNAN	+886910358944	OFFICE_E	ZHUNAN	su ama	0920403010	she lives in san jia li 	
