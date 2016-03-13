@@ -3,7 +3,7 @@
 #include "CompList.h"
 #include "MessageHandler.h"
 #include "Modem.h"
-#include "ModemData.h"
+#include "ModemInterface.h"
 #include "ReportCollection.h"
 #include "ReferralList.h"
 
@@ -48,7 +48,7 @@ public:
 	ReportCollection report_collection;
 	ReferralList referral_list;
 	CompList comp_list;
-	ModemData* modem_data;
+	ModemInterface* modem_interface;
 	FieldCollection config;
 
 	Fl_Window* window;
@@ -70,7 +70,7 @@ public:
 	Gui();
 	virtual ~Gui();
 
-	void init(ModemData* modem_data_in);
+	void init(ModemInterface* mod_int_in);
 	void run();
 	void total_reports(Report::Type type);
 	bool is_saved();

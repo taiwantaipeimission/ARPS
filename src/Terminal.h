@@ -24,7 +24,7 @@ public:
 		RESULT_ERROR
 	};
 
-	static const int NO_RESPONSE_TIMEOUT_MS = 5000;
+	static const int NO_RESPONSE_TIMEOUT_MS = 1000;
 
 	Modem modem;
 	File* output_file;
@@ -42,10 +42,8 @@ public:
 	virtual ~Terminal();
 
 	void init(File* output_file_in, Gui* gui_in);
-	bool run_command(std::wstring command);
+	std::wstring run_command(std::wstring command);
 	bool update(double millis);
 	bool isbusy();
-
-	void run();
 };
 

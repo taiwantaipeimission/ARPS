@@ -215,12 +215,12 @@ void unprocess_msg_cb(Fl_Widget* wg, void* ptr)
 
 void timer_cb(void* ptr)
 {
-	Gui* gui = (Gui*)ptr;
+	/*Gui* gui = (Gui*)ptr;
 	poll_msg_cb(NULL, ptr);
 	for (int i = 1; i <= gui->unhandled->size(); i++)
 		gui->unhandled->select(i);
 	process_msg_cb(NULL, ptr);
-	Fl::repeat_timeout(gui->auto_check_s, timer_cb, ptr);
+	Fl::repeat_timeout(gui->auto_check_s, timer_cb, ptr);*/
 }
 
 void select_all_cb(Fl_Widget* wg, void* ptr)
@@ -294,9 +294,9 @@ Gui::~Gui()
 {
 }
 
-void Gui::init(ModemData* modem_data_in)
+void Gui::init(ModemInterface* mod_int_in)
 {
-	modem_data = modem_data_in;
+	modem_interface = mod_int_in;
 	auto_check_s = 300.0f;
 	file_manager.files[FILE_OUTPUT].append = true;
 	file_manager.files[FILE_OUTPUT].open(File::FILE_TYPE_OUTPUT);
@@ -468,7 +468,7 @@ void Gui::update_report_scrolls()
 		}
 		else if (it->second.report_required)
 		{
-			unreceived_reports->add(tos(it->second.area_name).c_str());
+			unreceived_reports->add(tos(it->second.area_name).c_str(), (void*)&it->second);
 		}
 
 		id_str = english_date + ID_STR_SEPARATOR + L"0" + ID_STR_SEPARATOR + it->second.area_name;
@@ -514,11 +514,10 @@ void Gui::send_reminder(Area* area)
 
 void Gui::poll_msgs()
 {
-	modem_data->clear_command_stream();
-	modem_data->push_command(L"AT");
-	modem_data->push_command(L"ATE0");
-	modem_data->push_command(L"AT+CMGF=0");
-	modem_data->push_command(L"AT+CMGL=4");
+	modem_interface->push_command(L"AT\r");
+	modem_interface->push_command(L"ATE0\r");
+	modem_interface->push_command(L"AT+CMGF=0\r");
+	modem_interface->push_command(L"AT+CMGL=4\r");
 }
 
 void Gui::send_message(std::wstring dest_ph_number, std::wstring msg_contents)
@@ -532,12 +531,14 @@ void Gui::send_message(std::wstring dest_ph_number, std::wstring msg_contents)
 		std::wstringstream cmd;
 		cmd << L"AT+CMGS=";
 		cmd << std::dec << (int)(strings[i].length() / 2 - 1);
-		modem_data->push_command(cmd.str());
+		cmd << L"\r";
+		modem_interface->push_command(cmd.str());
 
 		cmd.str(L"");
 		cmd.clear();
 		cmd << strings[i];
-		modem_data->push_command(cmd.str(), COMMAND_ESCAPE_CHAR);
+		cmd << COMMAND_ESCAPE_CHAR;
+		modem_interface->push_command(cmd.str());
 	}
 }
 
@@ -547,14 +548,15 @@ void Gui::delete_message_from_sim(int msg_cmg_id)
 	cmd_str << std::dec << msg_cmg_id;
 	std::wstring str_to_push = L"AT+CMGD=";
 	str_to_push += cmd_str.str();
-	modem_data->push_command(str_to_push);
+	str_to_push += L"\r";
+	modem_interface->push_command(str_to_push);
 }
 
 void Gui::check_msgs()
 {
-	while (modem_data->get_modem_strs().size() > 0)
+	while (modem_interface->num_results() > 0)
 	{
-		std::wstring modem_str = modem_data->pop_modem_str();
+		std::wstring modem_str = modem_interface->pop_result().second;
 		if (modem_str.find(L"+CMGL:") != std::wstring::npos)
 		{
 			msg_handler.parse_messages(modem_str, this);

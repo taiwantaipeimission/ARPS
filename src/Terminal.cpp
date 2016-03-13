@@ -65,7 +65,6 @@ bool Terminal::update(double millis)
 
 		if (is_final_line(modem_reply))
 		{
-			Fl::awake(check_msg_cb, (void*)gui);
 			got_modem = true;
 		}
 
@@ -99,8 +98,9 @@ bool Terminal::update(double millis)
 	}
 	else if (ms_until_timeout <= 0)
 	{
-		got_modem = true;
-		timeout = true;
+		//std::wcout << L"\nTIMEOUT\n";
+		//got_modem = true;
+		//timeout = true;
 	}
 	if (ms_until_timeout > 0)
 		ms_until_timeout = max(0, ms_until_timeout - millis);
@@ -108,9 +108,8 @@ bool Terminal::update(double millis)
 	return ret_value;
 }
 
-bool Terminal::run_command(std::wstring command)
+std::wstring Terminal::run_command(std::wstring command)
 {
-	bool success = false;
 	if (got_modem)
 	{
 		ms_until_timeout = NO_RESPONSE_TIMEOUT_MS;
@@ -119,6 +118,8 @@ bool Terminal::run_command(std::wstring command)
 		cur_command = command;
 		modem_reply = L"";
 
+
+		std::wcout << command;
 		std::string narrowed = tos(command);
 		size_t len = narrowed.length();
 		for (size_t i = 0; i < narrowed.length(); i++)
@@ -139,57 +140,12 @@ bool Terminal::run_command(std::wstring command)
 		}
 
 		std::wcout << modem_reply;
-		if (!is_error(modem_reply))
-		{
-			success = true;
-		}
+		return modem_reply;
 	}
-	return success;
-}
-
-void Terminal::run()
-{
-	/*clock_t start = clock();
-	clock_t end = start;
-	while (1)
+	else
 	{
-		update(double(end - start) / (double)CLOCKS_PER_SEC * 1000.0f);
-
-		if (modem_data->get_command_stream_size() > 0)
-		{
-			cur_command = modem_data->pop_command_str();
-			if (cur_command.find(COMMAND_ESCAPE_CHAR) != std::wstring::npos)
-			{
-				ms_until_timeout = NO_RESPONSE_TIMEOUT_MS;
-				got_modem = false;
-			}
-			if (cur_command.find(COMMAND_NEWLINE_CHAR) != std::wstring::npos)
-			{
-				ms_until_timeout = NO_RESPONSE_TIMEOUT_MS;
-				got_modem = false;
-			}
-
-			std::string narrowed = tos(cur_command);
-
-			size_t len = narrowed.length();
-			//if (cmd_source != COMMAND_SOURCE_USER)
-			std::wcout << cur_command;
-
-
-			for (size_t i = 0; i < narrowed.length(); i++)
-			{
-				std::wstring str = L"";
-				str += narrowed[i];
-				written = 0;
-				for (int i = 0; i < MAX_NUM_TRIES && written == 0; i++)
-					WriteFile(modem.file, tos(str).c_str(), 1, &written, NULL);
-			}
-
-		}
-
-		start = end;
-		end = clock();
-	}*/
+		return L"";
+	}
 }
 
 bool Terminal::isbusy()

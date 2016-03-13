@@ -1,91 +1,149 @@
-2016:3:1:7	SOUTH	+886963917982	SANXIA_A	WENSHAN	eric 黃	0911918931	he's a father with a 10 year old and wife. Converted to christianity a few years ago. Has a lot of mormon friends. gave book of mormon and invited to read intro and that you guys would follow up. He was curious as to why we have it. Give his family all the xilis. 	
-2016:3:1:7	CENTRAL	+886972576584	ZHONGLI_2_E	WUGU	高崇傑Vito	0956376890	Cool guy. Bus driver and elementary school teacher. Pretty good english.	
-2016:3:1:7	CENTRAL	+886972576584	ZHONGLI_2_E	ZHONGSHAN	顏先生	0985031322	Nice guy. Pullover contact.	
-2016:3:1:7	TAOYUAN	+886972576584	ZHONGLI_2_E	DAXI	廖先生	0922178428	Nice guy. Quick contact.	
-2016:3:1:7	SOUTH	+886972576584	ZHONGLI_2_E	ZHONGHE	林先生	0919203045	Cool guy. Seemed interested in gospel and english.	
-2016:3:1:7	CENTRAL	+886972576564	SHILIN_E	三重區	施宥辰	0970358361	works in shilin at mcdonalds super cool dude. Contacted a while ago and might have already sent this. Met on the street. Had lesson. 	
-2016:3:1:7	CENTRAL	+886972576509	XIZHI_A_E	WANHUA	陳	0916736291	Met briefly willing to learn more	
-2016:3:1:7	WEST	+886972576509	XIZHI_A_E	XINZHUANG	羅家庭	0930031831	Met briefly willing to learn more	
-2016:3:1:7	WEST	+886972576509	XIZHI_A_E	SHULIN	陳芮榆	0927002301	Met briefly willing to learn more. Her boy friend is christian but she hasnt been baptized because of her family. Interested in our view on the family	
-2016:3:1:7	HUALIAN	+886972576594	YULI_E	JIAN	 Stone (shi)	 0911191861	 met in yuli visiting a friend. likes to use english, and has interest in english class and said he has a couple friends he wants to bring. Older guy but runs marathons every couple of months still. Said he would be ok if we go visit him at his house. Nice guy	
-2016:3:1:7	TAOYUAN	+886972576590	TOUFEN_E	TAOYUAN	SYLVIA XIE XING RUI	0987232020	FORMER FROM 2013. 26, she is super nice and used to pray all the time. Only really had an htbt lesson.	
-2016:3:1:7	EAST	+886972576590	TOUFEN_E	SONGSHAN	林瑞長	0985781385	 STRAIGHT HOMIE! Former from 2014. Hes christian and has had the first lesson.	
-2016:3:1:7	CENTRAL	+886963938192	SONGSHAN_E	ZHONGSHAN	Lin Mu Yun	0919818235	super awesome. Younger lady. She's great. Good luck.	
-2016:3:1:7	CENTRAL	+886972576156	XIZHI_B_E	WANHUA	蔡文彬	0917165863	成員回條，成員黃春錫的弟弟住在	
-2016:3:1:7	TAIZHONG_SOUTH	+886972576585	GUISHAN_E	彰化市	qiu bo yi	0923576828	had a lesson, likes the atonement but busy with school	
-2016:3:1:7	WEST	+886972576153	SANXIA_B	板橋區	黃先生	0935758696	 huang dx. in a rush, left his business card. 	
-2016:3:1:7	EAST	+886972576520	JILONG_A_E	內湖	盧台平	0952322524	 A members dad.  He works from 7pm to 7am, so call in the afternoon.  He needs someone to 關心他.	
-2016:3:1:7	OFFICE	+886972576543	SHILIN_S	DAAN	田文珊	0987006249	is christian,met her near the temple,she goes to a church near the temple.invite her to do a tour!	
-2016:3:1:7	CENTRAL	+886972576543	SHILIN_S	DAAN	彭竹均	0925921388	met her outside the temple,she was in a rush but is interested in doing a temple tour. Her sister is a member in the states	
-2016:3:1:7	EAST	+886972576570	NEIHU_E	XIZHI	陳建宏	0917245000	quick contact while he was chilling in the dahu park. Buddhist, willing to meet 	
-2016:3:1:7	NORTH	+886972576570	NEIHU_E	SHILIN	王俊雄	0915605900,0985185900	a marine who is currently serving in 大直. Asked him about his job, he was like: it's hard to explain and you dont want to know it. From gao xiong, met missionaries a long time ago. Was a investigator but he forgot all of the teachings 	
-2016:3:1:7	SOUTH	+886963790682	BEITOU_S	ZHONGHE	RIC CAI	0919567515	 for zhonghe elders. met him on the street he didnt have much time so we dont know much about him but he lives in zhonghe pretty close to the chapel! Go teach him repentance and baptize him! 	
-2016:3:1:7	TAIZHONG_SOUTH	+886972576594	YULI_E	GAOXIONG	 Gao hua yi	 0970326144	 christian lady, 23ish, is going to move to australia to get married. Don't know when though	
-2016:3:1:7	ZHUNAN	+886963539987	TAO_2_E	MIAOLI	mr. Zhu	 0903549971	been to a church in gui shan, not sure on beliefs	
-2016:3:1:7	SOUTH	+886972576585	GUISHAN_E	中和	Sam康	0917431955	COOL	
-2016:3:1:7	TAOYUAN	+886972576585	GUISHAN_E	中壢區	黃文洪	0955888449	call at night	
-2016:3:1:7	CENTRAL	+886972576588	TAO_1_B	中正區	傅小姐	0937060236	 nice christian lady, said if she had time she would be willing net in tao yuan! 	
-2016:3:1:7	EAST	+886963539987	TAO_2_E	內湖區	吳益民	0975564499	super cool! He's there studying, back in 桃園 for the weekend. Lived in utah as an exchange student, and went to church every week while he was there. He is currently buddhist. Smokes.	
-2016:3:1:7	HUALIAN	+886963539987	TAO_2_E	花蓮	張碧桃	0922847290	visited tao yuan when we met her, super nice, little bit older 	
-2016:3:1:7	SOUTH	+886972576585	GUISHAN_E	YONGHE	陳Johnny	0982458508	call at night	
-2016:3:1:7	WEST	+886972576585	GUISHAN_E	板橋區	王Angela	0978981714	she is a dancer! Teach her the gospel!	
-2016:3:1:7	TAOYUAN	+886972576585	GUISHAN_E	中壢區	邱姊妹	0917119255	moms leg is not good, she loves her family. And Willing to be baptized! 	
-2016:3:1:7	TAOYUAN	+886972576507	TUCHENG_B_S	中壢	王聰聰	0905483235	From china,here for 6 months studying. Walked onto temple square with friend (also from china). Said they'd come back to do temples tours he they had time. Interested in learning about christianity. She's really short! 	
-2016:3:1:7	WEST	+886972576500	ASSISTANTS	LINKOU	蘇帥哥	0975609539	super nice guy wants to hear more!	
-2016:3:1:7	CENTRAL	+886972576562	WANDA_E	SANCHONG	林弟兄	0975165701	He is a member who wants to meet with the missionaries he also really wants to be a musician!帥！	
-2016:3:1:7	WEST	+886963790682	BEITOU_S	BANQIAO	CHEN陳姊妹	0975668416	TEXTHERNOW!Textfirsttoletherknowyouaremissionariesorshewontanswerherphone.Sheisanewinvestigatorforyou!Sheissetuptomeetwithyouonfriday3/11at8pm,whenyoutalktoheryoucansetupaplace.Herbaptismaldateisfor4/9.Shehasabomandcommittedtoreadandpraydaily!Contacthernow!	
-2016:3:1:7	SOUTH	+886963790682	BEITOU_S	ZHONGHE	RICCAI	0919567515	forzhongheelders.methimonthestreethedidnthavemuchtimesowedontknowmuchabouthimbuthelivesinzhongheprettyclosetothechapel!Goteachhimrepentanceandbaptizehim!	
-2016:3:1:7	TAOYUAN	+886912576044	BADE_A_E	中壢	張小姐	0928603609	superawesomehadafriendbringhertochurchsorrythisiscominglater	
-2016:3:1:7	CENTRAL	+886972576539	TUCHENG_E	中山區	李培瑋	0939207797	Young,marriedwoman.Worksin土城asanurse.Supernice.Jobisbusy.Doesn'tbelieveingodafterseeingsomanytragediesathospital.Quicklessonaboutchallengesandbaptism	
-2016:3:1:7		+886910358944	OFFICE_E	OFFICE	BASED	>9000	dopest of dope	有興趣
-2016:3:1:7		+886910358944	OFFICE_E	OFFICE	BASED 羅斯福	>9000	dopest of dope	有興趣
-2016:3:1:7		+886972576554	NORTH_JINHUA_E	ENGLISHWARD	Eileen	0978408415	From Hondoras, 天主教, study business, 六月畢業, had a lesson. Was super nice.	
-2016:3:1:7	SOUTH	+886963917870	LUODONG_A_E	YONGHE	邱惠雯 Grace	0963338678	 Really amazing investigator, recently moved, 看完'd the book of mormon. Chubby and friendly	
-2016:3:1:7		+886972576504	XINPU_E	ENGLISHWARD.	 risa	0978925090	 very cool. Interested in improving her english. She is japanese. Happily married with a little girl. Taught first lesson. She has had family problems in her youth, wants to prevent that in her family. 	
-2016:3:1:7	WEST	+886972576504	XINPU_E	XINZHUANG	kelly	0928242706	looking for a church. Came to english class twice. Very cool	
-2016:3:1:7	SOUTH	+886972576538	YULI_S	ZHONGHE	 WEI YI LING	0939643169	 Cute girl. Mom lives in yuli. Said one prayer to bless her moms health. 	
-2016:3:1:7	HUALIAN	+886972576538	YULI_S	GUANGFU	 Wang Qiu Ling	0977055757	 Cute girl. Grown up catholic. Had a lesson with her. Often goes to hualien.	
-2016:3:1:7	WEST	+886972576587	SANCHONG_S	樹林區	黃先生	0960674791	contacted in a park. Girlfriend lives in our area (sanchong) but we didn't talk to her. He is currently looking for work. 	
-2016:3:1:7	NORTH	+886972576547	TIANMU_E	BALI	MARTIN GUO	0936510420	 said he really likes Jesus. and rap. Good English.	
-2016:3:1:7	SOUTH	+886972576546	BEITOU_E	XINDIAN	forgot	0963639761	really nice lady, works in beitou on weekends, have had 2 lessons with her so set her up and get a new i	
-2016:3:1:7	EAST	+886972576155	ZHUNAN_S	YILAN	LIN	0983812036	 met during english boarding	
-2016:3:1:7	ZHUNAN	+886972576155	ZHUNAN_S	ZHUNAN	 YANG2 JUN4 WEI1	0975795637	 elders area	
-2016:3:1:7	ZHUNAN	+886972576155	ZHUNAN_S	XIANGSHAN	wang tongxue	0	gugu8558 yahoo.com	
-2016:3:1:7	ZHUNAN	+886972576155	ZHUNAN_S	ZHUNAN	 DONG3 HUAN4 CHENG2	0912695106	tonyrool4 gmail.com. Elders area by zhunan guozhong 	
-2016:3:1:7	ZHUNAN	+886972576155	ZHUNAN_S	ZHUNAN	CHEN2 YOU3 YI2	0958527608	 also elder's area by zhunan guoxiao	
-2016:3:1:7		+886972576155	ZHUNAN_S	DONGHAI	 SIMON WANG2	0955476177	 student at taizhong donghai college	
-2016:3:1:7		+886963873617	XIZHI_S	基陸	Kelly	0917253388	Has a friend who is a member in 高雄 wants to learn more and is interested in English!	
-2016:3:1:7	SOUTH	+886972576155	ZHUNAN_S	XINDIAN	steve huang	098657883	 lives in taipei and works hard. Is 48 but his kids are 7 and twelve. English is very good. Just visited a friend in taoyuan. Really a gentle kind man :) 	
-2016:3:1:7		+886963790682	BEITOU_S	SALAWAKMALAYSIA	 CAI XIANSHENG	+60168633232	 MET IN TAIWAN. NOT CHRISTIAN BUT INTERESTED IN LEARNING MORE :)	
-2016:3:1:7	TAIZHONG_SOUTH	+886972576592	JIAN_E	MINXIONG	呂小姐	0931983338	met missionaries on the train a while ago, she seems really nice.	
-2016:3:1:7	ZHUNAN	+886972576155	ZHUNAN_S	TOUFEN	ZHUANG1 YU4 DA2	0963098621	tongxue	
-2016:3:1:7	TAIZHONG_SOUTH	+886972576155	ZHUNAN_S	ZHANGHUA	WENG RONG SHU	0970143291	female	
-2016:3:1:7	SOUTH	+886972576155	ZHUNAN_S	ZHONGHE	LI3 XIANSHENG	0987901608	 	
-2016:3:1:7	SOUTH	+886972576155	ZHUNAN_S	ZHONGHE	 HUANG XIANSHENG	0909142032		
-2016:3:1:7	ZHUNAN	+886972576155	ZHUNAN_S	TOUFEN	shi2 mei3 bi4	0987823252	met while english boarding and she is christian!	
-2016:3:1:7		+886972576155	ZHUNAN_S	GU3XIAN1ZHENG3	 gu3	037596203		
-2016:3:1:7	TAOYUAN	+886963719073	TAO_2_S	ZHONGLI	Sun xs	0975651270	 really short contact, but he was super great! One time he fixed the chapels AC for his job! He said he had interest in learning more about the church.	
-2016:3:1:7	TAOYUAN	+886963719073	TAO_2_S	ZHONGLI	 ye xs	0916046789	he was just sitting on his bike and it was a quick contact and said the missionaries could call him. He was nice and willing to listen	
-2016:3:1:7	CENTRAL	+886963719073	TAO_2_S	TAIBEI	hong xs	0930810681	 met him on the way to the bank with 30 missionaries. He knew who the mormons were and was interested in my companion marrying his son. 	
-2016:3:1:7	ZHUNAN	+886972576155	ZHUNAN_S	HOULONG	 林	0937242915	 male	
-2016:3:1:7	ZHUNAN	+886910358944	OFFICE_E	ZHUNAN	su ama	0920403010	she lives in san jia li 	
-2016:3:1:7	TAIZHONG_SOUTH	+886972576569	XINZHU_1_S	DALI	 wu Chen xuan	0936261999	 he is so prepared. He came to visit his mom for a month in xin zhu for guo nian. His mom is our investigator and invited him to meet with us. He has been taught lessons 1-3 and word of wisdom. He has been to church twice. Please call him asap! He is so awesome! We love him so take care of him. Get him baptized! He is a student at zhong xin college.	
-2016:3:1:7	TAIZHONG_SOUTH	+886963731605	TAO_3_E	東石鄉	吳欣儀	0920018411	She is a former investigator and is really nice. Her address is 東石鄉，文港村173之21號。she knows you will call. Knew a member named 陳韋翰弟兄。Keep on keepin' on!	
-2016:3:1:7		+886972576517	DANFENG_E	ENGLISHWARD	 Chris	0981869343	 From africa. Calling potentials, set up and talk to him for a minute at the 丹鳳 mrt (near his house). Said he will come to church on sunday and wants to bring friends.	
-2016:3:1:7	TAOYUAN	+886972576517	DANFENG_E	桃園	Alvin	0916164991	業務員. Potential we call that moved.	
-2016:3:1:7	TAIZHONG_SOUTH	+886912576044	BADE_A_E	雲林	劉dx	0930057351	met him when we helped him to move. A member's uncle in taoyuan ward. #謝謝 	
-2016:3:1:7	SOUTH	+886965008522	LUZHOU_B_E	中和區	Kass	0952215977	Kass is a mom of 3 and is super ready to learn. She feels the pressures of being a mom and wants to use the gospel to bless her family. Weekdays woul be better. She WILL be baptized.	
-2016:3:1:7	EAST	+886972576506	XINBAN_E	YILAN	Blake 謝	0910164946	dj at one point. Twenties. Good english  	
-2016:3:1:7	TAOYUAN	+886972576506	XINBAN_E	BADE	吳	0939758232	STUDENT GIRL 	
-2016:3:1:7	TAOYUAN	+886972576506	XINBAN_E	BADE	林	0927798760	STUDENT GIRL 	
-2016:3:1:7	CENTRAL	+886972576506	XINBAN_E	XINYI	蔡帥哥	0925008801	高二	
-2016:3:1:7	CENTRAL	+886972576517	DANFENG_E	萬華區	逄堡鈞 Jin	0965515668	 Had a lesson, invited to 4/16洗禮, but rejected the date. Super cool, studies 設計, 大三.	
-2016:3:1:7	CENTRAL	+886912576049	BADE_S	TAIPEI	huang dx	0982650393	八德 member referral. The members name is 潘dx and said his friend is buddhist but to give him a try! 	
-2016:3:1:7	EAST	+886963917870	LUODONG_A_E	蘇澳鎮	陳明傑	0985390462		
-2016:3:1:7	CENTRAL	+886963938192	SONGSHAN_E	WANHUA	Rosa Chen	0982869492	She is SO AWESOME! Please contact her. She set for next Tuesday at 8:00 at the XiMenDing Exit 6 but can change if needed. We told you would contact her in the next day. Good luck!	
-2016:3:1:7	NORTH	+886963938192	SONGSHAN_E	DANSHUI	Liu Fang1 Yu3	0936729828	Super awesome! She is Christian but after hearing God have us living prophet she wants to meet. Currently set us for Tuesday at 11:30. You have to set up the place. She is good to meet on Wednesday too if needed. Night time not good.	
-2016:3:1:7	SOUTH	+886963938192	SONGSHAN_E	ZHONGHE	廖先生	0921804888	works here in songshan give him a call .	
-2016:3:1:7	WEST	+886963938192	SONGSHAN_E	BANQIAO	蔡帥哥	0917668386	quick contact cool guy 	
-2016:3:1:7	EAST	+886963917870	LUODONG_A_E	宜蘭市	許景婷	0972503556		
-2016:3:1:7	EAST	+886963917870	LUODONG_A_E	宜蘭市	李	0921130084		
-2016:3:1:7		+886972576517	DANFENG_E	ENGLISHWARD	Miles	0965722724	Quick contact, from africa. Been in taiwan for 4 months, met missionaries his first month here.	
+2016:3:2:7	SOUTH	+886963917982	SANXIA_A	WENSHAN	eric 黃	0911918931	he's a father with a 10 year old and wife. Converted to christianity a few years ago. Has a lot of mormon friends. gave book of mormon and invited to read intro and that you guys would follow up. He was curious as to why we have it. Give his family all the xilis. 	
+2016:3:2:7	CENTRAL	+886972576584	ZHONGLI_2_E	WUGU	高崇傑Vito	0956376890	Cool guy. Bus driver and elementary school teacher. Pretty good english.	
+2016:3:2:7	CENTRAL	+886972576584	ZHONGLI_2_E	ZHONGSHAN	顏先生	0985031322	Nice guy. Pullover contact.	
+2016:3:2:7	TAOYUAN	+886972576584	ZHONGLI_2_E	DAXI	廖先生	0922178428	Nice guy. Quick contact.	
+2016:3:2:7	SOUTH	+886972576584	ZHONGLI_2_E	ZHONGHE	林先生	0919203045	Cool guy. Seemed interested in gospel and english.	
+2016:3:2:7	CENTRAL	+886972576564	SHILIN_E	三重區	施宥辰	0970358361	works in shilin at mcdonalds super cool dude. Contacted a while ago and might have already sent this. Met on the street. Had lesson. 	
+2016:3:2:7	CENTRAL	+886972576509	XIZHI_A_E	WANHUA	陳	0916736291	Met briefly willing to learn more	
+2016:3:2:7	WEST	+886972576509	XIZHI_A_E	XINZHUANG	羅家庭	0930031831	Met briefly willing to learn more	
+2016:3:2:7	WEST	+886972576509	XIZHI_A_E	SHULIN	陳芮榆	0927002301	Met briefly willing to learn more. Her boy friend is christian but she hasnt been baptized because of her family. Interested in our view on the family	
+2016:3:2:7	HUALIAN	+886972576594	YULI_E	JIAN	 Stone (shi)	 0911191861	 met in yuli visiting a friend. likes to use english, and has interest in english class and said he has a couple friends he wants to bring. Older guy but runs marathons every couple of months still. Said he would be ok if we go visit him at his house. Nice guy	
+2016:3:2:7	TAOYUAN	+886972576590	TOUFEN_E	TAOYUAN	SYLVIA XIE XING RUI	0987232020	FORMER FROM 2013. 26, she is super nice and used to pray all the time. Only really had an htbt lesson.	
+2016:3:2:7	EAST	+886972576590	TOUFEN_E	SONGSHAN	林瑞長	0985781385	 STRAIGHT HOMIE! Former from 2014. Hes christian and has had the first lesson.	
+2016:3:2:7	CENTRAL	+886963938192	SONGSHAN_E	ZHONGSHAN	Lin Mu Yun	0919818235	super awesome. Younger lady. She's great. Good luck.	
+2016:3:2:7	CENTRAL	+886972576156	XIZHI_B_E	WANHUA	蔡文彬	0917165863	成員回條，成員黃春錫的弟弟住在	
+2016:3:2:7	TAIZHONG_SOUTH	+886972576585	GUISHAN_E	彰化市	qiu bo yi	0923576828	had a lesson, likes the atonement but busy with school	
+2016:3:2:7	WEST	+886972576153	SANXIA_B	板橋區	黃先生	0935758696	 huang dx. in a rush, left his business card. 	
+2016:3:2:7	EAST	+886972576520	JILONG_A_E	內湖	盧台平	0952322524	 A members dad.  He works from 7pm to 7am, so call in the afternoon.  He needs someone to 關心他.	
+2016:3:2:7	OFFICE	+886972576543	SHILIN_S	DAAN	田文珊	0987006249	is christian,met her near the temple,she goes to a church near the temple.invite her to do a tour!	
+2016:3:2:7	CENTRAL	+886972576543	SHILIN_S	DAAN	彭竹均	0925921388	met her outside the temple,she was in a rush but is interested in doing a temple tour. Her sister is a member in the states	
+2016:3:2:7	EAST	+886972576570	NEIHU_E	XIZHI	陳建宏	0917245000	quick contact while he was chilling in the dahu park. Buddhist, willing to meet 	
+2016:3:2:7	NORTH	+886972576570	NEIHU_E	SHILIN	王俊雄	0915605900,0985185900	a marine who is currently serving in 大直. Asked him about his job, he was like: it's hard to explain and you dont want to know it. From gao xiong, met missionaries a long time ago. Was a investigator but he forgot all of the teachings 	
+2016:3:2:7	SOUTH	+886963790682	BEITOU_S	ZHONGHE	RIC CAI	0919567515	 for zhonghe elders. met him on the street he didnt have much time so we dont know much about him but he lives in zhonghe pretty close to the chapel! Go teach him repentance and baptize him! 	
+2016:3:2:7	TAIZHONG_SOUTH	+886972576594	YULI_E	GAOXIONG	 Gao hua yi	 0970326144	 christian lady, 23ish, is going to move to australia to get married. Don't know when though	
+2016:3:2:7	ZHUNAN	+886963539987	TAO_2_E	MIAOLI	mr. Zhu	 0903549971	been to a church in gui shan, not sure on beliefs	
+2016:3:2:7	SOUTH	+886972576585	GUISHAN_E	中和	Sam康	0917431955	COOL	
+2016:3:2:7	TAOYUAN	+886972576585	GUISHAN_E	中壢區	黃文洪	0955888449	call at night	
+2016:3:2:7	CENTRAL	+886972576588	TAO_1_B	中正區	傅小姐	0937060236	 nice christian lady, said if she had time she would be willing net in tao yuan! 	
+2016:3:2:7	EAST	+886963539987	TAO_2_E	內湖區	吳益民	0975564499	super cool! He's there studying, back in 桃園 for the weekend. Lived in utah as an exchange student, and went to church every week while he was there. He is currently buddhist. Smokes.	
+2016:3:2:7	HUALIAN	+886963539987	TAO_2_E	花蓮	張碧桃	0922847290	visited tao yuan when we met her, super nice, little bit older 	
+2016:3:2:7	SOUTH	+886972576585	GUISHAN_E	YONGHE	陳Johnny	0982458508	call at night	
+2016:3:2:7	WEST	+886972576585	GUISHAN_E	板橋區	王Angela	0978981714	she is a dancer! Teach her the gospel!	
+2016:3:2:7	TAOYUAN	+886972576585	GUISHAN_E	中壢區	邱姊妹	0917119255	moms leg is not good, she loves her family. And Willing to be baptized! 	
+2016:3:2:7	TAOYUAN	+886972576507	TUCHENG_B_S	中壢	王聰聰	0905483235	From china,here for 6 months studying. Walked onto temple square with friend (also from china). Said they'd come back to do temples tours he they had time. Interested in learning about christianity. She's really short! 	
+2016:3:2:7	WEST	+886972576500	ASSISTANTS	LINKOU	蘇帥哥	0975609539	super nice guy wants to hear more!	
+2016:3:2:7	CENTRAL	+886972576562	WANDA_E	SANCHONG	林弟兄	0975165701	He is a member who wants to meet with the missionaries he also really wants to be a musician!帥！	
+2016:3:2:7	WEST	+886963790682	BEITOU_S	BANQIAO	CHEN陳姊妹	0975668416	TEXTHERNOW!Textfirsttoletherknowyouaremissionariesorshewontanswerherphone.Sheisanewinvestigatorforyou!Sheissetuptomeetwithyouonfriday3/11at8pm,whenyoutalktoheryoucansetupaplace.Herbaptismaldateisfor4/9.Shehasabomandcommittedtoreadandpraydaily!Contacthernow!	
+2016:3:2:7	SOUTH	+886963790682	BEITOU_S	ZHONGHE	RICCAI	0919567515	forzhongheelders.methimonthestreethedidnthavemuchtimesowedontknowmuchabouthimbuthelivesinzhongheprettyclosetothechapel!Goteachhimrepentanceandbaptizehim!	
+2016:3:2:7	TAOYUAN	+886912576044	BADE_A_E	中壢	張小姐	0928603609	superawesomehadafriendbringhertochurchsorrythisiscominglater	
+2016:3:2:7	CENTRAL	+886972576539	TUCHENG_E	中山區	李培瑋	0939207797	Young,marriedwoman.Worksin土城asanurse.Supernice.Jobisbusy.Doesn'tbelieveingodafterseeingsomanytragediesathospital.Quicklessonaboutchallengesandbaptism	
+2016:3:2:7		+886910358944	OFFICE_E	OFFICE	BASED	>9000	dopest of dope	有興趣
+2016:3:2:7		+886910358944	OFFICE_E	OFFICE	BASED 羅斯福	>9000	dopest of dope	有興趣
+2016:3:2:7		+886972576554	NORTH_JINHUA_E	ENGLISHWARD	Eileen	0978408415	From Hondoras, 天主教, study business, 六月畢業, had a lesson. Was super nice.	
+2016:3:2:7	SOUTH	+886963917870	LUODONG_A_E	YONGHE	邱惠雯 Grace	0963338678	 Really amazing investigator, recently moved, 看完'd the book of mormon. Chubby and friendly	
+2016:3:2:7		+886972576504	XINPU_E	ENGLISHWARD.	 risa	0978925090	 very cool. Interested in improving her english. She is japanese. Happily married with a little girl. Taught first lesson. She has had family problems in her youth, wants to prevent that in her family. 	
+2016:3:2:7	WEST	+886972576504	XINPU_E	XINZHUANG	kelly	0928242706	looking for a church. Came to english class twice. Very cool	
+2016:3:2:7	SOUTH	+886972576538	YULI_S	ZHONGHE	 WEI YI LING	0939643169	 Cute girl. Mom lives in yuli. Said one prayer to bless her moms health. 	
+2016:3:2:7	HUALIAN	+886972576538	YULI_S	GUANGFU	 Wang Qiu Ling	0977055757	 Cute girl. Grown up catholic. Had a lesson with her. Often goes to hualien.	
+2016:3:2:7	WEST	+886972576587	SANCHONG_S	樹林區	黃先生	0960674791	contacted in a park. Girlfriend lives in our area (sanchong) but we didn't talk to her. He is currently looking for work. 	
+2016:3:2:7	NORTH	+886972576547	TIANMU_E	BALI	MARTIN GUO	0936510420	 said he really likes Jesus. and rap. Good English.	
+2016:3:2:7	SOUTH	+886972576546	BEITOU_E	XINDIAN	forgot	0963639761	really nice lady, works in beitou on weekends, have had 2 lessons with her so set her up and get a new i	
+2016:3:2:7	EAST	+886972576155	ZHUNAN_S	YILAN	LIN	0983812036	 met during english boarding	
+2016:3:2:7	ZHUNAN	+886972576155	ZHUNAN_S	ZHUNAN	 YANG2 JUN4 WEI1	0975795637	 elders area	
+2016:3:2:7	ZHUNAN	+886972576155	ZHUNAN_S	XIANGSHAN	wang tongxue	0	gugu8558 yahoo.com	
+2016:3:2:7	ZHUNAN	+886972576155	ZHUNAN_S	ZHUNAN	 DONG3 HUAN4 CHENG2	0912695106	tonyrool4 gmail.com. Elders area by zhunan guozhong 	
+2016:3:2:7	ZHUNAN	+886972576155	ZHUNAN_S	ZHUNAN	CHEN2 YOU3 YI2	0958527608	 also elder's area by zhunan guoxiao	
+2016:3:2:7		+886972576155	ZHUNAN_S	DONGHAI	 SIMON WANG2	0955476177	 student at taizhong donghai college	
+2016:3:2:7		+886963873617	XIZHI_S	基陸	Kelly	0917253388	Has a friend who is a member in 高雄 wants to learn more and is interested in English!	
+2016:3:2:7	SOUTH	+886972576155	ZHUNAN_S	XINDIAN	steve huang	098657883	 lives in taipei and works hard. Is 48 but his kids are 7 and twelve. English is very good. Just visited a friend in taoyuan. Really a gentle kind man :) 	
+2016:3:2:7		+886963790682	BEITOU_S	SALAWAKMALAYSIA	 CAI XIANSHENG	+60168633232	 MET IN TAIWAN. NOT CHRISTIAN BUT INTERESTED IN LEARNING MORE :)	
+2016:3:2:7	TAIZHONG_SOUTH	+886972576592	JIAN_E	MINXIONG	呂小姐	0931983338	met missionaries on the train a while ago, she seems really nice.	
+2016:3:2:7	ZHUNAN	+886972576155	ZHUNAN_S	TOUFEN	ZHUANG1 YU4 DA2	0963098621	tongxue	
+2016:3:2:7	TAIZHONG_SOUTH	+886972576155	ZHUNAN_S	ZHANGHUA	WENG RONG SHU	0970143291	female	
+2016:3:2:7	SOUTH	+886972576155	ZHUNAN_S	ZHONGHE	LI3 XIANSHENG	0987901608	 	
+2016:3:2:7	SOUTH	+886972576155	ZHUNAN_S	ZHONGHE	 HUANG XIANSHENG	0909142032		
+2016:3:2:7	ZHUNAN	+886972576155	ZHUNAN_S	TOUFEN	shi2 mei3 bi4	0987823252	met while english boarding and she is christian!	
+2016:3:2:7		+886972576155	ZHUNAN_S	GU3XIAN1ZHENG3	 gu3	037596203		
+2016:3:2:7	TAOYUAN	+886963719073	TAO_2_S	ZHONGLI	Sun xs	0975651270	 really short contact, but he was super great! One time he fixed the chapels AC for his job! He said he had interest in learning more about the church.	
+2016:3:2:7	TAOYUAN	+886963719073	TAO_2_S	ZHONGLI	 ye xs	0916046789	he was just sitting on his bike and it was a quick contact and said the missionaries could call him. He was nice and willing to listen	
+2016:3:2:7	CENTRAL	+886963719073	TAO_2_S	TAIBEI	hong xs	0930810681	 met him on the way to the bank with 30 missionaries. He knew who the mormons were and was interested in my companion marrying his son. 	
+2016:3:2:7	ZHUNAN	+886972576155	ZHUNAN_S	HOULONG	 林	0937242915	 male	
+2016:3:2:7	ZHUNAN	+886910358944	OFFICE_E	ZHUNAN	su ama	0920403010	she lives in san jia li 	
+2016:3:2:7	TAIZHONG_SOUTH	+886972576569	XINZHU_1_S	DALI	 wu Chen xuan	0936261999	 he is so prepared. He came to visit his mom for a month in xin zhu for guo nian. His mom is our investigator and invited him to meet with us. He has been taught lessons 1-3 and word of wisdom. He has been to church twice. Please call him asap! He is so awesome! We love him so take care of him. Get him baptized! He is a student at zhong xin college.	
+2016:3:2:7	TAIZHONG_SOUTH	+886963731605	TAO_3_E	東石鄉	吳欣儀	0920018411	She is a former investigator and is really nice. Her address is 東石鄉，文港村173之21號。she knows you will call. Knew a member named 陳韋翰弟兄。Keep on keepin' on!	
+2016:3:2:7		+886972576517	DANFENG_E	ENGLISHWARD	 Chris	0981869343	 From africa. Calling potentials, set up and talk to him for a minute at the 丹鳳 mrt (near his house). Said he will come to church on sunday and wants to bring friends.	
+2016:3:2:7	TAOYUAN	+886972576517	DANFENG_E	桃園	Alvin	0916164991	業務員. Potential we call that moved.	
+2016:3:2:7	TAIZHONG_SOUTH	+886912576044	BADE_A_E	雲林	劉dx	0930057351	met him when we helped him to move. A member's uncle in taoyuan ward. #謝謝 	
+2016:3:2:7	SOUTH	+886965008522	LUZHOU_B_E	中和區	Kass	0952215977	Kass is a mom of 3 and is super ready to learn. She feels the pressures of being a mom and wants to use the gospel to bless her family. Weekdays woul be better. She WILL be baptized.	
+2016:3:2:7	EAST	+886972576506	XINBAN_E	YILAN	Blake 謝	0910164946	dj at one point. Twenties. Good english  	
+2016:3:2:7	TAOYUAN	+886972576506	XINBAN_E	BADE	吳	0939758232	STUDENT GIRL 	
+2016:3:2:7	TAOYUAN	+886972576506	XINBAN_E	BADE	林	0927798760	STUDENT GIRL 	
+2016:3:2:7	CENTRAL	+886972576506	XINBAN_E	XINYI	蔡帥哥	0925008801	高二	
+2016:3:2:7	CENTRAL	+886972576517	DANFENG_E	萬華區	逄堡鈞 Jin	0965515668	 Had a lesson, invited to 4/16洗禮, but rejected the date. Super cool, studies 設計, 大三.	
+2016:3:2:7	CENTRAL	+886912576049	BADE_S	TAIPEI	huang dx	0982650393	八德 member referral. The members name is 潘dx and said his friend is buddhist but to give him a try! 	
+2016:3:2:7	EAST	+886963917870	LUODONG_A_E	蘇澳鎮	陳明傑	0985390462		
+2016:3:2:7	CENTRAL	+886963938192	SONGSHAN_E	WANHUA	Rosa Chen	0982869492	She is SO AWESOME! Please contact her. She set for next Tuesday at 8:00 at the XiMenDing Exit 6 but can change if needed. We told you would contact her in the next day. Good luck!	
+2016:3:2:7	NORTH	+886963938192	SONGSHAN_E	DANSHUI	Liu Fang1 Yu3	0936729828	Super awesome! She is Christian but after hearing God have us living prophet she wants to meet. Currently set us for Tuesday at 11:30. You have to set up the place. She is good to meet on Wednesday too if needed. Night time not good.	
+2016:3:2:7	SOUTH	+886963938192	SONGSHAN_E	ZHONGHE	廖先生	0921804888	works here in songshan give him a call .	
+2016:3:2:7	WEST	+886963938192	SONGSHAN_E	BANQIAO	蔡帥哥	0917668386	quick contact cool guy 	
+2016:3:2:7	EAST	+886963917870	LUODONG_A_E	宜蘭市	許景婷	0972503556		
+2016:3:2:7	EAST	+886963917870	LUODONG_A_E	宜蘭市	李	0921130084		
+2016:3:2:7		+886972576517	DANFENG_E	ENGLISHWARD	Miles	0965722724	Quick contact, from africa. Been in taiwan for 4 months, met missionaries his first month here.	
+2016:3:2:7	EAST	+886972576593	TAIDONG_2_E	松山區	王家庭	0227641423		
+2016:3:2:7	CENTRAL	+886972576526	XINZHU_1_E	三重	汪君玲	0918888958	Met on exchanges in 蘆洲, but lives in 三重, call her ASAP, she has serious marital problems and we taught her how to pray and she asked God whether or not to get a divorce. CALL HER ASAP. Peace	
+2016:3:2:7	XINZHU	+886972576377	TAO_4_S	XINZHU	 Senthil	0988237794	  He is from India, here studying for his doctoral degree. He was not really interested, but gave us his number.  He does not have any religious background.	
+2016:3:2:7	NORTH	+886972576500	ASSISTANTS	BEITOU	寒先生	0910019738	SUPER NICE GUY  SPIRIT SCREAMED AT Me to talk to him! Call him up	
+2016:3:2:7	HUALIAN	+886972576594	YULI_E	花蓮	謝先生	0934149623	dad.  Has a young daughter	
+2016:3:2:7	WEST	+886972576509	XIZHI_A_E	XINZHUANG	李育恩	0976083113	super nice la from another church. Feels lost in life. Likes to hear about Gods love.	
+2016:3:2:7	WEST	+886972576546	BEITOU_E	XINZHUANG	李弟兄	0987435097	likes mario, goes to church in 士林區	
+2016:3:2:7	WEST	+886972576548	XINDIAN_E	板橋	林ya hui	0982014441or0982531432thisoneisbetter	 super awesome contact, before we starting talking about church she asked if the church was open today because she wanted to become a christian. Seems like she has some life problems. Really humble. Call her up  she needs help. Also i love you elder robinson and or clawson 	
+2016:3:2:7	CENTRAL	+886972576377	TAO_4_S	SANCHONG	 LI JUN XIAN	0955506228	  He has no religious background.	
+2016:3:2:7	NORTH	+886972576377	TAO_4_S	BEITOU	 MR.HUANG 	0955042169	 lives near shipai station.  He has gone to a Christian church before.	
+2016:3:2:7		+886972576548	XINDIAN_E	盧洲	mr.謝	0975973965	really quick contact not much about him	
+2016:3:2:7	NORTH	+886972576564	SHILIN_E	天母區	葉先生	0936759942	文化大學. Very busy, has met missionaries several times. Had a very fast lesson	
+2016:3:2:7	TAIZHONG_SOUTH	+886972576518	XINDIAN_S	GAOXIONG	zhen jm	0928698657	0	
+2016:3:2:7		+886963572706	SONGSHAN_S	鶯歌	 王月媕 Wang yue er	0955474307	she is a member referral she did a temple tour yesterday and then came to fhe tonight she has tons of questions her sister is a songshan member and she remembers seeing sister missionaries in yingge this past summer her address is 鶯桃路188號 she is super in your face but a nice lady she will set up but you will patience 加油	
+2016:3:2:7	SOUTH	+886972576561	XINAN_S	YONGHE	huang dx	0976562789	 set a 4/16 baptism taught how to pray smoking when met hipster style	
+2016:3:2:7	TAOYUAN	+886965113871	JINHUA_S	桃園	張寶元	0	超棒，有五歲小孩，有時候會來台北上課	
+2016:3:2:7		+886972576559	WANDA_S	JAPAN	YOKO ye jm	monkey203 gmail.com	she is moving to japan for work  wants to live there and hear about the gospel. Go to church! :) speaks chinese 	
+2016:3:2:7	SOUTH	+886972576559	WANDA_S	XINDIAN	林 XS 	0975891993	 ray him outside a 7 and said a prayer for him. He listened and accepted to be baptized! Didn't set a date with him though. He prayed. Wants to meet with missionaries to prepare for baptism. :) 	
+2016:3:2:7	CENTRAL	+886972576559	WANDA_S	DAAN	hong xj	0988281414	 60year old woman she loves christian churches. But wont change but wants to hear more! Her husband might fan dui tho zhong xiao mrt? 	
+2016:3:2:7	CENTRAL	+886963790682	BEITOU_S	SANCHONG	BAI ZHONG YI	0972857772	member referral! This is one of our members zhang jm's clients. He used to be a big drinker but is now doing a lot better. She said he is awesome and just needs the gospel! 	
+2016:3:2:7		+886963938192	SONGSHAN_E	DAZHI	BORIS LIN	0922669551	told him you would give him a call tonight. He can only answer at night cuz if is in college. We met him in XinYiQu. Super cool. Lived in Canada for two years.	
+2016:3:2:7	NORTH	+886972576559	WANDA_S	DANSHUI	 xu dx	0978727626	 met at a red light. Hurry and got his number he is christian and interested in learning more! :) 	
+2016:3:2:7	SOUTH	+886965113871	JINHUA_S	中和	王致傑	0973585033	男人，住院中，可能很快會出院，喜歡漂亮的女生	
+2016:3:2:7	TAOYUAN	+886965113871	JINHUA_S	桃園	張寶元	0968462590	超棒，有五歲小孩，有時候會來台北上課	
+2016:3:2:7	CENTRAL	+886972576511	ZHONGHE_2_E	DAAN	cai dixiong	0989659756		
+2016:3:2:7	CENTRAL	+886972576526	XINZHU_1_E	萬華區	楊弟兄	0972224777	former, last met missionaries in 2012. Called him, recently had a baby	
+2016:3:2:7	TAOYUAN	+886972576582	ZHUBEI_3_E	龜山區	許tyrone	0978390147	 he bought us 豆花 and had a lesson with him. Super cool. Goes to school over there but lives here in 竹北 and said he is really busy. Try to set up a time at night 吧	
+2016:3:2:7	TAOYUAN	+886972576584	ZHONGLI_2_E	BADE	武夢蝶	0979651718	Cool lady; Christian; really nice	
+2016:3:2:7	WEST	+886972939022	BADE_B_E	BANQIAO	林 Tony 	0972906715	 his girlfriend lives it ying ge so if was just visiting. Hes about 18. Had a lesson	
+2016:3:2:7	TAOYUAN	+886972576584	ZHONGLI_2_E	TAOYUAN_AREA	賴小姐	0976758510	Cool lady;趕時間去工作	
+2016:3:2:7	WEST	+886972576562	WANDA_E	XINZHUANG	Claire shi 	0953693380	she has been to english class once and church once in wan da met a few days ago has a date for 4/23 or middle of april. Has a friend on a mission. Works by taipei station. Loves the atmosphere in church. 26 years old. Super fun personality！she is awesome!	
+2016:3:2:7	SOUTH	+886963771573	+886963771573	ZHONGHE	XIE YI JIA	0921707004	 temple tour referral. She is 30 yrs old	
+2016:3:2:7	SOUTH	+886963771573	+886963771573	XINDIAN	LIAO LIN LAN	0928507336	 temple tour referral. She is 53 yrs old	
+2016:3:2:7	CENTRAL	+886963771573	+886963771573	WANHUA	 SHEN HUI NI	0919395510	 Temple tour referral. She is 25 yrs old 	
+2016:3:2:7	TAIZHONG_SOUTH	+886972576540	ZHUBEI_2_S	FENGYUAN	劉子豪	0975151771	16 years old. Former, not taught much. No info why dropped. Interested. Call on saturday or sunday	
+2016:3:2:7	SOUTH	+886963771573	+886963771573	ZHONGHE	 XIE JI CHEN	0933112264	 temple tour referral. He is 24 yrs old 	
+2016:3:2:7	TAIZHONG_SOUTH	+886963771573	+886963771573	TAIZHONG	 ZHONG SHU HUA 	0927493448	 taibei temple tour referral. She is 50 yrs old 	
+2016:3:2:7	TAIZHONG_SOUTH	+886963771573	+886963771573	WUFENG	 YANG CHEN ZHONG	0978596696	 taibei temple tour referral. He is 17 yrs old. 	
+2016:3:2:7	WEST	+886972576562	WANDA_E	BANQIAO	Hunting xie	0978260269(or0998260269sorryhardtoread.)	she has graduated from college and is likely in her 20s  	
+2016:3:2:7	WEST	+886972576562	WANDA_E	XINZHUANG	李小姐	0922774385	26years old 	
+2016:3:2:7	NORTH	+886972576560	LONGTAN_E	北投	蔡嘉和	0980972191	 soldier 32yrs old has an la friend named roger(林dx) english class two yes's and saturdays台北市北投區尊賢街229號4樓  has young children	
+2016:3:2:7	TAOYUAN	+886972576560	LONGTAN_E	平鎮區	劉而才	0976214969	 soldier 24yrs old has an la friend named roger (林dx) english class 2 yes's saturdays 	
+2016:3:2:7	EAST	+886963761862	ZHUNAN_ZL	松山區	Wayne 	0953792959	Really cool dad of one daughter in college, humble, willing to meet. 3rd # of phone #(5) could be a 0,8, or 6  met in zhunan!	
+2016:3:2:7		+886963771573	+886963771573	TAIZHONGDONGSHI	 HUANG YU RU	0938122710	 taibei temple tour member referral. She is 26 yrs old. She is the member's classmate and has a baby. The member is Shen pei jin:0921572119 and she is from songshan.	
+2016:3:2:7	TAIZHONG_SOUTH	+886963771573	+886963771573	TAINAN	 LING YANG	0915760809	 taibei temple tour member referral. She is 28 yrs old. Her older sister referred her; who is ling wei: 0970932154 she is 26 and is from tainan 1st ward	
+2016:3:2:7	WEST	+886963771573	+886963771573	BANQIAO	 WU HUI ZHU	0955693661	 temple tour member referral. She is 44 yrs old. The member said to try to teach her about our life's purpose (POS) and the member is lu jin xuan: 0909266782 	
+2016:3:2:7	TAOYUAN	+886963771573	+886963771573	ZHONGLI	 YANG CHANG ZHEN	0919622852	 temple tour member referral. He is 44 yrs old. The member is from tainan she says he  has interest in getting to know more about the church. The member is Wu jin kai:0958786122	
+2016:3:2:7	SOUTH	+886963771573	+886963771573	XINDIAN	 LI SU YUN	0903625569	 temple tour member referral. She is 53 yrs old and her older sister Li su zhen referred her. (02)22421641	
+2016:3:2:7	EAST	+886963790682	BEITOU_S	NEIHU	ZHANG JM	0917216368	 MET REALLY QUICK SEEMED PRETTY NICE AND COOL	
+2016:3:2:7	NORTH	+886972576559	WANDA_S	DANSHUI	mr. Xu. Jason 	0925800273	met on the mrt. He is interested in learning more about jesus christ:) 	
+2016:3:2:7	WEST	+886972576559	WANDA_S	BANQIAO	MR. SUN?	0922706180	 cool guy. Not sure what his name was. Very quick contact. Wants to learn more. 	
+2016:3:2:7	WEST	+886972576559	WANDA_S	BANQIAO	chang 	0917194605	 text only. Met a little bit ago interested. 	
+2016:3:2:7		+886972576559	WANDA_S	WINNI	0	0		
+2016:3:2:7	CENTRAL	+886972576559	WANDA_S	SANCHONG	mr. Lin 林	0921978263	text him about church and meeting with missionaries. He wants to know more about the restoration. 	
+2016:3:2:7	CENTRAL	+886972576542	LUZHOU_A_E	信義區	劉柏成	0984348370	lives near 西門町同學likes running	
+2016:3:2:7	TAIZHONG_SOUTH	+886963771573	+886963771573	FENGYUAN	 ZHANG SHU YOU	0932611741	 taibei temple member referral. She actually went with her friend to church this morning and thought it was pretty good!:)	
+2016:3:2:7	NORTH	+886965113871	JINHUA_S	淡水	董姐妹	0	非常好，有兩個小孩，邀請她帶小孩來英文班，和聖餐聚會，已給他摩爾門經	
+2016:3:2:7	NORTH	+886965113871	JINHUA_S	淡水	董姐妹	0903988928	非常好，有兩個小孩，邀請她帶小孩來英文班，和聖餐聚會，已給他摩爾門經	

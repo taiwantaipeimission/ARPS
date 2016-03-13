@@ -26,3 +26,15 @@
 2016:3:1:7:0:YONGHE_S	0	0	2	5	0	1	1
 2016:3:1:7:1:JINGXIN_E	劉文鳳BP_DATE:march5CONF_DATE:march6WARD:景新HOME_ADDR:臺北市文山區景興路153巷31號1樓PH_NUM:0972272322BAP_SOURCE:51=Missionarycontacting2=LAreferral3=RCreferral4=Activememberreferral5=Englishclass6=Templetour	march5CONF_DATE:march6WARD:景新HOME_ADDR:臺北市文山區景興路153巷31號1樓PH_NUM:0972272322BAP_SOURCE:51=Missionarycontacting2=LAreferral3=RCreferral4=Activememberreferral5=Englishclass6=Templetour	march6WARD:景新HOME_ADDR:臺北市文山區景興路153巷31號1樓PH_NUM:0972272322BAP_SOURCE:51=Missionarycontacting2=LAreferral3=RCreferral4=Activememberreferral5=Englishclass6=Templetour	景新HOME_ADDR:臺北市文山區景興路153巷31號1樓PH_NUM:0972272322BAP_SOURCE:51=Missionarycontacting2=LAreferral3=RCreferral4=Activememberreferral5=Englishclass6=Templetour	臺北市文山區景興路153巷31號1樓PH_NUM:0972272322BAP_SOURCE:51=Missionarycontacting2=LAreferral3=RCreferral4=Activememberreferral5=Englishclass6=Templetour	0972272322BAP_SOURCE:51=Missionarycontacting2=LAreferral3=RCreferral4=Activememberreferral5=Englishclass6=Templetour	51
 2016:3:1:7:1:TAIDONG_3_E	陽秀英	3/5/2016	3/6/2016	台車三	台車市志航路二段2號	0983506653	1
+2016:3:2:7:0:BADE_A_E	0	0	0	0	0	2	2
+2016:3:2:7:0:DANFENG_E	0	0	3	1	0	1	1
+2016:3:2:7:0:HUALIAN_1_S	0	0	2	1	0	1	1
+2016:3:2:7:0:NORTH_JINHUA_E	1	0	3	7	1	1	1
+2016:3:2:7:0:XINZHU_3_E	0	1	2	3	0	1	1
+2016:3:2:7:0:ZHONGLI_2_E	0	0	0	3	0	1	1
+2016:3:2:7:0:ZHUNAN_S	0	0	2	5	0	1	1
+2016:3:2:7:1:BADE_A_E	林杰杭	3/12	3/13	八德	福國北街72號5樓之1	0962002946	1
+2016:3:2:7:1:DANFENG_E	廖以昕	3/10	3/13	丹鳳支會	林口	0956353390	1
+2016:3:2:7:1:HUALIAN_1_S	lichongwei李崇偉	3.12.2016	3.13.2016	hualian1st	吉安鄉建昌路180號3樓	0983987667	1
+2016:3:2:7:1:XINZHU_3_E	陳嘉翔	11March	13March	竹三	0	0	0
+2016:3:2:7:1:ZHONGLI_2_E	Ruby廖倩汝	3/12/2016	3/13/2016	中壢第二支會	桃園市平鎮區貿一路116號	0981417346	5

@@ -17,6 +17,7 @@
 #include "codes.h"
 #include "Gui.h"
 #include "Terminal.h"
+#include "ModemInterface.h"
 
 
 
@@ -50,17 +51,16 @@ public:
 	}
 };
 
-std::queue<std::wstring> commands;
-bool quit = false;
-
-void run_terminal_func(Terminal* terminal)
+void run_terminal_func(Terminal* terminal, Gui* gui, ModemInterface* mod_interface, bool* quit)
 {
-	while (!quit || commands.size() > 0)
+	while (!*quit || mod_interface->num_commands() > 0)
 	{
-		if (!terminal->isbusy() && commands.size() > 0)
+		if (!terminal->isbusy() && mod_interface->num_commands() > 0)
 		{
-			terminal->run_command(commands.front());
-			commands.pop();
+			wstring cmd = mod_interface->pop_command();
+			wstring result = terminal->run_command(cmd);
+			mod_interface->push_result(cmd, result);
+			Fl::awake(check_msg_cb, (void*)gui);
 		}
 	}
 }
@@ -71,28 +71,39 @@ int main(int argc, char **argv)
 	{
 		Gui gui;
 		Terminal terminal;
-		//ModemData modem_data;
+		ModemInterface modem_interface;
+		bool quit = false;
 
-		//gui.load();
-		//gui.init(&modem_data);
+		
+
 		terminal.init(&gui.file_manager.files[L"OUTPUT"], &gui);
 
-		std::thread terminal_thread(run_terminal_func, &terminal);
+		std::thread terminal_thread(run_terminal_func, &terminal, &gui, &modem_interface, &quit);
+
 		std::wstring cmd;
+		std::getline(std::wcin, cmd);
+		while (cmd != L"q")
+		{
+		replace_chars(cmd, L";", COMMAND_ESCAPE_CHAR);
+		modem_interface.push_command(cmd + L"\r");
+		std::getline(std::wcin, cmd);
+		}
+
+		gui.load();
+		gui.init(&modem_interface);
+
+		gui.run();
+		/*std::wstring cmd;
 		std::getline(std::wcin, cmd);
 		while (cmd != L"q")
 		{
 			replace_chars(cmd, L";", COMMAND_ESCAPE_CHAR);
 			commands.push(cmd + L"\r");
 			std::getline(std::wcin, cmd);
-		}
+		}*/
 		quit = true;
 
 		terminal_thread.join();
-
-		//std::thread terminal_thread(run_terminal_func, &terminal);
-		//gui.run();
-		//terminal_thread.join();
 	}
 	catch(std::exception e)
 	{
