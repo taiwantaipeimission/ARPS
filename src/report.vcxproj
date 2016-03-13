@@ -84,6 +84,7 @@
     <ClCompile Include="MessageHandler.cpp" />
     <ClCompile Include="Modem.cpp" />
     <ClCompile Include="ModemData.cpp" />
+    <ClCompile Include="ModemInterface.cpp" />
     <ClCompile Include="Referral.cpp" />
     <ClCompile Include="ReferralList.cpp" />
     <ClCompile Include="Reminder.cpp" />
@@ -104,6 +105,7 @@
     <ClInclude Include="MessageHandler.h" />
     <ClInclude Include="Modem.h" />
     <ClInclude Include="ModemData.h" />
+    <ClInclude Include="ModemInterface.h" />
     <ClInclude Include="Referral.h" />
     <ClInclude Include="ReferralList.h" />
     <ClInclude Include="Reminder.h" />

@@ -42,9 +42,8 @@ Terminal::~Terminal()
 {
 }
 
-void Terminal::init(ModemData* modem_data_in, File* output_file_in, Gui* gui_in)
+void Terminal::init(File* output_file_in, Gui* gui_in)
 {
-	modem_data = modem_data_in;
 	output_file = output_file_in;
 	gui = gui_in;
 
@@ -62,16 +61,12 @@ bool Terminal::update(double millis)
 	{
 		std::wstring modem_ch_null = L"";
 		modem_ch_null += modem_ch;
-		std::wcout << modem_ch_null;
-		output_file->file << modem_ch_null;
 		modem_reply += modem_ch_null;
 
 		if (is_final_line(modem_reply))
 		{
-			modem_data->push_modem_str(modem_reply);
 			Fl::awake(check_msg_cb, (void*)gui);
 			got_modem = true;
-			modem_reply = L"";
 		}
 
 		if (ms_until_timeout > 0)
@@ -85,41 +80,10 @@ bool Terminal::update(double millis)
 	if (_kbhit())
 	{
 		user_ch = _getch();
-		got_user = true;
-	}
-	else
-	{
-		got_user = false;
-	}
-
-	/*if (cmd_source == COMMAND_SOURCE_LOGIC)
-	{
-		if (got_modem)
-		{
-			if(command_stream.size() <= 0)	//eof
-			{
-				if (modem_str.find(L"+CMGL:") != std::wstring::npos)
-				{
-					msg_handler->parse_messages(this, modem_str, comp_list);
-				}
-				if (command_stream.size() <= 0)
-					ret_value = false;
-			}
-			modem_str = L"";
-		}
-	}
-	else if (cmd_source == COMMAND_SOURCE_USER)
-	{
-		
-		
-	}*/
-	if (got_user)
-	{
 		if (user_ch != 127)
 		{
 			std::wstring user_str;
 			user_str += user_ch;
-			modem_data->push_command(user_str, L"");
 		}
 		else
 		{
@@ -131,6 +95,66 @@ bool Terminal::update(double millis)
 	}
 	if (got_modem)
 	{
+		ret_value = false;
+	}
+	else if (ms_until_timeout <= 0)
+	{
+		got_modem = true;
+		timeout = true;
+	}
+	if (ms_until_timeout > 0)
+		ms_until_timeout = max(0, ms_until_timeout - millis);
+
+	return ret_value;
+}
+
+bool Terminal::run_command(std::wstring command)
+{
+	bool success = false;
+	if (got_modem)
+	{
+		ms_until_timeout = NO_RESPONSE_TIMEOUT_MS;
+		got_modem = false;
+		timeout = false;
+		cur_command = command;
+		modem_reply = L"";
+
+		std::string narrowed = tos(command);
+		size_t len = narrowed.length();
+		for (size_t i = 0; i < narrowed.length(); i++)
+		{
+			std::wstring str = L"";
+			str += narrowed[i];
+			written = 0;
+			for (int i = 0; i < MAX_NUM_TRIES && written == 0; i++)
+				WriteFile(modem.file, tos(str).c_str(), 1, &written, NULL);
+		}
+
+		clock_t start = clock();
+		clock_t end = start;
+		while (update(double(end - start) / (double)CLOCKS_PER_SEC * 1000.0f))
+		{
+			start = end;
+			end = clock();
+		}
+
+		std::wcout << modem_reply;
+		if (!is_error(modem_reply))
+		{
+			success = true;
+		}
+	}
+	return success;
+}
+
+void Terminal::run()
+{
+	/*clock_t start = clock();
+	clock_t end = start;
+	while (1)
+	{
+		update(double(end - start) / (double)CLOCKS_PER_SEC * 1000.0f);
+
 		if (modem_data->get_command_stream_size() > 0)
 		{
 			cur_command = modem_data->pop_command_str();
@@ -150,7 +174,7 @@ bool Terminal::update(double millis)
 			size_t len = narrowed.length();
 			//if (cmd_source != COMMAND_SOURCE_USER)
 			std::wcout << cur_command;
-			
+
 
 			for (size_t i = 0; i < narrowed.length(); i++)
 			{
@@ -162,30 +186,14 @@ bool Terminal::update(double millis)
 			}
 
 		}
-		else
-		{
-			ret_value = false;
-		}
-	}
-	else if (ms_until_timeout <= 0)
-	{
-		//std::wcout << L"TIMEOUT\n";
-		//got_modem = true;
-	}
-	if (ms_until_timeout > 0)
-		ms_until_timeout = max(0, ms_until_timeout - millis);
 
-	return ret_value;
-}
-
-void Terminal::run()
-{
-	clock_t start = clock();
-	clock_t end = start;
-	while (1)
-	{
-		update(double(end - start) / (double)CLOCKS_PER_SEC * 1000.0f);
 		start = end;
 		end = clock();
-	}
+	}*/
+}
+
+bool Terminal::isbusy()
+{
+	std::lock_guard<std::mutex> guard(mu);
+	return !got_modem;
 }

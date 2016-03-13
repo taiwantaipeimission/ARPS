@@ -263,6 +263,14 @@ int MessageBrowser::handle(int event)
 			}
 		}
 	}
+	else if (event == FL_SHORTCUT)
+	{
+		if (Fl::event_key() == FL_CTRL + 'a')
+		{
+			for (int i = 1; i <= size(); i++)
+				select(i);
+		}
+	}
 	if(!handled)
 		handled = Fl_Multi_Browser::handle(event);
 	return handled;

@@ -50,9 +50,19 @@ public:
 	}
 };
 
+std::queue<std::wstring> commands;
+bool quit = false;
+
 void run_terminal_func(Terminal* terminal)
 {
-	terminal->run();
+	while (!quit || commands.size() > 0)
+	{
+		if (!terminal->isbusy() && commands.size() > 0)
+		{
+			terminal->run_command(commands.front());
+			commands.pop();
+		}
+	}
 }
 
 int main(int argc, char **argv)
@@ -61,15 +71,28 @@ int main(int argc, char **argv)
 	{
 		Gui gui;
 		Terminal terminal;
-		ModemData modem_data;
+		//ModemData modem_data;
 
-		gui.load();
-		gui.init(&modem_data);
-		terminal.init(&modem_data, &gui.file_manager.files[L"OUTPUT"], &gui);
+		//gui.load();
+		//gui.init(&modem_data);
+		terminal.init(&gui.file_manager.files[L"OUTPUT"], &gui);
 
 		std::thread terminal_thread(run_terminal_func, &terminal);
-		gui.run();
+		std::wstring cmd;
+		std::getline(std::wcin, cmd);
+		while (cmd != L"q")
+		{
+			replace_chars(cmd, L";", COMMAND_ESCAPE_CHAR);
+			commands.push(cmd + L"\r");
+			std::getline(std::wcin, cmd);
+		}
+		quit = true;
+
 		terminal_thread.join();
+
+		//std::thread terminal_thread(run_terminal_func, &terminal);
+		//gui.run();
+		//terminal_thread.join();
 	}
 	catch(std::exception e)
 	{
