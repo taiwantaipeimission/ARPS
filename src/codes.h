@@ -68,3 +68,24 @@
 #define BUTTON_WIDTH 100
 #define CHECKBOX_WIDTH 25
 #define SPACING 5
+
+//Console colors
+enum
+{
+	CC_BLACK = 0,
+	CC_DARK_BLUE = 1,
+	CC_DARK_GREEN = 2,
+	CC_TEAL = 3,
+	CC_DARK_RED = 4,
+	CC_DARK_PURPLE = 5,
+	CC_GOLD = 6,
+	CC_GREY = 7,
+	CC_DARK_WHITE = 8,
+	CC_BLUE = 9,
+	CC_GREEN = 10,
+	CC_CYAN = 11,
+	CC_RED = 12,
+	CC_PURPLE = 13,
+	CC_YELLOW = 14,
+	CC_WHITE = 15
+};

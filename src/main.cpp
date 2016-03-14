@@ -74,35 +74,14 @@ int main(int argc, char **argv)
 		ModemInterface modem_interface;
 		bool quit = false;
 
-		
-
 		terminal.init(&gui.file_manager.files[L"OUTPUT"], &gui);
-
 		std::thread terminal_thread(run_terminal_func, &terminal, &gui, &modem_interface, &quit);
-
-		std::wstring cmd;
-		std::getline(std::wcin, cmd);
-		while (cmd != L"q")
-		{
-		replace_chars(cmd, L";", COMMAND_ESCAPE_CHAR);
-		modem_interface.push_command(cmd + L"\r");
-		std::getline(std::wcin, cmd);
-		}
 
 		gui.load();
 		gui.init(&modem_interface);
-
 		gui.run();
-		/*std::wstring cmd;
-		std::getline(std::wcin, cmd);
-		while (cmd != L"q")
-		{
-			replace_chars(cmd, L";", COMMAND_ESCAPE_CHAR);
-			commands.push(cmd + L"\r");
-			std::getline(std::wcin, cmd);
-		}*/
+		
 		quit = true;
-
 		terminal_thread.join();
 	}
 	catch(std::exception e)

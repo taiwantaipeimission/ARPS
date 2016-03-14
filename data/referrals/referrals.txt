@@ -147,3 +147,20 @@
 2016:3:2:7	TAIZHONG_SOUTH	+886963771573	+886963771573	FENGYUAN	 ZHANG SHU YOU	0932611741	 taibei temple member referral. She actually went with her friend to church this morning and thought it was pretty good!:)	
 2016:3:2:7	NORTH	+886965113871	JINHUA_S	淡水	董姐妹	0	非常好，有兩個小孩，邀請她帶小孩來英文班，和聖餐聚會，已給他摩爾門經	
 2016:3:2:7	NORTH	+886965113871	JINHUA_S	淡水	董姐妹	0903988928	非常好，有兩個小孩，邀請她帶小孩來英文班，和聖餐聚會，已給他摩爾門經	
+2016:3:2:7	XINZHU	+886972576548	XINDIAN_E	新竹	ada    feng ting jie	0958069866	 full lesson 1 on the street. Bout 21 She is already christian, her mom is too but in a different church. She was really willing to listen to what we had to say. Lives close to the chapel in xin zhu. Didn't bring up baptism. 	
+2016:3:2:7		+886965113871	JINHUA_S	華聖頓DC	JOhn	+13012840610	非常棒！他爸爸是台灣人，但他只會講英文。他非常棒，爸爸一直講話，他還幫忙說好，我們一起做禱告	
+2016:3:2:7		+886965113871	JINHUA_S	中和南勢角站	曹妙雪	0920120749	很棒	
+2016:3:2:7	WEST	+886965113871	JINHUA_S	板橋	王世宏	0933823105	超級棒！小時候會來我們教會學英文，非常願意禱告並和傳教士見面	
+2016:3:2:7		+886972576566	OFFICE_E	盧洲	mr.謝	0975973965	really quick contact not much about him	
+2016:3:2:7		+886972576566	OFFICE_E	TAIZHONGDONGSHI	 HUANG YU RU	0938122710	 taibei temple tour member referral. She is 26 yrs old. She is the member's classmate and has a baby. The member is Shen pei jin:0921572119 and she is from songshan.	
+2016:3:2:7	SOUTH	+886972576566	OFFICE_E	中和區	曹妙雪	0920120749	很棒，南勢角站	
+2016:3:2:7	WEST	+886972576500	ASSISTANTS	BANQIAO	曾	0978028269	NICE GUY COLLEGE STUDENT O A WHEELCHAIR:) 	
+2016:3:2:7	WEST	+886963535582	ZHONGHE_2_S	SANXIA	楊	0912398458	had a lesson. She's a dentist 	
+2016:3:2:7	EAST	+886963535582	ZHONGHE_2_S	RUIFANG	 巫	0905133882	 talked about baptism. Said that they might get baptized.  	
+2016:3:2:7		+886972576507	TUCHENG_S	ENGLISHWARD	吳先生	0952160590	referral from missionaries. Thinks we are really great young people preaching the gospel, but has no interest in attending a church that speaks chinese.   	
+2016:3:2:7	NORTH	+886972576566	OFFICE_E	八里區	 a mr. Thomas 李國強 	0910210763	 who has a Book of Mormon. Willing to read and learn but said not willing to change religion. Is currently Catholic and works for their propaganda. 	
+2016:3:2:7	TAOYUAN	+886972576566	OFFICE_E	BADE	 王月媕 Wang yue er	0955474307	she is a member referral she did a temple tour yesterday and then came to fhe tonight she has tons of questions her sister is a songshan member and she remembers seeing sister missionaries in yingge this past summer her address is 鶯桃路188號 she is super in your face but a nice lady she will set up but you will patience 加油	
+2016:3:2:7	CENTRAL	+886972576566	OFFICE_E	WANHUA	Miles	0965722724	Quick contact, from africa. Been in taiwan for 4 months, met missionaries his first month here. English ward 	
+2016:3:2:7	CENTRAL	+886972576566	OFFICE_E	萬華區	吳先生	0952160590	referral from missionaries. Thinks we are really great young people preaching the gospel, but has no interest in attending a church that speaks chinese.   	
+2016:3:2:7	NORTH	+886972987783	JILONG_B_E	北投	邱建聰	0910205862	nice dude met in jilong	
+2016:3:2:7	TAOYUAN	+886972939022	BADE_B_E	GUISHAN	forgot	0976600718	called a wrong number and asked if missionaries can meet with him.	

@@ -11,6 +11,7 @@
 #include <ctime>
 #include <codecvt>
 #include <locale>
+#include <Windows.h>
 
 static const std::wstring tos(int x)
 {
@@ -126,4 +127,14 @@ static const std::wstring get_report_date_str(std::wstring report_wday)
 			+ ID_STR_SEPARATOR + report_wday;
 	}
 	return report_date;
+}
+
+static const int set_color(const int foreground, const int background)
+{
+
+	int color = foreground + (background * 16);
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(hConsole, color);
+
+	return 0;
 }

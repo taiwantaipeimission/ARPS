@@ -118,7 +118,7 @@ std::wstring Terminal::run_command(std::wstring command)
 		cur_command = command;
 		modem_reply = L"";
 
-
+		set_color(CC_YELLOW, CC_BLACK);
 		std::wcout << command;
 		std::string narrowed = tos(command);
 		size_t len = narrowed.length();
@@ -138,8 +138,9 @@ std::wstring Terminal::run_command(std::wstring command)
 			start = end;
 			end = clock();
 		}
-
+		set_color(CC_CYAN, CC_BLACK);
 		std::wcout << modem_reply;
+		set_color(CC_WHITE, CC_BLACK);
 		return modem_reply;
 	}
 	else

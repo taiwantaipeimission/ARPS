@@ -133,7 +133,7 @@ std::vector<std::wstring> encode_msg(Message* msg)
 	int msg_id = rand() % 256;
 	for (int i = 0; i < num_concat_msgs; i++)
 	{
-		int this_msg_length = std::min(remaining_contents.length(), (size_t)(MAX_MSG_LEN / 2));
+		int this_msg_length = (std::min)(remaining_contents.length(), (size_t)(MAX_MSG_LEN / 2));
 		int all_msg_data_length = this_msg_length * 2 + (num_concat_msgs > 1 ? 6 : 0);
 		std::wstring msg_chars = remaining_contents.substr((size_t)0, (size_t)this_msg_length);
 		remaining_contents = remaining_contents.substr(this_msg_length, remaining_contents.length() - this_msg_length);

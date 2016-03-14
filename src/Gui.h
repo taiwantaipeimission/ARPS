@@ -83,7 +83,7 @@ public:
 	void delete_message_from_sim(int msg_cmg_id);
 
 	void poll_msgs();
-	void check_msgs();
+	bool check_msgs();
 	void process_msg(Message* msg);
 	void unprocess_msg(Message* msg);
 	void update_msg_scroll();

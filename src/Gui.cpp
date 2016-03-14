@@ -88,8 +88,14 @@ void quit_cb(Fl_Widget* wg, void* ptr)
 void user_terminal_cb(Fl_Widget* wg, void* ptr)
 {
 	Gui* gui = (Gui*)ptr;
-	//gui->terminal->init_user();
-	//gui->run_terminal_commands();
+	std::wstring cmd;
+	std::getline(std::wcin, cmd);
+	while (cmd != L"q")
+	{
+		replace_chars(cmd, L";", COMMAND_ESCAPE_CHAR);
+		gui->modem_interface->push_command(cmd + L"\r");
+		std::getline(std::wcin, cmd);
+	}
 }
 
 void send_reminder_cb(Fl_Widget* wg, void* ptr)
@@ -181,9 +187,11 @@ void poll_msg_cb(Fl_Widget* wg, void* ptr)
 void check_msg_cb(void* ptr)
 {
 	Gui* gui = (Gui*)ptr;
-	gui->check_msgs();
-	gui->update_msg_scroll();
-	gui->update_report_scrolls();
+	if (gui->check_msgs())
+	{
+		gui->update_msg_scroll();
+		gui->update_report_scrolls();
+	}
 }
 
 void process_msg_cb(Fl_Widget* wg, void* ptr)
@@ -222,6 +230,7 @@ void timer_cb(void* ptr)
 	process_msg_cb(NULL, ptr);
 	Fl::repeat_timeout(gui->auto_check_s, timer_cb, ptr);*/
 }
+
 
 void select_all_cb(Fl_Widget* wg, void* ptr)
 {
@@ -552,16 +561,19 @@ void Gui::delete_message_from_sim(int msg_cmg_id)
 	modem_interface->push_command(str_to_push);
 }
 
-void Gui::check_msgs()
+bool Gui::check_msgs()
 {
+	bool found_msg = false;
 	while (modem_interface->num_results() > 0)
 	{
 		std::wstring modem_str = modem_interface->pop_result().second;
 		if (modem_str.find(L"+CMGL:") != std::wstring::npos)
 		{
 			msg_handler.parse_messages(modem_str, this);
+			found_msg = true;
 		}
 	}
+	return found_msg;
 }
 
 void Gui::process_msg(Message* msg)
