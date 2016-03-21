@@ -197,11 +197,12 @@ void check_msg_cb(void* ptr)
 void process_msg_cb(Fl_Widget* wg, void* ptr)
 {
 	Gui* gui = (Gui*)ptr;
-	for (int j = 1; j <= gui->unhandled->size(); j++)
+	MessageBrowser* browser = (MessageBrowser*)wg;
+	for (int j = 1; j <= browser->size(); j++)
 	{
-		if (gui->unhandled->selected(j))
+		if (browser->selected(j))
 		{
-			gui->process_msg((Message*)gui->unhandled->data(j));
+			gui->process_msg((Message*)browser->data(j));
 		}
 	}
 	gui->update_msg_scroll();
@@ -211,11 +212,12 @@ void process_msg_cb(Fl_Widget* wg, void* ptr)
 void unprocess_msg_cb(Fl_Widget* wg, void* ptr)
 {
 	Gui* gui = (Gui*)ptr;
-	for (int i = 1; i <= gui->handled->size(); i++)
+	MessageBrowser* browser = (MessageBrowser*)wg;
+	for (int i = 1; i <= browser->size(); i++)
 	{
-		if (gui->handled->selected(i))
+		if (browser->selected(i))
 		{
-			gui->unprocess_msg((Message*)gui->handled->data(i));
+			gui->unprocess_msg((Message*)browser->data(i));
 		}
 	}
 	gui->update_msg_scroll();
@@ -254,6 +256,16 @@ int MessageBrowser::handle(int event)
 				handled = 1;
 			}
 		}
+		else if (Fl::event_button() == FL_LEFT_MOUSE && Fl::event_clicks())
+		{
+			Message* msg = value() ? (Message*)data(value()) : NULL;
+			if (msg)
+			{
+				std::wstring msg_text = msg->contents;
+				fl_message(tos(msg_text).c_str());
+			}
+			handled = 1;
+		}
 	}
 	else if(event == FL_RELEASE)
 	{
@@ -278,6 +290,19 @@ int MessageBrowser::handle(int event)
 		{
 			for (int i = 1; i <= size(); i++)
 				select(i);
+		}
+	}
+	else if (event == FL_KEYDOWN)
+	{
+		if (Fl::event_key() == FL_Enter)
+		{
+			Message* msg = value() ? (Message*)data(value()): NULL;
+			if (msg)
+			{
+				std::wstring msg_text = msg->contents;
+				fl_message(tos(msg_text).c_str());
+			}
+			handled = 1;
 		}
 	}
 	if(!handled)
