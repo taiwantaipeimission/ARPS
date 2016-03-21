@@ -1,0 +1,103 @@
+DANFENG_E|+886972576517|4|王 ashley: 馬上關電話||8|30|0|0|0|0\TAO_2_S|+886963719073|4|Wang dx; konghao||0|16|0|0|0|0\BADE_S|+886912576049|3|TYPE:REFERRAL
+PLACE: jilongrenai
+NAME: luo hui qi
+NUMBER: 0988905415
+INFO: she is 16 years old and wants to know heavenly father more. Also interested in english ||0|160|0|72|2|1\SONGSHAN_E|+886963938192|3|TYPE:REFERRAL
+PLACE:XINZHUANG
+NAME:展先生
+NUMBER:0986129320
+INFO:great guy. Set him up. Good luck.||8|140|0|82|2|1\HUALIAN_2_E|+886963932617|3|TYPE:REFERRAL
+PLACE:桃園市
+NAME:林姐妹
+NUMBER:0987631803
+INFO: she lives close to you on bao qing jie super nice has cute little kid! ||8|140|0|136|2|1\HUALIAN_2_E|+886963932617|3|TYPE:REFERRAL
+PLACE:花蓮市
+NAME:CHEN XIE XI
+NUMBER:0963637033
+INFO:really nice shuai guy lives in the ji an sisters area ||8|140|0|137|2|1\ANKANG_E|+886972576529|3|TYPE:REFERRAL
+PLACE:kanding
+NAME:Vic
+NUMBER:0921834218
+INFO:同學，nice kid,  goes to a christian church but has not been baptized, not sure if its the right area either. 加油||8|140|0|156|3|1\LONGTAN_E|+886972576560|3|TYPE:REFERRAL
+PLACE:Zhubei
+NAME:蔣dx
+NUMBER: 0987481877
+INFO: cool guy wants to go to the church !鄧長老！||8|140|0|198|2|1\ZHONGLI_1_E|+886972576568|3|TYPE:REFERRAL
+PLACE:national central university
+NAME:David
+NUMBER:0909958846
+INFO:sorry i dont know what city national central university is in. So i am just sending the referral to APPS. David is from Vietnam and his english is super good.  Only been in Taiwan a couple days. Super nice and 帥. ||8|140|0|211|5|1\ZHONGLI_1_E|+886972576568|3|TYPE:REFERRAL
+PLACE:新莊
+NAME:梁弟兄
+NUMBER:0923821108
+INFO:Lives near 丹鳳. Willing to meet and said could come to church.||8|140|0|212|2|1\OFFICE_E|+886910358944|3|TYPE:REFERRAL
+PLACE:蘆洲區
+NAME:邱楷勛
+NUMBER:0926846906
+INFO:Nice college-age kid with a nebulous belief in diety.||8|140|0|191|2|1\WANDA_E|+886972576562|3|TYPE:REFERRAL
+PLACE: DATONG 
+AME:Carl 
+NUMBER:0910011107
+INFO: 67 years old. he was in formers sounds like he has some physical disability. Said he would set up if you called him. He is in the wan da ward. ||0|160|0|93|2|1\SONGSHAN_E|+886963938192|1|TYPE:ENGLISH
+CLASSLEVEL:CHILD
+TOTALSTUDENTS:10
+TOTALNONMEM:7
+NEWSTUDENTS:0
+NEWINV:1||0|83|0|0|0|0\WANDA_S|+886972576559|3|TYPE:REFERRAL
+PLACE:SAN CHONG
+NAME:jian xs 
+NUMBER:0976849020
+INFO: met on the street and he is interested in church! ||0|118|0|0|0|0\OFFICE_E|+886910358944|3|TYPE:REFERRAL
+PLACE:淡水區
+NAME:陳泓瑋
+NUMBER:0916069503
+INFO:大四學生。||8|122|0|0|0|0\WANDA_S|+886972576559|3|TYPE:REFERRAL
+PLACE: JILONG 
+NAME:liu xj
+NUMBER:0920563073
+INFO: she is christian. Talked on the mrt about baptism. Didn't invite cause no time but seemed interested! ||0|160|0|62|2|1\LUZHOU_A_E|+886972576542|3|TYPE:REFERRAL
+PLACE:萬華區
+NAME:吳yizhe
+NUMBER:0918681031
+INFO: old former moved for childrens school has 3 all belowe highschool||8|140|0|103|2|1\HUALIAN_3_E|+886963832102|3|TYPE:REFERRAL
+PLACE:Banqiao
+NAME:陳昭薏
+NUMBER:0958868206
+INFO:male, in his 40's, super nice||8|140|0|207|2|1\TOUR_S|+886972576577|3|TYPE:REFERRAL
+PLACE:淡水區
+NAME:王蕙婷victin
+NUMBER:0974123337
+INFO: baptismal date new investigator for 4/24! She is pretty golden! So sweet! We set her up for thursday night at 6 at the danswei chapel. Call her!! Baptize her!:)||8|140|0|209|4|1\JILONG_B_E|+886972987783|3|TYPE:REFERRAL
+PLACE:桃園
+NAME:鄭小姐
+NUMBER:0954011151
+INFO:在基隆遇到她。她在桃園讀大學，所以大部分的時間都在那裡，但她家庭住基隆。住你們能給她洗禮||8|140|0|0|2|1\TAO_2_S|+886963719073|3|TYPE:REFERRAL
+PLACE: 太平
+NAME: Mina
+NUMBER:0935354016
+INFO: met at the train station during english boarding. Really quick contact but she wanted the addresses for taizhongs english classes.||8|140|0|137|3|1\OFFICE_E|+886972576566|3|TYPE:REFERRAL
+PLACE:秀水鄉
+NAME:吳家慶
+NUMBER:0913887876
+INFO:member referral from jilong
+我在網路上遇到他，沒有聽過關於我們，已經跟他討論救恩計畫，和一部分的復興的一小部份目前有宗教信仰，叫創新學會，想要學習福音，平日白天工作不方便接電話，晚上可以，假日約見面比較好||8|140|0|49|3|1\OFFICE_E|+886972576566|3|TYPE:REFERRAL
+PLACE:新店區
+NAME:陳小姐
+NUMBER:0926469526
+INFO:MEMBER REFERRAL not jidu tu but willing to learn more!||8|140|0|50|2|1\TAO_3_E_ZL|+886972576524|4|||8|0|0|0|0|0\LUZHOU_A_E|+886972576542|3|TYPE:REFERRAL
+PLACE:中山區
+NAME:丁教友
+NUMBER:0911643662, or 0970856060, or (02)82853200
+INFO:he said that he "WILL COME TO CHURCH THIS SUNDAY" great sense of humor does late night 火鍋 so morning and after noon are best||8|140|0|105|4|1\XINPU_E|+886972576504|3|TYPE:REFERRAL
+PLACE:ZHONGLI
+NAME:Sheep
+NUMBER:0937334432
+INFO:this guy is awesome! He came to ours english program as a kid and really likes the church. He is super chill, give him a call.||0|160|0|80|2|1\TOUFEN_E|+886972576590|3|TYPE:REFERRAL
+PLACE:大安區
+NAME:林紹儀
+NUMBER:0970181877
+INFO: he's a homie! He's had the first three lessons and the word of wisdom, he's super cool! Call him or text him in the morning||8|140|0|84|3|1\TAIDONG_1_S|+886972576596|3|TYPE:REFERRAL
+PLACE:XINZHU
+NAME:HONG DX
+NUMBER:0919256246
+INFO: came to english class a long time ago. Said if will get acquired if it is right he wants time.||0|158|0|0|0|0\
