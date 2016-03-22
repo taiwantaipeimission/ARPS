@@ -24,7 +24,7 @@ void send_english_reminder_cb(Fl_Widget* wg, void* ptr);
 void send_verify_text_cb(Fl_Widget* wg, void* ptr);
 void delete_msg_cb(Fl_Widget* wg, void* ptr);
 void poll_msg_cb(Fl_Widget* wg, void* ptr);
-void check_msg_cb(void* ptr);
+void completed_command_cb(void* ptr);
 void process_msg_cb(Fl_Widget* wg, void* ptr);
 void unprocess_msg_cb(Fl_Widget* wg, void* ptr);
 void timer_cb(void* ptr);
@@ -63,6 +63,7 @@ public:
 	std::wstring english_date;
 	std::wstring report_wday;
 	std::wstring english_wday;
+	std::wstring stray_msg_handler;
 
 	bool auto_check;
 	double auto_check_s;
@@ -83,7 +84,7 @@ public:
 	void delete_message_from_sim(int msg_cmg_id);
 
 	void poll_msgs();
-	bool check_msgs();
+	bool completed_command_cb();
 	void process_msg(Message* msg);
 	void unprocess_msg(Message* msg);
 	void update_msg_scroll();

@@ -3,6 +3,7 @@
 #include "codes.h"
 #include "Area.h"
 #include "Referral.h"
+#include "Terminal.h"
 
 #include <FL/FL.h>
 #include <FL/FL_Window.h>
@@ -26,7 +27,11 @@ std::wstring get_browser_display_txt(std::wstring str)
 	{
 		str.replace(pos, 1, L" ");
 	}
-	str.resize(100);
+	if (str.size() > 100)
+	{
+		str.resize(100);
+		str += L"...";
+	}
 	return str;
 }
 
@@ -165,11 +170,11 @@ void delete_msg_cb(Fl_Widget* wg, void* ptr)
 				gui->msg_handler.changed = true;
 			}
 		}
-		for (int i = 0; i < handled_to_erase.size(); i++)
+		for (size_t i = 0; i < handled_to_erase.size(); i++)
 		{
 			gui->msg_handler.erase_message(handled_to_erase[i], true);
 		}
-		for (int i = 0; i < unhandled_to_erase.size(); i++)
+		for (size_t i = 0; i < unhandled_to_erase.size(); i++)
 		{
 			gui->msg_handler.erase_message(unhandled_to_erase[i], false);
 		}
@@ -184,10 +189,10 @@ void poll_msg_cb(Fl_Widget* wg, void* ptr)
 	gui->poll_msgs();
 }
 
-void check_msg_cb(void* ptr)
+void completed_command_cb(void* ptr)
 {
 	Gui* gui = (Gui*)ptr;
-	if (gui->check_msgs())
+	if (gui->completed_command_cb())
 	{
 		gui->update_msg_scroll();
 		gui->update_report_scrolls();
@@ -197,7 +202,7 @@ void check_msg_cb(void* ptr)
 void process_msg_cb(Fl_Widget* wg, void* ptr)
 {
 	Gui* gui = (Gui*)ptr;
-	MessageBrowser* browser = (MessageBrowser*)wg;
+	MessageBrowser* browser = gui->unhandled;
 	for (int j = 1; j <= browser->size(); j++)
 	{
 		if (browser->selected(j))
@@ -212,7 +217,7 @@ void process_msg_cb(Fl_Widget* wg, void* ptr)
 void unprocess_msg_cb(Fl_Widget* wg, void* ptr)
 {
 	Gui* gui = (Gui*)ptr;
-	MessageBrowser* browser = (MessageBrowser*)wg;
+	MessageBrowser* browser = gui->handled;
 	for (int i = 1; i <= browser->size(); i++)
 	{
 		if (browser->selected(i))
@@ -251,7 +256,8 @@ int MessageBrowser::handle(int event)
 	{
 		if (Fl::event_button() == FL_RIGHT_MOUSE)
 		{
-			if (item_selected(find_item(Fl::event_y())))
+			void* item = find_item(Fl::event_y());
+			if (item && item_selected(item))
 			{
 				handled = 1;
 			}
@@ -481,6 +487,7 @@ void Gui::load()
 
 	report_wday = config.values[CONFIG_FIELD_REPORT_WDAY];
 	english_wday = config.values[CONFIG_FIELD_ENGLISH_WDAY];
+	stray_msg_handler = config.values[CONFIG_FIELD_STRAY_MSG_HANDLER];
 
 	report_date = get_report_date_str(report_wday);
 	english_date = get_report_date_str(english_wday);
@@ -560,19 +567,25 @@ void Gui::send_message(std::wstring dest_ph_number, std::wstring msg_contents)
 	msg.contents = msg_contents;
 	msg.dest_number = dest_ph_number;
 	std::vector<std::wstring> strings = encode_msg(&msg);
+	
 	for (size_t i = 0; i < strings.size(); i++)
 	{
-		std::wstringstream cmd;
-		cmd << L"AT+CMGS=";
-		cmd << std::dec << (int)(strings[i].length() / 2 - 1);
-		cmd << L"\r";
-		modem_interface->push_command(cmd.str());
+		Command cmd;
+		std::wstringstream cmd_ss;
+		cmd_ss << L"AT+CMGS=";
+		cmd_ss << std::dec << (int)(strings[i].length() / 2 - 1);
+		cmd_ss << L"\r";
+		cmd.sub_cmds.push_back(SubCommand(cmd_ss.str()));
 
-		cmd.str(L"");
-		cmd.clear();
-		cmd << strings[i];
-		cmd << COMMAND_ESCAPE_CHAR;
-		modem_interface->push_command(cmd.str());
+		cmd_ss.str(L"");
+		cmd_ss.clear();
+		cmd_ss << strings[i];
+		cmd_ss << COMMAND_ESCAPE_CHAR;
+		cmd.sub_cmds.push_back(SubCommand(cmd_ss.str()));
+
+		cmd.n_times_to_try = 3;
+
+		modem_interface->push_command(cmd);
 	}
 }
 
@@ -586,16 +599,22 @@ void Gui::delete_message_from_sim(int msg_cmg_id)
 	modem_interface->push_command(str_to_push);
 }
 
-bool Gui::check_msgs()
+// This function is called every time a command is passed to the modem and a response received.
+// Returns true if a message was parsed from the resulting output, false otherwise.
+bool Gui::completed_command_cb()
 {
 	bool found_msg = false;
 	while (modem_interface->num_results() > 0)
 	{
-		std::wstring modem_str = modem_interface->pop_result().second;
-		if (modem_str.find(L"+CMGL:") != std::wstring::npos)
+		Command cmd = modem_interface->pop_result();
+		for (vector<SubCommand>::iterator it = cmd.sub_cmds.begin(); it != cmd.sub_cmds.end(); ++it)
 		{
-			msg_handler.parse_messages(modem_str, this);
-			found_msg = true;
+			wstring modem_str = it->result;
+			if (modem_str.find(L"+CMGL:") != std::wstring::npos)
+			{
+				msg_handler.parse_messages(modem_str, this);
+				found_msg = true;
+			}
 		}
 	}
 	return found_msg;
@@ -686,7 +705,7 @@ void Gui::process_msg(Message* msg)
 			referral.read_message(*msg);
 			referral.locate(&comp_list);
 			if (!referral.found_dest())
-				referral.dest_number = LOST_REFERRAL_HANDLER;	//Send it to the recorder!
+				referral.dest_number = stray_msg_handler;	//Send it to the recorder!
 			send_message(referral.dest_number, msg->contents);
 			referral_list.push_back(referral);
 
@@ -709,7 +728,7 @@ void Gui::process_msg(Message* msg)
 				}
 			}
 			if(!found)
-				send_message(LOST_REFERRAL_HANDLER, msg->contents);	//Send it to the recorder!
+				send_message(stray_msg_handler, msg->contents);	//Send it to the recorder!
 			processed_this_msg = true;
 		}
 	}

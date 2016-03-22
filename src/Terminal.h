@@ -3,7 +3,7 @@
 class Gui;
 
 #include "Modem.h"
-
+#include "ModemInterface.h"
 #include "ModemData.h"
 #include "File.h"
 
@@ -24,14 +24,14 @@ public:
 		RESULT_ERROR
 	};
 
-	static const int NO_RESPONSE_TIMEOUT_MS = 1000;
+	static const int NO_RESPONSE_TIMEOUT_MS = 600000;
 
 	Modem modem;
 	File* output_file;
 	Gui* gui;
 
-	std::wstring cur_command;
-	std::wstring modem_reply;
+	wstring cur_command;
+	wstring cur_reply;
 	bool got_modem = true;
 	bool timeout = false;
 
@@ -42,7 +42,8 @@ public:
 	virtual ~Terminal();
 
 	void init(File* output_file_in, Gui* gui_in);
-	std::wstring run_command(std::wstring command);
+	wstring run_command_str(wstring command);
+	void run_command(Command* command);
 	bool update(double millis);
 	bool isbusy();
 };

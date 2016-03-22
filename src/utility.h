@@ -129,6 +129,16 @@ static const std::wstring get_report_date_str(std::wstring report_wday)
 	return report_date;
 }
 
+static const bool is_final_line(std::wstring line)
+{
+	return line.find(L"OK\r\n") != std::wstring::npos || line.find(L"> ") != std::wstring::npos || line.find(L"ERROR\r\n") != std::wstring::npos;
+}
+
+static const bool is_error(std::wstring line)
+{
+	return line.find(L"ERROR\r\n") != std::wstring::npos;
+}
+
 static const int set_color(const int foreground, const int background)
 {
 

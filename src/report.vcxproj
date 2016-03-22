@@ -74,6 +74,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Area.cpp" />
+    <ClCompile Include="Command.cpp" />
     <ClCompile Include="CompList.cpp" />
     <ClCompile Include="FieldCollection.cpp" />
     <ClCompile Include="File.cpp" />
@@ -96,6 +97,7 @@
   <ItemGroup>
     <ClInclude Include="Area.h" />
     <ClInclude Include="codes.h" />
+    <ClInclude Include="Command.h" />
     <ClInclude Include="CompList.h" />
     <ClInclude Include="FieldCollection.h" />
     <ClInclude Include="File.h" />

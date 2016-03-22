@@ -11,20 +11,30 @@ ModemInterface::~ModemInterface()
 {
 }
 
-void ModemInterface::push_command(wstring cmd)
+void ModemInterface::push_command(Command cmd)
 {
 	std::lock_guard<std::mutex> guard(mu);
-	commands.push(cmd);
+	cmd_unrun.push(cmd);
 }
 
-wstring ModemInterface::pop_command()
+void ModemInterface::push_command(wstring str)
 {
 	std::lock_guard<std::mutex> guard(mu);
-	wstring ret_val(L"");
-	if (commands.size() > 0)
+	SubCommand sub_cmd;
+	sub_cmd.cmd = str;
+	Command cmd;
+	cmd.sub_cmds.push_back(sub_cmd);
+	cmd_unrun.push(cmd);
+}
+
+Command ModemInterface::pop_command()
+{
+	std::lock_guard<std::mutex> guard(mu);
+	Command ret_val;
+	if (cmd_unrun.size() > 0)
 	{
-		ret_val = commands.front();
-		commands.pop();
+		ret_val = cmd_unrun.front();
+		cmd_unrun.pop();
 	}
 	return ret_val;
 }
@@ -32,23 +42,23 @@ wstring ModemInterface::pop_command()
 size_t ModemInterface::num_commands()
 {
 	std::lock_guard<std::mutex> guard(mu);
-	return commands.size();
+	return cmd_unrun.size();
 }
 
-void ModemInterface::push_result(wstring cmd, wstring result)
+void ModemInterface::push_result(Command res)
 {
 	std::lock_guard<std::mutex> guard(mu);
-	results.push(pair<wstring, wstring>(cmd, result));
+	cmd_run.push(res);
 }
 
-pair<wstring, wstring> ModemInterface::pop_result()
+Command ModemInterface::pop_result()
 {
 	std::lock_guard<std::mutex> guard(mu);
-	pair<wstring, wstring> ret_val(L"", L"");
-	if (results.size() > 0)
+	Command ret_val;
+	if (cmd_run.size() > 0)
 	{
-		ret_val = results.front();
-		results.pop();
+		ret_val = cmd_run.front();
+		cmd_run.pop();
 	}
 	return ret_val;
 }
@@ -56,5 +66,5 @@ pair<wstring, wstring> ModemInterface::pop_result()
 size_t ModemInterface::num_results()
 {
 	std::lock_guard<std::mutex> guard(mu);
-	return results.size();
+	return cmd_run.size();
 }

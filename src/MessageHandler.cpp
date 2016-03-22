@@ -18,8 +18,8 @@ MessageHandler::MessageHandler()
 
 MessageHandler::~MessageHandler()
 {
-	for (int i = 0; i < msgs_handled.size(); i++)
-		delete msgs_handled[i];
+	for (std::vector<Message*>::iterator it = msgs_handled.begin(); it != msgs_handled.end(); ++it)
+		delete *it;
 	for (std::vector<Message*>::iterator it = msgs_unhandled.begin(); it != msgs_unhandled.end(); ++it)
 		delete *it;
 }

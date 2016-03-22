@@ -23,16 +23,6 @@
 
 #include "FL/Fl.H"
 
-static const bool is_final_line(std::wstring line)
-{
-	return line.find(L"OK\r\n") != std::wstring::npos || line.find(L"> ") != std::wstring::npos || line.find(L"ERROR\r\n") != std::wstring::npos;
-}
-
-static const bool is_error(std::wstring line)
-{
-	return line.find(L"ERROR\r\n") != std::wstring::npos;
-}
-
 Terminal::Terminal()
 {
 }
@@ -57,13 +47,13 @@ bool Terminal::update(double millis)
 	ReadFile(modem.file, &modem_ch, 1, &read, NULL);
 
 	//get char from modem
-	if (read)
+	while(read)
 	{
 		std::wstring modem_ch_null = L"";
 		modem_ch_null += modem_ch;
-		modem_reply += modem_ch_null;
+		cur_reply += modem_ch_null;
 
-		if (is_final_line(modem_reply))
+		if (is_final_line(cur_reply))
 		{
 			got_modem = true;
 		}
@@ -72,35 +62,21 @@ bool Terminal::update(double millis)
 		{
 			ms_until_timeout = NO_RESPONSE_TIMEOUT_MS;
 		}
+
+		ReadFile(modem.file, &modem_ch, 1, &read, NULL);
 	}
 
-	//get char from user input
-	wchar_t user_ch = '\0';
-	if (_kbhit())
-	{
-		user_ch = _getch();
-		if (user_ch != 127)
-		{
-			std::wstring user_str;
-			user_str += user_ch;
-		}
-		else
-		{
-			if (got_modem)
-				ret_value = false;
-			else
-				got_modem = true;
-		}
-	}
 	if (got_modem)
 	{
 		ret_value = false;
 	}
 	else if (ms_until_timeout <= 0)
 	{
-		//std::wcout << L"\nTIMEOUT\n";
-		//got_modem = true;
-		//timeout = true;
+		set_color(CC_RED, CC_BLACK);
+		std::wcout << L"\nTIMEOUT\n";
+		set_color(CC_WHITE, CC_BLACK);
+		got_modem = true;
+		timeout = true;
 	}
 	if (ms_until_timeout > 0)
 		ms_until_timeout = max(0, ms_until_timeout - millis);
@@ -108,7 +84,7 @@ bool Terminal::update(double millis)
 	return ret_value;
 }
 
-std::wstring Terminal::run_command(std::wstring command)
+wstring Terminal::run_command_str(wstring command)
 {
 	if (got_modem)
 	{
@@ -116,11 +92,12 @@ std::wstring Terminal::run_command(std::wstring command)
 		got_modem = false;
 		timeout = false;
 		cur_command = command;
-		modem_reply = L"";
+		cur_reply = L"";
 
 		set_color(CC_YELLOW, CC_BLACK);
-		std::wcout << command;
-		std::string narrowed = tos(command);
+		std::wcout << cur_command;
+		set_color(CC_WHITE, CC_BLACK);
+		std::string narrowed = tos(cur_command);
 		size_t len = narrowed.length();
 		for (size_t i = 0; i < narrowed.length(); i++)
 		{
@@ -138,14 +115,38 @@ std::wstring Terminal::run_command(std::wstring command)
 			start = end;
 			end = clock();
 		}
+
 		set_color(CC_CYAN, CC_BLACK);
-		std::wcout << modem_reply;
+		std::wcout << cur_reply;
 		set_color(CC_WHITE, CC_BLACK);
-		return modem_reply;
+
+		return cur_reply;
 	}
 	else
 	{
 		return L"";
+	}
+}
+
+void Terminal::run_command(Command* command)
+{
+	if (command)
+	{
+		bool had_failure = false;
+		do
+		{
+			for (size_t i = 0; i < command->sub_cmds.size(); i++)
+			{
+				SubCommand* sub_cmd = &command->sub_cmds[i];
+				sub_cmd->result = run_command_str(sub_cmd->cmd);
+				sub_cmd->ran = true;
+				sub_cmd->success = !is_error(sub_cmd->result) && !timeout;
+				sub_cmd->timeout = timeout;
+				if (!sub_cmd->success)
+					had_failure = true;
+			}
+			command->n_times_tried++;
+		} while (had_failure && command->n_times_tried < command->n_times_to_try);
 	}
 }
 

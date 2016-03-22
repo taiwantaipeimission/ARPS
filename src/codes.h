@@ -22,7 +22,6 @@
 #define REP_KEY_BAP_TOUR L"BAP_TOUR"
 
 //Phone numbers
-#define LOST_REFERRAL_HANDLER L"+886972576566"
 #define INT_PH_NUM_PREFIX L"+886"
 
 //File paths
@@ -39,6 +38,7 @@
 //Config fields (to match in config file)
 #define CONFIG_FIELD_REPORT_WDAY L"REPORT_WDAY"
 #define CONFIG_FIELD_ENGLISH_WDAY L"ENGLISH_WDAY"
+#define CONFIG_FIELD_STRAY_MSG_HANDLER L"STRAY_MSG_HANDLER"
 
 //String constants
 #define PH_NUMBER_HEAD L"+"
