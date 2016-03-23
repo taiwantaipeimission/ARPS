@@ -84,6 +84,7 @@ public:
 	void delete_message_from_sim(int msg_cmg_id);
 
 	void poll_msgs();
+	void configure_modem();
 	bool completed_command_cb();
 	void process_msg(Message* msg);
 	void unprocess_msg(Message* msg);

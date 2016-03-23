@@ -28,12 +28,6 @@
 #include <FL/Fl_Multiline_Output.H>
 
 
-/* Create the date stamp for a reporting period, based on the current time and the weekday of reporting.
- * All days up to the day of reporting return back to the previous reporting period (e.g. Thursday-Tuesday will be counted as reports
- * for English reporting session which began on the Wednesday previous).
- */
-
-
 class Console_streambuf
 	: public std::basic_streambuf<wchar_t>
 {
@@ -69,16 +63,27 @@ int main(int argc, char **argv)
 {
 	try
 	{
+		set_color(CC_GREEN, CC_BLACK);
+		wcout << L"Loading...\n";
+		set_color(CC_GREY, CC_BLACK);
+
+		wcout << L"-Creating objects\n";
 		Gui gui;
 		Terminal terminal;
 		ModemInterface modem_interface;
 		bool quit = false;
 
+		wcout << L"-Initializing terminal\n";
 		terminal.init(&gui.file_manager.files[L"OUTPUT"], &gui);
 		std::thread terminal_thread(run_terminal_func, &terminal, &gui, &modem_interface, &quit);
 
+		wcout << L"-Loading data files\n";
 		gui.load();
+		wcout << L"-Initializing GUI\n";
 		gui.init(&modem_interface);
+		set_color(CC_GREEN, CC_BLACK);
+		wcout << L"Done\n";
+		set_color(CC_WHITE, CC_BLACK);
 		gui.run();
 		
 		quit = true;

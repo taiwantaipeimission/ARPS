@@ -11,6 +11,7 @@ public:
 
 	Report::Type report_type;
 
+	std::wstring header_row;
 	std::map<std::wstring, Report> reports;
 	
 	//Does the report sheet need to be re-saved?

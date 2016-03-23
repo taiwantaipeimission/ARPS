@@ -96,6 +96,11 @@ static const inline int positive_modulo(int i, int n) {
 	return (i % n + n) % n;
 }
 
+/* Create the date stamp for a reporting period, based on the current time and the weekday of reporting.
+* All days up to the day of reporting return back to the previous reporting period (e.g. Thursday-Tuesday will be counted as reports
+* for English reporting session which began on the Wednesday previous).
+*/
+
 static const std::wstring get_report_date_str(std::wstring report_wday)
 {
 	std::wstring report_date;

@@ -1,5 +1,8 @@
 #pragma once
 
+#include <string>
+using namespace std;
+
 //Internals
 
 //Filepaths
@@ -11,7 +14,13 @@
 #define BAPTISM_RESPONSE_MSG L"Congratulations on your baptism[s]! Please send in one copy of this template per baptism."
 #define BAPTISM_REPORT_TEMPLATE L"TYPE:BAPTISM\nCONV_NAME:\nBP_DATE:\nCONF_DATE:\nWARD:\nHOME_ADDR:\nPH_NUM:\nBAP_SOURCE:\n1=Missionary contacting\n2=LA referral\n3=RC referral\n4=Active member referral\n5=English class\n6=Temple tour"
 
-//Report value key strings
+//Report key strings
+#define REPORT_FIELDS L"A,B,C,D,NEXTWEEKBAP,BAP,CONF,BD,SAC,PK,OL,NIMISSFIND,NIMEMREF,RCLA,LAC,RCT"
+#define ENGLISH_FIELDS L"CLASSLEVEL,TOTALSTUDENTS,TOTALNONMEM,NEWSTUDENTS,NEWINV"
+#define BAPTISM_RECORD_FIELDS L"CONV_NAME,BP_DATE,CONF_DATE,WARD,HOME_ADDR,PH_NUM"
+#define BAPTISM_SOURCE_FIELDS L"BAP_MISS_FIND,BAP_LA_REF,BAP_RC_REF,BAP_MEM_REF,BAP_ENGLISH,BAP_TOUR"
+
+//Baptism source key strings
 #define REP_KEY_BAP L"BAP"
 #define REP_KEY_BAP_SOURCE L"BAP_SOURCE"
 #define REP_KEY_BAP_MISS_FIND L"BAP_MISS_FIND"
@@ -46,6 +55,10 @@
 #define ID_STR_SEPARATOR L":"
 #define COMMAND_NEWLINE_CHAR L"\r"
 #define COMMAND_ESCAPE_CHAR L"\u001A"		//The CTRL-Z character used at the end of PDU payload data
+
+//Timeout values
+#define NO_RESPONSE_TIMEOUT_MS 1000
+#define MSG_NO_RESPONSE_TIMEOUT_MS 60000
 
 //Message constants
 #define TYPE_KEY L"TYPE"

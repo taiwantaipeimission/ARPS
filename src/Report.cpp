@@ -6,6 +6,8 @@
 #include "utility.h"
 #include "Message.h"
 
+using namespace std;
+
 Report::Report()
 {
 	set_type(TYPE_REGULAR);
@@ -32,13 +34,9 @@ void Report::read_message(Message msg, std::wstring date)
 
 	std::wstring value;
 
-	for (unsigned int i = 0; i < int_key_list.size(); i++)
+	for (map<wstring, wstring>::iterator it = report_values.begin(); it != report_values.end(); ++it)
 	{
-		int_values[int_key_list[i]] = _wtoi(get_msg_key_val(msg.contents, int_key_list[i], ':', '\n').c_str());
-	}
-	for (unsigned int i = 0; i < string_key_list.size(); i++)
-	{
-		string_values[string_key_list[i]] = get_msg_key_val(msg.contents, string_key_list[i], ':', '\n');
+		it->second = _wtoi(get_msg_key_val(msg.contents, it->first, ':', '\n').c_str());
 	}
 }
 
@@ -50,28 +48,36 @@ void Report::set_type(Type new_type)
 {
 	type = new_type;
 	use_sub_id = false;
+	wstring field_list = L"";
 	if (type == TYPE_REGULAR)
 	{
-		string_key_list = {};
-		int_key_list = { L"A", L"B", L"C", L"D", L"NEXTWEEKBAP", L"BAP", L"CONF", L"BD", L"SAC", L"PK", L"OL", L"NIMISSFIND", L"NIMEMREF", L"RCLA", L"LAC", L"RCT" };
+		field_list = REPORT_FIELDS;
 	}
 	else if (type == TYPE_ENGLISH)
 	{
+		field_list = ENGLISH_FIELDS;
 		use_sub_id = true;
-		string_key_list = { L"CLASSLEVEL" };
-		int_key_list = { L"TOTALSTUDENTS", L"TOTALNONMEM", L"NEWSTUDENTS", L"NEWINV" };
 	}
 	else if (type == TYPE_BAPTISM_RECORD)
 	{
+		field_list = BAPTISM_RECORD_FIELDS;
 		use_sub_id = true;
-		string_key_list = { L"CONV_NAME", L"BP_DATE", L"CONF_DATE", L"WARD", L"HOME_ADDR", L"PH_NUM"};
-		int_key_list = { L"BAP_SOURCE" };
 	}
 	else if (type == TYPE_BAPTISM_SOURCE)
 	{
-		string_key_list = {};
-		int_key_list = { L"BAP_MISS_FIND", L"BAP_LA_REF", L"BAP_RC_REF", L"BAP_MEM_REF", L"BAP_ENGLISH", L"BAP_TOUR" };
+		field_list = BAPTISM_SOURCE_FIELDS;
 	}
+
+	report_values.clear();
+	vector<wstring> field_tokens = tokenize(field_list, ',');
+	for (vector<wstring>::iterator it = field_tokens.begin(); it != field_tokens.end(); ++it)
+	{
+		if (report_values.count(*it) <= 0)
+		{
+			report_values[*it] = L"";
+		}
+	}
+	
 }
 
 std::wstring Report::get_id_str()
@@ -97,9 +103,8 @@ bool Report::operator==(Report& other)
 	
 	// sender number and cmgl_id don't matter; not retained
 
-	if (this->string_values != other.string_values || this->int_values != other.int_values)
+	if (this->report_values != other.report_values)
 		return false;
-
 
 	return true;
 }
@@ -111,101 +116,92 @@ bool Report::operator!=(Report& other)
 
 void Report::operator+=(Report& other)
 {
-	for (std::map<std::wstring, int>::iterator i = other.int_values.begin(); i != other.int_values.end(); ++i)
+	for (map<wstring, wstring>::iterator it = other.report_values.begin(); it != other.report_values.end(); ++it)
 	{
-		if (this->int_values.count(i->first) > 0)	//Existing value for this report field
+		if (this->report_values.count(it->first) > 0)	//Existing value for this report field
 		{
-			this->int_values[i->first] += i->second;
+			char ex_str[256];
+			strcpy_s(ex_str, tos(this->report_values[it->first]).c_str());
+			char* ex_end;
+			long ex_val = strtol(ex_str, &ex_end, 10);
+
+			char add_str[256];
+			strcpy_s(add_str, tos(it->second).c_str());
+			char* add_end;
+			long add_val = strtol(add_str, &add_end, 10);
+
+			if ((ex_end != ex_str || strlen(ex_str) == 0) && (add_end != add_str || strlen(add_str) == 0))
+			{
+				int summed = (int)(ex_val + add_val);
+				this->report_values[it->first] = tos(summed);
+			}
 		}
 		else
 		{
-			this->add_int(i->first, i->second);
+			this->report_values[it->first] = it->second;
 		}
 	}
-}
-
-void Report::add_int(std::wstring key, int value)
-{
-	int_values[key] = value;
-}
-
-void Report::add_string(std::wstring key, std::wstring value)
-{
-	string_values[key] = value;
-}
-
-void Report::remove_int(std::wstring key)
-{
-	int_values.erase(key);
-}
-
-void Report::remove_string(std::wstring key)
-{
-	string_values.erase(key);
 }
 
 void Report::clear_values()
 {
-	string_values.clear();
-	int_values.clear();
+	for (map<wstring, wstring>::iterator it = report_values.begin(); it != report_values.end(); ++it)
+		it->second = L"";
 }
 
-void Report::read_processed(std::wstring input)
+void Report::read_processed(wstring input, vector<wstring> header_tokens)
 {
-	std::wstringstream stream(input);
-	std::wstring id_str;
-	stream >> id_str;
-
-	sender_name = L"-";
-
-	//Tokenize the ID string to get the date stamp, name, and sub-ID if applicable
-	std::vector<std::wstring> id_str_tokens = tokenize(id_str, ':');
-	if (id_str_tokens.size() >= 5)
+	vector<wstring> tokens = tokenize(input, '\t');
+	map<wstring, wstring> read_value_pairs;
+	size_t n_pairs = min(tokens.size(), header_tokens.size());
+	for (size_t i = 0; i < n_pairs; i++)
 	{
-		int i = 0;
-		date_year = _wtoi(id_str_tokens[i++].c_str());
-		date_month = _wtoi(id_str_tokens[i++].c_str());
-		date_week = _wtoi(id_str_tokens[i++].c_str());
-		date_wday = _wtoi(id_str_tokens[i++].c_str());
-		if (id_str_tokens.size() == 6)
+		read_value_pairs[header_tokens[i]] = tokens[i];
+	}
+	if (tokens.size() > 0)
+	{
+		std::wstring id_str = tokens[0];
+		date_year = 0;
+		date_month = 0;
+		date_week = 0;
+		date_wday = 0;
+		use_sub_id = false;
+		sub_id = 0;
+		sender_name = L"-";
+
+		//Tokenize the ID string to get the date stamp, name, and sub-ID if applicable
+		std::vector<std::wstring> id_str_tokens = tokenize(id_str, ':');
+		if (id_str_tokens.size() >= 5)
 		{
-			use_sub_id = true;
-			sub_id = _wtoi(id_str_tokens[i++].c_str());
+			int i = 0;
+			date_year = _wtoi(id_str_tokens[i++].c_str());
+			date_month = _wtoi(id_str_tokens[i++].c_str());
+			date_week = _wtoi(id_str_tokens[i++].c_str());
+			date_wday = _wtoi(id_str_tokens[i++].c_str());
+			if (id_str_tokens.size() == 6)
+			{
+				use_sub_id = true;
+				sub_id = _wtoi(id_str_tokens[i++].c_str());
+			}
+			sender_name = id_str_tokens[i++];
 		}
-		sender_name = id_str_tokens[i++];
-	}
 
-	//Extract all of the keyed report values
-	for (int i = 0; i < string_key_list.size(); i++)
-	{
-		std::wstring value = L"0";
-		if (stream.good())
-			stream >> value;
-		string_values[string_key_list[i]] = value;
-	}
-	for (int i = 0; i < int_key_list.size(); i++)
-	{
-		int value = 0;
-		if (stream.good())
-			stream >> value;
-		int_values[int_key_list[i]] = value;
-	}
+		//Extract all of the keyed report values
+		for (map<wstring, wstring>::iterator it = report_values.begin(); it != report_values.end(); ++it)
+		{
+			it->second = read_value_pairs.count(it->first) > 0 ? read_value_pairs[it->first] : L"";
+		}
 
-	is_new = false;
-
-	return;
+		is_new = false;
+	}
 }
 
 void Report::print(std::wostream& output)
 {
 	output << get_id_str();
-	for (int i = 0; i < string_key_list.size(); i++)
+	for (map<wstring, wstring>::iterator it = report_values.begin(); it != report_values.end(); ++it)
 	{
-		output << L'\t' << string_values[string_key_list[i]];
-	}
-	for (int i = 0; i < int_key_list.size(); i++)
-	{
-		output << L'\t' << int_values[int_key_list[i]];
+		output << it->second;
 	}
 	output << L'\n';
 }

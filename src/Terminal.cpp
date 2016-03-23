@@ -53,7 +53,7 @@ bool Terminal::update(double millis)
 		modem_ch_null += modem_ch;
 		cur_reply += modem_ch_null;
 
-		if (is_final_line(cur_reply))
+		if (is_final_line(cur_reply) || cur_reply == cur_command)
 		{
 			got_modem = true;
 		}
@@ -88,7 +88,6 @@ wstring Terminal::run_command_str(wstring command)
 {
 	if (got_modem)
 	{
-		ms_until_timeout = NO_RESPONSE_TIMEOUT_MS;
 		got_modem = false;
 		timeout = false;
 		cur_command = command;
@@ -138,6 +137,7 @@ void Terminal::run_command(Command* command)
 			for (size_t i = 0; i < command->sub_cmds.size(); i++)
 			{
 				SubCommand* sub_cmd = &command->sub_cmds[i];
+				ms_until_timeout = sub_cmd->timeout_ms;
 				sub_cmd->result = run_command_str(sub_cmd->cmd);
 				sub_cmd->ran = true;
 				sub_cmd->success = !is_error(sub_cmd->result) && !timeout;

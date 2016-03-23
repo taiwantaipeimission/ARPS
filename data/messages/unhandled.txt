@@ -6,4 +6,40 @@ INFO:林JM lives in banqiao and did not want me to give her number to other miss
 PLACE:GAOXIONG
 NAME:JOHNNY
 NUMBER:0980576025
-INFO:nice guy. Didnt share lesson but he gave number and was willing for you to call him ||0|148|0|0|0|0\
+INFO:nice guy. Didnt share lesson but he gave number and was willing for you to call him ||0|148|0|0|0|0\YULI_S|+886972576538|3|TYPE:REFERRAL
+PLACE:XINDIAN
+NAME: LIN
+NUMBER: 0937980810
+INFO: Really nice lady. Visiting her family here in yuli. Had a lesson seems pretty interested. ||0|153|0|0|0|0\LUZHOU_B_E|+886965008522|3|TYPE:REFERRAL
+PLACE:新莊
+NAME:游至琳
+NUMBER:0987710725
+INFO:She is super nice. And very willing to learn. Her english is great and she wanted to learn more about the gospel.||8|140|0|1|3|1\LUZHOU_B_E|+886965008522|3|TYPE:REFERRAL
+PLACE:信義區
+NAME:盧佳佳
+NUMBER:0910371867
+INFO:she has lived in LA and Las Vegas for two years. She told up she has a lot of problems and our prayer made her feel as he her problems were all gone. Help her, she is super willing.||8|140|0|2|4|1\LUODONG_A_E|+886963917870|3|TYPE:REFERRAL
+PLACE: SHU LIN
+NAME: Lin zi hen
+NUMBER:0953676333
+INFO: originally met by a donut stand in luodong with his girlfriend. About 18. Wasn't super interested at first, but we called to follow up and he wanted to meet. Moving from yilan to shulin next wednesday.||0|160|0|38|2|1\GUISHAN_E|+886972576585|3|TYPE:REFERRAL
+PLACE:八德區
+NAME:阮珮茹
+NUMBER:0975737896
+INFO:self contacted vietnamese lady, wants to come to church and english class! Preach it! B-)||8|140|0|119|3|1\ZHONGLI_2_E|+886972576584|3|TYPE:REFERRAL
+PLACE:ZHUANGWEI
+NAME:李曉珍
+NUMBER:0979616910
+INFO: A young mom.  Just became a christian a few months ago and was baptized in a random church, but set a baptismal date on 4/30 after our explanation of apostasy. Really prepared, she will be waiting for your call! -司馬長老||8|140|0|125|5|1\ZHUBEI_2_E|+886972576583|3|TYPE:REFERRAL
+PLACE:TAOYUAN_AREA
+NAME:鮑園昌
+NUMBER:0910393903
+INFO: super awesome old guy. Retired. Has two kids. Really loves his family and is interested in the concept of eternal families. We taught him the full first lesson and he was willing to read and pray. He knows 柯長老和洪長老 from 新豐||8|140|0|210|5|1\XIZHI_A_E|+886972576509|3|TYPE:REFERRAL
+PLACE:JILONG_ZHONGSHAN 
+NAME:沈俊?
+NUMBER:0937771592
+INFO:Nice guy. Pretty busy with work but willing to listen  ||8|140|0|244|2|1\XIZHI_A_E|+886972576509|3|TYPE:REFERRAL
+PLACE:NEIHU 
+NAME:劉小姐
+NUMBER:0971501010
+INFO:Nice lady has been to TaoYuan english class and has a 4year old son who she wants to in to church ||8|140|0|247|3|1\

@@ -1,5 +1,6 @@
 #pragma once
 #include "Message.h"
+#include "codes.h"
 #include <string>
 #include <vector>
 
@@ -9,8 +10,11 @@ class SubCommand
 {
 public:
 	SubCommand(wstring cmd_str)
-		: cmd(cmd_str), result(L""), ran(false), success(false), timeout(false)
-	{}
+		: cmd(cmd_str), result(L""), ran(false), success(false), timeout(false), timeout_ms(NO_RESPONSE_TIMEOUT_MS)
+	{
+		if (cmd.find(COMMAND_ESCAPE_CHAR) != wstring::npos)
+			timeout_ms = MSG_NO_RESPONSE_TIMEOUT_MS;
+	}
 	SubCommand()
 		: SubCommand(L"")
 	{}
@@ -22,6 +26,7 @@ public:
 	bool ran;
 	bool success;
 	bool timeout;
+	int timeout_ms;
 };
 
 class Command

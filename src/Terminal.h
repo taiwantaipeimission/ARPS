@@ -24,8 +24,6 @@ public:
 		RESULT_ERROR
 	};
 
-	static const int NO_RESPONSE_TIMEOUT_MS = 600000;
-
 	Modem modem;
 	File* output_file;
 	Gui* gui;

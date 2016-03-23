@@ -93,14 +93,31 @@ void quit_cb(Fl_Widget* wg, void* ptr)
 void user_terminal_cb(Fl_Widget* wg, void* ptr)
 {
 	Gui* gui = (Gui*)ptr;
+
+	set_color(CC_GREEN, CC_BLACK);
+	wcout << L"Entered user terminal\n";
+	set_color(CC_GREY, CC_BLACK);
+	wcout << L"-Enter commands here and press ENTER.\n-To exit terminal, type \'q\'.\n-Type \';\' for an escape character.\n";
+	set_color(CC_WHITE, CC_BLACK);
 	std::wstring cmd;
 	std::getline(std::wcin, cmd);
 	while (cmd != L"q")
 	{
 		replace_chars(cmd, L";", COMMAND_ESCAPE_CHAR);
+		replace_chars(cmd, L".", L"\u001B");
 		gui->modem_interface->push_command(cmd + L"\r");
 		std::getline(std::wcin, cmd);
 	}
+	set_color(CC_GREEN, CC_BLACK);
+	wcout << L"Exited user terminal\n";
+	set_color(CC_WHITE, CC_BLACK);
+}
+
+void configure_modem_cb(Fl_Widget* wg, void* ptr)
+{
+	Gui* gui = (Gui*)ptr;
+
+	gui->configure_modem();
 }
 
 void send_reminder_cb(Fl_Widget* wg, void* ptr)
@@ -353,6 +370,7 @@ void Gui::init(ModemInterface* mod_int_in)
 		menu->add("Edit/Total English", FL_CTRL + 'e', total_english_cb, this);
 		menu->add("Edit/Total baptism source", FL_CTRL + 'b', total_baptism_source_cb, this);
 		menu->add("Areas/Send verification text", NULL, send_verify_text_cb, this);
+		menu->add("Modem/Configure modem", NULL, configure_modem_cb, this);
 	}
 	Fl_Tabs* tabs = new Fl_Tabs(0, BAR_HEIGHT + SPACING, WINDOW_WIDTH, WINDOW_HEIGHT - BAR_HEIGHT - SPACING);
 	{
@@ -634,7 +652,7 @@ void Gui::process_msg(Message* msg)
 
 			processed_this_msg = true;
 
-			int baptisms = report.int_values[REP_KEY_BAP];
+			int baptisms = _wtoi(report.report_values[REP_KEY_BAP].c_str());
 			if (baptisms > 0)
 			{
 				send_message(msg->sender_number, BAPTISM_RESPONSE_MSG);
@@ -667,24 +685,26 @@ void Gui::process_msg(Message* msg)
 			report.read_message(*msg, report_date);
 			report_collection.reports[Report::TYPE_BAPTISM_RECORD][ReportCollection::COMP].add_report(report);
 
-			int choice = report.int_values[REP_KEY_BAP_SOURCE];
+			int choice = _wtoi(report.report_values[REP_KEY_BAP_SOURCE].c_str());
 			Report bap_source = report;
 			bap_source.clear_values();
 			bap_source.set_type(Report::TYPE_BAPTISM_SOURCE);
-			for (std::vector<std::wstring>::iterator it = bap_source.int_key_list.begin(); it != bap_source.int_key_list.end(); ++it)
-				bap_source.int_values[*it] = 0;	//Fill with zeros
+
+			for (map<wstring, wstring>::iterator it = bap_source.report_values.begin(); it != bap_source.report_values.end(); ++it)
+				it->second = L"0";	//Fill with zeros
+
 			if (choice == 1)
-				bap_source.int_values[REP_KEY_BAP_MISS_FIND] = 1;
+				bap_source.report_values[REP_KEY_BAP_MISS_FIND] = L"1";
 			else if (choice == 2)
-				bap_source.int_values[REP_KEY_BAP_LA_REF] = 1;
+				bap_source.report_values[REP_KEY_BAP_LA_REF] = L"1";
 			else if (choice == 3)
-				bap_source.int_values[REP_KEY_BAP_RC_REF] = 1;
+				bap_source.report_values[REP_KEY_BAP_RC_REF] = L"1";
 			else if (choice == 4)
-				bap_source.int_values[REP_KEY_BAP_MEM_REF] = 1;
+				bap_source.report_values[REP_KEY_BAP_MEM_REF] = L"1";
 			else if (choice == 5)
-				bap_source.int_values[REP_KEY_BAP_ENGLISH] = 1;
+				bap_source.report_values[REP_KEY_BAP_ENGLISH] = L"1";
 			else if (choice == 6)
-				bap_source.int_values[REP_KEY_BAP_TOUR] = 1;
+				bap_source.report_values[REP_KEY_BAP_TOUR] = L"1";
 
 			if (report_collection.reports[Report::TYPE_BAPTISM_SOURCE][ReportCollection::COMP].reports.count(bap_source.get_id_str()) > 0)
 			{
@@ -759,4 +779,12 @@ void Gui::unprocess_msg(Message* msg)
 		}
 	}
 	msg_handler.changed = true;
+}
+
+void Gui::configure_modem()
+{
+	modem_interface->push_command(L"AT\r");
+	modem_interface->push_command(L"ATE0\r");
+	modem_interface->push_command(L"AT+CPIN=\"0000\"\r");
+	modem_interface->push_command(L"AT+CMGF=0\r");
 }
