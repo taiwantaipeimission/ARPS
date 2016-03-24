@@ -40,6 +40,9 @@ void ReportCollection::init(std::wstring global_prefix_in)
 
 	suffix = L".txt";
 
+	loaded_base = false;
+	loaded_aux = false;
+
 	for (int i = 0; i < Report::NUM_TYPES; i++)
 	{
 		for (int j = 0; j < NUM_DATA_ORDERS; j++)
@@ -253,6 +256,8 @@ void ReportCollection::total_reports(Report::Type type, DataOrder from, DataOrde
 
 void ReportCollection::total(Report::Type type, CompList* comp_list, std::wstring date)
 {
+	if (!loaded_base || !loaded_aux)
+		load(!loaded_base, !loaded_aux);
 	//Don't total text report
 	if (type != Report::TYPE_BAPTISM_RECORD)
 	{
@@ -276,18 +281,26 @@ void ReportCollection::total_all(CompList* comp_list, std::wstring date, std::ws
 	total(Report::TYPE_BAPTISM_SOURCE, comp_list, date);
 }
 
-bool ReportCollection::load_all()
+/* Loads only the most basic key indicators, those with the data order COMP.
+*/
+bool ReportCollection::load(bool base, bool aux)
 {
+	if (base)
+		loaded_base = true;
+	if (aux)
+		loaded_aux = true;
 	for (int i = 0; i < Report::NUM_TYPES; i++)
 	{
 		for (int j = 0; j < NUM_DATA_ORDERS; j++)
 		{
-			//Don't bother with baptism record for district, zone, etc. since it is a text report
-			if (i != Report::TYPE_BAPTISM_RECORD || j == COMP)
+			if (((j == COMP && base) || (j != COMP && aux))						//scope test
+				&& (i != Report::TYPE_BAPTISM_RECORD || j == COMP))			//Don't bother with baptism record for district, zone, etc. since it is a text report
 			{
 				if (report_files[(Report::Type)i][(DataOrder)j].open(File::FILE_TYPE_INPUT))
+				{
 					reports[(Report::Type)i][(DataOrder)j].read_stored_all(report_files[(Report::Type)i][(DataOrder)j].file);
-				report_files[(Report::Type)i][(DataOrder)j].close();
+					report_files[(Report::Type)i][(DataOrder)j].close();
+				}
 			}
 		}
 	}
@@ -301,7 +314,7 @@ bool ReportCollection::is_saved()
 	{
 		for (int j = 0; j < NUM_DATA_ORDERS && saved; j++)
 		{
-			if (reports[(Report::Type)i][(DataOrder)j].changed)
+			if (reports[(Report::Type)i][(DataOrder)j].loaded && reports[(Report::Type)i][(DataOrder)j].changed)
 				saved = false;
 		}
 	}
@@ -317,12 +330,12 @@ bool ReportCollection::save_all()
 			//Don't bother with baptism record for district, zone, etc. since it is a text report
 			if (i != Report::TYPE_BAPTISM_RECORD || j == COMP)
 			{
-				if (reports[(Report::Type)i][(DataOrder)j].changed && report_files[(Report::Type)i][(DataOrder)j].open(File::FILE_TYPE_OUTPUT))
+				if (reports[(Report::Type)i][(DataOrder)j].loaded && reports[(Report::Type)i][(DataOrder)j].changed && report_files[(Report::Type)i][(DataOrder)j].open(File::FILE_TYPE_OUTPUT))
 				{
 					reports[(Report::Type)i][(DataOrder)j].print(report_files[(Report::Type)i][(DataOrder)j].file);
 					reports[(Report::Type)i][(DataOrder)j].changed = false;
+					report_files[(Report::Type)i][(DataOrder)j].close();
 				}
-				report_files[(Report::Type)i][(DataOrder)j].close();
 			}
 		}
 	}

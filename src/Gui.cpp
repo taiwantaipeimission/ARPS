@@ -103,8 +103,8 @@ void user_terminal_cb(Fl_Widget* wg, void* ptr)
 	std::getline(std::wcin, cmd);
 	while (cmd != L"q")
 	{
-		replace_chars(cmd, L";", COMMAND_ESCAPE_CHAR);
-		replace_chars(cmd, L".", L"\u001B");
+		replace_chars(cmd, L"`", COMMAND_ESCAPE_CHAR);
+		replace_chars(cmd, L"~", L"\u001B");
 		gui->modem_interface->push_command(cmd + L"\r");
 		std::getline(std::wcin, cmd);
 	}
@@ -492,7 +492,7 @@ void Gui::load()
 
 	comp_list.load(&file_manager);
 	report_collection.init(L"../data/");
-	report_collection.load_all();
+	report_collection.load(true, false);
 	msg_handler.load(&file_manager);
 
 	file_manager.files[FILE_REFERRALS].open(File::FILE_TYPE_INPUT);

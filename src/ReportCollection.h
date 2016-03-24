@@ -31,6 +31,8 @@ public:
 	std::wstring suffix;
 	std::map<Report::Type, std::map<DataOrder, ReportSheet>> reports;		//Keyed by a combination of report type and data order
 	std::map<Report::Type, std::map<DataOrder, File>> report_files;			//File paths; organized same as report sheets above
+	bool loaded_base;
+	bool loaded_aux;
 
 	ReportCollection();
 	virtual ~ReportCollection();
@@ -38,7 +40,7 @@ public:
 	void init(std::wstring global_prefix_in);
 
 	bool is_saved();
-	bool load_all();
+	bool load(bool base, bool aux);
 	bool save_all();
 	void total_all(CompList* comp_list, std::wstring date, std::wstring english_date);
 

@@ -7,7 +7,7 @@
 using namespace std;
 
 ReportSheet::ReportSheet()
-	: reports(), changed(false)
+	: reports(), changed(false), loaded(false)
 {
 }
 
@@ -85,6 +85,7 @@ void ReportSheet::read_stored_all(std::wistream& input)
 		}
 	}
 	changed = false;
+	loaded = true;
 }
 
 void ReportSheet::print(std::wostream& output)

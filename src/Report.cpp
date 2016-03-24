@@ -36,7 +36,7 @@ void Report::read_message(Message msg, std::wstring date)
 
 	for (map<wstring, wstring>::iterator it = report_values.begin(); it != report_values.end(); ++it)
 	{
-		it->second = _wtoi(get_msg_key_val(msg.contents, it->first, ':', '\n').c_str());
+		it->second = get_msg_key_val(msg.contents, it->first, ':', '\n').c_str();
 	}
 }
 
@@ -201,7 +201,7 @@ void Report::print(std::wostream& output)
 	output << get_id_str();
 	for (map<wstring, wstring>::iterator it = report_values.begin(); it != report_values.end(); ++it)
 	{
-		output << it->second;
+		output << L'\t' << it->second;
 	}
 	output << L'\n';
 }

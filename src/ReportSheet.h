@@ -13,6 +13,7 @@ public:
 
 	std::wstring header_row;
 	std::map<std::wstring, Report> reports;
+	bool loaded;
 	
 	//Does the report sheet need to be re-saved?
 	bool changed;
