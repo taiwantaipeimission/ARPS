@@ -509,6 +509,11 @@ void Gui::load()
 	english_wday = config.values[CONFIG_FIELD_ENGLISH_WDAY];
 	stray_msg_handler = config.values[CONFIG_FIELD_STRAY_MSG_HANDLER];
 
+	report_fields = config.values[CONFIG_FIELD_REPORT_FIELDS];
+	english_fields = config.values[CONFIG_FIELD_ENGLISH_FIELDS];
+	baptism_record_fields = config.values[CONFIG_FIELD_BAPTISM_RECORD_FIELDS];
+	baptism_source_fields = config.values[CONFIG_FIELD_BAPTISM_SOURCE_FIELDS];
+
 	report_date = get_report_date_str(report_wday);
 	english_date = get_report_date_str(english_wday);
 }
@@ -719,6 +724,7 @@ void Gui::process_msg(Message* msg)
 			{
 				//Add on to the existing baptism source report
 				report_collection.reports[Report::TYPE_BAPTISM_SOURCE][ReportCollection::COMP].reports[bap_source.get_id_str()] += bap_source;
+				report_collection.reports[Report::TYPE_BAPTISM_SOURCE][ReportCollection::COMP].changed = true;
 			}
 			else
 			{

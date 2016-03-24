@@ -31,7 +31,7 @@ CompList::~CompList()
 void CompList::load(FileManager* file_manager)
 {
 	file_manager->files[FILE_PH_LIST].open(File::FILE_TYPE_INPUT);
-	std::wstring line;
+	std::wstring line = L"";
 	std::getline(file_manager->files[FILE_PH_LIST].file, line);
 	std::vector<std::wstring> header = tokenize(line, '\t');
 

@@ -74,6 +74,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Area.cpp" />
+    <ClCompile Include="codes.cpp" />
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="CompList.cpp" />
     <ClCompile Include="FieldCollection.cpp" />

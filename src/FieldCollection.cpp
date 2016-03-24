@@ -17,9 +17,9 @@ void FieldCollection::read_fields(File* file)
 	std::wstring key;
 	std::wstring value;
 
-	std::getline(file->file, line);
 	while (file->file.good())
 	{
+		std::getline(file->file, line);
 		int key_beg_pos = 0;
 		int key_end_pos = line.find(L"=", key_beg_pos) - 1;
 		int value_beg_pos = key_end_pos + 2;
@@ -28,8 +28,6 @@ void FieldCollection::read_fields(File* file)
 		key = line.substr(key_beg_pos, key_end_pos - key_beg_pos + 1);
 		value = line.substr(value_beg_pos, value_end_pos - value_beg_pos + 1);
 		values[key] = value;
-
-		std::getline(file->file, line);
 	}
 }
 

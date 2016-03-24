@@ -31,6 +31,7 @@ public:
 	bool use_sub_id;
 	bool is_new;
 
+	std::vector<std::wstring> report_list;				//List of all fields used in the report; used to preserve order when printing
 	std::map<std::wstring, std::wstring> report_values;
 
 	Report();

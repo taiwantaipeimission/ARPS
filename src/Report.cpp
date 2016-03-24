@@ -51,26 +51,26 @@ void Report::set_type(Type new_type)
 	wstring field_list = L"";
 	if (type == TYPE_REGULAR)
 	{
-		field_list = REPORT_FIELDS;
+		field_list = report_fields;
 	}
 	else if (type == TYPE_ENGLISH)
 	{
-		field_list = ENGLISH_FIELDS;
+		field_list = english_fields;
 		use_sub_id = true;
 	}
 	else if (type == TYPE_BAPTISM_RECORD)
 	{
-		field_list = BAPTISM_RECORD_FIELDS;
+		field_list = baptism_record_fields;
 		use_sub_id = true;
 	}
 	else if (type == TYPE_BAPTISM_SOURCE)
 	{
-		field_list = BAPTISM_SOURCE_FIELDS;
+		field_list = baptism_source_fields;
 	}
 
 	report_values.clear();
-	vector<wstring> field_tokens = tokenize(field_list, ',');
-	for (vector<wstring>::iterator it = field_tokens.begin(); it != field_tokens.end(); ++it)
+	report_list = tokenize(field_list, ',');
+	for (vector<wstring>::iterator it = report_list.begin(); it != report_list.end(); ++it)
 	{
 		if (report_values.count(*it) <= 0)
 		{
@@ -199,9 +199,9 @@ void Report::read_processed(wstring input, vector<wstring> header_tokens)
 void Report::print(std::wostream& output)
 {
 	output << get_id_str();
-	for (map<wstring, wstring>::iterator it = report_values.begin(); it != report_values.end(); ++it)
+	for (vector<wstring>::iterator it = report_list.begin(); it != report_list.end(); ++it)
 	{
-		output << L'\t' << it->second;
+		output << L'\t' << report_values[*it];
 	}
 	output << L'\n';
 }

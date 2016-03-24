@@ -92,9 +92,9 @@ void ReportSheet::print(std::wostream& output)
 {
 	Report header_ref;
 	header_ref.set_type(report_type);
-	for (map<wstring, wstring>::iterator it = header_ref.report_values.begin(); it != header_ref.report_values.end(); ++it)
+	for (vector<wstring>::iterator it = header_ref.report_list.begin(); it != header_ref.report_list.end(); ++it)
 	{
-		output << L"\t" << it->first;
+		output << L"\t" << *it;
 	}
 	output << L"\n";
 	for (std::map<std::wstring, Report>::iterator it = reports.begin(); it != reports.end(); ++it)
