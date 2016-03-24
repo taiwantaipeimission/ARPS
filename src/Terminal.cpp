@@ -88,6 +88,16 @@ wstring Terminal::run_command_str(wstring command)
 {
 	if (got_modem)
 	{
+		
+
+		clock_t start = clock();
+		clock_t end = start;
+		while (update(double(end - start) / (double)CLOCKS_PER_SEC * 1000.0f))
+		{
+			start = end;
+			end = clock();
+		}
+
 		got_modem = false;
 		timeout = false;
 		cur_command = command;
@@ -107,8 +117,7 @@ wstring Terminal::run_command_str(wstring command)
 				WriteFile(modem.file, tos(str).c_str(), 1, &written, NULL);
 		}
 
-		clock_t start = clock();
-		clock_t end = start;
+		
 		while (update(double(end - start) / (double)CLOCKS_PER_SEC * 1000.0f))
 		{
 			start = end;

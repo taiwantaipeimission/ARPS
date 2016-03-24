@@ -7,6 +7,7 @@
 #include "ReportCollection.h"
 #include "ReferralList.h"
 
+class Fl_Button;
 #include <FL/Fl_Multi_Browser.H>
 
 #include <string>
@@ -58,6 +59,7 @@ public:
 	Fl_Multi_Browser* received_reports;
 	Fl_Multi_Browser* unreceived_english;
 	Fl_Multi_Browser* received_english;
+	Fl_Button* check_message_button;
 
 	std::wstring report_date;
 	std::wstring english_date;
@@ -67,6 +69,7 @@ public:
 
 	bool auto_check;
 	double auto_check_s;
+	bool checking_msgs;
 
 	Gui();
 	virtual ~Gui();

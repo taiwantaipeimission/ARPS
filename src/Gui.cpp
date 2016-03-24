@@ -97,13 +97,13 @@ void user_terminal_cb(Fl_Widget* wg, void* ptr)
 	set_color(CC_GREEN, CC_BLACK);
 	wcout << L"Entered user terminal\n";
 	set_color(CC_GREY, CC_BLACK);
-	wcout << L"-Enter commands here and press ENTER.\n-To exit terminal, type \'q\'.\n-Type \';\' for an escape character.\n";
+	wcout << L"-Enter commands here and press ENTER.\n-To exit terminal, type \'q\'.\n-Type \'$\' for a message-end character.\n-Type \'~' for an escape character.\n";
 	set_color(CC_WHITE, CC_BLACK);
 	std::wstring cmd;
 	std::getline(std::wcin, cmd);
 	while (cmd != L"q")
 	{
-		replace_chars(cmd, L"`", COMMAND_ESCAPE_CHAR);
+		replace_chars(cmd, L"$", COMMAND_ESCAPE_CHAR);
 		replace_chars(cmd, L"~", L"\u001B");
 		gui->modem_interface->push_command(cmd + L"\r");
 		std::getline(std::wcin, cmd);
@@ -353,6 +353,8 @@ Gui::~Gui()
 
 void Gui::init(ModemInterface* mod_int_in)
 {
+	checking_msgs = false;
+
 	modem_interface = mod_int_in;
 	auto_check_s = 300.0f;
 	file_manager.files[FILE_OUTPUT].append = true;
@@ -386,10 +388,10 @@ void Gui::init(ModemInterface* mod_int_in)
 				handled->box(FL_BORDER_BOX);
 				handled->end();
 			}
-			Fl_Button* check_msg_button = new Fl_Button(SPACING, WINDOW_HEIGHT - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "Check msgs");
+			check_message_button = new Fl_Button(SPACING, WINDOW_HEIGHT - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "Check msgs");
 			{
-				check_msg_button->user_data((void*)this);
-				check_msg_button->callback(poll_msg_cb);
+				check_message_button->user_data((void*)this);
+				check_message_button->callback(poll_msg_cb);
 			}
 			Fl_Button* process_msg_button = new Fl_Button(BUTTON_WIDTH + 2 * SPACING, WINDOW_HEIGHT - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "Process");
 			{
@@ -573,10 +575,15 @@ void Gui::send_reminder(Area* area)
 
 void Gui::poll_msgs()
 {
+	check_message_button->deactivate();
 	modem_interface->push_command(L"AT\r");
 	modem_interface->push_command(L"ATE0\r");
 	modem_interface->push_command(L"AT+CMGF=0\r");
-	modem_interface->push_command(L"AT+CMGL=4\r");
+
+	Command cmd;
+	cmd.is_check_msg_command = true;
+	cmd.sub_cmds.push_back(SubCommand(L"AT+CMGL=4\r"));
+	modem_interface->push_command(cmd);
 }
 
 void Gui::send_message(std::wstring dest_ph_number, std::wstring msg_contents)
@@ -625,6 +632,8 @@ bool Gui::completed_command_cb()
 	while (modem_interface->num_results() > 0)
 	{
 		Command cmd = modem_interface->pop_result();
+		if (cmd.is_check_msg_command)
+			check_message_button->activate();
 		for (vector<SubCommand>::iterator it = cmd.sub_cmds.begin(); it != cmd.sub_cmds.end(); ++it)
 		{
 			wstring modem_str = it->result;

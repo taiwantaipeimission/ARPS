@@ -34,7 +34,7 @@ class Command
 public:
 
 	Command()
-		: n_times_to_try(1), n_times_tried(0), sub_cmds()
+		: n_times_to_try(1), n_times_tried(0), is_check_msg_command(false), sub_cmds()
 	{
 	}
 
@@ -43,5 +43,6 @@ public:
 
 	int n_times_to_try;
 	int n_times_tried;
+	bool is_check_msg_command;
 	vector<SubCommand> sub_cmds;
 };

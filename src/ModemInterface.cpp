@@ -20,8 +20,7 @@ void ModemInterface::push_command(Command cmd)
 void ModemInterface::push_command(wstring str)
 {
 	std::lock_guard<std::mutex> guard(mu);
-	SubCommand sub_cmd;
-	sub_cmd.cmd = str;
+	SubCommand sub_cmd(str);
 	Command cmd;
 	cmd.sub_cmds.push_back(sub_cmd);
 	cmd_unrun.push(cmd);
