@@ -222,35 +222,77 @@ Report ReportCollection::transform_report(Report rep, DataOrder from, DataOrder 
 	return rep;
 }
 
-void ReportCollection::total_reports(Report::Type type, DataOrder from, DataOrder to, CompList* comp_list, std::wstring date)
+void ReportCollection::create_baptism_source_reports()
 {
-	std::map<std::wstring, Report> reports_to_add;
-	std::vector<std::wstring> tokens = tokenize(date, ':');
-	int date_month = _wtoi(tokenize(date, L':')[1].c_str());
-
-	for (std::map<std::wstring, Report>::iterator it = reports[type][from].reports.begin(); it != reports[type][from].reports.end(); ++it)
+	for (map<wstring, Report>::iterator it = reports[Report::TYPE_BAPTISM_RECORD][COMP].reports.begin(); it != reports[Report::TYPE_BAPTISM_RECORD][COMP].reports.end(); ++it)
 	{
-		Report transformed = transform_report(it->second, from, to, comp_list);
-		int transformed_date_month = transformed.date_month;
+		int choice = _wtoi(it->second.report_values[REP_KEY_BAP_SOURCE].c_str());
+		Report bap_source = it->second;
+		bap_source.clear_values();
+		bap_source.set_type(Report::TYPE_BAPTISM_SOURCE);
 
-		if ((transformed.sender_name != L"UNKNOWN" && reports[type][to].reports.count(transformed.get_id_str()) <= 0)						//Conditions for writing/overwriting a new report: no existing report
-			|| transformed.get_date() == date														//Still receiving reports for today and updating sums
-			|| (transformed.date_month == date_month && transformed.date_wday == 0))				//We're adding a monthly report for the current month
+		for (map<wstring, wstring>::iterator it = bap_source.report_values.begin(); it != bap_source.report_values.end(); ++it)
+			it->second = L"0";	//Fill with zeros
+
+		if (choice == 1)
+			bap_source.report_values[REP_KEY_BAP_MISS_FIND] = L"1";
+		else if (choice == 2)
+			bap_source.report_values[REP_KEY_BAP_LA_REF] = L"1";
+		else if (choice == 3)
+			bap_source.report_values[REP_KEY_BAP_RC_REF] = L"1";
+		else if (choice == 4)
+			bap_source.report_values[REP_KEY_BAP_MEM_REF] = L"1";
+		else if (choice == 5)
+			bap_source.report_values[REP_KEY_BAP_ENGLISH] = L"1";
+		else if (choice == 6)
+			bap_source.report_values[REP_KEY_BAP_TOUR] = L"1";
+
+		if (reports[Report::TYPE_BAPTISM_SOURCE][ReportCollection::COMP].reports.count(bap_source.get_id_str()) > 0)
 		{
-			if (reports_to_add.count(transformed.get_id_str()) > 0)
-			{
-				reports_to_add[transformed.get_id_str()] += transformed;
-			}
-			else
-			{
-				reports_to_add[transformed.get_id_str()] = transformed;						//Start adding a new report
-			}
+			//Add on to the existing baptism source report
+			reports[Report::TYPE_BAPTISM_SOURCE][ReportCollection::COMP].reports[bap_source.get_id_str()] += bap_source;
+			reports[Report::TYPE_BAPTISM_SOURCE][ReportCollection::COMP].changed = true;
+		}
+		else
+		{
+			//Create a new baptism source report
+			reports[Report::TYPE_BAPTISM_SOURCE][ReportCollection::COMP].add_report(bap_source);
 		}
 	}
+}
 
-	for (std::map<std::wstring, Report>::iterator it = reports_to_add.begin(); it != reports_to_add.end(); ++it)
+void ReportCollection::total_reports(Report::Type type, DataOrder from, DataOrder to, CompList* comp_list, std::wstring date)
+{
+	if (type != Report::TYPE_BAPTISM_RECORD)
 	{
-		reports[type][to].add_report(it->second);
+		std::map<std::wstring, Report> reports_to_add;
+		std::vector<std::wstring> tokens = tokenize(date, ':');
+		int date_month = _wtoi(tokenize(date, L':')[1].c_str());
+
+		for (std::map<std::wstring, Report>::iterator it = reports[type][from].reports.begin(); it != reports[type][from].reports.end(); ++it)
+		{
+			Report transformed = transform_report(it->second, from, to, comp_list);
+			int transformed_date_month = transformed.date_month;
+
+			if ((transformed.sender_name != L"UNKNOWN" && reports[type][to].reports.count(transformed.get_id_str()) <= 0)						//Conditions for writing/overwriting a new report: no existing report
+				|| transformed.get_date() == date														//Still receiving reports for today and updating sums
+				|| (transformed.date_month == date_month && transformed.date_wday == 0))				//We're adding a monthly report for the current month
+			{
+				if (reports_to_add.count(transformed.get_id_str()) > 0)
+				{
+					reports_to_add[transformed.get_id_str()] += transformed;
+				}
+				else
+				{
+					reports_to_add[transformed.get_id_str()] = transformed;						//Start adding a new report
+				}
+			}
+		}
+
+		for (std::map<std::wstring, Report>::iterator it = reports_to_add.begin(); it != reports_to_add.end(); ++it)
+		{
+			reports[type][to].add_report(it->second);
+		}
 	}
 }
 
@@ -276,6 +318,7 @@ void ReportCollection::total(Report::Type type, CompList* comp_list, std::wstrin
 
 void ReportCollection::total_all(CompList* comp_list, std::wstring date, std::wstring english_date)
 {
+	create_baptism_source_reports();
 	total(Report::TYPE_REGULAR, comp_list, date);
 	total(Report::TYPE_ENGLISH, comp_list, english_date);
 	total(Report::TYPE_BAPTISM_SOURCE, comp_list, date);

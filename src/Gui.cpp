@@ -492,15 +492,6 @@ void Gui::load()
 {
 	file_manager.load(PATH_PATH_FILE);
 
-	comp_list.load(&file_manager);
-	report_collection.init(L"../data/");
-	report_collection.load(true, false);
-	msg_handler.load(&file_manager);
-
-	file_manager.files[FILE_REFERRALS].open(File::FILE_TYPE_INPUT);
-	referral_list.load(&file_manager.files[FILE_REFERRALS]);
-	file_manager.files[FILE_REFERRALS].close();
-
 	file_manager.files[L"CONFIG"].open(File::FILE_TYPE_INPUT);
 	config.read_fields(&file_manager.files[L"CONFIG"]);
 	file_manager.files[L"CONFIG"].close();
@@ -509,13 +500,17 @@ void Gui::load()
 	english_wday = config.values[CONFIG_FIELD_ENGLISH_WDAY];
 	stray_msg_handler = config.values[CONFIG_FIELD_STRAY_MSG_HANDLER];
 
-	report_fields = config.values[CONFIG_FIELD_REPORT_FIELDS];
-	english_fields = config.values[CONFIG_FIELD_ENGLISH_FIELDS];
-	baptism_record_fields = config.values[CONFIG_FIELD_BAPTISM_RECORD_FIELDS];
-	baptism_source_fields = config.values[CONFIG_FIELD_BAPTISM_SOURCE_FIELDS];
-
 	report_date = get_report_date_str(report_wday);
 	english_date = get_report_date_str(english_wday);
+
+	comp_list.load(&file_manager);
+	report_collection.init(L"../data/");
+	report_collection.load(true, false);
+	msg_handler.load(&file_manager);
+
+	file_manager.files[FILE_REFERRALS].open(File::FILE_TYPE_INPUT);
+	referral_list.load(&file_manager.files[FILE_REFERRALS]);
+	file_manager.files[FILE_REFERRALS].close();
 }
 
 void Gui::update_report_scrolls()
@@ -654,17 +649,15 @@ bool Gui::completed_command_cb()
 
 void Gui::process_msg(Message* msg)
 {
-	bool processed_this_msg = false;
 	if (!msg->concatenated)
 	{
 		if (msg->type == TYPE_REPORT)
 		{
+			ReportSheet* sheet = &report_collection.reports[Report::TYPE_REGULAR][ReportCollection::COMP];
 			Report report;
 			report.set_type(Report::TYPE_REGULAR);
-			report.read_message(*msg, report_date);
-			report_collection.reports[Report::TYPE_REGULAR][ReportCollection::COMP].add_report(report);
-
-			processed_this_msg = true;
+			report.read_message(*msg, sheet->sheet_fields, report_date);
+			sheet->add_report(report);
 
 			int baptisms = _wtoi(report.report_values[REP_KEY_BAP].c_str());
 			if (baptisms > 0)
@@ -685,54 +678,19 @@ void Gui::process_msg(Message* msg)
 		}
 		else if (msg->type == TYPE_REPORT_ENGLISH)
 		{
+			ReportSheet* sheet = &report_collection.reports[Report::TYPE_ENGLISH][ReportCollection::COMP];
 			Report report;
 			report.set_type(Report::TYPE_ENGLISH);
-			report.read_message(*msg, english_date);
-			report_collection.reports[Report::TYPE_ENGLISH][ReportCollection::COMP].add_report(report);
-
-			processed_this_msg = true;
+			report.read_message(*msg, sheet->sheet_fields, english_date);
+			sheet->add_report(report);
 		}
 		else if (msg->type == TYPE_REPORT_BAPTISM)
 		{
+			ReportSheet* sheet = &report_collection.reports[Report::TYPE_BAPTISM_RECORD][ReportCollection::COMP];
 			Report report;
 			report.set_type(Report::TYPE_BAPTISM_RECORD);
-			report.read_message(*msg, report_date);
-			report_collection.reports[Report::TYPE_BAPTISM_RECORD][ReportCollection::COMP].add_report(report);
-
-			int choice = _wtoi(report.report_values[REP_KEY_BAP_SOURCE].c_str());
-			Report bap_source = report;
-			bap_source.clear_values();
-			bap_source.set_type(Report::TYPE_BAPTISM_SOURCE);
-
-			for (map<wstring, wstring>::iterator it = bap_source.report_values.begin(); it != bap_source.report_values.end(); ++it)
-				it->second = L"0";	//Fill with zeros
-
-			if (choice == 1)
-				bap_source.report_values[REP_KEY_BAP_MISS_FIND] = L"1";
-			else if (choice == 2)
-				bap_source.report_values[REP_KEY_BAP_LA_REF] = L"1";
-			else if (choice == 3)
-				bap_source.report_values[REP_KEY_BAP_RC_REF] = L"1";
-			else if (choice == 4)
-				bap_source.report_values[REP_KEY_BAP_MEM_REF] = L"1";
-			else if (choice == 5)
-				bap_source.report_values[REP_KEY_BAP_ENGLISH] = L"1";
-			else if (choice == 6)
-				bap_source.report_values[REP_KEY_BAP_TOUR] = L"1";
-
-			if (report_collection.reports[Report::TYPE_BAPTISM_SOURCE][ReportCollection::COMP].reports.count(bap_source.get_id_str()) > 0)
-			{
-				//Add on to the existing baptism source report
-				report_collection.reports[Report::TYPE_BAPTISM_SOURCE][ReportCollection::COMP].reports[bap_source.get_id_str()] += bap_source;
-				report_collection.reports[Report::TYPE_BAPTISM_SOURCE][ReportCollection::COMP].changed = true;
-			}
-			else
-			{
-				//Create a new baptism source report
-				report_collection.reports[Report::TYPE_BAPTISM_SOURCE][ReportCollection::COMP].add_report(bap_source);
-			}
-
-			processed_this_msg = true;
+			report.read_message(*msg, sheet->sheet_fields, report_date);
+			sheet->add_report(report);
 		}
 		else if (msg->type == TYPE_REFERRAL)
 		{
@@ -743,8 +701,6 @@ void Gui::process_msg(Message* msg)
 				referral.dest_number = stray_msg_handler;	//Send it to the recorder!
 			send_message(referral.dest_number, msg->contents);
 			referral_list.push_back(referral);
-
-			processed_this_msg = true;
 		}
 		else if (msg->type == TYPE_UNKNOWN)
 		{
@@ -764,22 +720,18 @@ void Gui::process_msg(Message* msg)
 			}
 			if(!found)
 				send_message(stray_msg_handler, msg->contents);	//Send it to the recorder!
-			processed_this_msg = true;
 		}
 	}
-	if (processed_this_msg)
+	msg_handler.msgs_handled.push_back(msg);
+	for (size_t i = 0, erased = 0; i < msg_handler.msgs_unhandled.size() && erased == 0; i++)
 	{
-		msg_handler.msgs_handled.push_back(msg);
-		for (size_t i = 0, erased = 0; i < msg_handler.msgs_unhandled.size() && erased == 0; i++)
+		if (msg_handler.msgs_unhandled[i] == msg)
 		{
-			if (msg_handler.msgs_unhandled[i] == msg)
-			{
-				msg_handler.msgs_unhandled.erase(msg_handler.msgs_unhandled.begin() + i);
-				erased = true;
-			}
+			msg_handler.msgs_unhandled.erase(msg_handler.msgs_unhandled.begin() + i);
+			erased = true;
 		}
-		msg_handler.changed = true;
 	}
+	msg_handler.changed = true;
 }
 
 void Gui::unprocess_msg(Message* msg)

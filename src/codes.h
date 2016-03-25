@@ -14,12 +14,6 @@ using namespace std;
 #define BAPTISM_RESPONSE_MSG L"Congratulations on your baptism[s]! Please send in one copy of this template per baptism."
 #define BAPTISM_REPORT_TEMPLATE L"TYPE:BAPTISM\nCONV_NAME:\nBP_DATE:\nCONF_DATE:\nWARD:\nHOME_ADDR:\nPH_NUM:\nBAP_SOURCE:\n1=Missionary contacting\n2=LA referral\n3=RC referral\n4=Active member referral\n5=English class\n6=Temple tour"
 
-//Report key strings
-extern wstring report_fields;
-extern wstring english_fields;
-extern wstring baptism_record_fields;
-extern wstring baptism_source_fields;
-
 //Baptism source key strings
 #define REP_KEY_BAP L"BAP"
 #define REP_KEY_BAP_SOURCE L"BAP_SOURCE"

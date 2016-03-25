@@ -13,7 +13,7 @@ Report::Report()
 	set_type(TYPE_REGULAR);
 }
 
-void Report::read_message(Message msg, std::wstring date)
+void Report::read_message(Message msg, vector<wstring> to_read, std::wstring date)
 {
 	if (msg.type == TYPE_REPORT)
 		set_type(TYPE_REGULAR);
@@ -34,9 +34,9 @@ void Report::read_message(Message msg, std::wstring date)
 
 	std::wstring value;
 
-	for (map<wstring, wstring>::iterator it = report_values.begin(); it != report_values.end(); ++it)
+	for (vector<wstring>::iterator it = to_read.begin(); it != to_read.end(); ++it)
 	{
-		it->second = get_msg_key_val(msg.contents, it->first, ':', '\n').c_str();
+		report_values[*it] = get_msg_key_val(msg.contents, *it, ':', '\n').c_str();
 	}
 }
 
@@ -48,36 +48,20 @@ void Report::set_type(Type new_type)
 {
 	type = new_type;
 	use_sub_id = false;
-	wstring field_list = L"";
 	if (type == TYPE_REGULAR)
 	{
-		field_list = report_fields;
 	}
 	else if (type == TYPE_ENGLISH)
 	{
-		field_list = english_fields;
 		use_sub_id = true;
 	}
 	else if (type == TYPE_BAPTISM_RECORD)
 	{
-		field_list = baptism_record_fields;
 		use_sub_id = true;
 	}
 	else if (type == TYPE_BAPTISM_SOURCE)
 	{
-		field_list = baptism_source_fields;
 	}
-
-	report_values.clear();
-	report_list = tokenize(field_list, ',');
-	for (vector<wstring>::iterator it = report_list.begin(); it != report_list.end(); ++it)
-	{
-		if (report_values.count(*it) <= 0)
-		{
-			report_values[*it] = L"";
-		}
-	}
-	
 }
 
 std::wstring Report::get_id_str()
@@ -149,15 +133,10 @@ void Report::clear_values()
 		it->second = L"";
 }
 
-void Report::read_processed(wstring input, vector<wstring> header_tokens)
+void Report::read_processed(wstring input, vector<wstring> field_order)
 {
 	vector<wstring> tokens = tokenize(input, '\t');
-	map<wstring, wstring> read_value_pairs;
-	size_t n_pairs = min(tokens.size(), header_tokens.size());
-	for (size_t i = 0; i < n_pairs; i++)
-	{
-		read_value_pairs[header_tokens[i]] = tokens[i];
-	}
+
 	if (tokens.size() > 0)
 	{
 		std::wstring id_str = tokens[0];
@@ -186,20 +165,21 @@ void Report::read_processed(wstring input, vector<wstring> header_tokens)
 			sender_name = id_str_tokens[i++];
 		}
 
-		//Extract all of the keyed report values
-		for (map<wstring, wstring>::iterator it = report_values.begin(); it != report_values.end(); ++it)
+		size_t n_pairs = min(tokens.size() - 1, field_order.size());
+		for (size_t i = 0; i < n_pairs; i++)
 		{
-			it->second = read_value_pairs.count(it->first) > 0 ? read_value_pairs[it->first] : L"";
+			if (field_order[i] != L"")
+			{
+				report_values[field_order[i]] = tokens[i + 1];
+			}
 		}
-
-		is_new = false;
 	}
 }
 
-void Report::print(std::wostream& output)
+void Report::print(std::wostream& output, vector<wstring> to_write)
 {
 	output << get_id_str();
-	for (vector<wstring>::iterator it = report_list.begin(); it != report_list.end(); ++it)
+	for (vector<wstring>::iterator it = to_write.begin(); it != to_write.end(); ++it)
 	{
 		output << L'\t' << report_values[*it];
 	}

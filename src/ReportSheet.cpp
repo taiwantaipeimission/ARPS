@@ -62,8 +62,8 @@ void ReportSheet::read_stored_all(std::wistream& input)
 		wstring line_s = L"";
 
 		input.getline(line, 2028, '\n');
-		header_row = line;
-		vector<wstring> header_tokens = tokenize(header_row, '\t');
+		sheet_fields = tokenize(line, L'\t');
+		sheet_fields.erase(sheet_fields.begin());	//Get rid of the first blank column (the ID string column)
 		
 		while (input.good())
 		{
@@ -75,7 +75,7 @@ void ReportSheet::read_stored_all(std::wistream& input)
 			{
 				Report report;
 				report.set_type(report_type);
-				report.read_processed(line_s, header_tokens);
+				report.read_processed(line_s, sheet_fields);
 				add_report(report);
 			}
 			else
@@ -90,15 +90,11 @@ void ReportSheet::read_stored_all(std::wistream& input)
 
 void ReportSheet::print(std::wostream& output)
 {
-	Report header_ref;
-	header_ref.set_type(report_type);
-	for (vector<wstring>::iterator it = header_ref.report_list.begin(); it != header_ref.report_list.end(); ++it)
-	{
+	for (vector<wstring>::iterator it = sheet_fields.begin(); it != sheet_fields.end(); ++it)
 		output << L"\t" << *it;
-	}
 	output << L"\n";
 	for (std::map<std::wstring, Report>::iterator it = reports.begin(); it != reports.end(); ++it)
 	{
-		it->second.print(output);
+		it->second.print(output, sheet_fields);
 	}
 }

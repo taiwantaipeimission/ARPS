@@ -42,6 +42,7 @@ public:
 	bool is_saved();
 	bool load(bool base, bool aux);
 	bool save_all();
+	void create_baptism_source_reports();
 	void total_all(CompList* comp_list, std::wstring date, std::wstring english_date);
 
 	void total(Report::Type type, CompList* comp_list, std::wstring date);
