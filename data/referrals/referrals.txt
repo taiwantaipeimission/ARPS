@@ -469,3 +469,4 @@
 2016:3:3:7	EAST	+886972576592	HUALIAN_2_ZL	YILAN	曾天白	0953576009	former investigator from a long time ago	
 2016:3:3:7		+886965113871	JINHUA_S	木柵	Ariel	0955151212	英文班學生，非常棒！看跟隨祂的影片時哭了！工作在金華教堂附近，非常願意跟木柵的傳教士見面！金色的！！	
 2016:3:3:7		+886965113871	JINHUA_S	木柵	Ariel	0955151212	英文班學生，非常棒！看跟隨祂的影片時哭了！工作在金華教堂附近，非常願意跟木柵的傳教士見面！金色的！！	
+2016:3:3:7	CENTRAL	+886972576584	ZHONGLI_2_E	ZHONGZHENG	蘇姐妹	0960736030	She was in the process of making a car commercial when we met her, cool lady	
