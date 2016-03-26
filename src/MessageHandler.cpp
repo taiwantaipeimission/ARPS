@@ -33,11 +33,11 @@ void MessageHandler::parse_messages(std::wstring raw_str, Gui* gui)
 	{
 		Message* msg = new Message();
 		std::wstring msg_str = raw_str.substr(start, end - start + 1);	//String containing message info as well as CMGL response of the modem
-		decode_msg(msg, msg_str, &gui->comp_list);
+		msg->decode(msg_str, &gui->comp_list);
 		
-		if (msg->concatenated)
+		if (msg->is_concatenated())
 		{
-			unsigned int id = msg->concat_num_msgs | (msg->concat_refnum << 8);
+			unsigned int id = msg->get_concat_num_msgs() | (msg->get_concat_refnum() << 8);
 			msgs_fragment[id].push_back(msg);
 		}
 		else
@@ -46,8 +46,8 @@ void MessageHandler::parse_messages(std::wstring raw_str, Gui* gui)
 		}
 		start = end + 1;
 		end = raw_str.find(L"+CMGL:", start + 1) - 1;
-		if(msg->cmgl_ids.size() > 0)
-			gui->delete_message_from_sim(msg->cmgl_ids[0]);
+		if(msg->get_cmgl_ids().size() > 0)
+			gui->delete_message_from_sim(msg->get_cmgl_ids()[0]);
 		changed = true;
 	}
 
@@ -55,11 +55,11 @@ void MessageHandler::parse_messages(std::wstring raw_str, Gui* gui)
 	for (std::map<unsigned int, std::vector<Message*>>::iterator it = msgs_fragment.begin(); it != msgs_fragment.end(); )
 	{
 		std::vector<int> correct_order;					//List of the indeces of message fragments for this concat_id, arranged in proper order
-		int num_msgs = it->second[0]->concat_num_msgs;
+		int num_msgs = it->second[0]->get_concat_num_msgs();
 		correct_order.assign(num_msgs, -1);				//Fill with -1s so we can see if any msgs are missing
 		for (size_t i = 0; i < it->second.size(); i++)
 		{
-			size_t index = it->second[i]->concat_index - 1;					//Concat indeces inside msg start from 1, so subtract 1
+			size_t index = it->second[i]->get_concat_index() - 1;					//Concat indeces inside msg start from 1, so subtract 1
 			if (index < correct_order.size())
 				correct_order[index] = i;
 		}
@@ -67,10 +67,10 @@ void MessageHandler::parse_messages(std::wstring raw_str, Gui* gui)
 		{
 			for (unsigned int i = 1; i < correct_order.size(); i++)
 			{
-				it->second[correct_order[0]]->contents += it->second[correct_order[i]]->contents;
-				it->second[correct_order[0]]->cmgl_ids.push_back(it->second[correct_order[i]]->cmgl_ids[0]);
+				it->second[correct_order[0]]->app_contents(it->second[correct_order[i]]->get_contents());
+				it->second[correct_order[0]]->push_cmgl_id(it->second[correct_order[i]]->get_cmgl_ids()[0]);
 			}
-			it->second[correct_order[0]]->concatenated = false;
+			it->second[correct_order[0]]->set_concatenated(false);
 			msgs_unhandled.push_back(it->second[correct_order[0]]);
 			it = msgs_fragment.erase(it);
 			changed = true;
@@ -95,10 +95,10 @@ void MessageHandler::load(File* file, bool handled)
 			if (!line.empty())
 			{
 				Message* msg = new Message();
-				read_filed_msg(msg, line);
-				if (msg->concatenated)
+				msg->read(line);
+				if (msg->is_concatenated())
 				{
-					msgs_fragment[msg->concat_refnum].push_back(msg);
+					msgs_fragment[msg->get_concat_refnum()].push_back(msg);
 				}
 				else
 				{
@@ -107,7 +107,7 @@ void MessageHandler::load(File* file, bool handled)
 
 					for (std::vector<Message*>::iterator it = target_vector->begin(); it != target_vector->end() && !duplicate; ++it)
 					{
-						if ((*it)->sender_name == msg->sender_name && (*it)->contents == msg->contents)
+						if ((*it)->get_sender_name() == msg->get_sender_name() && (*it)->get_contents() == msg->get_contents())
 							duplicate = true;
 					}
 					if (!duplicate)
@@ -125,7 +125,7 @@ void MessageHandler::save(File* file, bool handled)
 {
 	for (std::vector<Message*>::iterator it = (handled ? msgs_handled.begin() : msgs_unhandled.begin()); it != (handled ? msgs_handled.end() : msgs_unhandled.end()); ++it)
 	{
-		file->file << write_filed_msg(*it) << MSG_SEPARATOR;
+		file->file << (*it)->write() << MSG_SEPARATOR;
 	}
 }
 

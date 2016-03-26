@@ -15,13 +15,13 @@ Referral::~Referral()
 
 void Referral::read_message(Message msg)
 {
-	src_number = msg.sender_number;
-	src_name = msg.sender_name;
+	src_number = msg.get_sender_number();
+	src_name = msg.get_sender_name();
 
-	dest_geog_area = get_msg_key_val(msg.contents, L"PLACE", ':', '\n');
-	name = get_msg_key_val(msg.contents, L"NAME", ':', '\n', false);
-	number = get_msg_key_val(msg.contents, L"NUMBER", ':', '\n');
-	info = get_msg_key_val(msg.contents, L"INFO", ':', '\n', false);
+	dest_geog_area = get_msg_key_val(msg.get_contents(), L"PLACE", ':', '\n');
+	name = get_msg_key_val(msg.get_contents(), L"NAME", ':', '\n', false);
+	number = get_msg_key_val(msg.get_contents(), L"NUMBER", ':', '\n');
+	info = get_msg_key_val(msg.get_contents(), L"INFO", ':', '\n', false);
 
 	strip_chars(name, L"\t\n");
 	strip_chars(info, L"\t\n");

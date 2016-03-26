@@ -6,6 +6,8 @@
 #include <iomanip>
 #include <algorithm>
 
+#define OLDVER
+
 int get_hex_value(std::wstring rep)
 {
 	std::wstringstream conversion_stream;
@@ -121,13 +123,13 @@ std::wstring unpack_septets(std::vector<int> data)
 	return decoded_data;
 }
 
-std::vector<std::wstring> encode_msg(Message* msg)
+std::vector<std::wstring> Message::encode()
 {
-	std::wstring dest_number_encoded = encode_phone_number(msg->dest_number);
+	std::wstring dest_number_encoded = encode_phone_number(dest_number);
 	int num_length = dest_number_encoded.length();
 
-	int num_concat_msgs = (msg->contents.length() * 2) / MAX_MSG_LEN + 1;
-	std::wstring remaining_contents(msg->contents);
+	int num_concat_msgs = (contents.length() * 2) / MAX_MSG_LEN + 1;
+	std::wstring remaining_contents(contents);
 	std::vector<std::wstring> strings;
 
 	int msg_id = rand() % 256;
@@ -174,7 +176,7 @@ std::vector<std::wstring> encode_msg(Message* msg)
 	return strings;
 }
 
-bool decode_msg(Message* msg, std::wstring input, CompList* comp_list)
+void Message::decode(std::wstring input, CompList* comp_list)
 {
 	//Extract strings
 	std::wstringstream ss;
@@ -184,14 +186,14 @@ bool decode_msg(Message* msg, std::wstring input, CompList* comp_list)
 	{
 		ss.ignore(256, '\n');
 	}
-	ss >> msg->raw_pdu;
+	ss >> raw_pdu;
 	ss.clear();
 	ss.seekg(0, std::ios::beg);
-	ss.str(msg->raw_pdu);
+	ss.str(raw_pdu);
 
 	int service_center_number_length = extract_hex_value(ss, 2);
 	if (service_center_number_length < 0)
-		return false;
+		return;
 	int service_center_type = extract_hex_value(ss, 2);
 	std::wstring service_center_number = extract_phone_number(ss, service_center_number_length * 2 - 2);
 	int pdu_header = extract_hex_value(ss, 2);
@@ -202,19 +204,19 @@ bool decode_msg(Message* msg, std::wstring input, CompList* comp_list)
 	
 	int sender_number_length = extract_hex_value(ss, 2);
 	if (sender_number_length < 0)
-		return false;
+		return;
 	int sender_number_type = extract_hex_value(ss, 2);
-	msg->sender_number = extract_phone_number(ss, sender_number_length);
+	sender_number = extract_phone_number(ss, sender_number_length);
 	int protocol_id = extract_hex_value(ss, 2);
-	msg->data_coding = extract_hex_value(ss, 2);
+	data_coding = extract_hex_value(ss, 2);
 	std::wstring time = extract_phone_number(ss, 14);
-	msg->msg_length = extract_hex_value(ss, 2);
-	if (msg->msg_length < 0)
-		return false;
+	msg_length = extract_hex_value(ss, 2);
+	if (msg_length < 0)
+		return;
 	std::wstring udh;
 
-	msg->contents = L"";
-	if (msg->data_coding == 8)
+	contents = L"";
+	if (data_coding == 8)
 	{
 		int i = 0;
 		if (has_udh)
@@ -230,7 +232,7 @@ bool decode_msg(Message* msg, std::wstring input, CompList* comp_list)
 		int value = extract_hex_value(ss, 4);
 		while (ss.good())
 		{
-			msg->contents.push_back(value);		//Extract in 2-byte octet pairs
+			contents.push_back(value);		//Extract in 2-byte octet pairs
 			value = extract_hex_value(ss, 4);
 		}
 	}
@@ -258,107 +260,97 @@ bool decode_msg(Message* msg, std::wstring input, CompList* comp_list)
 		}
 		std::wstring all_contents = unpack_septets(packed_data);
 		int udh_num_septets = has_udh ? (((udhl + 1) * 8) + 6) / 7 : 0;
-		msg->contents = all_contents.substr(udh_num_septets, all_contents.length() - udh_num_septets);
+		contents = all_contents.substr(udh_num_septets, all_contents.length() - udh_num_septets);
 	}
 	std::wstring forbidden_chars = L"";
 	forbidden_chars += MSG_FILE_FIELD_SEPARATOR;
 	forbidden_chars += MSG_SEPARATOR;
-	strip_chars(msg->contents, forbidden_chars);
+	strip_chars(contents, forbidden_chars);
 	if (has_udh)
 	{
-		msg->concatenated = (udh[0] == 0x0) || (udh[0] == 0x8);
-		msg->concat_refnum = udh[1];
-		msg->concat_num_msgs = udh[2];
-		msg->concat_index = udh[3];
+		concatenated = (udh[0] == 0x0) || (udh[0] == 0x8);
+		concat_refnum = udh[1];
+		concat_num_msgs = udh[2];
+		concat_index = udh[3];
 	}
 	else
 	{
-		msg->concatenated = false;
-		msg->concat_refnum = 0;
-		msg->concat_index = 0;
-		msg->concat_num_msgs = 0;
+		concatenated = false;
+		concat_refnum = 0;
+		concat_index = 0;
+		concat_num_msgs = 0;
 	}
 
-	if (comp_list && comp_list->areas.count(msg->sender_number) > 0)
+	if (comp_list && comp_list->areas.count(sender_number) > 0)
 	{
-		msg->sender_name = comp_list->areas[msg->sender_number].area_name;
+		sender_name = comp_list->areas[sender_number].area_name;
 	}
 	else
-		msg->sender_name = msg->sender_number;
-
-	std::wstring type_str = get_msg_key_val(msg->contents, TYPE_KEY, ':', '\n');
-
-	if (type_str == TYPE_REPORT_STR)
-		msg->type = TYPE_REPORT;
-	else if (type_str == TYPE_ENGLISH_STR)
-		msg->type = TYPE_REPORT_ENGLISH;
-	else if (type_str == TYPE_BAPTISM_STR)
-		msg->type = TYPE_REPORT_BAPTISM;
-	else if (type_str == TYPE_REFERRAL_STR)
-		msg->type = TYPE_REFERRAL;
-	else
-		msg->type = TYPE_UNKNOWN;
+		sender_name = sender_number;
 
 	int cmgl_id_start = input.find(L"CMGL: ");
 	if (cmgl_id_start != std::wstring::npos)
 	{
 		cmgl_id_start += 6;
 		int cmgl_id_end = input.find(L",", cmgl_id_start);
-		msg->cmgl_ids.push_back(_wtoi(input.substr(cmgl_id_start, cmgl_id_end - cmgl_id_start).c_str()));
+		cmgl_ids.push_back(_wtoi(input.substr(cmgl_id_start, cmgl_id_end - cmgl_id_start).c_str()));
 	}
 	else
 	{
-		msg->cmgl_ids.clear();
+		cmgl_ids.clear();
 	}
-	return true;
 }
 
-void read_filed_msg(Message* msg, std::wstring input)
+void Message::read(std::wstring input)
 {
+#ifdef OLDVER
 	std::wstringstream ss(input);
 
-	
-	std::getline(ss, msg->sender_name, MSG_FILE_FIELD_SEPARATOR);
-	std::getline(ss, msg->sender_number, MSG_FILE_FIELD_SEPARATOR);
-	std::wstring msg_type;
-	std::getline(ss, msg_type, MSG_FILE_FIELD_SEPARATOR);
-	msg->type = (MessageType)_wtoi(msg_type.c_str()); 
-	std::getline(ss, msg->contents, MSG_FILE_FIELD_SEPARATOR);
-	std::getline(ss, msg->sent_date, MSG_FILE_FIELD_SEPARATOR);
+	std::getline(ss, sender_name, MSG_FILE_FIELD_SEPARATOR);
+	std::getline(ss, sender_number, MSG_FILE_FIELD_SEPARATOR);
+	std::getline(ss, contents, MSG_FILE_FIELD_SEPARATOR);
+	std::getline(ss, sent_date, MSG_FILE_FIELD_SEPARATOR);
 	std::wstring data_coding;
 	std::getline(ss, data_coding, MSG_FILE_FIELD_SEPARATOR);
-	msg->data_coding = _wtoi(data_coding.c_str());
+	data_coding = _wtoi(data_coding.c_str());
 	std::wstring msg_length;
 	std::getline(ss, msg_length, MSG_FILE_FIELD_SEPARATOR);
-	msg->msg_length = _wtoi(msg_length.c_str());
+	msg_length = _wtoi(msg_length.c_str());
 	std::wstring concatenated;
 	std::getline(ss, concatenated, MSG_FILE_FIELD_SEPARATOR);
-	msg->concatenated = _wtoi(concatenated.c_str()) == 0 ? false : true;
+	concatenated = _wtoi(concatenated.c_str()) == 0 ? false : true;
 	std::wstring concat_refnum;
 	std::getline(ss, concat_refnum, MSG_FILE_FIELD_SEPARATOR);
-	msg->concat_refnum = _wtoi(concat_refnum.c_str());
+	concat_refnum = _wtoi(concat_refnum.c_str());
 	std::wstring concat_num_msgs;
 	std::getline(ss, concat_num_msgs, MSG_FILE_FIELD_SEPARATOR);
-	msg->concat_num_msgs = _wtoi(concat_num_msgs.c_str());
+	concat_num_msgs = _wtoi(concat_num_msgs.c_str());
 	std::wstring concat_index;
 	std::getline(ss, concat_index, MSG_FILE_FIELD_SEPARATOR);
-	msg->concat_index = _wtoi(concat_index.c_str());
+	concat_index = _wtoi(concat_index.c_str());
+#else
+
+
+
+
+
+
+#endif
 }
 
-std::wstring write_filed_msg(Message* msg)
+std::wstring Message::write()
 {
 	std::wstringstream ss;
-	ss << msg->sender_name << MSG_FILE_FIELD_SEPARATOR
-		<< msg->sender_number << MSG_FILE_FIELD_SEPARATOR
-		<< msg->type << MSG_FILE_FIELD_SEPARATOR
-		<< msg->contents << MSG_FILE_FIELD_SEPARATOR
-		<< msg->sent_date << MSG_FILE_FIELD_SEPARATOR
-		<< msg->data_coding << MSG_FILE_FIELD_SEPARATOR
-		<< msg->msg_length << MSG_FILE_FIELD_SEPARATOR
-		<< msg->concatenated << MSG_FILE_FIELD_SEPARATOR
-		<< msg->concat_refnum << MSG_FILE_FIELD_SEPARATOR
-		<< msg->concat_num_msgs << MSG_FILE_FIELD_SEPARATOR
-		<< msg->concat_index;
+	ss << sender_name << MSG_FILE_FIELD_SEPARATOR
+		<< sender_number << MSG_FILE_FIELD_SEPARATOR
+		<< contents << MSG_FILE_FIELD_SEPARATOR
+		<< sent_date << MSG_FILE_FIELD_SEPARATOR
+		<< data_coding << MSG_FILE_FIELD_SEPARATOR
+		<< msg_length << MSG_FILE_FIELD_SEPARATOR
+		<< concatenated << MSG_FILE_FIELD_SEPARATOR
+		<< concat_refnum << MSG_FILE_FIELD_SEPARATOR
+		<< concat_num_msgs << MSG_FILE_FIELD_SEPARATOR
+		<< concat_index;
 	std::wstring return_str = ss.str();
 	return return_str;
 }

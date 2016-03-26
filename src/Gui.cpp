@@ -284,7 +284,7 @@ int MessageBrowser::handle(int event)
 			Message* msg = value() ? (Message*)data(value()) : NULL;
 			if (msg)
 			{
-				std::wstring msg_text = msg->contents;
+				std::wstring msg_text = msg->get_contents();
 				fl_message(tos(msg_text).c_str());
 			}
 			handled = 1;
@@ -322,7 +322,7 @@ int MessageBrowser::handle(int event)
 			Message* msg = value() ? (Message*)data(value()): NULL;
 			if (msg)
 			{
-				std::wstring msg_text = msg->contents;
+				std::wstring msg_text = msg->get_contents();
 				fl_message(tos(msg_text).c_str());
 			}
 			handled = 1;
@@ -555,13 +555,13 @@ void Gui::update_msg_scroll()
 	handled->clear();
 	for (size_t i = 0; i < msg_handler.msgs_unhandled.size(); i++)
 	{
-		std::wstring display_txt = get_browser_display_txt(msg_handler.msgs_unhandled[i]->sender_name + DISPLAY_TEXT_SEPARATOR + msg_handler.msgs_unhandled[i]->contents);
+		std::wstring display_txt = get_browser_display_txt(msg_handler.msgs_unhandled[i]->get_sender_name() + DISPLAY_TEXT_SEPARATOR + msg_handler.msgs_unhandled[i]->get_contents());
 		unhandled->add(tos(display_txt).c_str(), msg_handler.msgs_unhandled[i]);
 	}
 
 	for (size_t i = 0; i < msg_handler.msgs_handled.size(); i++)
 	{
-		std::wstring display_txt = get_browser_display_txt(msg_handler.msgs_handled[i]->sender_name + DISPLAY_TEXT_SEPARATOR + msg_handler.msgs_handled[i]->contents);
+		std::wstring display_txt = get_browser_display_txt(msg_handler.msgs_handled[i]->get_sender_name() + DISPLAY_TEXT_SEPARATOR + msg_handler.msgs_handled[i]->get_contents());
 		handled->add(tos(display_txt).c_str(), msg_handler.msgs_handled[i]);
 	}
 	unhandled->redraw();
@@ -589,9 +589,9 @@ void Gui::poll_msgs()
 void Gui::send_message(std::wstring dest_ph_number, std::wstring msg_contents)
 {
 	Message msg;
-	msg.contents = msg_contents;
-	msg.dest_number = dest_ph_number;
-	std::vector<std::wstring> strings = encode_msg(&msg);
+	msg.set_contents(msg_contents);
+	msg.set_dest_number(dest_ph_number);
+	std::vector<std::wstring> strings = msg.encode();
 	
 	for (size_t i = 0; i < strings.size(); i++)
 	{
@@ -649,9 +649,10 @@ bool Gui::completed_command_cb()
 
 void Gui::process_msg(Message* msg)
 {
-	if (!msg->concatenated)
+	if (!msg->is_concatenated())
 	{
-		if (msg->type == TYPE_REPORT)
+		wstring msg_type = get_msg_key_val(msg->get_contents(), TYPE_KEY, ':', '\n');
+		if (msg_type == TYPE_REPORT_STR)
 		{
 			ReportSheet* sheet = &report_collection.reports[Report::TYPE_REGULAR][ReportCollection::COMP];
 			Report report;
@@ -662,8 +663,8 @@ void Gui::process_msg(Message* msg)
 			int baptisms = _wtoi(report.report_values[REP_KEY_BAP].c_str());
 			if (baptisms > 0)
 			{
-				send_message(msg->sender_number, BAPTISM_RESPONSE_MSG);
-				send_message(msg->sender_number, BAPTISM_REPORT_TEMPLATE);
+				send_message(msg->get_sender_number(), BAPTISM_RESPONSE_MSG);
+				send_message(msg->get_sender_number(), BAPTISM_REPORT_TEMPLATE);
 
 				for (int i = 0; i < baptisms; i++)
 				{
@@ -676,7 +677,7 @@ void Gui::process_msg(Message* msg)
 				}
 			}
 		}
-		else if (msg->type == TYPE_REPORT_ENGLISH)
+		else if (msg_type == TYPE_ENGLISH_STR)
 		{
 			ReportSheet* sheet = &report_collection.reports[Report::TYPE_ENGLISH][ReportCollection::COMP];
 			Report report;
@@ -684,7 +685,7 @@ void Gui::process_msg(Message* msg)
 			report.read_message(*msg, sheet->sheet_fields, english_date);
 			sheet->add_report(report);
 		}
-		else if (msg->type == TYPE_REPORT_BAPTISM)
+		else if (msg_type == TYPE_BAPTISM_STR)
 		{
 			ReportSheet* sheet = &report_collection.reports[Report::TYPE_BAPTISM_RECORD][ReportCollection::COMP];
 			Report report;
@@ -692,24 +693,24 @@ void Gui::process_msg(Message* msg)
 			report.read_message(*msg, sheet->sheet_fields, report_date);
 			sheet->add_report(report);
 		}
-		else if (msg->type == TYPE_REFERRAL)
+		else if (msg_type == TYPE_REFERRAL_STR)
 		{
 			Referral referral;
 			referral.read_message(*msg);
 			referral.locate(&comp_list);
 			if (!referral.found_dest())
 				referral.dest_number = stray_msg_handler;	//Send it to the recorder!
-			send_message(referral.dest_number, msg->contents);
+			send_message(referral.dest_number, msg->get_contents());
 			referral_list.push_back(referral);
 		}
-		else if (msg->type == TYPE_UNKNOWN)
+		else
 		{
 			bool found = false;
 			for (ReferralList::iterator it = referral_list.begin(); it != referral_list.end() && !found; ++it)
 			{
-				if (it->dest_number == msg->sender_number)
+				if (it->dest_number == msg->get_sender_number())
 				{
-					std::wstring result = get_msg_key_val(msg->contents, it->name, ':', '\n');
+					std::wstring result = get_msg_key_val(msg->get_contents(), it->name, ':', '\n');
 					if (!result.empty())
 					{
 						strip_chars(result, L"\t\n");
@@ -719,7 +720,7 @@ void Gui::process_msg(Message* msg)
 				}
 			}
 			if(!found)
-				send_message(stray_msg_handler, msg->contents);	//Send it to the recorder!
+				send_message(stray_msg_handler, msg->get_contents());	//Send it to the recorder!
 		}
 	}
 	msg_handler.msgs_handled.push_back(msg);
