@@ -2,6 +2,8 @@
 
 #include "codes.h"
 
+#include "rapidjson/document.h"
+
 #include <algorithm>
 #include <string>
 #include <iostream>
@@ -27,6 +29,15 @@ static const std::string tos(std::wstring str)
 
 	std::string st = converter.to_bytes(str);
 	return st;
+}
+
+static const std::wstring tow(std::string str)
+{
+	typedef std::codecvt_utf8<wchar_t> convert_type;
+	std::wstring_convert<convert_type, wchar_t> converter;
+
+	std::wstring ws = converter.from_bytes(str);
+	return ws;
 }
 
 static void strip_chars(std::wstring& str, std::wstring chars_to_remove)

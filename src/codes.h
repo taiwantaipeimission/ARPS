@@ -66,8 +66,18 @@ using namespace std;
 #define TYPE_BAPTISM_STR L"BAPTISM"
 #define TYPE_REFERRAL_STR L"REFERRAL"
 #define MAX_MSG_LEN 134 	//140 characters of message (for 8-bit encoding); take away 6 bits for possible UDH data
-#define MSG_FILE_FIELD_SEPARATOR L'|'
-#define MSG_SEPARATOR L'\\'
+
+//JSON keys
+#define JK_SENDER_NAME "SENDER_NAME"
+#define JK_SENDER_NUMBER "SENDER_NUMBER"
+#define JK_CONTENTS "CONTENTS"
+#define JK_SENT_DATE "SENT_DATE"
+#define JK_DATA_CODING "DATA_CODING"
+#define JK_MSG_LEN "MSG_LEN"
+#define JK_CONCAT "CONCAT"
+#define JK_CONCAT_REFNUM "C_REFNUM"
+#define JK_CONCAT_NUM_MSG "C_NUM_MSG"
+#define JK_CONCAT_INDEX "C_INDEX"
 
 //Serial constants
 #define MAX_NUM_TRIES 64		//Try this many times to get a character across the serial cable before quitting

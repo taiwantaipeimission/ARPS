@@ -6,6 +6,8 @@
 
 #include "CompList.h"
 
+#include "rapidjson/document.h"
+
 std::wstring encode_hex_value(std::wstring chars, int rep_num_chars);
 std::wstring unpack_septets(std::vector<int> packed_data);
 std::wstring encode_phone_number(std::wstring phone_number);
@@ -35,6 +37,9 @@ private:
 	//Incoming: fields deducted from comparison to area list
 	std::wstring sender_name;
 
+	//Incoming: state tracking
+	bool processed;
+
 	//Outgoing:
 	std::wstring dest_number;
 
@@ -51,6 +56,7 @@ public:
 	int get_concat_index() { return concat_index; }
 	std::vector<int> get_cmgl_ids() { return cmgl_ids; }
 	std::wstring get_sender_name() { return sender_name; }
+	bool is_processed() { return processed; }
 	std::wstring get_dest_number() { return dest_number; }
 
 	void set_contents(std::wstring contents_in) { contents = contents_in; }
@@ -58,11 +64,13 @@ public:
 	void push_cmgl_id(int cmgl_in) { cmgl_ids.push_back(cmgl_in); }
 	void set_dest_number(std::wstring dest_number_in) { dest_number = dest_number_in; }
 	void set_concatenated(bool concatenated_in) { concatenated = concatenated_in; }
+	void set_sender_name(std::wstring sender_name_in) { sender_name = sender_name_in; }
+	void set_processed(bool processed_in) { processed = processed_in; }
 
 	std::vector<std::wstring> encode();
 	void decode(std::wstring raw_input, CompList* comp_list);
-	void read(std::wstring input);
-	std::wstring write();
+	void read(const rapidjson::Value& m_val);
+	void write(rapidjson::Document* d);
 };
 
 

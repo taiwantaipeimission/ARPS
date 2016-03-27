@@ -16,6 +16,7 @@ public:
 	FileType file_type;
 	bool append;
 	std::wfstream file;
+	std::wstring contents;
 
 	File();
 	File(File& file);
@@ -23,5 +24,6 @@ public:
 
 	virtual bool open(File::FileType file_type_in);
 	virtual void close();
+	virtual std::wstring extract_contents();
 };
 

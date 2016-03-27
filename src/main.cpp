@@ -20,12 +20,16 @@
 #include "ModemInterface.h"
 
 
+#include "rapidjson\stringbuffer.h"
+#include "rapidjson\prettywriter.h"
 
 #include <string.h>
 #include <FL/Fl.H>
 #include <FL/Fl_Window.H>
 #include <FL/Fl_Choice.H>
 #include <FL/Fl_Multiline_Output.H>
+
+using namespace rapidjson;
 
 
 class Console_streambuf
@@ -60,7 +64,34 @@ void run_terminal_func(Terminal* terminal, Gui* gui, ModemInterface* mod_interfa
 }
 
 int main(int argc, char **argv)
-{
+{/*
+	Message msg;
+	msg.set_contents(L"yo, man");
+	msg.set_sender_name(L"THE MAN");
+
+	Document d;
+	d.SetArray();
+
+	msg.write_json(&d);
+
+
+	StringBuffer s;
+	PrettyWriter<StringBuffer> writer(s);
+	d.Accept(writer);
+	cout << s.GetString() << endl;
+
+	return 0;
+
+
+
+	*/
+
+
+
+
+
+
+
 	try
 	{
 		set_color(CC_GREEN, CC_BLACK);

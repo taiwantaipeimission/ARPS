@@ -2,11 +2,14 @@
 #include "Message.h"
 #include "Area.h"
 #include "utility.h"
+
+#include "rapidjson\document.h"
+
 #include <sstream>
 #include <iomanip>
 #include <algorithm>
 
-#define OLDVER
+using namespace rapidjson;
 
 int get_hex_value(std::wstring rep)
 {
@@ -262,10 +265,6 @@ void Message::decode(std::wstring input, CompList* comp_list)
 		int udh_num_septets = has_udh ? (((udhl + 1) * 8) + 6) / 7 : 0;
 		contents = all_contents.substr(udh_num_septets, all_contents.length() - udh_num_septets);
 	}
-	std::wstring forbidden_chars = L"";
-	forbidden_chars += MSG_FILE_FIELD_SEPARATOR;
-	forbidden_chars += MSG_SEPARATOR;
-	strip_chars(contents, forbidden_chars);
 	if (has_udh)
 	{
 		concatenated = (udh[0] == 0x0) || (udh[0] == 0x8);
@@ -301,56 +300,36 @@ void Message::decode(std::wstring input, CompList* comp_list)
 	}
 }
 
-void Message::read(std::wstring input)
+void Message::read(const Value& m)
 {
-#ifdef OLDVER
-	std::wstringstream ss(input);
-
-	std::getline(ss, sender_name, MSG_FILE_FIELD_SEPARATOR);
-	std::getline(ss, sender_number, MSG_FILE_FIELD_SEPARATOR);
-	std::getline(ss, contents, MSG_FILE_FIELD_SEPARATOR);
-	std::getline(ss, sent_date, MSG_FILE_FIELD_SEPARATOR);
-	std::wstring data_coding;
-	std::getline(ss, data_coding, MSG_FILE_FIELD_SEPARATOR);
-	data_coding = _wtoi(data_coding.c_str());
-	std::wstring msg_length;
-	std::getline(ss, msg_length, MSG_FILE_FIELD_SEPARATOR);
-	msg_length = _wtoi(msg_length.c_str());
-	std::wstring concatenated;
-	std::getline(ss, concatenated, MSG_FILE_FIELD_SEPARATOR);
-	concatenated = _wtoi(concatenated.c_str()) == 0 ? false : true;
-	std::wstring concat_refnum;
-	std::getline(ss, concat_refnum, MSG_FILE_FIELD_SEPARATOR);
-	concat_refnum = _wtoi(concat_refnum.c_str());
-	std::wstring concat_num_msgs;
-	std::getline(ss, concat_num_msgs, MSG_FILE_FIELD_SEPARATOR);
-	concat_num_msgs = _wtoi(concat_num_msgs.c_str());
-	std::wstring concat_index;
-	std::getline(ss, concat_index, MSG_FILE_FIELD_SEPARATOR);
-	concat_index = _wtoi(concat_index.c_str());
-#else
-
-
-
-
-
-
-#endif
+	sender_name = tow(m[JK_SENDER_NAME].GetString());
+	sender_number = tow(m[JK_SENDER_NUMBER].GetString());
+	contents = tow(m[JK_CONTENTS].GetString());
+	sent_date = tow(m[JK_SENT_DATE].GetString());
+	data_coding = m[JK_DATA_CODING].GetInt();
+	msg_length = m[JK_MSG_LEN].GetInt();
+	concatenated = m[JK_CONCAT].GetBool();
+	concat_refnum = m[JK_CONCAT_REFNUM].GetInt();
+	concat_num_msgs = m[JK_CONCAT_NUM_MSG].GetInt();
+	concat_index = m[JK_CONCAT_INDEX].GetInt();
 }
 
-std::wstring Message::write()
+void Message::write(Document* d)
 {
-	std::wstringstream ss;
-	ss << sender_name << MSG_FILE_FIELD_SEPARATOR
-		<< sender_number << MSG_FILE_FIELD_SEPARATOR
-		<< contents << MSG_FILE_FIELD_SEPARATOR
-		<< sent_date << MSG_FILE_FIELD_SEPARATOR
-		<< data_coding << MSG_FILE_FIELD_SEPARATOR
-		<< msg_length << MSG_FILE_FIELD_SEPARATOR
-		<< concatenated << MSG_FILE_FIELD_SEPARATOR
-		<< concat_refnum << MSG_FILE_FIELD_SEPARATOR
-		<< concat_num_msgs << MSG_FILE_FIELD_SEPARATOR
-		<< concat_index;
-	std::wstring return_str = ss.str();
-	return return_str;
+		Value v;
+		v.SetObject();
+		Document::AllocatorType& a = d->GetAllocator();
+		
+		v.AddMember(JK_SENDER_NAME, Value(tos(sender_name).c_str(), a), a);
+		v.AddMember(JK_SENDER_NUMBER, Value(tos(sender_number).c_str(), a), a);
+		v.AddMember(JK_CONTENTS, Value(tos(contents).c_str(), a), a);
+		v.AddMember(JK_SENT_DATE, Value(tos(sent_date).c_str(), a), a);
+		v.AddMember(JK_DATA_CODING, data_coding, a);
+		v.AddMember(JK_MSG_LEN, msg_length, a);
+		v.AddMember(JK_CONCAT, concatenated, a);
+		v.AddMember(JK_CONCAT_REFNUM, concat_refnum, a);
+		v.AddMember(JK_CONCAT_NUM_MSG, concat_num_msgs, a);
+		v.AddMember(JK_CONCAT_INDEX, concat_index, a);
+
+		d->PushBack(v, a);
 }

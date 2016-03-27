@@ -1,12 +1,15 @@
 #include "File.h"
-#include <codecvt>
 #include "utility.h"
+
+#include <codecvt>
+#include <sstream>
 
 File::File()
 	: filepath(L""),
 	file_type(FILE_TYPE_INPUT),
 	append(false),
-	file()
+	file(),
+	contents(L"")
 {
 
 }
@@ -25,6 +28,7 @@ File::~File()
 
 bool File::open(File::FileType file_type_in)
 {
+	contents = L"";
 	file_type = file_type_in;
 	if (!file.is_open())
 	{
@@ -52,4 +56,11 @@ void File::close()
 	{
 		file.close();
 	}
+}
+
+wstring File::extract_contents()
+{
+	if(contents == L"")
+		contents = wstring(static_cast<wstringstream const&>(wstringstream() << file.rdbuf()).str());
+	return contents;
 }

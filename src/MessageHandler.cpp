@@ -8,6 +8,13 @@
 #include "Referral.h"
 #include "File.h"
 #include "Gui.h"
+#include "utility.h"
+
+#include "rapidjson/document.h"
+#include "rapidjson/stringbuffer.h"
+#include "rapidjson/prettywriter.h"
+
+using namespace rapidjson;
 
 MessageHandler::MessageHandler()
 {
@@ -86,9 +93,37 @@ void MessageHandler::parse_messages(std::wstring raw_str, Gui* gui)
 
 void MessageHandler::load(File* file, bool handled)
 {
-	if (file->file.good())
+	Document document;
+	if (file->file.good() && !document.Parse<0>(tos(file->extract_contents()).c_str()).HasParseError())
 	{
-		do
+		assert(document.IsArray());
+		for (SizeType i = 0; i < document.Size(); i++)
+		{
+			const Value& m = document[i];
+			Message* msg = new Message();
+			msg->read(m);
+			if (msg->is_concatenated())
+			{
+				msgs_fragment[msg->get_concat_refnum()].push_back(msg);
+			}
+			else
+			{
+				bool duplicate = false;
+				std::vector<Message*>* target_vector = handled ? &msgs_handled : &msgs_unhandled;
+
+				for (std::vector<Message*>::iterator it = target_vector->begin(); it != target_vector->end() && !duplicate; ++it)
+				{
+					if ((*it)->get_sender_name() == msg->get_sender_name() && (*it)->get_contents() == msg->get_contents())
+						duplicate = true;
+				}
+				if (!duplicate)
+				{
+					target_vector->push_back(msg);
+				}
+			}
+		}
+
+		/*do
 		{
 			std::wstring line;
 			std::getline(file->file, line, MSG_SEPARATOR);
@@ -116,17 +151,24 @@ void MessageHandler::load(File* file, bool handled)
 					}
 				}
 			}
-		} while (file->file.good());
+		} while (file->file.good());*/
 		changed = false;
 	}
 }
 
 void MessageHandler::save(File* file, bool handled)
 {
+	Document d;
+	d.SetArray();
 	for (std::vector<Message*>::iterator it = (handled ? msgs_handled.begin() : msgs_unhandled.begin()); it != (handled ? msgs_handled.end() : msgs_unhandled.end()); ++it)
 	{
-		file->file << (*it)->write() << MSG_SEPARATOR;
+		(*it)->write(&d);
 	}
+	StringBuffer buffer;
+	PrettyWriter<StringBuffer> writer(buffer);
+	d.Accept(writer);
+	string str = buffer.GetString();
+	file->file << tow(str);
 }
 
 bool MessageHandler::is_saved()
@@ -143,6 +185,7 @@ void MessageHandler::save(FileManager* file_manager)
 	file_manager->files[FILE_MESSAGES_UNHANDLED].open(File::FILE_TYPE_OUTPUT);
 	save(&file_manager->files[FILE_MESSAGES_UNHANDLED], false);
 	file_manager->files[FILE_MESSAGES_UNHANDLED].close();
+
 	changed = false;
 }
 
