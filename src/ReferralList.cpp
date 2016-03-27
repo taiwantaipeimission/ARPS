@@ -38,7 +38,7 @@ void ReferralList::save(File* file, std::wstring date)
 {
 	for (ReferralList::iterator it = this->begin(); it != this->end(); ++it)
 	{
-		file->file << it->print(date) << L"\n";
+		file->file << it->print() << L"\n";
 	}
 	changed = false;
 }

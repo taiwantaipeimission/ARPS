@@ -171,7 +171,7 @@ void Report::read_processed(wstring input, vector<wstring> field_order)
 		{
 			if (field_order[i] != L"")
 			{
-				report_values[field_order[i]] = tokens[i + 1];
+				report_values[field_order[i]] = tokens[i + 1];	//Skip the first token, which contains only the ID string
 			}
 		}
 	}

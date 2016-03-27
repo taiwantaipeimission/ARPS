@@ -13,8 +13,10 @@ Referral::~Referral()
 {
 }
 
-void Referral::read_message(Message msg)
+void Referral::read_message(Message msg, std::wstring date_in)
 {
+	date = date_in;
+
 	src_number = msg.get_sender_number();
 	src_name = msg.get_sender_name();
 
@@ -31,7 +33,7 @@ void Referral::read_message(Message msg)
 		*it = towupper(*it);
 }
 
-std::wstring Referral::print(std::wstring date)
+std::wstring Referral::print()
 {
 	std::wstring return_val = date + L"\t" + dest_zone + L"\t" + src_number + L"\t" + src_name + L"\t" + dest_geog_area + L"\t" + name + L"\t" + number + L"\t" + info + L"\t" + contact_state;
 	return return_val;
@@ -39,8 +41,6 @@ std::wstring Referral::print(std::wstring date)
 
 void Referral::load(std::wstring line)
 {
-	std::wstring date;
-
 	std::vector<std::wstring> tokens = tokenize(line, '\t');
 
 	if (tokens.size() >= 9)

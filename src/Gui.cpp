@@ -502,6 +502,7 @@ void Gui::load()
 
 	report_date = get_report_date_str(report_wday);
 	english_date = get_report_date_str(english_wday);
+	current_date = get_cur_date_str();
 
 	comp_list.load(&file_manager);
 	report_collection.init(L"../data/");
@@ -671,7 +672,7 @@ void Gui::process_msg(Message* msg)
 					//Add a blank baptism record, so we can see if data is missing
 					Report bap_record = report;
 					bap_record.clear_values();
-					bap_record.set_type(Report::TYPE_BAPTISM_SOURCE);
+					bap_record.set_type(Report::TYPE_BAPTISM_RECORD);
 					bap_record.sub_id = i;
 					report_collection.reports[Report::TYPE_BAPTISM_RECORD][ReportCollection::COMP].add_report(report);
 				}
@@ -696,7 +697,7 @@ void Gui::process_msg(Message* msg)
 		else if (msg_type == TYPE_REFERRAL_STR)
 		{
 			Referral referral;
-			referral.read_message(*msg);
+			referral.read_message(*msg, current_date);
 			referral.locate(&comp_list);
 			if (!referral.found_dest())
 				referral.dest_number = stray_msg_handler;	//Send it to the recorder!

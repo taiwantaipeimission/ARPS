@@ -45,7 +45,7 @@ bool File::open(File::FileType file_type_in)
 	bool good = file.good();
 	if (!good)
 	{
-		throw std::ifstream::failure(tos((L"File error in file " + filepath).c_str()));
+		wcout << L"File error in file " + filepath + L"\n";
 	}
 	return good;
 }

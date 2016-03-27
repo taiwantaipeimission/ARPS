@@ -107,6 +107,24 @@ static const inline int positive_modulo(int i, int n) {
 	return (i % n + n) % n;
 }
 
+static const std::wstring get_date_str(tm time_struct)
+{
+	return tos(1900 + time_struct.tm_year)
+		+ ID_STR_SEPARATOR + tos(time_struct.tm_mon + 1)
+		+ ID_STR_SEPARATOR + tos((time_struct.tm_mday + 7) / 7)
+		+ ID_STR_SEPARATOR + tos(time_struct.tm_wday == 0 ? 7 : time_struct.tm_wday);
+}
+
+static const std::wstring get_cur_date_str()
+{
+	time_t curtime;
+	tm curtime_st;
+	time(&curtime);
+	localtime_s(&curtime_st, &curtime);
+
+	return get_date_str(curtime_st);
+}
+
 /* Create the date stamp for a reporting period, based on the current time and the weekday of reporting.
 * All days up to the day of reporting return back to the previous reporting period (e.g. Thursday-Tuesday will be counted as reports
 * for English reporting session which began on the Wednesday previous).
@@ -125,10 +143,7 @@ static const std::wstring get_report_date_str(std::wstring report_wday)
 	
 	if (cur_wday == i_report_wday)
 	{
-		report_date = tos(1900 + curtime_st.tm_year)
-			+ ID_STR_SEPARATOR + tos(curtime_st.tm_mon + 1)
-			+ ID_STR_SEPARATOR + tos((curtime_st.tm_mday + 6) / 7)
-			+ ID_STR_SEPARATOR + report_wday;
+		return get_date_str(curtime_st);
 	}
 	else
 	{
@@ -137,12 +152,8 @@ static const std::wstring get_report_date_str(std::wstring report_wday)
 		last_week_tm_st.tm_mday -= days_since_last_report;
 		time_t last_week_tm = mktime(&last_week_tm_st);
 		localtime_s(&last_week_tm_st, &last_week_tm);
-		report_date = tos(1900 + last_week_tm_st.tm_year)
-			+ ID_STR_SEPARATOR + tos(last_week_tm_st.tm_mon + 1)
-			+ ID_STR_SEPARATOR + tos((last_week_tm_st.tm_mday + 6) / 7)
-			+ ID_STR_SEPARATOR + report_wday;
+		return get_date_str(last_week_tm_st);
 	}
-	return report_date;
 }
 
 static const bool is_final_line(std::wstring line)

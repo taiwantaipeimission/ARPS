@@ -15,12 +15,13 @@ public:
 	std::wstring number;
 	std::wstring info;
 	std::wstring contact_state;
+	std::wstring date;
 
 	Referral();
 	virtual ~Referral();
 
-	void read_message(Message msg);
-	std::wstring print(std::wstring date);
+	void read_message(Message msg, std::wstring date_in);
+	std::wstring print();
 	void load(std::wstring line);
 
 	bool locate(CompList* list);

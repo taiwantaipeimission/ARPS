@@ -118,8 +118,6 @@ Report ReportCollection::transform_report(Report rep, DataOrder from, DataOrder 
 			std::wstring zone_name;
 			if (comp_list->by_area_name.count(rep.sender_name) > 0)
 			{
-				if (rep.sender_name == L"SANXIA_A")
-					int x = 0;
 				zone_name = rep.type == Report::TYPE_ENGLISH ? comp_list->by_area_name[rep.sender_name][0].english_unit_name : comp_list->by_area_name[rep.sender_name][0].zone_name;
 			}
 			else
@@ -269,6 +267,8 @@ void ReportCollection::total_reports(Report::Type type, DataOrder from, DataOrde
 		std::vector<std::wstring> tokens = tokenize(date, ':');
 		int date_month = _wtoi(tokenize(date, L':')[1].c_str());
 
+		reports[type][to].sheet_fields = reports[type][from].sheet_fields;
+
 		for (std::map<std::wstring, Report>::iterator it = reports[type][from].reports.begin(); it != reports[type][from].reports.end(); ++it)
 		{
 			Report transformed = transform_report(it->second, from, to, comp_list);
@@ -292,6 +292,7 @@ void ReportCollection::total_reports(Report::Type type, DataOrder from, DataOrde
 		for (std::map<std::wstring, Report>::iterator it = reports_to_add.begin(); it != reports_to_add.end(); ++it)
 		{
 			reports[type][to].add_report(it->second);
+			reports[type][to].changed = true;
 		}
 	}
 }

@@ -51,7 +51,7 @@ public:
 
 void run_terminal_func(Terminal* terminal, Gui* gui, ModemInterface* mod_interface, bool* quit)
 {
-	while (!*quit || mod_interface->num_commands() > 0)
+	while (!*quit || mod_interface->num_commands() > 0 || terminal->isbusy())
 	{
 		if (!terminal->isbusy() && mod_interface->num_commands() > 0)
 		{

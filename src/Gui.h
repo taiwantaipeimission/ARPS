@@ -63,6 +63,7 @@ public:
 
 	std::wstring report_date;
 	std::wstring english_date;
+	std::wstring current_date;
 	std::wstring report_wday;
 	std::wstring english_wday;
 	std::wstring stray_msg_handler;
