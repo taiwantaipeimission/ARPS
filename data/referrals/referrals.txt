@@ -471,7 +471,7 @@
 2016:3:4:7		+886965113871	JINHUA_S	木柵	Ariel	0955151212	英文班學生，非常棒！看跟隨祂的影片時哭了！工作在金華教堂附近，非常願意跟木柵的傳教士見面！金色的！！	
 2016:3:4:7	CENTRAL	+886972576584	ZHONGLI_2_E	ZHONGZHENG	蘇姐妹	0960736030	She was in the process of making a car commercial when we met her, cool lady	
 2016:3:4:7	NORTH	+886963938192	SONGSHAN_E	DANSHUI	張帥哥	0988153764	帥哥 quick contact he wants to learn more and if wants to go on a mission 	
-2016:3:4:7	TAOYUAN	+886972576562	WANDA_E	YINGGE	shu chen chiang	0972793758	nice lady quick contact	
+2016:3:4:7	TAOYUAN	+886972576562	WANDA_E	YINGGE	shu chen chiang	0972793758	nice lady quick contact	0
 2016:3:4:7	NORTH	+886972576562	WANDA_E	BEITOU	Chen or genie	0955171033	 really nice, said could meet sometime 	
 2016:3:4:7	CENTRAL	+886972576562	WANDA_E	SANCHONG	 xu	0952869288	really nice ama. The number might actually be 0952899288	
 2016:3:4:7	EAST	+886972576509	XIZHI_A_E	NANGANG	張達	0912268926	Baptized 2years ago(2014-3-23) in 汐止Recently moved to your area. Try to contact and get records moved.	
@@ -572,3 +572,38 @@
 2016:3:4:7	TAIZHONG_SOUTH	+886972576566	OFFICE_E	三民區	蔡佩珊	0987959625	在nu skin工作，非常願意跟傳教士見面學習福音！很可愛	
 2016:3:4:7	CENTRAL	+886972576566	OFFICE_E	信義區	BELLE 林	0976323736	she is christian and we met her on the mrt. We watched the new video with her. She seemed really interested to know more! Really pretty and sweet 	
 2016:3:4:7	NORTH	+886972576566	OFFICE_E	淡水區	陳先生	0983916886	met on the mrt. He was all too cool for us but kept talking. Has seen missionaries and such. Doesn't really believe in god because he hasn't seen him. Told him about prayer. 	
+2016:3:4:7	SOUTH	+886972576566	OFFICE_E	文山區	張	0919265470	LIVES IN SHENKEN	
+2016:3:4:7	TAOYUAN	+886972576513	YONGHE_S	ZHONGLI	Yang tong xue 	0908827963	super great! About 15 years old. She wants to be baptized. Our investigator's friend.	
+2016:3:4:7	CENTRAL	+886972576566	OFFICE_E	台北	黃昱翔	0939054592	帥哥	
+2016:3:4:7	TAIZHONG_SOUTH	+886972576566	OFFICE_E	官田區	 lin2 yi4 chen2	0903283343	female	
+2016:3:4:7	SOUTH	+886972576566	OFFICE_E	文山區	Ariel	0955151212	英文班學生，非常棒！看跟隨祂的影片時哭了！工作在金華教堂附近，非常願意跟木柵的傳教士見面！金色的！！	
+2016:3:4:7	CENTRAL	+886972576566	OFFICE_E	新北市	趙先生	0939125946	 Has a family and was willing to give his number. Really awesome guy and is familiar with christian beliefs	
+2016:3:4:7	TAIZHONG_SOUTH	+886972576566	OFFICE_E	台中	 WANG YU PING	0935264685	 FORMER THAT STILL REALLY WANTS TO LEARN ABOUT CHRIST. Believes christ atoned for us. 27 years old.	
+2016:3:4:7	TAIZHONG_SOUTH	+886972576513	YONGHE_S	TAINAN	Irene 陳	0981059089	wants to know more about our english class 	
+2016:3:4:7	WEST	+886972576539	TUCHENG_ZL	板橋	陳映瑄	0922329027	SICK LP that is in college. Enjoys jogging. Majors in japanese, great english! 板橋 ward boundaries. Thinks elder robbins is cute	
+2016:3:4:7	CENTRAL	+886972576543	SHILIN_S	大同區	楊小姐	0	高中生	
+2016:3:4:7		+886972576543	SHILIN_S	BEITO	李文聰	0	living church's area	
+2016:3:4:7	WEST	+886972576516	SIYUAN_E	三峽區	陳湘琪姐妹	0918282550	a member's friend who said she wants to start understanding church.  Her friend's name is 鄔繽 (wu1bin1)   referral from: 思源 elders petermann and Tang:-*	
+2016:3:4:7	WEST	+886972576542	LUZHOU_A_E	板橋區	李堇華	0981986286	this extremely busy women but she loves christ and has time most sundays;-)	
+2016:3:4:7	SOUTH	+886972576529	ANKANG_E	中和區	丘先生	0970822222	had a lesson said good for another day call now	
+2016:3:4:7	NORTH	+886972576566	OFFICE_E	BEITOU	李文聰	0	living church's area	
+2016:3:4:7	NORTH	+886972576542	LUZHOU_A_E	士林區	林柏諭	0989582511	he is pretty christian has not prayed in two years his mom has lots of money (tell him that)	
+2016:3:4:7	CENTRAL	+886972576150	TAIDONG_2_S	三重區	chen yi yin	0972341707		
+2016:3:4:7	TAIZHONG_SOUTH	+886972576150	TAIDONG_2_S	JIAYI	Lacey	0921602877	English interest	
+2016:3:4:7	CENTRAL	+886972576543	SHILIN_S	DAAN	 CHEN2 WEI2 LIN2	0932239526	interested in temple tours	
+2016:3:4:7	TAIZHONG_SOUTH	+886972576543	SHILIN_S	ZHANGHUA	XU3 SHENG4 CHENG2	0982001069	30s ba?interested in learning more	
+2016:3:4:7	CENTRAL	+886972576578	TAO_4_E	蘆洲區	吳文生	0955387677	他在早上時候打電話給桃一傳教士，說他很感激傳教士（鄧長老、石長老）在他生病時去探望他（桃園長庚醫院）。他也說，現在他很想跟傳教士見面。他最近很渴望認識傳教士。他說這個星期都能拜訪他。地址：新北市蘆洲區三民路26巷34弄2號7樓。加油！this referral was sent to luzhu by mistake. He lives in luzhou.	
+2016:3:4:7	SOUTH	+886963796383	MUZHA_S	中和區	 zhen4 xj	0909676511	 elders, if you get this, give it to the sisters. She needs them. no lesson, pretty quick contact. When we called to set up, she said 4/4 would work, and that she was pretty interested. Is the boss of a ji pai dian in mu zha. 	
+2016:3:5:1	TAOYUAN	+886972576524	TAO_3_E_ZL	鶯歌區	鄭先生	0930043398		
+2016:3:5:1	WEST	+886972576524	TAO_3_E_ZL	新莊區	羅先生	0926215280		
+2016:3:5:1	TAOYUAN	+886972576524	TAO_3_E_ZL	中壢區	黃Angel	0939765920		
+2016:3:5:1	TAOYUAN	+886972576524	TAO_3_E_ZL	中壢區	賴帥哥	0970090465		
+2016:3:5:1	TAOYUAN	+886972576524	TAO_3_E_ZL	中壢區	邱帥哥	0970654974		
+2016:3:5:1	TAOYUAN	+886972576524	TAO_3_E_ZL	中壢區	Chelsea	0975875128		
+2016:3:5:1	WEST	+886972576524	TAO_3_E_ZL	板橋區	呂小姐	0957128550		
+2016:3:5:1	SOUTH	+886972576516	SIYUAN_E	永和區	盧聖義	0952841323	he's La just called his old record and said he has not been to church in a while because he didnt know where it was but i told him. GET HIM TO CHURCH!:-D	
+2016:3:5:1		+886972576500	ASSISTANTS	GAOXIONGHOUYIMRT	邱小姐	0911167920	a mother super nice and willing to meet. Quick contact	
+2016:3:5:1		+886972576524	TAO_3_E_ZL	中歷區	陳先生	0982261073	has BOM really nice	
+2016:3:5:1	CENTRAL	+886963917982	SANXIA_A_E	信義區	林先生	0958553207	works at foxconn. Interested in english class. Had a lesson.	
+2016:3:5:1	XINZHU	+886972576524	TAO_3_E_ZL	新竹	Rachel	0933861263	likes english	
+2016:3:5:1	EAST	+886972576543	SHILIN_S	松山	YU2 XJ	0986333838	interested	
