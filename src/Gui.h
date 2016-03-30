@@ -28,8 +28,8 @@ void poll_msg_cb(Fl_Widget* wg, void* ptr);
 void completed_command_cb(void* ptr);
 void process_msg_cb(Fl_Widget* wg, void* ptr);
 void unprocess_msg_cb(Fl_Widget* wg, void* ptr);
-void timer_cb(void* ptr);
 void select_all_cb(Fl_Widget* wg, void* ptr);
+void window_cb(Fl_Widget* wg, void* ptr);
 
 class MessageBrowser : public Fl_Multi_Browser
 {

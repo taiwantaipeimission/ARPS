@@ -31,6 +31,7 @@
 
 using namespace rapidjson;
 
+Gui* gui;
 
 class Console_streambuf
 	: public std::basic_streambuf<wchar_t>
@@ -63,68 +64,50 @@ void run_terminal_func(Terminal* terminal, Gui* gui, ModemInterface* mod_interfa
 	}
 }
 
+BOOL WINAPI ConsoleHandler(DWORD dwCtrlEvent)
+{
+	switch (dwCtrlEvent)
+	{
+	case CTRL_C_EVENT:
+	case CTRL_BREAK_EVENT:
+	case CTRL_CLOSE_EVENT:
+	case CTRL_LOGOFF_EVENT:
+	case CTRL_SHUTDOWN_EVENT:
+	default:
+		return FALSE;
+	}
+}
+
 int main(int argc, char **argv)
-{/*
-	Message msg;
-	msg.set_contents(L"yo, man");
-	msg.set_sender_name(L"THE MAN");
+{
+	SetConsoleCtrlHandler((PHANDLER_ROUTINE)ConsoleHandler, TRUE);
 
-	Document d;
-	d.SetArray();
+	set_color(CC_GREEN, CC_BLACK);
+	wcout << L"Loading...\n";
+	set_color(CC_GREY, CC_BLACK);
 
-	msg.write_json(&d);
+	wcout << L"-Creating objects\n";
+	gui = new Gui();
+	Terminal terminal;
+	ModemInterface modem_interface;
+	bool quit = false;
 
+	wcout << L"-Initializing terminal\n";
+	terminal.init(&gui->file_manager.files[L"OUTPUT"], gui);
+	std::thread terminal_thread(run_terminal_func, &terminal, gui, &modem_interface, &quit);
 
-	StringBuffer s;
-	PrettyWriter<StringBuffer> writer(s);
-	d.Accept(writer);
-	cout << s.GetString() << endl;
-
-	return 0;
-
-
-
-	*/
-
-
-
-
-
-
-
-	try
-	{
-		set_color(CC_GREEN, CC_BLACK);
-		wcout << L"Loading...\n";
-		set_color(CC_GREY, CC_BLACK);
-
-		wcout << L"-Creating objects\n";
-		Gui gui;
-		Terminal terminal;
-		ModemInterface modem_interface;
-		bool quit = false;
-
-		wcout << L"-Initializing terminal\n";
-		terminal.init(&gui.file_manager.files[L"OUTPUT"], &gui);
-		std::thread terminal_thread(run_terminal_func, &terminal, &gui, &modem_interface, &quit);
-
-		wcout << L"-Loading data files\n";
-		gui.load();
-		wcout << L"-Initializing GUI\n";
-		gui.init(&modem_interface);
-		set_color(CC_GREEN, CC_BLACK);
-		wcout << L"Done\n";
-		set_color(CC_WHITE, CC_BLACK);
-		gui.run();
+	wcout << L"-Loading data files\n";
+	gui->load();
+	wcout << L"-Initializing GUI\n";
+	gui->init(&modem_interface);
+	set_color(CC_GREEN, CC_BLACK);
+	wcout << L"Done\n";
+	set_color(CC_WHITE, CC_BLACK);
+	gui->run();
 		
-		quit = true;
-		terminal_thread.join();
-	}
-	catch(std::exception e)
-	{
-		std::wcout << L"Error: " << e.what() << L"\n";
-		wchar_t c;
-		std::wcin >> c;
-	}
+	quit = true;
+	terminal_thread.join();
+	delete gui;
+
 	return 0;
 }

@@ -245,20 +245,14 @@ void unprocess_msg_cb(Fl_Widget* wg, void* ptr)
 	gui->update_msg_scroll();
 }
 
-void timer_cb(void* ptr)
-{
-	/*Gui* gui = (Gui*)ptr;
-	poll_msg_cb(NULL, ptr);
-	for (int i = 1; i <= gui->unhandled->size(); i++)
-		gui->unhandled->select(i);
-	process_msg_cb(NULL, ptr);
-	Fl::repeat_timeout(gui->auto_check_s, timer_cb, ptr);*/
-}
-
-
 void select_all_cb(Fl_Widget* wg, void* ptr)
 {
 
+}
+
+void window_cb(Fl_Widget* wg, void* ptr)
+{
+	quit_cb(wg, ptr);
 }
 
 MessageBrowser::MessageBrowser(Gui* gui_in, bool handled_in, int x, int y, int w, int h, const char* label)
@@ -361,9 +355,9 @@ void Gui::init(ModemInterface* mod_int_in)
 	file_manager.files[FILE_OUTPUT].open(File::FILE_TYPE_OUTPUT);
 
 	Fl_PNG_Image* image = new Fl_PNG_Image("../res/logo.png");
-	Fl::add_timeout(auto_check_s, timer_cb, this);
 	window = new Fl_Window(WINDOW_WIDTH, WINDOW_HEIGHT, "ARPS");
 	window->default_icon(image);
+	window->callback(window_cb, this);
 	Fl_Menu_Bar* menu = new Fl_Menu_Bar(0, 0, WINDOW_WIDTH, BAR_HEIGHT);
 	{
 		menu->add("File/Save", FL_CTRL + 's', save_cb, this);
@@ -577,9 +571,6 @@ void Gui::send_reminder(Area* area)
 void Gui::poll_msgs()
 {
 	check_message_button->deactivate();
-	modem_interface->push_command(L"AT\r");
-	modem_interface->push_command(L"ATE0\r");
-	modem_interface->push_command(L"AT+CMGF=0\r");
 
 	Command cmd;
 	cmd.is_check_msg_command = true;
@@ -756,4 +747,5 @@ void Gui::configure_modem()
 	modem_interface->push_command(L"ATE0\r");
 	modem_interface->push_command(L"AT+CPIN=\"0000\"\r");
 	modem_interface->push_command(L"AT+CMGF=0\r");
+	modem_interface->push_command(L"AT+CNMI=0,0,0,0\r");
 }
