@@ -1,1 +1,26 @@
-[]
+[
+    {
+        "SENDER_NAME": "ZHONGLI_2_E",
+        "SENDER_NUMBER": "+886972576584",
+        "CONTENTS": "xu jia hui: contacted",
+        "SENT_DATE": "",
+        "DATA_CODING": 0,
+        "MSG_LEN": 21,
+        "CONCAT": false,
+        "C_REFNUM": 0,
+        "C_NUM_MSG": 0,
+        "C_INDEX": 0
+    },
+    {
+        "SENDER_NAME": "ZHONGHE_2_E",
+        "SENDER_NUMBER": "+886972576511",
+        "CONTENTS": "柯小姐 new investigator!",
+        "SENT_DATE": "",
+        "DATA_CODING": 8,
+        "MSG_LEN": 42,
+        "CONCAT": false,
+        "C_REFNUM": 0,
+        "C_NUM_MSG": 0,
+        "C_INDEX": 0
+    }
+]
