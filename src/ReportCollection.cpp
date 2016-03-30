@@ -224,7 +224,6 @@ void ReportCollection::create_baptism_source_reports()
 {
 	for (map<wstring, Report>::iterator it = reports[Report::TYPE_BAPTISM_RECORD][COMP].reports.begin(); it != reports[Report::TYPE_BAPTISM_RECORD][COMP].reports.end(); ++it)
 	{
-		int choice = _wtoi(it->second.report_values[REP_KEY_BAP_SOURCE].c_str());
 		Report bap_source = it->second;
 		bap_source.clear_values();
 		bap_source.set_type(Report::TYPE_BAPTISM_SOURCE);
@@ -232,18 +231,7 @@ void ReportCollection::create_baptism_source_reports()
 		for (map<wstring, wstring>::iterator it = bap_source.report_values.begin(); it != bap_source.report_values.end(); ++it)
 			it->second = L"0";	//Fill with zeros
 
-		if (choice == 1)
-			bap_source.report_values[REP_KEY_BAP_MISS_FIND] = L"1";
-		else if (choice == 2)
-			bap_source.report_values[REP_KEY_BAP_LA_REF] = L"1";
-		else if (choice == 3)
-			bap_source.report_values[REP_KEY_BAP_RC_REF] = L"1";
-		else if (choice == 4)
-			bap_source.report_values[REP_KEY_BAP_MEM_REF] = L"1";
-		else if (choice == 5)
-			bap_source.report_values[REP_KEY_BAP_ENGLISH] = L"1";
-		else if (choice == 6)
-			bap_source.report_values[REP_KEY_BAP_TOUR] = L"1";
+		bap_source.report_values[it->second.report_values[REP_KEY_BAP_SOURCE]] = L"1";
 
 		if (reports[Report::TYPE_BAPTISM_SOURCE][ReportCollection::COMP].reports.count(bap_source.get_id_str()) > 0)
 		{
