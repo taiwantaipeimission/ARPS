@@ -1,3 +1,20 @@
+/* This file is part of ARPS.
+*
+* (C) 2016 by David B. Elliott (elliott.david.ballantyne@gmail.com)
+*
+* ARPS is free software: you can redistribute it and/or modify
+* it under the terms of Version 3 of the GNU General Public License as published by
+* the Free Software Foundation.
+*
+* ARPS is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with ARPS.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include "Gui.h"
 #include "utility.h"
 #include "codes.h"
@@ -250,6 +267,11 @@ void select_all_cb(Fl_Widget* wg, void* ptr)
 
 }
 
+void about_cb(Fl_Widget* wg, void* ptr)
+{
+	fl_message(tos((wstring)L"Automatic Reporting System v." + VERSION + L"\nCopyright 2016 Taiwan Taipei Mission\nDeveloped by Elder David Elliott\nMade and distributed under GPL").c_str());
+}
+
 void window_cb(Fl_Widget* wg, void* ptr)
 {
 	quit_cb(wg, ptr);
@@ -367,6 +389,7 @@ void Gui::init(ModemInterface* mod_int_in)
 		menu->add("Edit/Total baptism source", FL_CTRL + 'b', total_baptism_source_cb, this);
 		menu->add("Areas/Send verification text", NULL, send_verify_text_cb, this);
 		menu->add("Modem/Configure modem", NULL, configure_modem_cb, this);
+		menu->add("About/About ARPS", NULL, about_cb, this);
 	}
 	Fl_Tabs* tabs = new Fl_Tabs(0, BAR_HEIGHT + SPACING, WINDOW_WIDTH, WINDOW_HEIGHT - BAR_HEIGHT - SPACING);
 	{
