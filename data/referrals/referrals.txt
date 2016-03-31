@@ -617,3 +617,45 @@
 2016:3:5:2	SOUTH	+886972576504	XINPU_E	ZHONGHE	Lou 樓家庭	0931149872＆0931080019	 address is 中和區和平路220號7樓. Drop by the house at 1-3pm, they are most likely to be home . member referral. Super awesome. The referral is from a family who lives in Cali but the mother is taiwanese. Good luck!	
 2016:3:5:2	CENTRAL	+886972576547	TIANMU_A_E	DAAN	JEAN	0955854244	philipina. Super cool. Will come to church on sunday and bring her friends.  	
 2016:3:5:2	SOUTH	+886972576538	YULI_S	YONGHE	LUO JM	0980985592	Super sweet 20 year old girl we met while she was visiting family here in ruisui.	
+2016:3:5:3	TAOYUAN	+886972576511	ZHONGHE_2_E	TAOYUAN	陳弟兄	0913898883	cool guy doesnt believe in god but he is fantastic. definitely great potential for baptism	
+2016:3:5:3	EAST	+886972576594	YULI_E	基隆	鄭先生	0939310513	christian guy.  Watching his mom in Yuli.  	
+2016:3:5:3	CENTRAL	+886963790682	BEITOU_S	XINYI	So Gen Yi	0931381282	 He is christian. He is from japan, but has really english and chinese. He studied in canada for awhile. He set a baptismal date for 4/30! He said he would be interested in receiving an english book of mormon, and doing a temple tour! 	
+2016:3:5:3	EAST	+886963917870	LUODONG_A_E	內湖區	張詠淞	0935168428	 Believes in Christ and was even baptized.  Has run into missionaries plenty of times. Wants to get married.	
+2016:3:5:3	XINZHU	+886972576528	ZHUDONG_E	新豐鄉	apple 	0981463453	 phillipino. Girl, 25+ wants to know about activites. Catholic. A member named fyde gave us a ton of names. All phillipino. 	
+2016:3:5:3	XINZHU	+886972576528	ZHUDONG_E	新豐鄉	 Irvin 	0976219459	 former. Wants to come to church and activities but is busy with work. Phillipino 	
+2016:3:5:3	XINZHU	+886972576528	ZHUDONG_E	新豐鄉	 Jeric 	0989460093	 phillipino 吧	
+2016:3:5:3	XINZHU	+886972576528	ZHUDONG_E	新豐鄉	 Uita Reyes	0975091033	 also phillipino 	
+2016:3:5:3	XINZHU	+886972576528	ZHUDONG_E	新豐鄉	 Geraldine M Jalos	0978876745	phillipino 	
+2016:3:5:3	EAST	+886963796383	MUZHA_S	基隆	李zhe2han4	0906919393	 our member met him and taught him the gospel. Told him missionaries would call at 12 tomorrow  	
+2016:3:5:3	CENTRAL	+886972576524	TAO_3_E_ZL	大安區	高小姐	0926012235	we taught her the whole restoration and have her a book of mormon. Not bad	
+2016:3:5:3	CENTRAL	+886972576529	ANKANG_E	XINYI	Qiu 	0987722281	she has net missionaries before in TAIBEI city, a little hesitant but willing for you to call her 	0
+2016:3:5:3	TAIZHONG_SOUTH	+886972576568	ZHONGLI_1_E	台中	張先生	0932127373		
+2016:3:5:3	TAOYUAN	+886972576568	ZHONGLI_1_E	桃園	梁	0930331159		
+2016:3:5:3		+886972576568	ZHONGLI_1_E	高雄三民	呂東澤	0929529005	新規信者的回條	
+2016:3:5:3	TAOYUAN	+886972576568	ZHONGLI_1_E	八德	黃姐妹	0972917217		
+2016:3:5:3		+886972576568	ZHONGLI_1_E	龍岡	李姐妹	0983866706		
+2016:3:5:3	TAOYUAN	+886972576568	ZHONGLI_1_E	龍潭	邱姐妹	0975779223	這是她男朋友的電話	
+2016:3:5:3	TAIZHONG_SOUTH	+886972576568	ZHONGLI_1_E	高雄	曾弟兄	0985585046		
+2016:3:5:3	WEST	+886972576529	ANKANG_E	BANQIAO	huang	0987938642	cool guy on his scooter, he is willing to learn not sure on his commitment to join, but invite to church for sure, said wanted to know when it was  	
+2016:3:5:3	CENTRAL	+886972576517	DANFENG_E	三重	高承揚	0983380077	 One prayer lesson, doesn't believe in God, but is willing to learn.	
+2016:3:5:3	XINZHU	+886972576561	XINAN_S	XINZHU	 Xie Lue Jin		 She is the cousin and a referral from a recent convert from our ward. The RC from our ward's name is Yen dx. His number is 0989234617. Anyway she is in her 30s. No special religious belief and she works in sales. She is not married and according to our RC doesn't have a good relationship with her bf. Our RC believes the gospel will help his cousin find approprate men to date and also know that life does have a purpose. Good luck!	
+2016:3:5:3		+886972576561	XINAN_S	MUZHA	 Cai Pin Wen	0985750994	 From Taoyan but now lives in Taipei for work. Super cute. Had a lesson with her. She doesn't have a special religion and she is really open to learning. Call her!	
+2016:3:5:3	ZHUNAN	+886972576561	XINAN_S	GONGGUAN	 Liu Jin Tan	0927276971	 On his way back to work, but stopped and let us pray for him. He was smoking but was willing to leave his number with us. Give him a shot!	
+2016:3:5:3	WEST	+886972576585	GUISHAN_E	板橋	蔡弟兄	0979600314	來教會聚會五年了！因為智慧語的問題還沒受洗。喜歡先知約瑟斯密，每天研讀經文。說這個星期想約個時間一起讀經文。	
+2016:3:5:3		+886972576585	GUISHAN_E	南崁	馮志文	0989754873	之前的慕道友，有教會的朋友在淡水支會。他說4/10可能可以跟我們見面。	
+2016:3:5:3	NORTH	+886972576547	TIANMU_A_E	DANSHUI	JOSEF	0932180264	OLD MAN. Former from a long time ago. Super talkative. Says buddhism and 道教 are horrible. 	
+2016:3:5:3	CENTRAL	+886972576547	TIANMU_A_E	SANCHONG	LORNA	0987854871	philipina. Brother is a member. Willing to meet.  	
+2016:3:5:3	CENTRAL	+886972576584	ZHONGLI_2_E	DAAN	陳先生	0978206939	He came to Taoyuan with his friends. Meet later. 	
+2016:3:5:3	SOUTH	+886963809216	SANCHONG_E	永和	李邦彥	0975655519	 so sick! This guy wants to go to church! He says he wants to bring his friends too! Just call him up! 	
+2016:3:5:3	WEST	+886972576587	SANCHONG_S	板橋區	林先生	0932027233	 we met him today as he was visiting the doctor. Has some family members who are Christian. He is willing to learn.	
+2016:3:5:3	WEST	+886972576561	XINAN_S	BANQIAO	wu jiemei	0936188193	cooking teacher, originally from hualian, so kind, college teacher 	
+2016:3:5:3	XINZHU	+886963938175	DANSHUI_B_E	ZHUDONG	陳芳菲Vivi	0933946806	she is very willing to learn more about the BOM. College student here in danshui. Had a lesson. Please call! ~畢長老＼高長老	
+2016:3:5:3	NORTH	+886972576517	DANFENG_E	士林	陳弘晉 Bryan	0928038949	士林zone leaders area. Works at bank, was baptized in canada, speaks really good english. When you call him, use english, he is willing to meet.	
+2016:3:5:3	CENTRAL	+886972576517	DANFENG_E	三重	徐紹雲	0933759360	他是一個父親，有一個小孩，六日都有放假。我們跟他作了一個課程，願意接受洗禮，趕快約他吧！	
+2016:3:5:3	SOUTH	+886972576517	DANFENG_E	中和	詹宗瀚	0952013767	had a lesson, nice guy.	
+2016:3:5:3	NORTH	+886972939022	BADE_B_E	士林區	 Tim	0980953486	 super nice guy who has great english! He's Christian and goes to the college over there.	
+2016:3:5:3	TAOYUAN	+886972939022	BADE_B_E	中壢區	陳琳雅	0983095905	 Nice girl, goes to the college.	
+2016:3:5:3	WEST	+886972576561	XINAN_S	TUCHENG	Paul Strong is his english name zhu dx is his usual name	0981775800	comes to english class with his younger sister at jin hua, older man, came to church last sunday and willing to set up when we realized he lives in tucheng, chritian background 	
+2016:3:5:3	TAIZHONG_SOUTH	+886972576559	WANDA_S	GAOXIONG	Xiavior like on x men	0983589689	 was visiting beituo english is pretty good. Knows about jesus. Could learn more. Cool person! Girl... Ba.. 	
+2016:3:5:3	EAST	+886972576573	JINGXIN_S	SONGSHAN	吳小姐	0981653903	About 50 years old. Said she would be interested in coming to church and meeting afterwards. 	
+2016:3:5:3	TAOYUAN	+886972576573	JINGXIN_S	TAOYUAN_AREA	Lilian 林Lin	0970333931	 works at a hospital in Xindian.	
