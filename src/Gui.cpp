@@ -206,11 +206,11 @@ void delete_msg_cb(Fl_Widget* wg, void* ptr)
 		}
 		for (size_t i = 0; i < handled_to_erase.size(); i++)
 		{
-			gui->msg_handler.erase_message(handled_to_erase[i], true);
+			gui->msg_handler.erase_message(handled_to_erase[i], MessageHandler::HANDLED);
 		}
 		for (size_t i = 0; i < unhandled_to_erase.size(); i++)
 		{
-			gui->msg_handler.erase_message(unhandled_to_erase[i], false);
+			gui->msg_handler.erase_message(unhandled_to_erase[i], MessageHandler::UNHANDLED);
 		}
 		//browser->redraw();
 		gui->update_msg_scroll();
@@ -269,7 +269,10 @@ void select_all_cb(Fl_Widget* wg, void* ptr)
 
 void about_cb(Fl_Widget* wg, void* ptr)
 {
-	fl_message(tos((wstring)L"Automatic Reporting System v." + VERSION + L"\nCopyright 2016 Taiwan Taipei Mission\nDeveloped by Elder David Elliott\nMade and distributed under GPL").c_str());
+	fl_message(tos((wstring)L"Automatic Reporting System v." + VERSION +
+		L"\nCopyright 2016 David B. Elliott\nelliott.david.ballantyne@@gmail.com"
+		L"\nTaiwan Taipei Mission"
+		L"\nMade and distributed under the GNU General Public License V3").c_str());
 }
 
 void window_cb(Fl_Widget* wg, void* ptr)

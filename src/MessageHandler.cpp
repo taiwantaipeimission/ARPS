@@ -108,7 +108,7 @@ void MessageHandler::parse_messages(std::wstring raw_str, Gui* gui)
 	return;
 }
 
-void MessageHandler::load(File* file, bool handled)
+void MessageHandler::load(File* file, MessageStorageType type)
 {
 	Document document;
 	if (file->file.good() && !document.Parse<0>(tos(file->extract_contents()).c_str()).HasParseError())
@@ -126,7 +126,14 @@ void MessageHandler::load(File* file, bool handled)
 			else
 			{
 				bool duplicate = false;
-				std::vector<Message*>* target_vector = handled ? &msgs_handled : &msgs_unhandled;
+				std::vector<Message*>* target_vector = NULL;
+
+				if (type == HANDLED)
+					target_vector = &msgs_handled;
+				else if (type == UNHANDLED)
+					target_vector = &msgs_unhandled;
+				else if (type == OUTBOX)
+					target_vector = &msg_outbox;
 
 				for (std::vector<Message*>::iterator it = target_vector->begin(); it != target_vector->end() && !duplicate; ++it)
 				{
@@ -139,48 +146,25 @@ void MessageHandler::load(File* file, bool handled)
 				}
 			}
 		}
-
-		/*do
-		{
-			std::wstring line;
-			std::getline(file->file, line, MSG_SEPARATOR);
-			if (!line.empty())
-			{
-				Message* msg = new Message();
-				msg->read(line);
-				if (msg->is_concatenated())
-				{
-					msgs_fragment[msg->get_concat_refnum()].push_back(msg);
-				}
-				else
-				{
-					bool duplicate = false;
-					std::vector<Message*>* target_vector = handled ? &msgs_handled : &msgs_unhandled;
-
-					for (std::vector<Message*>::iterator it = target_vector->begin(); it != target_vector->end() && !duplicate; ++it)
-					{
-						if ((*it)->get_sender_name() == msg->get_sender_name() && (*it)->get_contents() == msg->get_contents())
-							duplicate = true;
-					}
-					if (!duplicate)
-					{
-						target_vector->push_back(msg);
-					}
-				}
-			}
-		} while (file->file.good());*/
 		changed = false;
 	}
 }
 
-void MessageHandler::save(File* file, bool handled)
+void MessageHandler::save(File* file, MessageStorageType type)
 {
 	Document d;
 	d.SetArray();
-	for (std::vector<Message*>::iterator it = (handled ? msgs_handled.begin() : msgs_unhandled.begin()); it != (handled ? msgs_handled.end() : msgs_unhandled.end()); ++it)
-	{
+	std::vector<Message*>* target_vector = NULL;
+	if (type == HANDLED)
+		target_vector = &msgs_handled;
+	else if (type == UNHANDLED)
+		target_vector = &msgs_unhandled;
+	else if (type == OUTBOX)
+		target_vector = &msg_outbox;
+
+	for (std::vector<Message*>::iterator it = target_vector->begin(); it != target_vector->end(); ++it)
 		(*it)->write(&d);
-	}
+
 	StringBuffer buffer;
 	PrettyWriter<StringBuffer> writer(buffer);
 	d.Accept(writer);
@@ -196,12 +180,16 @@ bool MessageHandler::is_saved()
 void MessageHandler::save(FileManager* file_manager)
 {
 	file_manager->files[FILE_MESSAGES_HANDLED].open(File::FILE_TYPE_OUTPUT);
-	save(&file_manager->files[FILE_MESSAGES_HANDLED], true);
+	save(&file_manager->files[FILE_MESSAGES_HANDLED], HANDLED);
 	file_manager->files[FILE_MESSAGES_HANDLED].close();
 
 	file_manager->files[FILE_MESSAGES_UNHANDLED].open(File::FILE_TYPE_OUTPUT);
-	save(&file_manager->files[FILE_MESSAGES_UNHANDLED], false);
+	save(&file_manager->files[FILE_MESSAGES_UNHANDLED], UNHANDLED);
 	file_manager->files[FILE_MESSAGES_UNHANDLED].close();
+
+	file_manager->files[FILE_MESSAGES_OUTBOX].open(File::FILE_TYPE_OUTPUT);
+	save(&file_manager->files[FILE_MESSAGES_OUTBOX], OUTBOX);
+	file_manager->files[FILE_MESSAGES_OUTBOX].close();
 
 	changed = false;
 }
@@ -209,27 +197,47 @@ void MessageHandler::save(FileManager* file_manager)
 void MessageHandler::load(FileManager* file_manager)
 {
 	file_manager->files[FILE_MESSAGES_HANDLED].open(File::FILE_TYPE_INPUT);
-	load(&file_manager->files[FILE_MESSAGES_HANDLED], true);
+	load(&file_manager->files[FILE_MESSAGES_HANDLED], HANDLED);
 	file_manager->files[FILE_MESSAGES_HANDLED].close();
 
 	file_manager->files[FILE_MESSAGES_UNHANDLED].open(File::FILE_TYPE_INPUT);
-	load(&file_manager->files[FILE_MESSAGES_UNHANDLED], false);
+	load(&file_manager->files[FILE_MESSAGES_UNHANDLED], UNHANDLED);
 	file_manager->files[FILE_MESSAGES_UNHANDLED].close();
+
+	file_manager->files[FILE_MESSAGES_OUTBOX].open(File::FILE_TYPE_INPUT);
+	load(&file_manager->files[FILE_MESSAGES_OUTBOX], OUTBOX);
+
 	changed = false;
 }
 
-void MessageHandler::erase_message(Message* msg, bool handled)
+void MessageHandler::erase_message(Message* msg, MessageStorageType type)
 {
-	if (handled)
+	if (type == HANDLED)
 	{
 		size_t before_size = msgs_handled.size();
 		msgs_handled.erase(std::remove(msgs_handled.begin(), msgs_handled.end(), msg), msgs_handled.end());
 		changed = msgs_handled.size() != before_size;
 	}
-	else
+	else if(type == UNHANDLED)
 	{
 		size_t before_size = msgs_unhandled.size();
 		msgs_unhandled.erase(std::remove(msgs_unhandled.begin(), msgs_unhandled.end(), msg), msgs_unhandled.end());
 		changed = msgs_unhandled.size() != before_size;
 	}
+	else if (type == OUTBOX)
+	{
+		size_t before_size = msg_outbox.size();
+		msg_outbox.erase(std::remove(msg_outbox.begin(), msg_outbox.end(), msg), msg_outbox.end());
+	}
+}
+
+void MessageHandler::add_to_outbox(Message* msg)
+{
+	msg_outbox.push_back(msg);
+}
+
+void MessageHandler::remove_from_outbox(Message* msg)
+{
+	msg_outbox.erase(std::remove(msg_outbox.begin(), msg_outbox.end(), msg), msg_outbox.end());
+	delete msg;
 }

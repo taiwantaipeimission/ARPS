@@ -54,6 +54,7 @@ using namespace std;
 #define FILE_PH_LIST L"PH_LIST"
 #define FILE_MESSAGES_HANDLED L"MESSAGES_HANDLED"
 #define FILE_MESSAGES_UNHANDLED L"MESSAGES_UNHANDLED"
+#define FILE_MESSAGES_OUTBOX L"MESSAGES_OUTBOX"
 #define FILE_REFERRALS L"REFERRALS"
 
 //Config fields (to match in config file)

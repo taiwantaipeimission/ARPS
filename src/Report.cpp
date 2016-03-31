@@ -137,6 +137,10 @@ void Report::operator+=(Report& other)
 				int summed = (int)(ex_val + add_val);
 				this->report_values[it->first] = tos(summed);
 			}
+			else
+			{
+				this->report_values[it->first] = L"-";	//Value is non-numeric
+			}
 		}
 		else
 		{
