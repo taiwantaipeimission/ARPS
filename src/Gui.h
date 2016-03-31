@@ -24,6 +24,8 @@
 #include "ReportCollection.h"
 #include "ReferralList.h"
 
+#include <rapidjson/document.h>
+
 class Fl_Button;
 #include <FL/Fl_Multi_Browser.H>
 
@@ -67,7 +69,7 @@ public:
 	ReferralList referral_list;
 	CompList comp_list;
 	ModemInterface* modem_interface;
-	FieldCollection config;
+	rapidjson::Document config;
 
 	Fl_Window* window;
 	MessageBrowser* unhandled;
@@ -81,9 +83,11 @@ public:
 	std::wstring report_date;
 	std::wstring english_date;
 	std::wstring current_date;
-	std::wstring report_wday;
-	std::wstring english_wday;
+	int report_wday;
+	int english_wday;
 	std::wstring stray_msg_handler;
+	std::wstring baptism_response_msg;
+	std::wstring baptism_report_template;
 
 	bool auto_check;
 	double auto_check_s;

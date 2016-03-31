@@ -512,13 +512,23 @@ void Gui::load()
 {
 	file_manager.load(PATH_PATH_FILE);
 
-	file_manager.files[L"CONFIG"].open(File::FILE_TYPE_INPUT);
-	config.read_fields(&file_manager.files[L"CONFIG"]);
-	file_manager.files[L"CONFIG"].close();
+	File* config_file = &file_manager.files[L"CONFIG"];
+	if (config_file && config_file->open(File::FILE_TYPE_INPUT) && !config.Parse<0>(tos(config_file->extract_contents()).c_str()).HasParseError())
+	{
+		report_wday = config[tos(CONFIG_FIELD_REPORT_WDAY).c_str()].GetInt();
+		english_wday = config[tos(CONFIG_FIELD_ENGLISH_WDAY).c_str()].GetInt();
+		stray_msg_handler = tow(config[tos(CONFIG_FIELD_STRAY_MSG_HANDLER).c_str()].GetString());
+		baptism_response_msg = tow(config[tos(CONFIG_FIELD_BAPTISM_RESPONSE).c_str()].GetString());
+		baptism_report_template = tow(config[tos(CONFIG_FIELD_BAPTISM_REPORT).c_str()].GetString());
 
-	report_wday = config.values[CONFIG_FIELD_REPORT_WDAY];
-	english_wday = config.values[CONFIG_FIELD_ENGLISH_WDAY];
-	stray_msg_handler = config.values[CONFIG_FIELD_STRAY_MSG_HANDLER];
+		config_file->close();
+	}
+	else
+	{
+		set_color(CC_RED, CC_BLACK);
+		wcout << "Error: invalid config file\n";
+		set_color(CC_WHITE, CC_BLACK);
+	}
 
 	report_date = get_report_date_str(report_wday);
 	english_date = get_report_date_str(english_wday);
@@ -681,8 +691,8 @@ void Gui::process_msg(Message* msg)
 			int baptisms = _wtoi(report.report_values[REP_KEY_BAP].c_str());
 			if (baptisms > 0)
 			{
-				send_message(msg->get_sender_number(), BAPTISM_RESPONSE_MSG);
-				send_message(msg->get_sender_number(), BAPTISM_REPORT_TEMPLATE);
+				send_message(msg->get_sender_number(), baptism_response_msg);
+				send_message(msg->get_sender_number(), baptism_report_template);
 
 				for (int i = 0; i < baptisms; i++)
 				{

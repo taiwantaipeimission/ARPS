@@ -27,11 +27,6 @@ using namespace std;
 
 #define PATHS_FILEPATH L"paths.txt"
 
-//Message text
-
-#define BAPTISM_RESPONSE_MSG L"Congratulations on your baptism[s]! Please send in one copy of this template per baptism."
-#define BAPTISM_REPORT_TEMPLATE L"TYPE:BAPTISM\nCONV_NAME:\nBP_DATE:\nCONF_DATE:\nWARD:\nHOME_ADDR:\nPH_NUM:\nBAP_SOURCE:\n1=Missionary contacting\n2=LA referral\n3=RC referral\n4=Active member referral\n5=English class\n6=Temple tour"
-
 //Baptism source key strings
 #define REP_KEY_BAP L"BAP"
 #define REP_KEY_BAP_SOURCE L"BAP_SOURCE"
@@ -61,10 +56,8 @@ using namespace std;
 #define CONFIG_FIELD_REPORT_WDAY L"REPORT_WDAY"
 #define CONFIG_FIELD_ENGLISH_WDAY L"ENGLISH_WDAY"
 #define CONFIG_FIELD_STRAY_MSG_HANDLER L"STRAY_MSG_HANDLER"
-#define CONFIG_FIELD_REPORT_FIELDS L"REPORT_FIELDS"
-#define CONFIG_FIELD_ENGLISH_FIELDS L"ENGLISH_FIELDS"
-#define CONFIG_FIELD_BAPTISM_RECORD_FIELDS L"BAPTISM_RECORD_FIELDS"
-#define CONFIG_FIELD_BAPTISM_SOURCE_FIELDS L"BAPTISM_SOURCE_FIELDS"
+#define CONFIG_FIELD_BAPTISM_RESPONSE L"BAPTISM_RESPONSE"
+#define CONFIG_FIELD_BAPTISM_REPORT L"BAPTISM_REPORT"
 
 //String constants
 #define PH_NUMBER_HEAD L"+"

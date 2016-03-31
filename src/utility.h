@@ -147,24 +147,23 @@ static const std::wstring get_cur_date_str()
 * for English reporting session which began on the Wednesday previous).
 */
 
-static const std::wstring get_report_date_str(std::wstring report_wday)
+static const std::wstring get_report_date_str(int report_wday)
 {
 	std::wstring report_date;
 	time_t curtime;
 	tm curtime_st;
 	time(&curtime);
 	localtime_s(&curtime_st, &curtime);
-	int i_report_wday = _wtoi(report_wday.c_str());
 
 	int cur_wday = (curtime_st.tm_wday == 0 ? 7 : curtime_st.tm_wday);
 	
-	if (cur_wday == i_report_wday)
+	if (cur_wday == report_wday)
 	{
 		return get_date_str(curtime_st);
 	}
 	else
 	{
-		int days_since_last_report = positive_modulo(cur_wday - i_report_wday, 7);
+		int days_since_last_report = positive_modulo(cur_wday - report_wday, 7);
 		tm last_week_tm_st = curtime_st;
 		last_week_tm_st.tm_mday -= days_since_last_report;
 		time_t last_week_tm = mktime(&last_week_tm_st);
