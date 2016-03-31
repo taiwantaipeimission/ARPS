@@ -200,8 +200,6 @@ void delete_msg_cb(Fl_Widget* wg, void* ptr)
 					handled_to_erase.push_back(msg);
 				else
 					unhandled_to_erase.push_back(msg);
-				//browser->remove(i - 1);
-				gui->msg_handler.changed = true;
 			}
 		}
 		for (size_t i = 0; i < handled_to_erase.size(); i++)
@@ -212,7 +210,6 @@ void delete_msg_cb(Fl_Widget* wg, void* ptr)
 		{
 			gui->msg_handler.erase_message(unhandled_to_erase[i], MessageHandler::UNHANDLED);
 		}
-		//browser->redraw();
 		gui->update_msg_scroll();
 	}
 }
@@ -584,16 +581,18 @@ void Gui::update_msg_scroll()
 {
 	unhandled->clear();
 	handled->clear();
-	for (size_t i = 0; i < msg_handler.msgs_unhandled.size(); i++)
+	vector<Message*> const * unhandled_msg_vector = msg_handler.get_messages(MessageHandler::UNHANDLED);
+	vector<Message*> const * handled_msg_vector = msg_handler.get_messages(MessageHandler::HANDLED);
+	for (vector<Message*>::const_iterator it = unhandled_msg_vector->begin(); it != unhandled_msg_vector->end(); ++it)
 	{
-		std::wstring display_txt = get_browser_display_txt(msg_handler.msgs_unhandled[i]->get_sender_name() + DISPLAY_TEXT_SEPARATOR + msg_handler.msgs_unhandled[i]->get_contents());
-		unhandled->add(tos(display_txt).c_str(), msg_handler.msgs_unhandled[i]);
+		std::wstring display_txt = get_browser_display_txt((*it)->get_sender_name() + DISPLAY_TEXT_SEPARATOR +(*it)->get_contents());
+		unhandled->add(tos(display_txt).c_str(), *it);
 	}
 
-	for (size_t i = 0; i < msg_handler.msgs_handled.size(); i++)
+	for (vector<Message*>::const_iterator it = handled_msg_vector->begin(); it != handled_msg_vector->end(); ++it)
 	{
-		std::wstring display_txt = get_browser_display_txt(msg_handler.msgs_handled[i]->get_sender_name() + DISPLAY_TEXT_SEPARATOR + msg_handler.msgs_handled[i]->get_contents());
-		handled->add(tos(display_txt).c_str(), msg_handler.msgs_handled[i]);
+		std::wstring display_txt = get_browser_display_txt((*it)->get_sender_name() + DISPLAY_TEXT_SEPARATOR + (*it)->get_contents());
+		handled->add(tos(display_txt).c_str(), *it);
 	}
 	unhandled->redraw();
 	handled->redraw();
@@ -609,7 +608,7 @@ void Gui::poll_msgs()
 	check_message_button->deactivate();
 
 	Command cmd;
-	cmd.is_check_msg_command = true;
+	cmd.type = Command::TYPE_CHECK_MSG;
 	cmd.sub_cmds.push_back(SubCommand(L"AT+CMGL=4\r"));
 	modem_interface->push_command(cmd);
 }
@@ -660,8 +659,10 @@ bool Gui::completed_command_cb()
 	while (modem_interface->num_results() > 0)
 	{
 		Command cmd = modem_interface->pop_result();
-		if (cmd.is_check_msg_command)
+		if (cmd.type == Command::TYPE_CHECK_MSG)
 			check_message_button->activate();
+		if (cmd.type == Command::TYPE_SEND_MSG && !cmd.success_all)
+			msg_handler.add_message(cmd.msg, MessageHandler::OUTBOX);
 		for (vector<SubCommand>::iterator it = cmd.sub_cmds.begin(); it != cmd.sub_cmds.end(); ++it)
 		{
 			wstring modem_str = it->result;
@@ -751,30 +752,14 @@ void Gui::process_msg(Message* msg)
 				send_message(stray_msg_handler, msg->get_contents());	//Send it to the recorder!
 		}
 	}
-	msg_handler.msgs_handled.push_back(msg);
-	for (size_t i = 0, erased = 0; i < msg_handler.msgs_unhandled.size() && erased == 0; i++)
-	{
-		if (msg_handler.msgs_unhandled[i] == msg)
-		{
-			msg_handler.msgs_unhandled.erase(msg_handler.msgs_unhandled.begin() + i);
-			erased = true;
-		}
-	}
-	msg_handler.changed = true;
+	msg_handler.add_message(msg, MessageHandler::HANDLED);
+	msg_handler.erase_message(msg, MessageHandler::UNHANDLED);
 }
 
 void Gui::unprocess_msg(Message* msg)
 {
-	msg_handler.msgs_unhandled.push_back(msg);
-	for (size_t i = 0, found = 0; i < msg_handler.msgs_handled.size() && found == 0; i++)
-	{
-		if (msg_handler.msgs_handled[i] == msg)
-		{
-			msg_handler.msgs_handled.erase(msg_handler.msgs_handled.begin() + i);
-			found = true;
-		}
-	}
-	msg_handler.changed = true;
+	msg_handler.add_message(msg, MessageHandler::UNHANDLED);
+	msg_handler.erase_message(msg, MessageHandler::HANDLED);
 }
 
 void Gui::configure_modem()

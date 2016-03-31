@@ -73,10 +73,25 @@ void run_terminal_func(Terminal* terminal, Gui* gui, ModemInterface* mod_interfa
 	{
 		if (!terminal->isbusy() && mod_interface->num_commands() > 0)
 		{
+			bool wake_gui = false;
 			Command cmd = mod_interface->pop_command();
 			terminal->run_command(&cmd);
-			mod_interface->push_result(cmd);
-			Fl::awake(completed_command_cb, (void*)gui);
+			if (cmd.success_all)
+			{
+				mod_interface->push_result(cmd);
+				wake_gui = true;
+			}
+			else if (cmd.n_times_tried < cmd.n_times_to_try)
+			{
+				mod_interface->push_command(cmd);
+			}
+			else
+			{
+				mod_interface->push_result(cmd);
+				wake_gui = true;
+			}
+			if(wake_gui)
+				Fl::awake(completed_command_cb, (void*)gui);
 		}
 	}
 }

@@ -158,21 +158,19 @@ void Terminal::run_command(Command* command)
 	if (command)
 	{
 		bool had_failure = false;
-		do
+		for (size_t i = 0; i < command->sub_cmds.size(); i++)
 		{
-			for (size_t i = 0; i < command->sub_cmds.size(); i++)
-			{
-				SubCommand* sub_cmd = &command->sub_cmds[i];
-				ms_until_timeout = sub_cmd->timeout_ms;
-				sub_cmd->result = run_command_str(sub_cmd->cmd);
-				sub_cmd->ran = true;
-				sub_cmd->success = !is_error(sub_cmd->result) && !timeout;
-				sub_cmd->timeout = timeout;
-				if (!sub_cmd->success)
-					had_failure = true;
-			}
-			command->n_times_tried++;
-		} while (had_failure && command->n_times_tried < command->n_times_to_try);
+			SubCommand* sub_cmd = &command->sub_cmds[i];
+			ms_until_timeout = sub_cmd->timeout_ms;
+			sub_cmd->result = run_command_str(sub_cmd->cmd);
+			sub_cmd->ran = true;
+			sub_cmd->success = !is_error(sub_cmd->result) && !timeout;
+			if (!sub_cmd->success)
+				had_failure = true;
+		}
+		command->n_times_tried++;
+		command->ran_all = true;
+		command->success_all = !had_failure;
 	}
 }
 

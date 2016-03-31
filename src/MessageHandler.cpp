@@ -210,6 +210,18 @@ void MessageHandler::load(FileManager* file_manager)
 	changed = false;
 }
 
+void MessageHandler::add_message(Message* msg, MessageStorageType type)
+{
+	if (type == HANDLED)
+		msgs_handled.push_back(msg);
+	else if (type == UNHANDLED)
+		msgs_unhandled.push_back(msg);
+	else if (type == OUTBOX)
+		msg_outbox.push_back(msg);
+
+	changed = true;
+}
+
 void MessageHandler::erase_message(Message* msg, MessageStorageType type)
 {
 	if (type == HANDLED)
@@ -231,13 +243,14 @@ void MessageHandler::erase_message(Message* msg, MessageStorageType type)
 	}
 }
 
-void MessageHandler::add_to_outbox(Message* msg)
+std::vector<Message*> const * MessageHandler::get_messages(MessageStorageType type)
 {
-	msg_outbox.push_back(msg);
-}
-
-void MessageHandler::remove_from_outbox(Message* msg)
-{
-	msg_outbox.erase(std::remove(msg_outbox.begin(), msg_outbox.end(), msg), msg_outbox.end());
-	delete msg;
+	if (type == HANDLED)
+		return &msgs_handled;
+	else if (type == UNHANDLED)
+		return &msgs_unhandled;
+	else if (type == OUTBOX)
+		return &msg_outbox;
+	else
+		return NULL;
 }

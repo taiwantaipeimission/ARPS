@@ -30,6 +30,15 @@ class Gui;
 
 class MessageHandler
 {
+private:
+
+	std::map<unsigned int, std::vector<Message*>> msgs_fragment;	//All fragments of concatenated messages, keyed by their concat_num_msgs | (concat_refnum << 8)
+	std::vector<Message*> msgs_unhandled;
+	std::vector<Message*> msgs_handled;
+	std::vector<Message*> msg_outbox;
+
+	bool changed;
+
 public:
 
 	enum MessageStorageType
@@ -38,13 +47,6 @@ public:
 		HANDLED,
 		OUTBOX
 	};
-
-	std::map<unsigned int, std::vector<Message*>> msgs_fragment;	//All fragments of concatenated messages, keyed by their concat_num_msgs | (concat_refnum << 8)
-	std::vector<Message*> msgs_unhandled;
-	std::vector<Message*> msgs_handled;
-	std::vector<Message*> msg_outbox;
-
-	bool changed;
 
 	MessageHandler();
 	virtual ~MessageHandler();
@@ -56,11 +58,10 @@ public:
 	void load(FileManager* file_manager);
 
 	void parse_messages(std::wstring raw_str, Gui* gui);
+
+	void add_message(Message* msg, MessageStorageType type);
 	void erase_message(Message* msg, MessageStorageType type);
 
-
-
-	void add_to_outbox(Message* msg);
-	void remove_from_outbox(Message* msg);
+	std::vector<Message*> const * get_messages(MessageStorageType type);
 };
 

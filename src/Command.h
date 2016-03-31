@@ -27,7 +27,7 @@ class SubCommand
 {
 public:
 	SubCommand(wstring cmd_str)
-		: cmd(cmd_str), result(L""), ran(false), success(false), timeout(false), timeout_ms(NO_RESPONSE_TIMEOUT_MS)
+		: cmd(cmd_str), result(L""), ran(false), success(false), timeout_ms(NO_RESPONSE_TIMEOUT_MS)
 	{
 		if (cmd.find(COMMAND_ESCAPE_CHAR) != wstring::npos)
 			timeout_ms = MSG_NO_RESPONSE_TIMEOUT_MS;
@@ -42,7 +42,6 @@ public:
 	wstring result;
 	bool ran;
 	bool success;
-	bool timeout;
 	int timeout_ms;
 };
 
@@ -50,16 +49,26 @@ class Command
 {
 public:
 
-	Command()
-		: n_times_to_try(1), n_times_tried(0), is_check_msg_command(false), sub_cmds()
+	enum Type
+	{
+		TYPE_CHECK_MSG,
+		TYPE_SEND_MSG,
+		TYPE_OTHER
+	};
+
+	Command(Type type_in = TYPE_OTHER)
+		: type(type_in), n_times_to_try(1), n_times_tried(0), ran_all(false), success_all(false), msg(NULL), sub_cmds()
 	{
 	}
 
 	~Command()
 	{}
 
+	Type type;
 	int n_times_to_try;
 	int n_times_tried;
-	bool is_check_msg_command;
+	bool ran_all;
+	bool success_all;
+	Message* msg;	//If the command is of TYPE_SEND_MSG, this contains a pointer to its associated message.
 	vector<SubCommand> sub_cmds;
 };
