@@ -659,3 +659,15 @@
 2016:3:5:3	TAIZHONG_SOUTH	+886972576559	WANDA_S	GAOXIONG	Xiavior like on x men	0983589689	 was visiting beituo english is pretty good. Knows about jesus. Could learn more. Cool person! Girl... Ba.. 	
 2016:3:5:3	EAST	+886972576573	JINGXIN_S	SONGSHAN	吳小姐	0981653903	About 50 years old. Said she would be interested in coming to church and meeting afterwards. 	
 2016:3:5:3	TAOYUAN	+886972576573	JINGXIN_S	TAOYUAN_AREA	Lilian 林Lin	0970333931	 works at a hospital in Xindian.	
+2016:3:5:4	TAOYUAN	+886963917870	LUODONG_A_E	ZHONGLI	 "a zhong"	0984372082	 Actually, don't contact him; wrong info, sorry. 	
+2016:3:5:4	TAOYUAN	+886972576566	OFFICE_E	龍潭區	李姐妹	0983866706		
+2016:3:5:4	TAIZHONG_SOUTH	+886972576566	OFFICE_E	三民區	呂東澤	0929529005	新規信者的回條	
+2016:3:5:4	CENTRAL	+886972576548	XINDIAN_E	三重	ann 陳安jie 	0926160302	 english student in 新店 26 years old marked yes on english forms 	
+2016:3:5:4	SOUTH	+886972576548	XINDIAN_E	永和	吳柏緯	0989666607	english class student boy in xin dian marked yes on english forms	
+2016:3:5:4	TAOYUAN	+886963917870	LUODONG_A_E	ZHONGLI	 "a zhong"	0984372082	 Viatnamese man in his late 30's. Works in zhongli. When we first net him he was with his girlfriend, also viatnamese and works at same place.	
+2016:3:5:4	TAOYUAN	+886972576566	OFFICE_E	蘆竹區	馮志文	0989754873	之前的慕道友，有教會的朋友在淡水支會。他說4/10可能可以跟我們見面。	
+2016:3:5:4	SOUTH	+886972576566	OFFICE_E	文山區	 Cai Pin Wen	0985750994	 From Taoyan but now lives in Taipei for work. Super cute. Had a lesson with her. She doesn't have a special religion and she is really open to learning. Call her!	
+2016:3:5:4	EAST	+886972576559	WANDA_S	SONGSHAN	林弟兄	0916991822	doesn't really believe in god Shared the first lesson. He wants to learn more. His heart got softened and he is so ready to hear this message he said he would pray about it! 	
+2016:3:5:4	CENTRAL	+886972576513	YONGHE_S	三重	李邦彥	0975655519	 so sick! This guy wants to go to church! He says he wants to bring his friends too! Just call him up! 	
+2016:3:5:4	CENTRAL	+886972576562	WANDA_E	ZHONGZHENG	Eva 高 	0931366609	22 came to our english class. She doesnt know much about christianity but said you could call her. 	
+2016:3:5:4	SOUTH	+886972576562	WANDA_E	XINDIAN	呂先生	0921174551	He was with his girlfriend. Very nice guy. Was in a hurry though. 	
