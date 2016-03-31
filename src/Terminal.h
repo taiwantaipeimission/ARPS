@@ -17,8 +17,6 @@
 
 #pragma once
 
-class Gui;
-
 #include "Modem.h"
 #include "ModemInterface.h"
 #include "ModemData.h"
@@ -43,7 +41,6 @@ public:
 
 	Modem modem;
 	File* output_file;
-	Gui* gui;
 
 	wstring cur_command;
 	wstring cur_reply;
@@ -56,7 +53,7 @@ public:
 	Terminal();
 	virtual ~Terminal();
 
-	void init(File* output_file_in, Gui* gui_in);
+	void init(File* output_file_in);
 	wstring run_command_str(wstring command);
 	void run_command(Command* command);
 	bool update(double millis);

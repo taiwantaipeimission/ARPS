@@ -671,3 +671,38 @@
 2016:3:5:4	CENTRAL	+886972576513	YONGHE_S	三重	李邦彥	0975655519	 so sick! This guy wants to go to church! He says he wants to bring his friends too! Just call him up! 	
 2016:3:5:4	CENTRAL	+886972576562	WANDA_E	ZHONGZHENG	Eva 高 	0931366609	22 came to our english class. She doesnt know much about christianity but said you could call her. 	
 2016:3:5:4	SOUTH	+886972576562	WANDA_E	XINDIAN	呂先生	0921174551	He was with his girlfriend. Very nice guy. Was in a hurry though. 	
+2016:3:5:4		+886963572706	SONGSHAN_S	XINAN	Ye Jia Hua	0922505130	 la referral	
+2016:3:5:4	CENTRAL	+886972576516	SIYUAN_E	五股區	zhao4ying2	0933827751	you probably already know her we have her record and called her up.  She said she lives near 五股國小。ELDER TANG AND PEtermann	
+2016:3:5:4	CENTRAL	+886972576548	XINDIAN_E	三重區	ann 陳安jie 	0926160302	 english student in 新店 26 years old marked yes on english forms 	
+2016:3:5:4	WEST	+886972576548	XINDIAN_E	板橋區	簡弟兄	0986711598	 !!A less active member in your area!! In the past weeks we has been tryin to quit coffee and tea on his own. Says isn't meeting with missionaries just because they haven't called. So CALL. He lives on 文華路 he needs your help! :) love elder stevenson 	
+2016:3:5:4	CENTRAL	+886972576377	TAO_4_S	DAAN	馬 Chris	0975069251	 if lives by zhongxiao fuxing 	
+2016:3:5:4	SOUTH	+886972576524	TAO_3_E_ZL	文山區	謝小姐	0928128785	give to muzha	
+2016:3:5:4	XINZHU	+886972576548	XINDIAN_E	新竹	sister cai 	0920490718	 a college girl that got baptized yesterday because her sister told her to. Not sure which church 	
+2016:3:5:4	NORTH	+886972576554	JINHUA_ZL	士林區	王仁和	0984197781	 Has a baptismal date for 4/23. He is a super nice guy he wants to learn more. He is in business.	
+2016:3:5:4	SOUTH	+886972576548	XINDIAN_E	永和區	吳柏緯	0989666607	english class student boy in xin dian marked yes on english forms	
+2016:3:5:4	CENTRAL	+886972576548	XINDIAN_E	三重區	石	0970570424	 pretty quick just got his number 	
+2016:3:5:4	TAOYUAN	+886972576524	TAO_3_E_ZL	YINGGE	呂葳鋐	0939968436	interested. 	
+2016:3:5:4	NORTH	+886963938192	SONGSHAN_ZL	TIANMU	GEOVANI	0978943277	half blood brazil and taiwan . Cool dude 	
+2016:3:5:4	CENTRAL	+886972576536	HUALIAN_1_E	TAIPEI	Jian Yidian	0932364909	Met in Hualien; came for grave sweeping. 	
+2016:3:5:4	EAST	+886972576516	SIYUAN_E	SONGSHAN	Lin Zhe Yi	0913729873	Owns a drink shop in Taipei. He is a less active.   	
+2016:3:5:4	TAOYUAN	+886972576516	SIYUAN_E	DAXI	Jian Jia Ling	0922273135	A less active!	
+2016:3:5:4		+886972576560	LONGTAN_E	龜山區（GUISHAN）	王姐妹	0982228892	sometimes lives in 龍潭 but moved to 龜山 recently to take care the child	
+2016:3:5:4	NORTH	+886963832102	HUALIAN_3_E	SHILIN	伍姐妹	0955820662	shared #because He lives and she is willing to be baptized but we didnt set a date.	
+2016:3:5:4	SOUTH	+886963938192	SONGSHAN_ZL	XINDIAN	TAO 帥哥	0984515178	帥哥對福音有interest 	
+2016:3:5:4	CENTRAL	+886963938192	SONGSHAN_ZL	SANCHONG	yao小姐	0978231551	a cool woman 	
+2016:3:5:4	SOUTH	+886972576582	ZHUBEI_3_E	中和	楊amah	0935141322	 in a 腳踏車 gang haha. Christian.	
+2016:3:5:4	SOUTH	+886963731605	TAO_3_E	新店區	侯竹青	0968195749	 She is from 大陸(dalu). Has been in taiwan for 2 months now. Goes to college in Jingmei, in taipei. Going on a bike ride for 10 days around the island. Believes in God, probably willing to meet when she is back.	
+2016:3:5:4	TAOYUAN	+886963731605	TAO_3_E	中壢區	劉庭羽	0975523292	lady, lives in or near da nan. Met her  at work watching a sign. Talked about families for a sec. Said her (2) kids bring happiness in her life.	
+2016:3:5:4	EAST	+886972576526	XINZHU_1_E	松山區	藍姐妹	035427900	Sweet lady, really nice, likes to speak english	
+2016:3:5:4	TAIZHONG_SOUTH	+886963917982	SANXIA_A_E	ZHANGHUA	qiu1 yong3 xuan1	0952541942	cool guy in twenties. Works for foxconn in dingpu. Good english. Came to church. He knows elder 李	
+2016:3:5:4	NORTH	+886972961085	BANQIAO_S	SHILIN	0	0955952620	talked about baptism. She's been to church before when her friend took her. Willing to learn more!	
+2016:3:5:4		+886972576596	TAIDONG_1_S	TAIZHONGBEITU	 LIN YI JUN (patrick)	0983511045	willing to pray about message of restoration. 	
+2016:3:5:4	EAST	+886972576516	SIYUAN_E	SONGSHAN	 Sally 陳	0988959382	A less active! But is super awesome!	
+2016:3:5:4	WEST	+886972961085	BANQIAO_S	TUCHENG	Tony 莊正和ZhuangZhengHe	0922151517	willing to meet	
+2016:3:5:4	WEST	+886972961085	BANQIAO_S	SHULIN	Bernie 林	0973000217	has more time on weekends. Interested in english class!	
+2016:3:5:4	WEST	+886972961085	BANQIAO_S	XINZHUANG	Jack	0939588540	Met him a few days ago, he's been to another church before and is really interested in finding another church	
+2016:3:5:4	WEST	+886972961085	BANQIAO_S	SANXIA	高筱筠gao xiao yun	0982521814	willing to meet. She believes in christ and her father is very devout. We talked about baptism with her and she said baptism is hard for her to accept because she's gay. But very willing to meet!	
+2016:3:5:4	CENTRAL	+886972961085	BANQIAO_S	SANCHONG	康峻Kang Jun	0985396001	he's a photographer. Not really willing to meet, but super nice and wants to learn english!	
+2016:3:5:4	EAST	+886972576517	DANFENG_E	內湖	陳怡君	0918861528	 she is super rich christian, really friendly, goes to church for the social aspect.	
+2016:3:5:4	NORTH	+886972576559	WANDA_S	SHILIN	ethan 陳	0925881020	 met on the mrt 18 he has seen missionaries before but hasn't heard the message is willing to hear! :) 	
+2016:3:5:4	TAOYUAN	+886972576566	OFFICE_E	龜山區	王姐妹	0982228892	sometimes lives in 龍潭 but moved to 龜山 recently to take care the child	

@@ -30,9 +30,9 @@ Report::Report()
 	set_type(TYPE_REGULAR);
 }
 
-void Report::read_message(Message msg, vector<wstring> to_read, std::wstring date)
+void Report::read_message(Message* msg, vector<wstring> to_read, std::wstring date)
 {
-	wstring msg_type = get_msg_key_val(msg.get_contents(), TYPE_KEY, ':', '\n');
+	wstring msg_type = get_msg_key_val(msg->get_contents(), TYPE_KEY, ':', '\n');
 	if (msg_type == TYPE_REPORT_STR)
 		set_type(TYPE_REGULAR);
 	else if (msg_type == TYPE_ENGLISH_STR)
@@ -40,7 +40,7 @@ void Report::read_message(Message msg, vector<wstring> to_read, std::wstring dat
 	else if (msg_type == TYPE_BAPTISM_STR)
 		set_type(TYPE_BAPTISM_RECORD);
 
-	sender_name = msg.get_sender_name();
+	sender_name = msg->get_sender_name();
 	std::vector<std::wstring> date_strs = tokenize(date, ':');
 	if (date_strs.size() >= 4)
 	{
@@ -54,7 +54,7 @@ void Report::read_message(Message msg, vector<wstring> to_read, std::wstring dat
 
 	for (vector<wstring>::iterator it = to_read.begin(); it != to_read.end(); ++it)
 	{
-		report_values[*it] = get_msg_key_val(msg.get_contents(), *it, ':', '\n').c_str();
+		report_values[*it] = get_msg_key_val(msg->get_contents(), *it, ':', '\n').c_str();
 	}
 }
 

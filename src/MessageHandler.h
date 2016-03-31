@@ -60,8 +60,8 @@ public:
 	void parse_messages(std::wstring raw_str, Gui* gui);
 
 	void add_message(Message* msg, MessageStorageType type);
-	void erase_message(Message* msg, MessageStorageType type);
+	void erase_message(Message* msg, MessageStorageType type, bool free_memory = true);
 
-	std::vector<Message*> const * get_messages(MessageStorageType type);
+	std::vector<Message*>* get_messages(MessageStorageType type);
 };
 

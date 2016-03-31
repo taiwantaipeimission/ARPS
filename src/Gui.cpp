@@ -195,11 +195,10 @@ void delete_msg_cb(Fl_Widget* wg, void* ptr)
 		{
 			if (browser->selected(i))
 			{
-				Message* msg = (Message*)browser->data(i);
 				if (browser->handled)
-					handled_to_erase.push_back(msg);
+					handled_to_erase.push_back((Message*)browser->data(i));
 				else
-					unhandled_to_erase.push_back(msg);
+					unhandled_to_erase.push_back((Message*)browser->data(i));
 			}
 		}
 		for (size_t i = 0; i < handled_to_erase.size(); i++)
@@ -581,15 +580,15 @@ void Gui::update_msg_scroll()
 {
 	unhandled->clear();
 	handled->clear();
-	vector<Message*> const * unhandled_msg_vector = msg_handler.get_messages(MessageHandler::UNHANDLED);
-	vector<Message*> const * handled_msg_vector = msg_handler.get_messages(MessageHandler::HANDLED);
-	for (vector<Message*>::const_iterator it = unhandled_msg_vector->begin(); it != unhandled_msg_vector->end(); ++it)
+	vector<Message*>* unhandled_msg_vector = msg_handler.get_messages(MessageHandler::UNHANDLED);
+	vector<Message*>* handled_msg_vector = msg_handler.get_messages(MessageHandler::HANDLED);
+	for (vector<Message*>::iterator it = unhandled_msg_vector->begin(); it != unhandled_msg_vector->end(); ++it)
 	{
-		std::wstring display_txt = get_browser_display_txt((*it)->get_sender_name() + DISPLAY_TEXT_SEPARATOR +(*it)->get_contents());
+		std::wstring display_txt = get_browser_display_txt((*it)->get_sender_name() + DISPLAY_TEXT_SEPARATOR + (*it)->get_contents());
 		unhandled->add(tos(display_txt).c_str(), *it);
 	}
 
-	for (vector<Message*>::const_iterator it = handled_msg_vector->begin(); it != handled_msg_vector->end(); ++it)
+	for (vector<Message*>::iterator it = handled_msg_vector->begin(); it != handled_msg_vector->end(); ++it)
 	{
 		std::wstring display_txt = get_browser_display_txt((*it)->get_sender_name() + DISPLAY_TEXT_SEPARATOR + (*it)->get_contents());
 		handled->add(tos(display_txt).c_str(), *it);
@@ -678,7 +677,7 @@ bool Gui::completed_command_cb()
 
 void Gui::process_msg(Message* msg)
 {
-	if (!msg->is_concatenated())
+	if (msg && !msg->is_concatenated())
 	{
 		wstring msg_type = get_msg_key_val(msg->get_contents(), TYPE_KEY, ':', '\n');
 		if (msg_type == TYPE_REPORT_STR)
@@ -686,7 +685,7 @@ void Gui::process_msg(Message* msg)
 			ReportSheet* sheet = &report_collection.reports[Report::TYPE_REGULAR][ReportCollection::COMP];
 			Report report;
 			report.set_type(Report::TYPE_REGULAR);
-			report.read_message(*msg, sheet->sheet_fields, report_date);
+			report.read_message(msg, sheet->sheet_fields, report_date);
 			sheet->add_report(report);
 
 			int baptisms = _wtoi(report.report_values[REP_KEY_BAP].c_str());
@@ -711,7 +710,7 @@ void Gui::process_msg(Message* msg)
 			ReportSheet* sheet = &report_collection.reports[Report::TYPE_ENGLISH][ReportCollection::COMP];
 			Report report;
 			report.set_type(Report::TYPE_ENGLISH);
-			report.read_message(*msg, sheet->sheet_fields, english_date);
+			report.read_message(msg, sheet->sheet_fields, english_date);
 			sheet->add_report(report);
 		}
 		else if (msg_type == TYPE_BAPTISM_STR)
@@ -719,13 +718,13 @@ void Gui::process_msg(Message* msg)
 			ReportSheet* sheet = &report_collection.reports[Report::TYPE_BAPTISM_RECORD][ReportCollection::COMP];
 			Report report;
 			report.set_type(Report::TYPE_BAPTISM_RECORD);
-			report.read_message(*msg, sheet->sheet_fields, report_date);
+			report.read_message(msg, sheet->sheet_fields, report_date);
 			sheet->add_report(report);
 		}
 		else if (msg_type == TYPE_REFERRAL_STR)
 		{
 			Referral referral;
-			referral.read_message(*msg, current_date);
+			referral.read_message(msg, current_date);
 			referral.locate(&comp_list);
 			if (!referral.found_dest())
 				referral.dest_number = stray_msg_handler;	//Send it to the recorder!
@@ -753,13 +752,13 @@ void Gui::process_msg(Message* msg)
 		}
 	}
 	msg_handler.add_message(msg, MessageHandler::HANDLED);
-	msg_handler.erase_message(msg, MessageHandler::UNHANDLED);
+	msg_handler.erase_message(msg, MessageHandler::UNHANDLED, false);
 }
 
 void Gui::unprocess_msg(Message* msg)
 {
 	msg_handler.add_message(msg, MessageHandler::UNHANDLED);
-	msg_handler.erase_message(msg, MessageHandler::HANDLED);
+	msg_handler.erase_message(msg, MessageHandler::HANDLED, false);
 }
 
 void Gui::configure_modem()

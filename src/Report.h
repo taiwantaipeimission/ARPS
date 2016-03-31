@@ -53,7 +53,7 @@ public:
 	virtual ~Report();
 
 	virtual void set_type(Type type);
-	virtual void read_message(Message msg, std::vector<std::wstring> fields_to_read, std::wstring date);
+	virtual void read_message(Message* msg, std::vector<std::wstring> fields_to_read, std::wstring date);
 
 	virtual std::wstring get_id_str();
 	virtual std::wstring get_date();

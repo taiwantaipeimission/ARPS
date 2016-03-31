@@ -565,6 +565,7 @@
 2016:3:5:3:0:DANSHUI_B_E	advanced	2	1	0	0
 2016:3:5:3:0:GUISHAN_E	Advanced	16	14	0	0
 2016:3:5:3:0:HUALIAN_1_E	gaoji	10	10	1	0
+2016:3:5:3:0:HUALIAN_1_S	child	6	5	0	0
 2016:3:5:3:0:HUALIAN_2_E	beginning	10	4	2	1
 2016:3:5:3:0:HUALIAN_3_S	Intermediate	9	6	3	1
 2016:3:5:3:0:JILONG_A_E	Intermediate	4	2	0	0

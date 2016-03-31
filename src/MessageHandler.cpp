@@ -42,10 +42,6 @@ MessageHandler::MessageHandler()
 
 MessageHandler::~MessageHandler()
 {
-	for (std::vector<Message*>::iterator it = msgs_handled.begin(); it != msgs_handled.end(); ++it)
-		delete *it;
-	for (std::vector<Message*>::iterator it = msgs_unhandled.begin(); it != msgs_unhandled.end(); ++it)
-		delete *it;
 }
 
 void MessageHandler::parse_messages(std::wstring raw_str, Gui* gui)
@@ -78,26 +74,33 @@ void MessageHandler::parse_messages(std::wstring raw_str, Gui* gui)
 	//Attempt to piece together concatenated messages
 	for (std::map<unsigned int, std::vector<Message*>>::iterator it = msgs_fragment.begin(); it != msgs_fragment.end(); )
 	{
-		std::vector<int> correct_order;					//List of the indeces of message fragments for this concat_id, arranged in proper order
-		int num_msgs = it->second[0]->get_concat_num_msgs();
-		correct_order.assign(num_msgs, -1);				//Fill with -1s so we can see if any msgs are missing
-		for (size_t i = 0; i < it->second.size(); i++)
+		if (it->second.size() > 0)
 		{
-			size_t index = it->second[i]->get_concat_index() - 1;					//Concat indeces inside msg start from 1, so subtract 1
-			if (index < correct_order.size())
-				correct_order[index] = i;
-		}
-		if (std::count(correct_order.begin(), correct_order.end(), -1) == 0)	//All sub-msgs found that make up this concat msg
-		{
-			for (unsigned int i = 1; i < correct_order.size(); i++)
+			std::vector<int> correct_order;					//List of the indeces of message fragments for this concat_id, arranged in proper order
+			int num_msgs = it->second[0]->get_concat_num_msgs();
+			correct_order.assign(num_msgs, -1);				//Fill with -1s so we can see if any msgs are missing
+			for (size_t i = 0; i < it->second.size(); i++)
 			{
-				it->second[correct_order[0]]->app_contents(it->second[correct_order[i]]->get_contents());
-				it->second[correct_order[0]]->push_cmgl_id(it->second[correct_order[i]]->get_cmgl_ids()[0]);
+				size_t index = it->second[i]->get_concat_index() - 1;					//Concat indeces inside msg start from 1, so subtract 1
+				if (index < correct_order.size())
+					correct_order[index] = i;
 			}
-			it->second[correct_order[0]]->set_concatenated(false);
-			msgs_unhandled.push_back(it->second[correct_order[0]]);
-			it = msgs_fragment.erase(it);
-			changed = true;
+			if (std::count(correct_order.begin(), correct_order.end(), -1) == 0)	//All sub-msgs found that make up this concat msg
+			{
+				for (unsigned int i = 1; i < correct_order.size(); i++)
+				{
+					it->second[correct_order[0]]->app_contents(it->second[correct_order[i]]->get_contents());
+					it->second[correct_order[0]]->push_cmgl_id(it->second[correct_order[i]]->get_cmgl_ids()[0]);
+				}
+				it->second[correct_order[0]]->set_concatenated(false);
+				msgs_unhandled.push_back(it->second[correct_order[0]]);
+				it = msgs_fragment.erase(it);
+				changed = true;
+			}
+			else
+			{
+				++it;
+			}
 		}
 		else
 		{
@@ -137,7 +140,7 @@ void MessageHandler::load(File* file, MessageStorageType type)
 
 				for (std::vector<Message*>::iterator it = target_vector->begin(); it != target_vector->end() && !duplicate; ++it)
 				{
-					if ((*it)->get_sender_name() == msg->get_sender_name() && (*it)->get_contents() == msg->get_contents())
+					if (**it == *msg)
 						duplicate = true;
 				}
 				if (!duplicate)
@@ -222,28 +225,33 @@ void MessageHandler::add_message(Message* msg, MessageStorageType type)
 	changed = true;
 }
 
-void MessageHandler::erase_message(Message* msg, MessageStorageType type)
+void MessageHandler::erase_message(Message* msg, MessageStorageType type, bool free_memory)
 {
+	bool removed_msg = false;
+	if(free_memory)
+		delete msg;
 	if (type == HANDLED)
 	{
 		size_t before_size = msgs_handled.size();
 		msgs_handled.erase(std::remove(msgs_handled.begin(), msgs_handled.end(), msg), msgs_handled.end());
-		changed = msgs_handled.size() != before_size;
+		removed_msg = msgs_handled.size() != before_size;
 	}
 	else if(type == UNHANDLED)
 	{
 		size_t before_size = msgs_unhandled.size();
 		msgs_unhandled.erase(std::remove(msgs_unhandled.begin(), msgs_unhandled.end(), msg), msgs_unhandled.end());
-		changed = msgs_unhandled.size() != before_size;
+		removed_msg = msgs_unhandled.size() != before_size;
 	}
 	else if (type == OUTBOX)
 	{
 		size_t before_size = msg_outbox.size();
 		msg_outbox.erase(std::remove(msg_outbox.begin(), msg_outbox.end(), msg), msg_outbox.end());
+		removed_msg = msg_outbox.size() != before_size;
 	}
+	changed = removed_msg;
 }
 
-std::vector<Message*> const * MessageHandler::get_messages(MessageStorageType type)
+std::vector<Message*>* MessageHandler::get_messages(MessageStorageType type)
 {
 	if (type == HANDLED)
 		return &msgs_handled;

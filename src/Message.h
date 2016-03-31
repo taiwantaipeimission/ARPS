@@ -61,20 +61,22 @@ private:
 	std::wstring dest_number;
 
 public:
-	std::wstring get_contents() { return contents; }
-	std::wstring get_raw_pdu() { return raw_pdu; }
-	std::wstring get_sender_number() { return sender_number; }
-	std::wstring get_sent_date() { return sent_date; }
-	int get_data_coding() { return data_coding; }
-	int get_msg_length() { return msg_length; }
-	bool is_concatenated() { return concatenated; }
-	int get_concat_refnum() { return concat_refnum; }
-	int get_concat_num_msgs() { return concat_num_msgs; }
-	int get_concat_index() { return concat_index; }
-	std::vector<int> get_cmgl_ids() { return cmgl_ids; }
-	std::wstring get_sender_name() { return sender_name; }
-	bool is_processed() { return processed; }
-	std::wstring get_dest_number() { return dest_number; }
+	std::wstring get_contents() const { return contents; }
+	std::wstring get_raw_pdu() const { return raw_pdu; }
+	std::wstring get_sender_number() const { return sender_number; }
+	std::wstring get_sent_date() const { return sent_date; }
+	int get_data_coding() const { return data_coding; }
+	int get_msg_length() const { return msg_length; }
+	bool is_concatenated() const { return concatenated; }
+	int get_concat_refnum() const { return concat_refnum; }
+	int get_concat_num_msgs() const { return concat_num_msgs; }
+	int get_concat_index() const { return concat_index; }
+	std::vector<int> get_cmgl_ids() const { return cmgl_ids; }
+	std::wstring get_sender_name() const { return sender_name; }
+	bool is_processed() const { return processed; }
+	std::wstring get_dest_number() const { return dest_number; }
+
+	bool operator==(const Message& other) const { return contents == other.contents && sender_name == other.sender_name && sent_date == other.sent_date && cmgl_ids == other.cmgl_ids; }
 
 	void set_contents(std::wstring contents_in) { contents = contents_in; }
 	void app_contents(std::wstring contents_app) { contents += contents_app; }

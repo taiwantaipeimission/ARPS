@@ -35,8 +35,6 @@
 #include "File.h"
 #include "Reminder.h"
 #include "Referral.h"
-#include "MessageHandler.h"
-#include "Gui.h"
 
 #include "FL/Fl.H"
 
@@ -49,10 +47,9 @@ Terminal::~Terminal()
 {
 }
 
-void Terminal::init(File* output_file_in, Gui* gui_in)
+void Terminal::init(File* output_file_in)
 {
 	output_file = output_file_in;
-	gui = gui_in;
 
 	modem.init();
 }

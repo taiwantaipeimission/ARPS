@@ -48,8 +48,6 @@
 
 using namespace rapidjson;
 
-Gui* gui;
-
 class Console_streambuf
 	: public std::basic_streambuf<wchar_t>
 {
@@ -119,27 +117,26 @@ int main(int argc, char **argv)
 	set_color(CC_GREY, CC_BLACK);
 
 	wcout << L"-Creating objects\n";
-	gui = new Gui();
+	Gui gui;
 	Terminal terminal;
 	ModemInterface modem_interface;
 	bool quit = false;
 
 	wcout << L"-Initializing terminal\n";
-	terminal.init(&gui->file_manager.files[L"OUTPUT"], gui);
-	std::thread terminal_thread(run_terminal_func, &terminal, gui, &modem_interface, &quit);
+	terminal.init(&gui.file_manager.files[L"OUTPUT"]);
+	std::thread terminal_thread(run_terminal_func, &terminal, &gui, &modem_interface, &quit);
 
 	wcout << L"-Loading data files\n";
-	gui->load();
+	gui.load();
 	wcout << L"-Initializing GUI\n";
-	gui->init(&modem_interface);
+	gui.init(&modem_interface);
 	set_color(CC_GREEN, CC_BLACK);
 	wcout << L"Done\n";
 	set_color(CC_WHITE, CC_BLACK);
-	gui->run();
+	gui.run();
 		
 	quit = true;
 	terminal_thread.join();
-	delete gui;
 
 	return 0;
 }

@@ -37,7 +37,7 @@ public:
 	Referral();
 	virtual ~Referral();
 
-	void read_message(Message msg, std::wstring date_in);
+	void read_message(Message* msg, std::wstring date_in);
 	std::wstring print();
 	void load(std::wstring line);
 
