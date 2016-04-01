@@ -225,11 +225,10 @@ void MessageHandler::add_message(Message* msg, MessageStorageType type)
 	changed = true;
 }
 
-void MessageHandler::erase_message(Message* msg, MessageStorageType type, bool free_memory)
+void MessageHandler::erase_message(Message* msg, MessageStorageType type)
 {
 	bool removed_msg = false;
-	if(free_memory)
-		delete msg;
+	delete msg;
 	if (type == HANDLED)
 	{
 		size_t before_size = msgs_handled.size();
@@ -247,6 +246,39 @@ void MessageHandler::erase_message(Message* msg, MessageStorageType type, bool f
 		size_t before_size = msg_outbox.size();
 		msg_outbox.erase(std::remove(msg_outbox.begin(), msg_outbox.end(), msg), msg_outbox.end());
 		removed_msg = msg_outbox.size() != before_size;
+	}
+	changed = removed_msg;
+}
+
+void MessageHandler::move_message(Message* msg, MessageStorageType from, MessageStorageType to, bool copy)
+{
+	bool removed_msg;
+	if (from == HANDLED)
+	{
+		size_t before_size = msgs_handled.size();
+		msgs_handled.erase(std::remove(msgs_handled.begin(), msgs_handled.end(), msg), msgs_handled.end());
+		removed_msg = msgs_handled.size() != before_size;
+	}
+	else if (from == UNHANDLED)
+	{
+		size_t before_size = msgs_unhandled.size();
+		msgs_unhandled.erase(std::remove(msgs_unhandled.begin(), msgs_unhandled.end(), msg), msgs_unhandled.end());
+		removed_msg = msgs_unhandled.size() != before_size;
+	}
+	else if (from == OUTBOX)
+	{
+		size_t before_size = msg_outbox.size();
+		msg_outbox.erase(std::remove(msg_outbox.begin(), msg_outbox.end(), msg), msg_outbox.end());
+		removed_msg = msg_outbox.size() != before_size;
+	}
+	if (removed_msg)
+	{
+		if (to == HANDLED)
+			msgs_handled.push_back(msg);
+		else if (to == UNHANDLED)
+			msgs_unhandled.push_back(msg);
+		else if (to == OUTBOX)
+			msg_outbox.push_back(msg);
 	}
 	changed = removed_msg;
 }

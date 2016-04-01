@@ -751,14 +751,12 @@ void Gui::process_msg(Message* msg)
 				send_message(stray_msg_handler, msg->get_contents());	//Send it to the recorder!
 		}
 	}
-	msg_handler.add_message(msg, MessageHandler::HANDLED);
-	msg_handler.erase_message(msg, MessageHandler::UNHANDLED, false);
+	msg_handler.move_message(msg, MessageHandler::UNHANDLED, MessageHandler::HANDLED);
 }
 
 void Gui::unprocess_msg(Message* msg)
 {
-	msg_handler.add_message(msg, MessageHandler::UNHANDLED);
-	msg_handler.erase_message(msg, MessageHandler::HANDLED, false);
+	msg_handler.move_message(msg, MessageHandler::HANDLED, MessageHandler::UNHANDLED);
 }
 
 void Gui::configure_modem()
