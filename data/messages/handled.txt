@@ -19258,5 +19258,113 @@
         "C_REFNUM": 135,
         "C_NUM_MSG": 2,
         "C_INDEX": 1
+    },
+    {
+        "SENDER_NAME": "SHILIN_S",
+        "SENDER_NUMBER": "+886972576543",
+        "CONTENTS": "伍姐妹：contacted busy until next month",
+        "SENT_DATE": "",
+        "DATA_CODING": 8,
+        "MSG_LEN": 70,
+        "CONCAT": false,
+        "C_REFNUM": 0,
+        "C_NUM_MSG": 0,
+        "C_INDEX": 0
+    },
+    {
+        "SENDER_NAME": "OFFICE_E",
+        "SENDER_NUMBER": "+886972576566",
+        "CONTENTS": "TYPE:REFERRAL\nPLACE: BEITUN\nNAME: LIN YI JUN (patrick)\nNUMBER: 0983511045\nINFO:willing to pray about message of restoration. ",
+        "SENT_DATE": "",
+        "DATA_CODING": 0,
+        "MSG_LEN": 125,
+        "CONCAT": false,
+        "C_REFNUM": 0,
+        "C_NUM_MSG": 0,
+        "C_INDEX": 0
+    },
+    {
+        "SENDER_NAME": "+886963771573",
+        "SENDER_NUMBER": "+886963771573",
+        "CONTENTS": "TYPE:REFERRAL\nPLACE:ZHONGSHAN\nNAME:GUO YAN ZHI\nNUMBER: 0919786765\nINFO: temple tour referral. Male. 26yrs ",
+        "SENT_DATE": "",
+        "DATA_CODING": 0,
+        "MSG_LEN": 106,
+        "CONCAT": false,
+        "C_REFNUM": 0,
+        "C_NUM_MSG": 0,
+        "C_INDEX": 0
+    },
+    {
+        "SENDER_NAME": "LONGTAN_E",
+        "SENDER_NUMBER": "+886972576560",
+        "CONTENTS": "TYPE:REFERRAL\nPLACE:松山區\nNAME:蔡宜璋\nNUMBER:23779969\nINFO:He was drunk , but he is interested in gospel",
+        "SENT_DATE": "",
+        "DATA_CODING": 8,
+        "MSG_LEN": 140,
+        "CONCAT": false,
+        "C_REFNUM": 20,
+        "C_NUM_MSG": 2,
+        "C_INDEX": 1
+    },
+    {
+        "SENDER_NAME": "JINHUA_S",
+        "SENDER_NUMBER": "+886965113871",
+        "CONTENTS": "TYPE:REFERRAL\nPLACE: san chong\nNAME:駱淑敏\nNUMBER:0932940699\nINFO: works at a parking garage in jinhua area and is super busy but is very nice. taught lesson 1",
+        "SENT_DATE": "",
+        "DATA_CODING": 8,
+        "MSG_LEN": 140,
+        "CONCAT": false,
+        "C_REFNUM": 65,
+        "C_NUM_MSG": 3,
+        "C_INDEX": 1
+    },
+    {
+        "SENDER_NAME": "OFFICE_E",
+        "SENDER_NUMBER": "+886972576566",
+        "CONTENTS": "TYPE:REFERRAL\nPLACE:信義區\nNAME:Ye Jia Hua\nNUMBER:0922505130\nINFO: la referral",
+        "SENT_DATE": "",
+        "DATA_CODING": 8,
+        "MSG_LEN": 140,
+        "CONCAT": false,
+        "C_REFNUM": 137,
+        "C_NUM_MSG": 2,
+        "C_INDEX": 1
+    },
+    {
+        "SENDER_NAME": "MUZHA_E",
+        "SENDER_NUMBER": "+886972576510",
+        "CONTENTS": "TYPE:REFERRAL\nPLACE:SONGSHAN\nNAME:石小姐\nNUMBER:0986911776\nINFO: Nice gal who works in muzha! Came to English class after we met her earlier yesterday. Good gospel interest. A little busy. The Songshan missionaries are wizardsB-)",
+        "SENT_DATE": "",
+        "DATA_CODING": 8,
+        "MSG_LEN": 140,
+        "CONCAT": false,
+        "C_REFNUM": 194,
+        "C_NUM_MSG": 4,
+        "C_INDEX": 1
+    },
+    {
+        "SENDER_NAME": "TOUR_S",
+        "SENDER_NUMBER": "+886972576577",
+        "CONTENTS": "TYPE:REFERRAL\nPLACE:淡水區\nNAME:劉弘煌\nNUMBER:0928561092\nINFO: Member referral from temple tour,士林member 劉弘俊 , contact it.",
+        "SENT_DATE": "",
+        "DATA_CODING": 8,
+        "MSG_LEN": 140,
+        "CONCAT": false,
+        "C_REFNUM": 248,
+        "C_NUM_MSG": 2,
+        "C_INDEX": 1
+    },
+    {
+        "SENDER_NAME": "TOUR_S",
+        "SENDER_NUMBER": "+886972576577",
+        "CONTENTS": "TYPE:REFERRAL\nPLACE:新莊區\nNAME:傅元萱\nNUMBER:0929344185\nINFO: referral from temple tour,33 years old woman,try it.",
+        "SENT_DATE": "",
+        "DATA_CODING": 8,
+        "MSG_LEN": 140,
+        "CONCAT": false,
+        "C_REFNUM": 249,
+        "C_NUM_MSG": 2,
+        "C_INDEX": 1
     }
 ]
