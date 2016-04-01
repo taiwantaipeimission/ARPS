@@ -39,6 +39,8 @@ void Report::read_message(Message* msg, vector<wstring> to_read, std::wstring da
 		set_type(TYPE_ENGLISH);
 	else if (msg_type == TYPE_BAPTISM_STR)
 		set_type(TYPE_BAPTISM_RECORD);
+	else if (msg_type == TYPE_REFERRAL_STR)
+		set_type(TYPE_REFERRAL);
 
 	sender_name = msg->get_sender_name();
 	std::vector<std::wstring> date_strs = tokenize(date, ':');
@@ -54,7 +56,9 @@ void Report::read_message(Message* msg, vector<wstring> to_read, std::wstring da
 
 	for (vector<wstring>::iterator it = to_read.begin(); it != to_read.end(); ++it)
 	{
-		report_values[*it] = get_msg_key_val(msg->get_contents(), *it, ':', '\n').c_str();
+		std::wstring msg_value = get_msg_key_val(msg->get_contents(), *it, ':', '\n');
+		strip_chars(msg_value, L"\n\t");
+		report_values[*it] = msg_value;
 	}
 }
 
@@ -62,7 +66,7 @@ Report::~Report()
 {
 }
 
-void Report::set_type(Type new_type)
+void Report::set_type(ReportType new_type)
 {
 	type = new_type;
 	use_sub_id = false;
@@ -79,6 +83,10 @@ void Report::set_type(Type new_type)
 	}
 	else if (type == TYPE_BAPTISM_SOURCE)
 	{
+	}
+	else if (type == TYPE_REFERRAL)
+	{
+		use_sub_id = true;
 	}
 }
 
@@ -166,7 +174,6 @@ void Report::read_processed(wstring input, vector<wstring> field_order)
 		date_month = 0;
 		date_week = 0;
 		date_wday = 0;
-		use_sub_id = false;
 		sub_id = 0;
 		sender_name = L"-";
 
@@ -179,9 +186,8 @@ void Report::read_processed(wstring input, vector<wstring> field_order)
 			date_month = _wtoi(id_str_tokens[i++].c_str());
 			date_week = _wtoi(id_str_tokens[i++].c_str());
 			date_wday = _wtoi(id_str_tokens[i++].c_str());
-			if (id_str_tokens.size() == 6)
+			if (id_str_tokens.size() == 6 && use_sub_id)
 			{
-				use_sub_id = true;
 				sub_id = _wtoi(id_str_tokens[i++].c_str());
 			}
 			sender_name = id_str_tokens[i++];

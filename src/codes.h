@@ -18,6 +18,36 @@
 #pragma once
 
 #include <string>
+#include <map>
+#include <vector>
+
+enum ReportType
+{
+	TYPE_REGULAR,
+	TYPE_ENGLISH,
+	TYPE_BAPTISM_RECORD,
+	TYPE_BAPTISM_SOURCE,
+	TYPE_REFERRAL,
+	NUM_TYPES
+};
+
+enum ReportOrder
+{
+	COMP,					//Data by companionship
+	DISTRICT,				//Data by district
+	DISTRICT_MONTH,			//Data by district (monthly totals)
+	ZONE,					//Data by zone
+	ZONE_MONTH,				//Data by zone (monthly totals)
+	WARD,					//Ward
+	WARD_MONTH,
+	STAKE,
+	STAKE_MONTH,
+	MISSION,
+	MISSION_MONTH,
+	INDIV,					//Data by individual
+	NUM_DATA_ORDERS
+};
+
 using namespace std;
 
 //Version
@@ -36,6 +66,9 @@ using namespace std;
 #define REP_KEY_BAP_MEM_REF L"BAP_MEM_REF"
 #define REP_KEY_BAP_ENGLISH L"BAP_ENGLISH"
 #define REP_KEY_BAP_TOUR L"BAP_TOUR"
+
+//Orders to total
+extern map<ReportType, vector<ReportOrder>> ORDERS_TO_TOTAL;
 
 //Phone numbers
 #define INT_PH_NUM_PREFIX L"+886"

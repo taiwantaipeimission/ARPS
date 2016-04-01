@@ -26,7 +26,7 @@ class ReportSheet
 {
 public:
 
-	Report::Type report_type;
+	ReportType report_type;
 
 	std::vector<std::wstring> sheet_fields;
 	std::map<std::wstring, Report> reports;

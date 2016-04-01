@@ -17,29 +17,18 @@
 
 #pragma once
 
-#include <string>
-#include "Message.h"
+class CompList;
 
-class Referral
+#include "Report.h"
+
+#include <string>
+
+class Referral : public Report
 {
 public:
-	std::wstring src_number;
-	std::wstring src_name;
-	std::wstring dest_geog_area;
-	std::wstring dest_number;
-	std::wstring dest_zone;
-	std::wstring name;
-	std::wstring number;
-	std::wstring info;
-	std::wstring contact_state;
-	std::wstring date;
 
 	Referral();
 	virtual ~Referral();
-
-	void read_message(Message* msg, std::wstring date_in);
-	std::wstring print();
-	void load(std::wstring line);
 
 	bool locate(CompList* list);
 	bool found_dest();

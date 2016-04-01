@@ -60,7 +60,6 @@
     <ClCompile Include="ModemData.cpp" />
     <ClCompile Include="ModemInterface.cpp" />
     <ClCompile Include="Referral.cpp" />
-    <ClCompile Include="ReferralList.cpp" />
     <ClCompile Include="Reminder.cpp" />
     <ClCompile Include="ReportCollection.cpp" />
     <ClCompile Include="Report.cpp" />
@@ -82,7 +81,6 @@
     <ClInclude Include="ModemData.h" />
     <ClInclude Include="ModemInterface.h" />
     <ClInclude Include="Referral.h" />
-    <ClInclude Include="ReferralList.h" />
     <ClInclude Include="Reminder.h" />
     <ClInclude Include="ReportCollection.h" />
     <ClInclude Include="Report.h" />

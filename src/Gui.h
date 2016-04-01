@@ -22,7 +22,6 @@
 #include "Modem.h"
 #include "ModemInterface.h"
 #include "ReportCollection.h"
-#include "ReferralList.h"
 
 #include <rapidjson/document.h>
 
@@ -66,7 +65,6 @@ public:
 	FileManager file_manager;
 	MessageHandler msg_handler;
 	ReportCollection report_collection;
-	ReferralList referral_list;
 	CompList comp_list;
 	ModemInterface* modem_interface;
 	rapidjson::Document config;
@@ -98,7 +96,7 @@ public:
 
 	void init(ModemInterface* mod_int_in);
 	void run();
-	void total_reports(Report::Type type);
+	void total_reports(ReportType type);
 	bool is_saved();
 	void save();
 	void load();
