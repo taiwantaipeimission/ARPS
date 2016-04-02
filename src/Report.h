@@ -40,26 +40,26 @@ public:
 	int date_wday;
 	std::wstring sender_name;
 	int sub_id;							//Used to differentiate English reports for different class levels, same date, same companionship.  Other report types don't use
-	bool use_sub_id;
 
 	std::map<std::wstring, std::wstring> report_values;			//List of all values contained; may contain fields not in vector<string> fields if they are present in processed data
 
 	Report();
 	virtual ~Report();
 
-	virtual void set_type(ReportType type);
-	virtual void read_message(Message* msg, std::vector<std::wstring> fields_to_read, std::wstring date);
+	virtual void set_type(ReportType type_in);
+	virtual void set_order(ReportOrder order_in);
+	virtual void read_message(Message* msg, std::vector<std::pair<std::wstring, bool>> fields_to_read, std::wstring date);
 
-	virtual std::wstring get_id_str();
+	virtual std::wstring get_id_str(bool include_sub_id);
 	virtual std::wstring get_date();
 	virtual std::wstring get_sender_name();
-
+	/*
 	virtual bool operator==(Report& other);
-	virtual bool operator!=(Report& other);
+	virtual bool operator!=(Report& other);*/
 	virtual void operator+=(Report& other);
 
 	virtual void clear_values();
 
-	virtual void read_processed(std::wstring input, std::vector<std::wstring> field_order);
-	virtual void print(std::wostream& output, std::vector<std::wstring> fields_to_write);
+	virtual void read_processed(std::wstring input, std::vector<std::pair<std::wstring, bool>> read_order);
+	virtual void print(std::wostream& output, std::vector<std::pair<std::wstring, bool>> write_order, bool print_sub_id);
 };

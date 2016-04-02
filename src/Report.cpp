@@ -30,7 +30,7 @@ Report::Report()
 	set_type(TYPE_REGULAR);
 }
 
-void Report::read_message(Message* msg, vector<wstring> to_read, std::wstring date)
+void Report::read_message(Message* msg, vector<pair<wstring, bool>> to_read, std::wstring date)
 {
 	wstring msg_type = get_msg_key_val(msg->get_contents(), TYPE_KEY, ':', '\n');
 	if (msg_type == TYPE_REPORT_STR)
@@ -54,11 +54,11 @@ void Report::read_message(Message* msg, vector<wstring> to_read, std::wstring da
 
 	std::wstring value;
 
-	for (vector<wstring>::iterator it = to_read.begin(); it != to_read.end(); ++it)
+	for (vector<pair<wstring, bool>>::iterator it = to_read.begin(); it != to_read.end(); ++it)
 	{
-		std::wstring msg_value = get_msg_key_val(msg->get_contents(), *it, ':', '\n');
+		std::wstring msg_value = get_msg_key_val(msg->get_contents(), it->first, ':', '\n');
 		strip_chars(msg_value, L"\n\t");
-		report_values[*it] = msg_value;
+		report_values[it->first] = msg_value;
 	}
 }
 
@@ -69,30 +69,16 @@ Report::~Report()
 void Report::set_type(ReportType new_type)
 {
 	type = new_type;
-	use_sub_id = false;
-	if (type == TYPE_REGULAR)
-	{
-	}
-	else if (type == TYPE_ENGLISH)
-	{
-		use_sub_id = true;
-	}
-	else if (type == TYPE_BAPTISM_RECORD)
-	{
-		use_sub_id = true;
-	}
-	else if (type == TYPE_BAPTISM_SOURCE)
-	{
-	}
-	else if (type == TYPE_REFERRAL)
-	{
-		use_sub_id = true;
-	}
 }
 
-std::wstring Report::get_id_str()
+void Report::set_order(ReportOrder order_in)
 {
-	return get_date() + L":" + (use_sub_id ? tos(sub_id) + L":" + sender_name : sender_name);
+	order = order_in;
+}
+
+std::wstring Report::get_id_str(bool include_sub_id)
+{
+	return get_date() + L":" + (include_sub_id ? tos(sub_id) + L":" + sender_name : sender_name);
 }
 
 std::wstring Report::get_date()
@@ -105,7 +91,7 @@ std::wstring Report::get_sender_name()
 {
 	return sender_name;
 }
-
+/*
 bool Report::operator==(Report& other)
 {
 	if (other.get_id_str() != this->get_id_str())
@@ -123,7 +109,7 @@ bool Report::operator!=(Report& other)
 {
 	return !((*this)==other);
 }
-
+*/
 void Report::operator+=(Report& other)
 {
 	for (map<wstring, wstring>::iterator it = other.report_values.begin(); it != other.report_values.end(); ++it)
@@ -163,7 +149,7 @@ void Report::clear_values()
 		it->second = L"";
 }
 
-void Report::read_processed(wstring input, vector<wstring> field_order)
+void Report::read_processed(wstring input, vector<pair<wstring, bool>> field_order)
 {
 	vector<wstring> tokens = tokenize(input, '\t');
 
@@ -186,7 +172,7 @@ void Report::read_processed(wstring input, vector<wstring> field_order)
 			date_month = _wtoi(id_str_tokens[i++].c_str());
 			date_week = _wtoi(id_str_tokens[i++].c_str());
 			date_wday = _wtoi(id_str_tokens[i++].c_str());
-			if (id_str_tokens.size() == 6 && use_sub_id)
+			if (id_str_tokens.size() == 6)
 			{
 				sub_id = _wtoi(id_str_tokens[i++].c_str());
 			}
@@ -196,20 +182,20 @@ void Report::read_processed(wstring input, vector<wstring> field_order)
 		size_t n_pairs = min(tokens.size() - 1, field_order.size());
 		for (size_t i = 0; i < n_pairs; i++)
 		{
-			if (field_order[i] != L"")
+			if (field_order[i].first != L"")
 			{
-				report_values[field_order[i]] = tokens[i + 1];	//Skip the first token, which contains only the ID string
+				report_values[field_order[i].first] = tokens[i + 1];	//Skip the first token, which contains only the ID string
 			}
 		}
 	}
 }
 
-void Report::print(std::wostream& output, vector<wstring> to_write)
+void Report::print(std::wostream& output, vector<pair<wstring, bool>> write_order, bool print_sub_id)
 {
-	output << get_id_str();
-	for (vector<wstring>::iterator it = to_write.begin(); it != to_write.end(); ++it)
+	output << get_id_str(print_sub_id);
+	for (vector<pair<wstring, bool>>::iterator it = write_order.begin(); it != write_order.end(); ++it)
 	{
-		output << L'\t' << report_values[*it];
+		output << L'\t' << report_values[it->first];
 	}
 	output << L'\n';
 }

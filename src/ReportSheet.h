@@ -24,24 +24,38 @@
 
 class ReportSheet
 {
-public:
-
+private:
 	ReportType report_type;
+	ReportOrder report_order;
 
-	std::vector<std::wstring> sheet_fields;
+	std::vector<std::pair<std::wstring, bool>> sheet_fields;	// wstring: field name; bool: is unique field (prefaced by @)
 	std::map<std::wstring, Report> reports;
 	bool loaded;
-	
+	bool use_sub_ids;
 	//Does the report sheet need to be re-saved?
 	bool changed;
 
+public:
 	ReportSheet();
 	virtual ~ReportSheet();
 
-	void add_report(Report report);
-	void remove_report(std::wstring id_str);
+	ReportType get_report_type() { return report_type; }
+	ReportOrder get_report_order() { return report_order; }
+	std::vector<std::pair<std::wstring, bool>> get_sheet_fields() { return sheet_fields; }
+	std::map<std::wstring, Report> get_reports() { return reports; }
+	Report get_report(std::wstring key) { return reports.count(key) > 0 ? reports[key] : Report(); }
 
-	void read_stored_all(std::wistream& input);
+	void insert_report(Report report);
+	void remove_report(std::wstring id_str);
+	void set_sheet_fields(std::vector<std::pair<std::wstring, bool>> sheet_fields_in) { sheet_fields = sheet_fields_in; changed = true; }
+	void set_report_type(ReportType report_type_in) { report_type = report_type_in; changed = true; }
+	void set_report_order(ReportOrder report_order_in) { report_order = report_order_in; changed = true; }
+
+	bool is_loaded() { return loaded; }
+	bool is_changed() { return changed; }
+	bool uses_sub_ids() { return use_sub_ids; }
+
+	void load(std::wistream& input);
 	void print(std::wostream& output);
 };
 

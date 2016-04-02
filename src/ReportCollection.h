@@ -47,9 +47,8 @@ public:
 	bool is_saved();
 	bool load(bool base, bool aux);
 	bool save();
-	void create_baptism_source_reports();
+	void create_baptism_source_reports(std::wstring report_date);
 	void total_type(ReportType type, CompList* comp_list, std::wstring date);
-	void total_all(CompList* comp_list, std::wstring date, std::wstring english_date);
 
 	void read_report(ReportType type, ReportOrder data_order, File* file);
 	void write_report(ReportType type, ReportOrder data_order, File* file);

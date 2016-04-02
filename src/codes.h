@@ -68,7 +68,7 @@ using namespace std;
 #define REP_KEY_BAP_TOUR L"BAP_TOUR"
 
 //Orders to total
-extern map<ReportType, vector<ReportOrder>> ORDERS_TO_TOTAL;
+extern map<ReportType, vector<ReportOrder>> REPORTS_TO_STORE;
 
 //Phone numbers
 #define INT_PH_NUM_PREFIX L"+886"

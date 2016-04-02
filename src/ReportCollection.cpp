@@ -67,10 +67,11 @@ void ReportCollection::init(std::wstring global_prefix_in)
 	for (int i = 0; i < NUM_TYPES; i++)
 	{
 		ReportType type = (ReportType)i;
-		for (int j = 0; j < ORDERS_TO_TOTAL[type].size(); j++)
+		for (int j = 0; j < REPORTS_TO_STORE[type].size(); j++)
 		{
-			ReportOrder order = ORDERS_TO_TOTAL[type][j];
-			reports[type][order].report_type = type;
+			ReportOrder order = REPORTS_TO_STORE[type][j];
+			reports[type][order].set_report_type(type);
+			reports[type][order].set_report_order(order);
 			report_files[type][order].filepath = global_prefix + prefix[type] + midfix[order] + suffix;
 		}
 	}
@@ -78,8 +79,7 @@ void ReportCollection::init(std::wstring global_prefix_in)
 
 void ReportCollection::read_report(ReportType type, ReportOrder data_order, File* file)
 {
-	reports[type][data_order].report_type = type;
-	reports[type][data_order].read_stored_all(file->file);
+	reports[type][data_order].load(file->file);
 }
 
 void ReportCollection::write_report(ReportType type, ReportOrder data_order, File* file)
@@ -236,29 +236,18 @@ Report ReportCollection::transform_report(Report rep, ReportOrder from, ReportOr
 	return rep;
 }
 
-void ReportCollection::create_baptism_source_reports()
+void ReportCollection::create_baptism_source_reports(std::wstring report_date)
 {
-	for (map<wstring, Report>::iterator it = reports[TYPE_BAPTISM_RECORD][COMP].reports.begin(); it != reports[TYPE_BAPTISM_RECORD][COMP].reports.end(); ++it)
+	map<wstring, Report> report_map = reports[TYPE_BAPTISM_RECORD][COMP].get_reports();
+	for (map<wstring, Report>::iterator it = report_map.begin(); it != report_map.end(); ++it)
 	{
 		Report bap_source = it->second;
-		bap_source.clear_values();
 		bap_source.set_type(TYPE_BAPTISM_SOURCE);
-
-		for (map<wstring, wstring>::iterator it = bap_source.report_values.begin(); it != bap_source.report_values.end(); ++it)
-			it->second = L"0";	//Fill with zeros
-
 		bap_source.report_values[it->second.report_values[REP_KEY_BAP_SOURCE]] = L"1";
-
-		if (reports[TYPE_BAPTISM_SOURCE][COMP].reports.count(bap_source.get_id_str()) > 0)
+		if (bap_source.sender_name != L"UNKNOWN" && report_map.count(bap_source.get_id_str(reports[TYPE_BAPTISM_SOURCE][COMP].uses_sub_ids())) <= 0
+			|| bap_source.get_date() == report_date)
 		{
-			//Add on to the existing baptism source report
-			reports[TYPE_BAPTISM_SOURCE][COMP].reports[bap_source.get_id_str()] += bap_source;
-			reports[TYPE_BAPTISM_SOURCE][COMP].changed = true;
-		}
-		else
-		{
-			//Create a new baptism source report
-			reports[TYPE_BAPTISM_SOURCE][COMP].add_report(bap_source);
+			reports[TYPE_BAPTISM_SOURCE][COMP].insert_report(bap_source);
 		}
 	}
 }
@@ -266,95 +255,84 @@ void ReportCollection::create_baptism_source_reports()
 void ReportCollection::total_reports(ReportType type, ReportOrder from, ReportOrder to, CompList* comp_list, std::wstring date)
 {
 	//If we maintain a report sheet for this type and both orders to and from
-	if (count(ORDERS_TO_TOTAL[type].begin(), ORDERS_TO_TOTAL[type].end(), from) > 0 && count(ORDERS_TO_TOTAL[type].begin(), ORDERS_TO_TOTAL[type].end(), to) > 0)
+	if (count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), from) > 0 && count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), to) > 0)
 	{
 		std::map<std::wstring, Report> reports_to_add;
 		std::vector<std::wstring> tokens = tokenize(date, ':');
 		int date_month = _wtoi(tokenize(date, L':')[1].c_str());
 
-		reports[type][to].sheet_fields = reports[type][from].sheet_fields;
+		reports[type][to].set_sheet_fields(reports[type][from].get_sheet_fields());
 
-		for (std::map<std::wstring, Report>::iterator it = reports[type][from].reports.begin(); it != reports[type][from].reports.end(); ++it)
+		map<wstring, Report> report_map = reports[type][from].get_reports();
+		for (std::map<std::wstring, Report>::iterator it = report_map.begin(); it != report_map.end(); ++it)
 		{
 			Report transformed = transform_report(it->second, from, to, comp_list);
 			int transformed_date_month = transformed.date_month;
 
-			if ((transformed.sender_name != L"UNKNOWN" && reports[type][to].reports.count(transformed.get_id_str()) <= 0)						//Conditions for writing/overwriting a new report: no existing report
+			if ((transformed.sender_name != L"UNKNOWN" && report_map.count(transformed.get_id_str(reports[type][to].uses_sub_ids())) <= 0)						//Conditions for writing/overwriting a new report: no existing report
 				|| transformed.get_date() == date														//Still receiving reports for today and updating sums
 				|| (transformed.date_month == date_month && transformed.date_wday == 0))				//We're adding a monthly report for the current month
 			{
-				if (reports_to_add.count(transformed.get_id_str()) > 0)
+				if (reports_to_add.count(transformed.get_id_str(reports[type][to].uses_sub_ids())) > 0)
 				{
-					reports_to_add[transformed.get_id_str()] += transformed;
+					reports_to_add[transformed.get_id_str(reports[type][to].uses_sub_ids())] += transformed;
 				}
 				else
 				{
-					reports_to_add[transformed.get_id_str()] = transformed;						//Start adding a new report
+					reports_to_add[transformed.get_id_str(reports[type][to].uses_sub_ids())] = transformed;						//Start adding a new report
 				}
 			}
 		}
 
 		for (std::map<std::wstring, Report>::iterator it = reports_to_add.begin(); it != reports_to_add.end(); ++it)
 		{
-			reports[type][to].add_report(it->second);
+			reports[type][to].insert_report(it->second);
 		}
 	}
 }
 
 void ReportCollection::total_type(ReportType type, CompList* comp_list, std::wstring date)
 {
-	if (count(ORDERS_TO_TOTAL[type].begin(), ORDERS_TO_TOTAL[type].end(), COMP) > 0)
+	if(type == TYPE_BAPTISM_SOURCE)
+		create_baptism_source_reports(date);
+
+	if (count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), COMP) > 0)
 	{
-		if (count(ORDERS_TO_TOTAL[type].begin(), ORDERS_TO_TOTAL[type].end(), DISTRICT) > 0)
+		if (count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), DISTRICT) > 0)
 			total_reports(type, COMP, DISTRICT, comp_list, date);
-		if (count(ORDERS_TO_TOTAL[type].begin(), ORDERS_TO_TOTAL[type].end(), ZONE) > 0)
+		if (count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), ZONE) > 0)
 			total_reports(type, COMP, ZONE, comp_list, date);
-		if (count(ORDERS_TO_TOTAL[type].begin(), ORDERS_TO_TOTAL[type].end(), WARD) > 0)
+		if (count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), WARD) > 0)
 			total_reports(type, COMP, WARD, comp_list, date);
-		if (count(ORDERS_TO_TOTAL[type].begin(), ORDERS_TO_TOTAL[type].end(), STAKE) > 0)
+		if (count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), STAKE) > 0)
 			total_reports(type, COMP, STAKE, comp_list, date);
 	}
-	if (count(ORDERS_TO_TOTAL[type].begin(), ORDERS_TO_TOTAL[type].end(), DISTRICT) > 0)
+	if (count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), DISTRICT) > 0)
 	{
-		if (count(ORDERS_TO_TOTAL[type].begin(), ORDERS_TO_TOTAL[type].end(), DISTRICT_MONTH) > 0)
+		if (count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), DISTRICT_MONTH) > 0)
 			total_reports(type, DISTRICT, DISTRICT_MONTH, comp_list, date);
 	}
-	if (count(ORDERS_TO_TOTAL[type].begin(), ORDERS_TO_TOTAL[type].end(), ZONE) > 0)
+	if (count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), ZONE) > 0)
 	{
-		if (count(ORDERS_TO_TOTAL[type].begin(), ORDERS_TO_TOTAL[type].end(), ZONE_MONTH) > 0)
+		if (count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), ZONE_MONTH) > 0)
 			total_reports(type, ZONE, ZONE_MONTH, comp_list, date);
-		if (count(ORDERS_TO_TOTAL[type].begin(), ORDERS_TO_TOTAL[type].end(), MISSION) > 0)
+		if (count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), MISSION) > 0)
 			total_reports(type, ZONE, MISSION, comp_list, date);
 	}
-	if (count(ORDERS_TO_TOTAL[type].begin(), ORDERS_TO_TOTAL[type].end(), WARD) > 0)
+	if (count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), WARD) > 0)
 	{
-		if (count(ORDERS_TO_TOTAL[type].begin(), ORDERS_TO_TOTAL[type].end(), WARD_MONTH) > 0)
+		if (count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), WARD_MONTH) > 0)
 			total_reports(type, WARD, WARD_MONTH, comp_list, date);
 	}
-	if (count(ORDERS_TO_TOTAL[type].begin(), ORDERS_TO_TOTAL[type].end(), STAKE) > 0)
+	if (count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), STAKE) > 0)
 	{
-		if (count(ORDERS_TO_TOTAL[type].begin(), ORDERS_TO_TOTAL[type].end(), STAKE_MONTH) > 0)
+		if (count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), STAKE_MONTH) > 0)
 			total_reports(type, STAKE, STAKE_MONTH, comp_list, date);
 	}
-	if (count(ORDERS_TO_TOTAL[type].begin(), ORDERS_TO_TOTAL[type].end(), MISSION) > 0)
+	if (count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), MISSION) > 0)
 	{
-		if (count(ORDERS_TO_TOTAL[type].begin(), ORDERS_TO_TOTAL[type].end(), MISSION_MONTH) > 0)
+		if (count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), MISSION_MONTH) > 0)
 			total_reports(type, MISSION, MISSION_MONTH, comp_list, date);
-	}
-}
-
-void ReportCollection::total_all(CompList* comp_list, std::wstring report_date, std::wstring english_date)
-{
-	create_baptism_source_reports();
-
-	if (!loaded_base || !loaded_aux)
-		load(!loaded_base, !loaded_aux);
-
-	for (int i = 0; i < NUM_TYPES; i++)
-	{
-		ReportType type = (ReportType)i;
-		wstring date = type == TYPE_ENGLISH ? english_date : report_date;
-		total_type(type, comp_list, date);
 	}
 }
 
@@ -369,14 +347,14 @@ bool ReportCollection::load(bool base, bool aux)
 	for (int i = 0; i < NUM_TYPES; i++)
 	{
 		ReportType type = (ReportType)i;
-		for (int j = 0; j < ORDERS_TO_TOTAL[type].size(); j++)
+		for (int j = 0; j < REPORTS_TO_STORE[type].size(); j++)
 		{
-			ReportOrder order = ORDERS_TO_TOTAL[type][j];
+			ReportOrder order = REPORTS_TO_STORE[type][j];
 			if (((order == COMP && base) || (order != COMP && aux)))
 			{
 				if (report_files[type][order].open(File::FILE_TYPE_INPUT))
 				{
-					reports[type][order].read_stored_all(report_files[type][order].file);
+					reports[type][order].load(report_files[type][order].file);
 					report_files[type][order].close();
 				}
 			}
@@ -391,10 +369,10 @@ bool ReportCollection::is_saved()
 	for (int i = 0; i < NUM_TYPES && saved; i++)
 	{
 		ReportType type = (ReportType)i;
-		for (int j = 0; j < ORDERS_TO_TOTAL[type].size() && saved; j++)
+		for (int j = 0; j < REPORTS_TO_STORE[type].size() && saved; j++)
 		{
-			ReportOrder order = ORDERS_TO_TOTAL[type][j];
-			if (reports[type][order].loaded && reports[type][order].changed)
+			ReportOrder order = REPORTS_TO_STORE[type][j];
+			if (reports[type][order].is_loaded() && reports[type][order].is_changed())
 				saved = false;
 		}
 	}
@@ -406,16 +384,15 @@ bool ReportCollection::save()
 	for (int i = 0; i < NUM_TYPES; i++)
 	{
 		ReportType type = (ReportType)i;
-		for (int j = 0; j < ORDERS_TO_TOTAL[type].size(); j++)
+		for (int j = 0; j < REPORTS_TO_STORE[type].size(); j++)
 		{
-			ReportOrder order = ORDERS_TO_TOTAL[type][j];
+			ReportOrder order = REPORTS_TO_STORE[type][j];
 			//Don't bother with baptism record for district, zone, etc. since it is a text report
 			if (i != TYPE_BAPTISM_RECORD || j == COMP)
 			{
-				if (reports[type][order].loaded && reports[type][order].changed && report_files[type][order].open(File::FILE_TYPE_OUTPUT))
+				if (reports[type][order].is_loaded() && reports[type][order].is_changed() && report_files[type][order].open(File::FILE_TYPE_OUTPUT))
 				{
 					reports[type][order].print(report_files[type][order].file);
-					reports[type][order].changed = false;
 					report_files[type][order].close();
 				}
 			}
