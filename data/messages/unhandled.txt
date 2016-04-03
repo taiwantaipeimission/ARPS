@@ -1,14 +1,1 @@
-[
-    {
-        "SENDER_NAME": "SANXIA_A_E",
-        "SENDER_NUMBER": "+886963917982",
-        "CONTENTS": "TYPE:REFERRAL\nPLACE:永和區\nNAME:aki 李馨儒\nNUMBER:0925602420\nINFO:cool girl in twenties. Had a great lesson! Interested in prophets and committed to come to conference. Call her tonight!",
-        "SENT_DATE": "",
-        "DATA_CODING": 8,
-        "MSG_LEN": 140,
-        "CONCAT": false,
-        "C_REFNUM": 42,
-        "C_NUM_MSG": 3,
-        "C_INDEX": 1
-    }
-]
+[]

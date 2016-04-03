@@ -3,6 +3,7 @@
 2016:2:3:7:JILONG	賴婷湘	1					
 2016:2:3:7:JINGXIN	蕭國祥	1					
 2016:2:3:7:JINHUA	趙俊維	1					
+2016:2:3:7:TUCHENG		0	0	0	0	0	0
 2016:2:3:7:XINDIAN	殷國定	1					
 2016:2:3:7:XINZHU	王芝英	1					
 2016:2:3:7:XIZHI	高黃思屏	1					
@@ -30,6 +31,20 @@
 2016:3:4:7:JINGXIN	-	2					
 2016:3:4:7:TAIDONG_2	-	2					
 2016:3:4:7:TOUFEN_MIAOLI	-			1	1		
+2016:3:4:7:XINAN	0						
 2016:3:4:7:XINDIAN	黃蔡潤西	1					
 2016:3:4:7:YILAN	吳易霖	1					
 2016:3:4:7:ZHUBEI	葉倚瑄	1					
+2016:4:1:7:BANQIAO	YAN ZI JUAN 顏紫娟				1		
+2016:4:1:7:JIAN	林莘茹	1					
+2016:4:1:7:JILONG							
+2016:4:1:7:SHUANGHE							
+2016:4:1:7:TAIDONG_1_3	-	1			1		
+2016:4:1:7:TAIDONG_2							
+2016:4:1:7:TAOYUAN_1_2							
+2016:4:1:7:TOUFEN_MIAOLI	彭麗傑	1					
+2016:4:1:7:XINZHU	林雍捷	1					
+2016:4:1:7:XINZHUANG	陳絨	1					
+2016:4:1:7:XIZHI	0						
+2016:4:1:7:YILAN							
+2016:4:1:7:ZHONGLI							
