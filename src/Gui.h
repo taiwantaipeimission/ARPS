@@ -53,8 +53,7 @@ class MessageBrowser : public Fl_Multi_Browser
 {
 public:
 	Gui* gui;
-	bool handled;
-	MessageBrowser(Gui* gui_in, bool handled_in, int x, int y, int w, int h, const char* label = 0);
+	MessageBrowser(Gui* gui_in, int x, int y, int w, int h, const char* label = 0);
 	int handle(int event);
 	int num_selected();
 };
@@ -72,6 +71,7 @@ public:
 	Fl_Window* window;
 	MessageBrowser* unhandled;
 	MessageBrowser* handled;
+	MessageBrowser* outbox;
 	Fl_Multi_Browser* unreceived_reports;
 	Fl_Multi_Browser* received_reports;
 	Fl_Multi_Browser* unreceived_english;

@@ -195,10 +195,10 @@ void delete_msg_cb(Fl_Widget* wg, void* ptr)
 		{
 			if (browser->selected(i))
 			{
-				if (browser->handled)
+				/*if (browser->handled)
 					handled_to_erase.push_back((Message*)browser->data(i));
 				else
-					unhandled_to_erase.push_back((Message*)browser->data(i));
+					unhandled_to_erase.push_back((Message*)browser->data(i));*/
 			}
 		}
 		for (size_t i = 0; i < handled_to_erase.size(); i++)
@@ -276,8 +276,8 @@ void window_cb(Fl_Widget* wg, void* ptr)
 	quit_cb(wg, ptr);
 }
 
-MessageBrowser::MessageBrowser(Gui* gui_in, bool handled_in, int x, int y, int w, int h, const char* label)
-	: Fl_Multi_Browser(x, y, w, h, label), gui(gui_in), handled(handled_in)
+MessageBrowser::MessageBrowser(Gui* gui_in, int x, int y, int w, int h, const char* label)
+	: Fl_Multi_Browser(x, y, w, h, label), gui(gui_in)
 {
 }
 
@@ -392,14 +392,14 @@ void Gui::init(ModemInterface* mod_int_in)
 	}
 	Fl_Tabs* tabs = new Fl_Tabs(0, BAR_HEIGHT + SPACING, WINDOW_WIDTH, WINDOW_HEIGHT - BAR_HEIGHT - SPACING);
 	{
-		Fl_Group* msg_tab = new Fl_Group(0, 2 * BAR_HEIGHT + SPACING, WINDOW_WIDTH, WINDOW_HEIGHT, "Messages");
+		Fl_Group* inbox_tab = new Fl_Group(0, 2 * BAR_HEIGHT + SPACING, WINDOW_WIDTH, WINDOW_HEIGHT, "Messages");
 		{
-			unhandled = new MessageBrowser(this, false, SPACING, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
+			unhandled = new MessageBrowser(this, SPACING, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
 			{
 				unhandled->box(FL_BORDER_BOX);
 				unhandled->end();
 			}
-			handled = new MessageBrowser(this, true, SPACING * 2 + WINDOW_WIDTH / 2, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
+			handled = new MessageBrowser(this, SPACING * 2 + WINDOW_WIDTH / 2, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
 			{
 				handled->box(FL_BORDER_BOX);
 				handled->end();
@@ -425,7 +425,16 @@ void Gui::init(ModemInterface* mod_int_in)
 				user_terminal_button->callback(user_terminal_cb);
 			}
 		}
-		msg_tab->end();
+		inbox_tab->end();
+		Fl_Group* outbox_tab = new Fl_Group(0, 2 * BAR_HEIGHT + SPACING, WINDOW_WIDTH, WINDOW_HEIGHT, "Outbox");
+		{
+			outbox = new MessageBrowser(this, SPACING, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
+			{
+				outbox->box(FL_BORDER_BOX);
+				outbox->end();
+			}
+		}
+		outbox_tab->end();
 		Fl_Group* report_tab = new Fl_Group(0, 2 * BAR_HEIGHT + SPACING, WINDOW_WIDTH, WINDOW_HEIGHT, "Reports");
 		{
 			unreceived_reports = new Fl_Multi_Browser(SPACING, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
@@ -574,6 +583,7 @@ void Gui::update_msg_scroll()
 	handled->clear();
 	vector<Message*>* unhandled_msg_vector = msg_handler.get_messages(MessageHandler::UNHANDLED);
 	vector<Message*>* handled_msg_vector = msg_handler.get_messages(MessageHandler::HANDLED);
+	vector<Message*>* outbox_msg_vector = msg_handler.get_messages(MessageHandler::OUTBOX);
 	for (vector<Message*>::iterator it = unhandled_msg_vector->begin(); it != unhandled_msg_vector->end(); ++it)
 	{
 		std::wstring display_txt = get_browser_display_txt((*it)->get_sender_name() + DISPLAY_TEXT_SEPARATOR + (*it)->get_contents());
@@ -585,8 +595,15 @@ void Gui::update_msg_scroll()
 		std::wstring display_txt = get_browser_display_txt((*it)->get_sender_name() + DISPLAY_TEXT_SEPARATOR + (*it)->get_contents());
 		handled->add(tos(display_txt).c_str(), *it);
 	}
+
+	for (vector<Message*>::iterator it = outbox_msg_vector->begin(); it != outbox_msg_vector->end(); ++it)
+	{
+		std::wstring display_txt = get_browser_display_txt((*it)->get_sender_name() + DISPLAY_TEXT_SEPARATOR + (*it)->get_contents());
+		outbox->add(tos(display_txt).c_str(), *it);
+	}
 	unhandled->redraw();
 	handled->redraw();
+	outbox->redraw();
 }
 
 void Gui::send_reminder(Area* area)
