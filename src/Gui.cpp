@@ -526,7 +526,7 @@ void Gui::load()
 
 	comp_list.load(&file_manager);
 	report_collection.init(L"../data/");
-	report_collection.load(true, true);
+	report_collection.load();
 	msg_handler.load(&file_manager);
 }
 

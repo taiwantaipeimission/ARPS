@@ -61,9 +61,6 @@ void ReportCollection::init(std::wstring global_prefix_in)
 
 	suffix = L".txt";
 
-	loaded_base = false;
-	loaded_aux = false;
-
 	for (int i = 0; i < NUM_TYPES; i++)
 	{
 		ReportType type = (ReportType)i;
@@ -310,25 +307,18 @@ void ReportCollection::total_type(ReportType type, CompList* comp_list, std::wst
 
 /* Loads only the most basic key indicators, those with the data order COMP.
 */
-bool ReportCollection::load(bool base, bool aux)
+bool ReportCollection::load()
 {
-	if (base)
-		loaded_base = true;
-	if (aux)
-		loaded_aux = true;
 	for (int i = 0; i < NUM_TYPES; i++)
 	{
 		ReportType type = (ReportType)i;
 		for (int j = 0; j < REPORTS_TO_STORE[type].size(); j++)
 		{
 			ReportOrder order = REPORTS_TO_STORE[type][j];
-			if (((order == COMP && base) || (order != COMP && aux)))
+			if (report_files[type][order].open(File::FILE_TYPE_INPUT))
 			{
-				if (report_files[type][order].open(File::FILE_TYPE_INPUT))
-				{
-					reports[type][order].load(report_files[type][order].file);
-					report_files[type][order].close();
-				}
+				reports[type][order].load(report_files[type][order].file);
+				report_files[type][order].close();
 			}
 		}
 	}

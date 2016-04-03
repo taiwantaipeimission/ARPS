@@ -36,8 +36,6 @@ public:
 	std::wstring suffix;
 	std::map<ReportType, std::map<ReportOrder, ReportSheet>> reports;		//Keyed by a combination of report type and data order
 	std::map<ReportType, std::map<ReportOrder, File>> report_files;			//File paths; organized same as report sheets above
-	bool loaded_base;
-	bool loaded_aux;
 
 	ReportCollection();
 	virtual ~ReportCollection();
@@ -45,7 +43,7 @@ public:
 	void init(std::wstring global_prefix_in);
 
 	bool is_saved();
-	bool load(bool base, bool aux);
+	bool load();
 	bool save();
 	void create_baptism_source_reports(std::wstring report_date);
 	void total_type(ReportType type, CompList* comp_list, std::wstring date);
