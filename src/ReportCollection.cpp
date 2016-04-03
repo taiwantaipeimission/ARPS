@@ -244,11 +244,16 @@ void ReportCollection::total_reports(ReportType type, ReportOrder from, ReportOr
 		{
 			Report transformed = transform_report(it->second, type, from, to, comp_list);
 
-			if (type == TYPE_REGULAR && to == DISTRICT)
+			if (type == TYPE_BAPTISM_SOURCE && to == DISTRICT)
 				int x = 0;
 			if (can_add_report(type, to, date, transformed))
-				reports_to_add[transformed.get_id_str(reports[type][to].uses_sub_ids())] = transformed;
-			
+			{
+				wstring new_id_str = transformed.get_id_str(reports[type][to].uses_sub_ids());
+				if (reports_to_add.count(new_id_str) > 0)
+					reports_to_add[transformed.get_id_str(reports[type][to].uses_sub_ids())] += transformed;
+				else
+					reports_to_add[transformed.get_id_str(reports[type][to].uses_sub_ids())] = transformed;
+			}
 		}
 
 		for (std::map<std::wstring, Report>::iterator it = reports_to_add.begin(); it != reports_to_add.end(); ++it)

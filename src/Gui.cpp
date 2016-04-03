@@ -722,21 +722,22 @@ void Gui::process_msg(Message* msg)
 		}
 		else
 		{
-			/*bool found = false;
-			for (ReferralList::iterator it = referral_list.begin(); it != referral_list.end() && !found; ++it)
+			bool found = false;
+			map<wstring, Report>* referral_list = report_collection.reports[TYPE_REFERRAL][COMP].get_reports();
+			for (map<wstring, Report>::iterator it = referral_list->begin(); it != referral_list->end() && !found; ++it)
 			{
-				if (it->dest_number == msg->get_sender_number())
+				if (it->second.report_values[L"DEST_AREA"] == msg->get_sender_name())
 				{
-					std::wstring result = get_msg_key_val(msg->get_contents(), it->name, ':', '\n');
+					std::wstring result = get_msg_key_val(msg->get_contents(), it->second.report_values[L"NAME"], ':', '\n');
 					if (!result.empty())
 					{
 						strip_chars(result, L"\t\n");
-						it->contact_state = result;
+						it->second.report_values[L"CONTACT_STATE"] = result;
 						found = true;
 					}
 				}
 			}
-			if(!found)*/
+			if(!found)
 				send_message(stray_msg_handler, msg->get_contents());	//Send it to the recorder!
 		}
 	}
