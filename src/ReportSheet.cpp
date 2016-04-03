@@ -24,7 +24,7 @@
 using namespace std;
 
 ReportSheet::ReportSheet()
-	: report_type(TYPE_REGULAR), report_order(COMP), reports(), changed(false), loaded(false)
+	: report_type(TYPE_REGULAR), report_order(COMP), reports(), changed(false), loaded(false), use_sub_ids(false)
 {
 }
 
@@ -37,11 +37,8 @@ void ReportSheet::insert_report(Report report)
 {
 	if (report.get_id_str(use_sub_ids) != L"")
 	{
-		report.set_type(report_type);
-		report.set_order(report_order);
 		if (use_sub_ids)
 		{
-			report.sub_id = 0;
 			bool unique_fields_same = false;
 			while (reports.count(report.get_id_str(true)) > 0 && !unique_fields_same)
 			{
@@ -49,7 +46,7 @@ void ReportSheet::insert_report(Report report)
 				Report other = reports[report.get_id_str(true)];
 				for (vector<pair<wstring, bool>>::iterator it = sheet_fields.begin(); it != sheet_fields.end(); ++it)
 				{
-					if (it->second && other.report_values[it->first] != report.report_values[it->first])
+					if (it->second && (other.report_values[it->first] != L"" && other.report_values[it->first] != report.report_values[it->first]))
 					{
 						unique_fields_same = false;
 						break;
@@ -61,47 +58,6 @@ void ReportSheet::insert_report(Report report)
 		}
 		reports[report.get_id_str(use_sub_ids)] = report;
 		changed = true;
-		/*
-
-
-
-		if (report_order == COMP)
-		{
-			if (report_type == TYPE_ENGLISH)
-			{
-				report.sub_id = 0;										//The starting value for the English class level sub-id
-				while (reports.count(report.get_id_str(use_sub_ids)) > 0 && reports[report.get_id_str(use_sub_ids)].report_values[L"CLASSLEVEL"] != report.report_values[L"CLASSLEVEL"])
-				{
-					//Keep incrementing until we find 1) an ID for which no record exists; 2) a an english class level name the same as this one.
-					report.sub_id++;
-				}
-			}
-			else if (report_type == TYPE_BAPTISM_RECORD)
-			{
-				report.sub_id = 0;										//The starting value for the baptism record sub-id
-				while (reports.count(report.get_id_str(use_sub_ids)) > 0 && reports[report.get_id_str()].report_values[L"CONV_NAME"] != L"" && reports[report.get_id_str()].report_values[L"CONV_NAME"] != report.report_values[L"CONV_NAME"])
-				{
-					//Keep incrementing until we find 1) an ID for which no record exists; 2) a blank convert name (indicates unsubmitted report); 3) a convert name the same as this one.
-					report.sub_id++;
-				}
-			}
-			else if (report_type == TYPE_BAPTISM_SOURCE)
-			{
-				report.sub_id = 0;
-				while (reports.count(report.get_id_str()) > 0 && reports[report.get_id_str()].report_values[L"CONV_NAME"] != L"" && reports[report.get_id_str()].report_values[L"CONV_NAME"] != report.report_values[L"CONV_NAME"])
-					report.sub_id++;
-			}
-			else if (report_type == TYPE_REFERRAL)
-			{
-				report.sub_id = 0;
-				while (reports.count(report.get_id_str()) > 0)
-				{
-					report.sub_id++;
-				}
-			}
-		}
-		reports[report.get_id_str(use_sub_ids)] = report;
-		changed = true;*/
 	}
 }
 
@@ -144,8 +100,6 @@ void ReportSheet::load(std::wistream& input)
 			if (line_s.length() > 0)
 			{
 				Report report;
-				report.set_type(report_type);
-				report.set_order(report_order);
 				report.read_processed(line_s, sheet_fields);
 				insert_report(report);
 			}

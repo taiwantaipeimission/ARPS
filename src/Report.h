@@ -31,9 +31,6 @@ class Report
 {
 public:
 	
-	ReportType type;
-	ReportOrder order;
-	
 	int date_year;
 	int date_month;
 	int date_week;
@@ -46,8 +43,6 @@ public:
 	Report();
 	virtual ~Report();
 
-	virtual void set_type(ReportType type_in);
-	virtual void set_order(ReportOrder order_in);
 	virtual void read_message(Message* msg, std::vector<std::pair<std::wstring, bool>> fields_to_read, std::wstring date);
 
 	virtual std::wstring get_id_str(bool include_sub_id);

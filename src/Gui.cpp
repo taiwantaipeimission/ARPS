@@ -537,12 +537,12 @@ void Gui::update_report_scrolls()
 	received_reports->clear();
 	unreceived_english->clear();
 	received_english->clear();
-	map<wstring, Report> reports = report_collection.reports[TYPE_REGULAR][COMP].get_reports();
-	map<wstring, Report> english = report_collection.reports[TYPE_ENGLISH][COMP].get_reports();
+	map<wstring, Report>* reports = report_collection.reports[TYPE_REGULAR][COMP].get_reports();
+	map<wstring, Report>* english = report_collection.reports[TYPE_ENGLISH][COMP].get_reports();
 	for (std::map<std::wstring, Area>::iterator it = comp_list.areas.begin(); it != comp_list.areas.end(); ++it, i++)
 	{
 		std::wstring id_str = report_date + ID_STR_SEPARATOR + it->second.area_name;
-		if (reports.count(id_str) > 0)
+		if (reports->count(id_str) > 0)
 		{
 			received_reports->add(tos(it->second.area_name).c_str(), (void*)&it->second);
 		}
@@ -552,7 +552,7 @@ void Gui::update_report_scrolls()
 		}
 
 		id_str = english_date + ID_STR_SEPARATOR + L"0" + ID_STR_SEPARATOR + it->second.area_name;
-		if (english.count(id_str) > 0)
+		if (english->count(id_str) > 0)
 		{
 			received_english->add(tos(it->second.area_name).c_str(), (void*)&it->second);
 		}
@@ -676,7 +676,6 @@ void Gui::process_msg(Message* msg)
 		{
 			ReportSheet* sheet = &report_collection.reports[TYPE_REGULAR][COMP];
 			Report report;
-			report.set_type(TYPE_REGULAR);
 			report.read_message(msg, sheet->get_sheet_fields(), report_date);
 			sheet->insert_report(report);
 
@@ -691,9 +690,8 @@ void Gui::process_msg(Message* msg)
 					//Add a blank baptism record, so we can see if data is missing
 					Report bap_record = report;
 					bap_record.clear_values();
-					bap_record.set_type(TYPE_BAPTISM_RECORD);
 					bap_record.sub_id = i;
-					report_collection.reports[TYPE_BAPTISM_RECORD][COMP].insert_report(report);
+					report_collection.reports[TYPE_BAPTISM_RECORD][COMP].insert_report(bap_record);
 				}
 			}
 		}
@@ -701,7 +699,6 @@ void Gui::process_msg(Message* msg)
 		{
 			ReportSheet* sheet = &report_collection.reports[TYPE_ENGLISH][COMP];
 			Report report;
-			report.set_type(TYPE_ENGLISH);
 			report.read_message(msg, sheet->get_sheet_fields(), english_date);
 			sheet->insert_report(report);
 		}
@@ -709,7 +706,6 @@ void Gui::process_msg(Message* msg)
 		{
 			ReportSheet* sheet = &report_collection.reports[TYPE_BAPTISM_RECORD][COMP];
 			Report report;
-			report.set_type(TYPE_BAPTISM_RECORD);
 			report.read_message(msg, sheet->get_sheet_fields(), report_date);
 			sheet->insert_report(report);
 		}
@@ -717,7 +713,6 @@ void Gui::process_msg(Message* msg)
 		{
 			ReportSheet* sheet = &report_collection.reports[TYPE_REFERRAL][COMP];
 			Referral referral;
-			referral.set_type(TYPE_REFERRAL);
 			referral.read_message(msg, sheet->get_sheet_fields(), current_date);
 			referral.locate(&comp_list);
 			if (!referral.found_dest())

@@ -50,9 +50,10 @@ public:
 	void create_baptism_source_reports(std::wstring report_date);
 	void total_type(ReportType type, CompList* comp_list, std::wstring date);
 
+	bool can_add_report(ReportType type, ReportOrder order, std::wstring date, Report report);
 	void read_report(ReportType type, ReportOrder data_order, File* file);
 	void write_report(ReportType type, ReportOrder data_order, File* file);
-	Report transform_report(Report rep, ReportOrder from, ReportOrder to, CompList* comp_list);
+	Report transform_report(Report rep, ReportType type, ReportOrder from, ReportOrder to, CompList* comp_list);
 	void total_reports(ReportType type, ReportOrder from, ReportOrder to, CompList* comp_list, std::wstring date);
 };
 

@@ -27,21 +27,11 @@ using namespace std;
 
 Report::Report()
 {
-	set_type(TYPE_REGULAR);
 }
 
 void Report::read_message(Message* msg, vector<pair<wstring, bool>> to_read, std::wstring date)
 {
-	wstring msg_type = get_msg_key_val(msg->get_contents(), TYPE_KEY, ':', '\n');
-	if (msg_type == TYPE_REPORT_STR)
-		set_type(TYPE_REGULAR);
-	else if (msg_type == TYPE_ENGLISH_STR)
-		set_type(TYPE_ENGLISH);
-	else if (msg_type == TYPE_BAPTISM_STR)
-		set_type(TYPE_BAPTISM_RECORD);
-	else if (msg_type == TYPE_REFERRAL_STR)
-		set_type(TYPE_REFERRAL);
-
+	sub_id = 0;
 	sender_name = msg->get_sender_name();
 	std::vector<std::wstring> date_strs = tokenize(date, ':');
 	if (date_strs.size() >= 4)
@@ -64,16 +54,6 @@ void Report::read_message(Message* msg, vector<pair<wstring, bool>> to_read, std
 
 Report::~Report()
 {
-}
-
-void Report::set_type(ReportType new_type)
-{
-	type = new_type;
-}
-
-void Report::set_order(ReportOrder order_in)
-{
-	order = order_in;
 }
 
 std::wstring Report::get_id_str(bool include_sub_id)

@@ -23,7 +23,6 @@
 Referral::Referral()
  : Report()
 {
-	set_type(TYPE_REFERRAL);
 }
 
 

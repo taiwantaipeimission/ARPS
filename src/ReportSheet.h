@@ -42,7 +42,7 @@ public:
 	ReportType get_report_type() { return report_type; }
 	ReportOrder get_report_order() { return report_order; }
 	std::vector<std::pair<std::wstring, bool>> get_sheet_fields() { return sheet_fields; }
-	std::map<std::wstring, Report> get_reports() { return reports; }
+	std::map<std::wstring, Report>* get_reports() { return &reports; }
 	Report get_report(std::wstring key) { return reports.count(key) > 0 ? reports[key] : Report(); }
 
 	void insert_report(Report report);

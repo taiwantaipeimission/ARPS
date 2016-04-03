@@ -111,70 +111,39 @@ void ReportCollection::write_report(ReportType type, ReportOrder data_order, Fil
 
 	MISSION->MISSION_MONTH
 */
-Report ReportCollection::transform_report(Report rep, ReportOrder from, ReportOrder to, CompList* comp_list)
+Report ReportCollection::transform_report(Report rep, ReportType type, ReportOrder from, ReportOrder to, CompList* comp_list)
 {
 	if (from == COMP)
 	{
 		if (to == DISTRICT)
-		{
-			std::wstring district_name;
-			if (comp_list->by_area_name.count(rep.sender_name) > 0)
-			{
-				district_name = comp_list->by_area_name[rep.sender_name][0].district_name;
-			}
+		{	if (comp_list->by_area_name.count(rep.sender_name) > 0)
+				rep.sender_name = comp_list->by_area_name[rep.sender_name][0].district_name;
 			else
-			{
-				district_name = L"UNKNOWN";
-			}
-			rep.sub_id = 0;
-			rep.sender_name = district_name;
+				rep.sender_name = L"UNKNOWN";
 		}
 		if (to == ZONE)
 		{
-			std::wstring zone_name;
 			if (comp_list->by_area_name.count(rep.sender_name) > 0)
-			{
-				zone_name = rep.type == TYPE_ENGLISH ? comp_list->by_area_name[rep.sender_name][0].english_unit_name : comp_list->by_area_name[rep.sender_name][0].zone_name;
-			}
+				rep.sender_name = type == TYPE_ENGLISH ? comp_list->by_area_name[rep.sender_name][0].english_unit_name : comp_list->by_area_name[rep.sender_name][0].zone_name;
 			else
-			{
-				zone_name = L"UNKNOWN";
-			}
-			rep.sub_id = 0;
-			rep.sender_name = zone_name;
+				rep.sender_name = L"UNKNOWN";
 		}
 		else if (to == WARD)
 		{
-			std::wstring ward_name;
 			if (comp_list->by_area_name.count(rep.sender_name) > 0)
-			{
-				ward_name = comp_list->by_area_name[rep.sender_name][0].ward_name;
-			}
+				rep.sender_name = comp_list->by_area_name[rep.sender_name][0].ward_name;
 			else
-			{
-				ward_name = L"UNKNOWN";
-			}
-			rep.sub_id = 0;
-			rep.sender_name = ward_name;
+				rep.sender_name = L"UNKNOWN";
 		}
 		else if (to == STAKE)
 		{
-			std::wstring stake_name;
 			if (comp_list->by_area_name.count(rep.sender_name) > 0)
-			{
-				stake_name = comp_list->by_area_name[rep.sender_name][0].stake_name;
-			}
+				rep.sender_name = comp_list->by_area_name[rep.sender_name][0].stake_name;
 			else
-			{
-				stake_name = L"UNKNOWN";
-			}
-			rep.sub_id = 0;
-			rep.sender_name = stake_name;
+				rep.sender_name = L"UNKNOWN";
 		}
 		else if (to == MISSION)
-		{
 			rep.sender_name = L"MISSION";
-		}
 	}
 	else if (from == DISTRICT)
 	{
@@ -232,20 +201,27 @@ Report ReportCollection::transform_report(Report rep, ReportOrder from, ReportOr
 			rep.date_wday = 0;
 		}
 	}
-
 	return rep;
+}
+
+bool ReportCollection::can_add_report(ReportType type, ReportOrder order, wstring date, Report report)
+{
+	map<wstring, Report>* destination_report_map = reports[type][order].get_reports();
+	int date_month = _wtoi(tokenize(date, L':')[1].c_str());
+
+	return ((report.sender_name != L"UNKNOWN" && destination_report_map->count(report.get_id_str(reports[type][order].uses_sub_ids())) <= 0)						//Conditions for writing/overwriting a new report: no existing report
+		|| report.get_date() == date														//Still receiving reports for today and updating sums
+		|| (report.date_month == date_month && report.date_wday == 0));				//We're adding a monthly report for the current month
 }
 
 void ReportCollection::create_baptism_source_reports(std::wstring report_date)
 {
-	map<wstring, Report> report_map = reports[TYPE_BAPTISM_RECORD][COMP].get_reports();
-	for (map<wstring, Report>::iterator it = report_map.begin(); it != report_map.end(); ++it)
+	map<wstring, Report>* report_map = reports[TYPE_BAPTISM_RECORD][COMP].get_reports();
+	for (map<wstring, Report>::iterator it = report_map->begin(); it != report_map->end(); ++it)
 	{
 		Report bap_source = it->second;
-		bap_source.set_type(TYPE_BAPTISM_SOURCE);
 		bap_source.report_values[it->second.report_values[REP_KEY_BAP_SOURCE]] = L"1";
-		if (bap_source.sender_name != L"UNKNOWN" && report_map.count(bap_source.get_id_str(reports[TYPE_BAPTISM_SOURCE][COMP].uses_sub_ids())) <= 0
-			|| bap_source.get_date() == report_date)
+		if (can_add_report(TYPE_BAPTISM_SOURCE, COMP, report_date, bap_source))
 		{
 			reports[TYPE_BAPTISM_SOURCE][COMP].insert_report(bap_source);
 		}
@@ -258,30 +234,21 @@ void ReportCollection::total_reports(ReportType type, ReportOrder from, ReportOr
 	if (count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), from) > 0 && count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), to) > 0)
 	{
 		std::map<std::wstring, Report> reports_to_add;
-		std::vector<std::wstring> tokens = tokenize(date, ':');
-		int date_month = _wtoi(tokenize(date, L':')[1].c_str());
+		
 
 		reports[type][to].set_sheet_fields(reports[type][from].get_sheet_fields());
 
-		map<wstring, Report> report_map = reports[type][from].get_reports();
-		for (std::map<std::wstring, Report>::iterator it = report_map.begin(); it != report_map.end(); ++it)
+		map<wstring, Report>* from_report_map = reports[type][from].get_reports();
+		map<wstring, Report>* to_report_map = reports[type][to].get_reports();
+		for (std::map<std::wstring, Report>::iterator it = from_report_map->begin(); it != from_report_map->end(); ++it)
 		{
-			Report transformed = transform_report(it->second, from, to, comp_list);
-			int transformed_date_month = transformed.date_month;
+			Report transformed = transform_report(it->second, type, from, to, comp_list);
 
-			if ((transformed.sender_name != L"UNKNOWN" && report_map.count(transformed.get_id_str(reports[type][to].uses_sub_ids())) <= 0)						//Conditions for writing/overwriting a new report: no existing report
-				|| transformed.get_date() == date														//Still receiving reports for today and updating sums
-				|| (transformed.date_month == date_month && transformed.date_wday == 0))				//We're adding a monthly report for the current month
-			{
-				if (reports_to_add.count(transformed.get_id_str(reports[type][to].uses_sub_ids())) > 0)
-				{
-					reports_to_add[transformed.get_id_str(reports[type][to].uses_sub_ids())] += transformed;
-				}
-				else
-				{
-					reports_to_add[transformed.get_id_str(reports[type][to].uses_sub_ids())] = transformed;						//Start adding a new report
-				}
-			}
+			if (type == TYPE_REGULAR && to == DISTRICT)
+				int x = 0;
+			if (can_add_report(type, to, date, transformed))
+				reports_to_add[transformed.get_id_str(reports[type][to].uses_sub_ids())] = transformed;
+			
 		}
 
 		for (std::map<std::wstring, Report>::iterator it = reports_to_add.begin(); it != reports_to_add.end(); ++it)
@@ -387,14 +354,10 @@ bool ReportCollection::save()
 		for (int j = 0; j < REPORTS_TO_STORE[type].size(); j++)
 		{
 			ReportOrder order = REPORTS_TO_STORE[type][j];
-			//Don't bother with baptism record for district, zone, etc. since it is a text report
-			if (i != TYPE_BAPTISM_RECORD || j == COMP)
+			if (reports[type][order].is_loaded() && reports[type][order].is_changed() && report_files[type][order].open(File::FILE_TYPE_OUTPUT))
 			{
-				if (reports[type][order].is_loaded() && reports[type][order].is_changed() && report_files[type][order].open(File::FILE_TYPE_OUTPUT))
-				{
-					reports[type][order].print(report_files[type][order].file);
-					report_files[type][order].close();
-				}
+				reports[type][order].print(report_files[type][order].file);
+				report_files[type][order].close();
 			}
 		}
 	}
