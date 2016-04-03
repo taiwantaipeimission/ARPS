@@ -20026,5 +20026,29 @@
         "C_REFNUM": 90,
         "C_NUM_MSG": 3,
         "C_INDEX": 1
+    },
+    {
+        "SENDER_NAME": "OFFICE_E",
+        "SENDER_NUMBER": "+886910358944",
+        "CONTENTS": "TYPE:REPORT\nA:100\nB:200\nC:300\nD:400\nNEXTWEEKBAP:500\nBAP:600\nBD:700\nSAC:800\nPK:900\nOL:1000\nNIMISSFIND:11000\nNIMEMREF:12000",
+        "SENT_DATE": "",
+        "DATA_CODING": 0,
+        "MSG_LEN": 121,
+        "CONCAT": false,
+        "C_REFNUM": 0,
+        "C_NUM_MSG": 0,
+        "C_INDEX": 0
+    },
+    {
+        "SENDER_NAME": "OFFICE_E",
+        "SENDER_NUMBER": "+886910358944",
+        "CONTENTS": "TYPE:BAPTISM\nCONV_NAME:東西1\nBP_DATE:\nCONF_DATE:\nWARD:\nHOME_ADDR:\nPH_NUM:\nBAP_SOURCE:1\n1=Missionary contacting\n2=LA referral\n3=RC referral\n4=Active member referral\n5=English class\n6=Temple tour",
+        "SENT_DATE": "",
+        "DATA_CODING": 8,
+        "MSG_LEN": 140,
+        "CONCAT": false,
+        "C_REFNUM": 238,
+        "C_NUM_MSG": 3,
+        "C_INDEX": 1
     }
 ]
