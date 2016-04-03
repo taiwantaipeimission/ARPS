@@ -113,12 +113,30 @@
 2016:4:1:6:2:WANDA_S	WEST	0	DANFENG_E	XINZHUANG	陳心姐	0977122012	justgotfired.Shehasseenmissionaries.Willingtolistenmore.Wantstogetincontact.	0
 2016:4:1:6:2:XINZHU_3_ZL	NORTH		DANSHUI_B_E	淡水	范先生	0933218253	cool 大學kid. Had a lesson and stuff so. 加油！  	
 2016:4:1:6:3:WANDA_S				XIN ZHUANG 	CLEO	0983261620	 met at the mrt he will go to china	
+2016:4:1:7:0:+886963771573				 TAIZHONG	 胡瑋琪	 0983785373	 taibei temple tour referral. Female. 23yrs. From 逢甲	
 2016:4:1:7:0:DANFENG_E	EAST		JILONG_A_E	JILONG_ZHONGZHENG	李麗娟	0926018801	She is a less active member.She had moved to Jilong from XinZhuang.Please call her ASAP.You should call her to come back!	
 2016:4:1:7:0:DANSHUI_A_E				 TAOYUAN	 Zhan 帥哥	 0919326156	 High school student, had a lesson with him, likes prayer! Getting ready to go to college	
 2016:4:1:7:0:DANSHUI_B_E				Luzhou	劉ivan  	0983360855	short contact. cool guy. Met at a college campus, had some interest in english and seemed willing to hear more	
 2016:4:1:7:0:MIAOLI_E				QJSHAN	邱晟瑋	0929860701	we contact him and his brother at his home.willing to meet and be baptized	
+2016:4:1:7:0:OFFICE_E	TAOYUAN		TAO_2_S	 TAOYUAN	 SANDY	 0936161183	 english class student, works in taipei, super nice	
+2016:4:1:7:0:SONGSHAN_S				 TAOYUANAREA	 SANDY	 0936161183	 english class student, works in taipei, super nice	
 2016:4:1:7:0:SONGSHAN_ZL					張達: set up			
+2016:4:1:7:0:TAIDONG_1_S				Xindian	ZHUANG	0976382876	 17 YEARs old. Baptism date for first week of May on sat. Read alma 36 and shared restoration. She is christian.	
+2016:4:1:7:0:TAO_3_E				斗六區	林	0931779933	We met on the street and she wrote her number down before she left in taxi. She is christian. Good english. Called, she has not been to our church yet but she has interest in meeting with missionaries! but will leave your area in a month.	
 2016:4:1:7:0:TIANMU_A_E	NORTH		DANSHUI_B_E	DANSHUI	CHARLIE	0933903010	randomly got his number. Nice guy	
 2016:4:1:7:0:XINBAN_E	WEST		SIYUAN_E	XINZHUANG	張志凱	 0983372617	Came to english class here in banqiao before. Interested in gospel 	
+2016:4:1:7:0:YONGHE_S	WEST		TUCHENG_ZL	TUCHENG	 劉恭宇 liu gong yu	0932970391	 was willing to say his own prayer, said he'd try it. Also said he might come to church.	
+2016:4:1:7:0:ZHUNAN_S				 toufen  	 a he	 0972747343	 male, vietnamese, has a little boy in vietnam	
 2016:4:1:7:1:DANSHUI_A_E				 LONGTAN	 Sean Ng	 0975929461	 Malaysian, college student here with girlfriend. Studying animation. Interested in baptism and forgiveness of sins.	
+2016:4:1:7:1:OFFICE_E	ZHUNAN		TOUFEN_E	 頭份鎮	 a he	 0972747343	 male, vietnamese, has a little boy in vietnam	
+2016:4:1:7:1:SONGSHAN_S	EAST		XIZHI_B_E	XIZHI	 MAY	 0958061189	 english class student, pretty nice, daughter attends english class in neihu	
 2016:4:1:7:1:SONGSHAN_ZL				jinhua	陳小姐	0930267238	called looking for someone else but i asked if we could teach them jesus they said okay 	
+2016:4:1:7:1:TAO_3_E	TAOYUAN		TAO_1_B	桃園區	劉衍慶(Jas)	0985777749	Really cool guy who is not baptized but friend gave him a bible after he was divorced and going through hard time. He said he liked it, and recieved a book of mormon from us very willingly. He was interested in great things, like why many churches. Not baptized because does not feel he is ready.	
+2016:4:1:7:1:ZHUNAN_S				 toufen	 fan	 0919090861	 vietnamese, male	
+2016:4:1:7:2:SONGSHAN_S	TAIZHONG_SOUTH		435	TAIZHONG	 li zhen yin	 0975280031	 quick contact, young mom, comes to taipei often but lives in taizhong, willing to listen	
+2016:4:1:7:2:ZHUNAN_S				 wanhua	 CHEN	 0988161649	 male, salesman, has two girls, wife is christian	
+2016:4:1:7:3:SONGSHAN_S				 daan	 aly	 0989172948	 indonesian, works taking care of a dog, super happy and nice, both her chinese and english are ok	
+2016:4:1:7:4:SONGSHAN_S	CENTRAL		WANDA_E	WANHUA	 wu wen jie	 0981771623	 lives by ximen ding, has been to church, willing to listen, kinda haihao	
+2016:4:1:7:5:SONGSHAN_S				NEWTAIPEI	 Andy	 0965178053	 his friends brought to english class, 14 years old	
+2016:4:1:7:6:SONGSHAN_S				 DANSHUI	許嘉玟	0938786296	 street contact super nice had interest and curious about christian churches	
+2016:4:1:7:7:SONGSHAN_S	WEST		DANFENG_E	XINZHUANG	 wu xj	 0973500063	 super nice, works selling alcohol, a little interested in christianity, has friends who are christians and has gone to church	
