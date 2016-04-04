@@ -101,6 +101,8 @@ void ReportSheet::load(std::wistream& input)
 			{
 				Report report;
 				report.read_processed(line_s, sheet_fields);
+				if (reports.count(report.get_id_str(use_sub_ids)) > 0)
+					report += reports[report.get_id_str(use_sub_ids)];
 				insert_report(report);
 			}
 			else
