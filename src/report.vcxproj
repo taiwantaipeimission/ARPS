@@ -65,6 +65,7 @@
     <ClCompile Include="Report.cpp" />
     <ClCompile Include="ReportSheet.cpp" />
     <ClCompile Include="Terminal.cpp" />
+    <ClCompile Include="utility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Area.h" />

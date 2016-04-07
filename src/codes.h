@@ -100,7 +100,7 @@ extern map<ReportType, vector<ReportOrder>> REPORTS_TO_STORE;
 #define COMMAND_ESCAPE_CHAR L"\u001A"		//The CTRL-Z character used at the end of PDU payload data
 
 //Timeout values
-#define NO_RESPONSE_TIMEOUT_MS 1000
+#define NO_RESPONSE_TIMEOUT_MS 5000
 #define MSG_NO_RESPONSE_TIMEOUT_MS 60000
 
 //Message constants

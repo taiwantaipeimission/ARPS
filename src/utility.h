@@ -74,6 +74,8 @@ static void replace_chars(std::wstring& str, std::wstring find, std::wstring rep
 	}
 }
 
+extern void strtoupper(std::wstring& str);
+
 static const std::vector<std::wstring> tokenize(std::wstring str, wchar_t delim)
 {
 	std::vector<std::wstring> result;

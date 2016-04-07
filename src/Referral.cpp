@@ -34,6 +34,7 @@ bool Referral::locate(CompList* list)
 {
 	std::wstring dest_geog_area = report_values[L"PLACE"];
 	strip_chars(dest_geog_area, L" ");
+	strtoupper(dest_geog_area);
 	std::vector<Area> potential_areas;
 	for (std::map<std::wstring, Area>::iterator it = list->areas.begin(); it != list->areas.end(); ++it)
 	{
