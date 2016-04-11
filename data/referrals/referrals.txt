@@ -203,3 +203,67 @@
 2016:4:2:4:3:SONGSHAN_ZL				信義	MALONE 	0939705777	lived in texas is christian wants to know more about us. This dude is sick	
 2016:4:2:4:3:WANDA_S	CENTRAL		WANDA_E	WANHUA	FU XJ	runeone		
 2016:4:2:4:3:XINPU_E	CENTRAL		SANCHONG_E	sanchong	陳文章	0917460158	 met english boarding super nice kid. College student, works for a drink company. Good luck.	
+2016:4:2:7:0:ASSISTANTS				板橋市	張先生	0912256708	nice guy met at  the bu area	
+2016:4:2:7:0:DANSHUI_A_E	SOUTH		ZHONGHE_1_E	中和區	 JASON 陳	0929959266	 帥哥！Met last week, goes to college in danshui, works in  yuanshan, lives in zhonghe. Hit him up!	
+2016:4:2:7:0:JINGXIN_ZL	TAOYUAN		LONGTAN_E	龍潭	林建億	0911237557		
+2016:4:2:7:0:LUZHOU_A_E	WEST		TUCHENG_ZL	土城區	王宏麂	0975535618	cool want to learn more and be 	
+2016:4:2:7:0:MUZHA_E	CENTRAL		WANDA_S	ENGLISH	Adriano	0909967416	 English ward! Lives in muzha, professor at the local university. First language is portugese (he's from brazil) but he has been reading the Book of Mormon in English and understands the restoration! He wants to go to church. Might be too busy for more than one conf session this weekend. Call and see!	
+2016:4:2:7:0:OFFICE_E	TAOYUAN		TAO_3_E	大園區	陳俊安	0931366631	 referral from temple tour 25years old ,try it.	
+2016:4:2:7:0:SANXIA_B_E	CENTRAL		XINAN_S	信義區	施燕兒 ShiYanEr	0972315479	 female, voluntarily going into the army for about 4 years, leaves next wednesday. Meet with her before she goes to taizhong!	
+2016:4:2:7:0:SHILIN_S	CENTRAL		SANCHONG_E	SANCHONG	LI3 JIA XIANG2	0930481114	in his 20s,works at a factory has a lot of stress.set baptismal date for 5/7.ex girlfriend is christian so he has gone to church. counts as a new investigator we set him up for 4/16 to meet at 7pm.so golden!	
+2016:4:2:7:0:SIYUAN_E	TAIZHONG_SOUTH		435	鳳山區	方小姐	 0929639090	calling through some old potential sheets and she said i could give her number to missionaries.  More time on weekends but a bit busy.  Go for it!	
+2016:4:2:7:0:SONGSHAN_S	CENTRAL		JINHUA_ZL	中山區	LEMON lian	0937373349	24 she is a chef decent english super active in her like local miao club thing wants to help people and spends her free time helping people  	
+2016:4:2:7:0:TAO_4_E	TAOYUAN		TAO_1_A	TAOYUAN	albert	0923851538	lives on 'da you lu' english student. Younger kid. Maybe 15. Very willing to meet	
+2016:4:2:7:0:TOUFEN_E	CENTRAL		SANCHONG_E	三重區	林翰裕	0911933291	準備考試，八月可以見面	
+2016:4:2:7:0:TOUR_S	SOUTH		YONGHE_S	永和區	張弟兄	0921383830、0910383830	 have a lesson with him,nice guy!	
+2016:4:2:7:0:TUCHENG_ZL	SOUTH		ZHONGHE_2_S	ZHONGHE	李 Jessie	0928533492	 For 韓長老  She is a super nice mom. Set up for Sunday 4/10 at 2:30. Call her quick! 	
+2016:4:2:7:0:WANDA_E	NORTH		BEITOU_E	BEITOU 	 Danny邱 	0975791283		
+2016:4:2:7:0:XIANGSHAN_E					呂淯萱: contacted 			
+2016:4:2:7:0:XINAN_S	CENTRAL		WANDA_E	 ZHONGZHENG	 Du Chen Ting (Jennifer Kelly)	 0223324238	 She is in our English class. Super cool! Doesn't seen like she has a special religion. About 40. Is expecting a call from the missionaries. When you call for her use her Chinese name.	
+2016:4:2:7:0:XINBAN_E	WEST		DANFENG_E	LINKOU 	HANNAH 洪	0912517017	Super cool lady. Been to english. Interested in plan of salvation so we taught it in first lesson. Set date. She is all yours.	
+2016:4:2:7:0:XINZHU_1_E	TAIZHONG_SOUTH		435	鳳山區	曾翔偵	0921071934	sweet guy, met him on the street, really interested, we had a lesson and he wants to meet yall 	
+2016:4:2:7:0:YILAN_E	CENTRAL		JINHUA_ZL	TAIPEI	陳彥唐	0980366384		
+2016:4:2:7:0:YONGHE_S	TAIZHONG_SOUTH		435	 WUFENG	張hao xiang 	0983596418	he is our investigator son. He came to church. Has English interest 	
+2016:4:2:7:0:ZHONGLI_2_E	CENTRAL		ASSISTANTS	 DAAN	 Eva 林	0955765079	 Met her and her mom, quick introductions. Very willing to give a #, seems interested	
+2016:4:2:7:1:ASSISTANTS	SOUTH		ZHONGHE_2_E	中和	伶	0911433256	her name is ling, she comes up to taipei a lot for business meetings. In late twenties, willing to learn more about jesus christ and our church. Call her up!	
+2016:4:2:7:1:JINGXIN_ZL	WEST		SANXIA_A_E	三峽	戴薏軒	0920327512		
+2016:4:2:7:1:LUZHOU_A_E	NORTH		DANSHUI_A_E	八里區	江明玥	0977267393	an sweet lady that has had all the lessons and being baptized but had to suddenly had note becaus of family issues she says she is poor but dont let her use it an excuse 	
+2016:4:2:7:1:OFFICE_E	TAIZHONG_SOUTH		435	嘉義	蘇演派	0955906007	has some health conditions wants a new start	
+2016:4:2:7:1:SANXIA_B_E	NORTH		DANSHUI_A_E	淡水區	王耀霆 WangYaoTing	0911961486	 college student, from zhanghua. Had a lesson, taught baptism, showed because of him video, he has no specific religious belief.	
+2016:4:2:7:1:TAO_4_E	CENTRAL		ASSISTANTS	大安區	eric	0905185028	super nice call between 6 and 9 at night	
+2016:4:2:7:1:TOUFEN_E	XINZHU		XINZHU_3_S	東區	Chris	0981438962	he's such a homie! Studied in shanghai from elementary till he graduated high school. He's dope, call him up! English is super solid, we had one prayer, he used to john in with his aunt as she prayed when he was a kid. He's 18 and going to 清華大學 tell him you're elder perkins' 潘長老’s friend	
+2016:4:2:7:1:TOUR_S	WEST		SIYUAN_E	新莊區	吳怡樺	0963109180	 quick contact ,try it.	
+2016:4:2:7:1:WANDA_E	EAST		YILAN_E	YILAN 	Iris 	0920706346		
+2016:4:2:7:1:XIANGSHAN_E					qiu 弟兄: contacted set up			
+2016:4:2:7:1:XINAN_S	CENTRAL		WANDA_S	datong	sophia	0939964238	speaks great english, already christian she says but has not been has not in another church,thinks it is a miracle she met the missionaries, taught how to pray and gave her a bom, she said she is so happy she knows how to talk to god now, gave her an assignment to read moroni 10:5, has a baptismal date for 5-28, super awesome! Go baptize her!	
+2016:4:2:7:1:XINBAN_E	WEST		TUCHENG_S	SHULIN 	LINDA 黎	0917185631	Attended english before. Willing to meet.	
+2016:4:2:7:1:XINZHU_1_E	TAIZHONG_SOUTH		435	台中北區	黃靈省	0980573622	lovely man, he's a manager for a singer. He travels a lot, but he's interested in meeting again!	
+2016:4:2:7:1:YONGHE_S	XINZHU		XINZHU_3_ZL	XINZHU	katie guo 	0933663575	likes English 	
+2016:4:2:7:1:ZHONGLI_2_E	WEST		TUCHENG_S	 SHULIN	 陳品宏 Alex 	0979314609	 Met him and his girlfriend, both in high school. Been to church before吧. Give him a call	
+2016:4:2:7:2:JINGXIN_ZL	CENTRAL		JINHUA_S	大安區	王鈞	0916858566	this lil buddy was just home skillet chillen big ups on the street when we yaboop skopped him right up side the skadoodle shnoodle and wipperguppied a cell number out of him, give him a ring a ding and if he gets baptized let elder robinson know 	
+2016:4:2:7:2:LUZHOU_A_E				嘉義西部	蘇演派	0955906007	has some health conditions wants a new start	
+2016:4:2:7:2:OFFICE_E	CENTRAL		WANDA_E	萬華區	yang jm	0922334116	only said one prayer, cool, did not have much time	
+2016:4:2:7:2:TAO_4_E	EAST		YILAN_E	YILAN	羅先生	0938567782	college kid.	
+2016:4:2:7:2:TOUFEN_E	XINZHU		XINZHU_3_ZL	東區	 Tom 陳彥廷	0910033165	 he's super dope. He likes basketball a lot, and loves a good laugh. Call him 帥 a bunch of times and he'll start goofin. We had a lesson on prayer and heavenly father, he offered a prayer before he left! Has had a girlfriend for the last 3 years, and is down to learn more about the gospel. Call between 6 p.m. To 10 p.m. 	
+2016:4:2:7:2:TOUR_S	CENTRAL		XINAN_S	信義區	Tina wu	0931112399	 english class student,live  六張犁 mrt station,have her a L1 tour .	
+2016:4:2:7:2:WANDA_E	NORTH		DANSHUI_A_E	 DANSHUI	Vivi 陳	0978801909	 Probably around 30 going to meet a friend. Had a lesson. Was kind of strange. Willing to listen though. 	
+2016:4:2:7:2:XINAN_S				wen hua	yang jm	0922334116	only said one prayer, cool, did not have much time	
+2016:4:2:7:2:YONGHE_S	EAST		JILONG_A_E	JILONG 	張 x.s 	0955955037	 he is our investigator's son. Nice guy. His dad really wants him to learn more about the  and also English. 	
+2016:4:2:7:2:ZHONGLI_2_E	TAOYUAN		LONGTAN_E	LONGTAN	洪先生	0920512471	 Very quick contact. He is not married, very friendly	
+2016:4:2:7:3:JINGXIN_ZL	SOUTH		MUZHA_S	文山區	翁坪偉	0932024457		
+2016:4:2:7:3:LUZHOU_A_E	WEST		TUCHENG_S	土城區	王宏麂	0975535618	possible screat refferal	
+2016:4:2:7:3:TOUFEN_E	TAOYUAN		ZHONGLI_2_E	楊梅區	 Tom 陳彥廷	0910033165	 he's super dope. He likes basketball a lot, and loves a good laugh. Call him 帥 a bunch of times and he'll start goofin. We had a lesson on prayer and heavenly father, he offered a prayer before he left! Has had a girlfriend for the last 3 years, and is down to learn more about the gospel. Call between 6 p.m. To 10 p.m. 	
+2016:4:2:7:3:TOUR_S	NORTH		TIANMU_B_E	天母	召鳳	0930933033	 referral from temple tour,member referral, 50+- years ,after 4/12 try it.	
+2016:4:2:7:3:WANDA_E	WEST		XINPU_E	BANQIAO	Michelle 敘	0905063816	catholic girl. Shared lesson one and she started crying. Super cool girl around 16 or 17. 	
+2016:4:2:7:3:YONGHE_S	TAIZHONG_SOUTH		435	TAIZHONG 	charlie 洪	0928962970	super cool. He was willing to take a train to taibei to meet with us but then we found out that he doesn't live in taibei right now 	
+2016:4:2:7:4:LUZHOU_A_E	TAIZHONG_SOUTH		435	台中西區	陳又宏	0981923077	student baptism interest learn	
+2016:4:2:7:4:TOUR_S				桃園大園區	陳俊安	0931366631	 referral from temple tour 25years old ,try it.	
+2016:4:2:7:4:WANDA_E	WEST		XINBAN_E	BANQIAO 	Zhuang 先生	0937781859	 was playing a game. 	
+2016:4:2:7:5:LUZHOU_A_E	CENTRAL		JINHUA_ZL	中山區	葉雅文	0932649923	sweet girl baptism willing	
+2016:4:2:7:5:WANDA_E	NORTH		SHILIN_S	shilin	pommyshu	0930345077	good english might have some interest in church 	
+2016:4:2:7:6:LUZHOU_A_E	CENTRAL		SANCHONG_S	三重區	洪子茹	0989907760	english class interest	
+2016:4:2:7:6:WANDA_E	EAST		SONGSHAN_ZL	NANGANG	zhen	0983715171	said we could share a message about our church	
+2016:4:2:7:7:LUZHOU_A_E	CENTRAL		SANCHONG_S	三重區	張慈娟	0930571220	english class interest	
+2016:4:2:7:7:WANDA_E	NORTH		SHILIN_S	SHILIN	pommyshu	0930345077	good english might have some interest in church 	
+2016:4:2:7:8:LUZHOU_A_E	CENTRAL		SANCHONG_S	三重區	張宏昌	0937490069	gospel likes	
+2016:4:2:7:9:LUZHOU_A_E	CENTRAL		SANCHONG_S	三重區	吳逸桻	0955471215	baptism interest	
