@@ -53,7 +53,8 @@ class MessageBrowser : public Fl_Multi_Browser
 {
 public:
 	Gui* gui;
-	MessageBrowser(Gui* gui_in, int x, int y, int w, int h, const char* label = 0);
+	MessageHandler::MessageStorageType type;
+	MessageBrowser(Gui* gui_in, MessageHandler::MessageStorageType message_storage_type_in, int x, int y, int w, int h, const char* label = 0);
 	int handle(int event);
 	int num_selected();
 };

@@ -195,10 +195,10 @@ void delete_msg_cb(Fl_Widget* wg, void* ptr)
 		{
 			if (browser->selected(i))
 			{
-				/*if (browser->handled)
+				if (browser->type == MessageHandler::HANDLED)
 					handled_to_erase.push_back((Message*)browser->data(i));
-				else
-					unhandled_to_erase.push_back((Message*)browser->data(i));*/
+				else if(browser->type == MessageHandler::UNHANDLED)
+					unhandled_to_erase.push_back((Message*)browser->data(i));
 			}
 		}
 		for (size_t i = 0; i < handled_to_erase.size(); i++)
@@ -276,8 +276,8 @@ void window_cb(Fl_Widget* wg, void* ptr)
 	quit_cb(wg, ptr);
 }
 
-MessageBrowser::MessageBrowser(Gui* gui_in, int x, int y, int w, int h, const char* label)
-	: Fl_Multi_Browser(x, y, w, h, label), gui(gui_in)
+MessageBrowser::MessageBrowser(Gui* gui_in, MessageHandler::MessageStorageType message_storage_type_in, int x, int y, int w, int h, const char* label)
+	: Fl_Multi_Browser(x, y, w, h, label), gui(gui_in), type(message_storage_type_in)
 {
 }
 
@@ -394,12 +394,12 @@ void Gui::init(ModemInterface* mod_int_in)
 	{
 		Fl_Group* inbox_tab = new Fl_Group(0, 2 * BAR_HEIGHT + SPACING, WINDOW_WIDTH, WINDOW_HEIGHT, "Messages");
 		{
-			unhandled = new MessageBrowser(this, SPACING, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
+			unhandled = new MessageBrowser(this, MessageHandler::UNHANDLED, SPACING, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
 			{
 				unhandled->box(FL_BORDER_BOX);
 				unhandled->end();
 			}
-			handled = new MessageBrowser(this, SPACING * 2 + WINDOW_WIDTH / 2, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
+			handled = new MessageBrowser(this, MessageHandler::HANDLED, SPACING * 2 + WINDOW_WIDTH / 2, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
 			{
 				handled->box(FL_BORDER_BOX);
 				handled->end();
@@ -428,7 +428,7 @@ void Gui::init(ModemInterface* mod_int_in)
 		inbox_tab->end();
 		Fl_Group* outbox_tab = new Fl_Group(0, 2 * BAR_HEIGHT + SPACING, WINDOW_WIDTH, WINDOW_HEIGHT, "Outbox");
 		{
-			outbox = new MessageBrowser(this, SPACING, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
+			outbox = new MessageBrowser(this, MessageHandler::OUTBOX, SPACING, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
 			{
 				outbox->box(FL_BORDER_BOX);
 				outbox->end();
