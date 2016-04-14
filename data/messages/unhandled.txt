@@ -1,14 +1,1 @@
-[
-    {
-        "SENDER_NAME": "LUZHOU_A_E",
-        "SENDER_NUMBER": "+886972576542",
-        "CONTENTS": "TYPE:REFERRAL\nPLACE:八里區\nNAME:江明玥\nNUMBER:0977267393\nINFO:an sweet lady that has had all the lessons and being baptized but had to suddenly had note becaus of family issues she says she is poor but dont let her use it an excuse ",
-        "SENT_DATE": "",
-        "DATA_CODING": 8,
-        "MSG_LEN": 140,
-        "CONCAT": false,
-        "C_REFNUM": 89,
-        "C_NUM_MSG": 4,
-        "C_INDEX": 1
-    }
-]
+[]
