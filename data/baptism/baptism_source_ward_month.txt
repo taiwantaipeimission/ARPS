@@ -41,18 +41,28 @@
 2016:3:0:0:YONGHE		1	0	0	0	0	0
 2016:3:0:0:ZHONGLI_2	Ruby廖倩汝					1	
 2016:3:0:0:ZHUBEI_2	葉倚瑄	1					
+2016:4:0:0:ANKANG							
 2016:4:0:0:DANFENG	陳絨	1					
 2016:4:0:0:HUALIAN_2	林莘茹	1					
 2016:4:0:0:JILONG							
+2016:4:0:0:JINHUA	吳詩婷					1	
+2016:4:0:0:NEIHU	 張林錦霞	1					
 2016:4:0:0:TAIDONG_1	齊榮華				1		
 2016:4:0:0:TAIDONG_2							
 2016:4:0:0:TAIDONG_3	張素津	1					
-2016:4:0:0:TAOYUAN_2							
+2016:4:0:0:TAOYUAN_1							
+2016:4:0:0:TAOYUAN_2	0						
 2016:4:0:0:TOUFEN	彭麗傑	1					
+2016:4:0:0:TUCHENG	張閎智	1					
+2016:4:0:0:WANDA	陳媽媽 (蘇姐妹)				1		
+2016:4:0:0:XIANGSHAN	邱靖婷		1				
+2016:4:0:0:XINAN	0						
 2016:4:0:0:XINBAN	YAN ZI JUAN 顏紫娟				1		
 2016:4:0:0:XINZHU_1	林雍捷	1					
 2016:4:0:0:XIZHI	0						
-2016:4:0:0:YILAN							
-2016:4:0:0:YONGHE							
+2016:4:0:0:YILAN		1					
+2016:4:0:0:YONGHE					1		
+2016:4:0:0:YULI							
 2016:4:0:0:ZHONGHE_2							
 2016:4:0:0:ZHONGLI_1							
+2016:4:0:0:ZHUBEI_1	彭康睿	1		2			
