@@ -50,6 +50,7 @@ void select_all_cb(Fl_Widget* wg, void* ptr);
 void window_cb(Fl_Widget* wg, void* ptr);
 void timer_cb(void* ptr);
 void auto_process_button_cb(Fl_Widget* wg, void* ptr);
+void compose_message_cb(Fl_Widget* wg, void* ptr);
 
 class MessageBrowser : public Fl_Multi_Browser
 {

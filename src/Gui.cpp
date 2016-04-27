@@ -34,6 +34,7 @@
 #include <FL/fl_ask.H>
 #include <FL/Fl_Multi_Browser.H>
 #include <FL/Fl_PNG_Image.H>
+#include <FL/Fl_Input.H>
 
 #include <ctime>
 
@@ -293,6 +294,48 @@ void auto_process_button_cb(Fl_Widget* wg, void* ptr)
 		Fl::remove_timeout(&timer_cb);
 }
 
+void send_message_cb(Fl_Widget* wg, void* ptr)
+{
+	
+}
+
+void compose_message_cb(Fl_Widget* wg, void* ptr)
+{
+	Gui* gui = (Gui*)ptr;
+	const char* rch = fl_input("Enter recipient(s):", "");
+	if (rch != NULL)
+	{
+		wstring recipients_st = tow(rch);
+		strip_chars(recipients_st, L" ");
+		vector<wstring> recipients = tokenize(recipients_st, L',');
+		vector<wstring> ph_nums;
+		for (vector<wstring>::iterator it = recipients.begin(); it != recipients.end(); ++it)
+		{
+			if (gui->comp_list.by_area_name.count(*it) > 0)
+				ph_nums.push_back(gui->comp_list.by_area_name[*it][0].ph_number);
+			else if (it->length() == 10 && is_integer(*it))
+				ph_nums.push_back(*it);
+			else
+				fl_alert((tos(*it) + " not found!").c_str());
+		}
+		
+		if (ph_nums.size() > 0)
+		{
+			wstring output = L"Sending to ";
+			for (vector<wstring>::iterator it = ph_nums.begin(); it != ph_nums.end(); ++it)
+			{
+				if (it != ph_nums.begin())
+					output += L", ";
+				output += *it;
+			}
+			const char* contents = fl_input(tos(output + L"\nEnter contents:").c_str(), "");
+			if (contents != NULL)
+				for (vector<wstring>::iterator it = ph_nums.begin(); it != ph_nums.end(); ++it)
+					gui->send_message(*it, tow(contents));
+		}
+	}
+}
+
 MessageBrowser::MessageBrowser(Gui* gui_in, MessageHandler::MessageStorageType message_storage_type_in, int x, int y, int w, int h, const char* label)
 	: Fl_Multi_Browser(x, y, w, h, label), gui(gui_in), type(message_storage_type_in)
 {
@@ -409,9 +452,10 @@ void Gui::init(ModemInterface* mod_int_in)
 		menu->add("Edit/Total reports", FL_CTRL + 'r', total_report_cb, this);
 		menu->add("Edit/Total English", FL_CTRL + 'e', total_english_cb, this);
 		menu->add("Edit/Total baptism source", FL_CTRL + 'b', total_baptism_source_cb, this);
-		menu->add("Edit/Auto-process", NULL, auto_process_button_cb, this, FL_MENU_TOGGLE | FL_MENU_VALUE);
-		menu->add("Areas/Send verification text", NULL, send_verify_text_cb, this);
-		menu->add("Modem/Configure modem", NULL, configure_modem_cb, this);
+		menu->add("Tools/Send Message", NULL, compose_message_cb, this);
+		menu->add("Tools/Auto-process", NULL, auto_process_button_cb, this, FL_MENU_TOGGLE | FL_MENU_VALUE);
+		menu->add("Tools/Send verification text", NULL, send_verify_text_cb, this);
+		menu->add("Tools/Configure modem", NULL, configure_modem_cb, this);
 		menu->add("About/About ARPS", NULL, about_cb, this);
 	}
 	Fl_Tabs* tabs = new Fl_Tabs(0, BAR_HEIGHT + SPACING, WINDOW_WIDTH, WINDOW_HEIGHT - BAR_HEIGHT - SPACING);

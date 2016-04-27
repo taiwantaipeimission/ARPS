@@ -41,20 +41,38 @@ static const std::wstring tos(int x)
 
 static const std::string tos(std::wstring str)
 {
-	typedef std::codecvt_utf8<wchar_t> convert_type;
-	std::wstring_convert<convert_type, wchar_t> converter;
+	if (str != L"")
+	{
+		typedef std::codecvt_utf8<wchar_t> convert_type;
+		std::wstring_convert<convert_type, wchar_t> converter;
 
-	std::string st = converter.to_bytes(str);
-	return st;
+		std::string st = converter.to_bytes(str);
+		return st;
+	}
+	return "";
 }
 
 static const std::wstring tow(std::string str)
 {
-	typedef std::codecvt_utf8<wchar_t> convert_type;
-	std::wstring_convert<convert_type, wchar_t> converter;
+	if (str != "")
+	{
+		typedef std::codecvt_utf8<wchar_t> convert_type;
+		std::wstring_convert<convert_type, wchar_t> converter;
 
-	std::wstring ws = converter.from_bytes(str);
-	return ws;
+		std::wstring ws = converter.from_bytes(str);
+		return ws;
+	}
+	return L"";
+}
+
+static bool is_integer(const std::wstring& s)
+{
+	if (s.empty() || ((!isdigit(s[0])) && (s[0] != '-') && (s[0] != '+'))) return false;
+
+	size_t p = 0;
+	stoll(s.c_str(), &p, 10);
+
+	return (p == 0);
 }
 
 static void strip_chars(std::wstring& str, std::wstring chars_to_remove)
