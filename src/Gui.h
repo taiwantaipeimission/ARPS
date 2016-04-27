@@ -48,6 +48,8 @@ void process_msg_cb(Fl_Widget* wg, void* ptr);
 void unprocess_msg_cb(Fl_Widget* wg, void* ptr);
 void select_all_cb(Fl_Widget* wg, void* ptr);
 void window_cb(Fl_Widget* wg, void* ptr);
+void timer_cb(void* ptr);
+void auto_process_button_cb(Fl_Widget* wg, void* ptr);
 
 class MessageBrowser : public Fl_Multi_Browser
 {
@@ -57,6 +59,8 @@ public:
 	MessageBrowser(Gui* gui_in, MessageHandler::MessageStorageType message_storage_type_in, int x, int y, int w, int h, const char* label = 0);
 	int handle(int event);
 	int num_selected();
+
+	void select_all();
 };
 
 class Gui
@@ -89,7 +93,6 @@ public:
 	std::wstring baptism_report_template;
 
 	bool auto_check;
-	double auto_check_s;
 	bool checking_msgs;
 
 	Gui();

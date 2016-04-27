@@ -276,6 +276,23 @@ void window_cb(Fl_Widget* wg, void* ptr)
 	quit_cb(wg, ptr);
 }
 
+void timer_cb(void* ptr)
+{
+	Gui* gui = (Gui*)ptr;
+	gui->poll_msgs();
+	Fl::repeat_timeout(AUTO_CHECK_S, &timer_cb, ptr);
+}
+
+void auto_process_button_cb(Fl_Widget* wg, void* ptr)
+{
+	Gui* gui = (Gui*)ptr;
+	gui->auto_check = !gui->auto_check;
+	if (gui->auto_check)
+		Fl::add_timeout(AUTO_CHECK_S, &timer_cb, ptr);
+	else
+		Fl::remove_timeout(&timer_cb);
+}
+
 MessageBrowser::MessageBrowser(Gui* gui_in, MessageHandler::MessageStorageType message_storage_type_in, int x, int y, int w, int h, const char* label)
 	: Fl_Multi_Browser(x, y, w, h, label), gui(gui_in), type(message_storage_type_in)
 {
@@ -357,6 +374,12 @@ int MessageBrowser::num_selected()
 	return n_selected;
 }
 
+void MessageBrowser::select_all()
+{
+	for (int i = 1; i <= size(); i++)
+		select(i);
+}
+
 Gui::Gui()
 {
 }
@@ -369,11 +392,11 @@ Gui::~Gui()
 void Gui::init(ModemInterface* mod_int_in)
 {
 	checking_msgs = false;
-
+	auto_check = true;
 	modem_interface = mod_int_in;
-	auto_check_s = 300.0f;
 	file_manager.files[FILE_OUTPUT].append = true;
 	file_manager.files[FILE_OUTPUT].open(File::FILE_TYPE_OUTPUT);
+	Fl::add_timeout(AUTO_CHECK_S, &timer_cb, this);
 
 	Fl_PNG_Image* image = new Fl_PNG_Image("../res/logo.png");
 	window = new Fl_Window(WINDOW_WIDTH, WINDOW_HEIGHT, "ARPS");
@@ -386,6 +409,7 @@ void Gui::init(ModemInterface* mod_int_in)
 		menu->add("Edit/Total reports", FL_CTRL + 'r', total_report_cb, this);
 		menu->add("Edit/Total English", FL_CTRL + 'e', total_english_cb, this);
 		menu->add("Edit/Total baptism source", FL_CTRL + 'b', total_baptism_source_cb, this);
+		menu->add("Edit/Auto-process", NULL, auto_process_button_cb, this, FL_MENU_TOGGLE | FL_MENU_VALUE);
 		menu->add("Areas/Send verification text", NULL, send_verify_text_cb, this);
 		menu->add("Modem/Configure modem", NULL, configure_modem_cb, this);
 		menu->add("About/About ARPS", NULL, about_cb, this);
@@ -680,6 +704,11 @@ bool Gui::completed_command_cb()
 				found_msg = true;
 			}
 		}
+	}
+	if (auto_check)
+	{
+		unhandled->select_all();
+		process_msg_cb(unhandled, (void*)this);
 	}
 	return found_msg;
 }

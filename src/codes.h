@@ -102,6 +102,7 @@ extern map<ReportType, vector<ReportOrder>> REPORTS_TO_STORE;
 //Timeout values
 #define NO_RESPONSE_TIMEOUT_MS 5000
 #define MSG_NO_RESPONSE_TIMEOUT_MS 60000
+#define AUTO_CHECK_S 300.0f
 
 //Message constants
 #define TYPE_KEY L"TYPE"
