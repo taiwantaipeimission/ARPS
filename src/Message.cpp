@@ -315,6 +315,7 @@ void Message::decode(std::wstring input, CompList* comp_list)
 	{
 		cmgl_ids.clear();
 	}
+	replace_chars(contents, L"\u0011", L"_");
 }
 
 void Message::read(const Value& m)
@@ -329,6 +330,7 @@ void Message::read(const Value& m)
 	concat_refnum = m[JK_CONCAT_REFNUM].GetInt();
 	concat_num_msgs = m[JK_CONCAT_NUM_MSG].GetInt();
 	concat_index = m[JK_CONCAT_INDEX].GetInt();
+	replace_chars(contents, L"\u0011", L"_");
 }
 
 void Message::write(Document* d)

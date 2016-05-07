@@ -35,6 +35,8 @@
 #include <FL/Fl_Multi_Browser.H>
 #include <FL/Fl_PNG_Image.H>
 #include <FL/Fl_Input.H>
+#include <FL/Fl_Text_Buffer.H>
+#include <FL/Fl_Text_Display.H>
 
 #include <ctime>
 
@@ -360,7 +362,16 @@ int MessageBrowser::handle(int event)
 			if (msg)
 			{
 				std::wstring msg_text = msg->get_contents();
-				fl_message(tos(msg_text).c_str());
+				Fl_Window* msg_popup = new Fl_Window(640, 480);
+				msg_popup->copy_label(tos(L"Message from " + msg->get_sender_name()).c_str());
+				Fl_Text_Buffer* buff = new Fl_Text_Buffer();
+				Fl_Text_Display* disp = new Fl_Text_Display(0, 0, 640, 480-20);
+				disp->buffer(buff);
+				disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
+				msg_popup->resizable(*disp);
+				msg_popup->show();
+				buff->text(tos(msg_text).c_str());
+				
 			}
 			handled = 1;
 		}
@@ -822,7 +833,8 @@ void Gui::process_msg(Message* msg)
 					if (!result.empty())
 					{
 						strip_chars(result, L"\t\n");
-						it->second.report_values[L"CONTACT_STATE"] = result;
+						it->second.report_values[L"CONTACT_STATUS"] = result;
+						report_collection.reports[TYPE_REFERRAL][COMP].insert_report(it->second);
 						found = true;
 					}
 				}

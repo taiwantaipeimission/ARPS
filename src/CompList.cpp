@@ -107,6 +107,7 @@ void CompList::load(FileManager* file_manager)
 				std::wstring geog_area_name = L"";
 				while (std::getline(ss, geog_area_name, L','))
 				{
+					strip_chars(geog_area_name, L" ");
 					area_to_add.geog_areas.push_back(geog_area_name);
 				}
 			}
