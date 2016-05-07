@@ -183,34 +183,42 @@ void delete_msg_cb(Fl_Widget* wg, void* ptr)
 {
 	MessageBrowser* browser = (MessageBrowser*)ptr;
 	Gui* gui = browser->gui;
+	std::vector<Message*>to_erase;
+	bool found_msgs_to_delete = false;
 
-	int n_selected = 0;
-	for (int i = 1; i <= browser->size(); n_selected += browser->selected(i++) ? 1 : 0)
-	{ }
-
-	std::wstring prompt = L"Are you sure you want to delete " + tos(n_selected) + L" messages?";
-	if (n_selected > 0 && fl_choice(tos(prompt).c_str(), NULL, "Cancel", "OK") == 2)
+	if (browser->msg_popup && browser->msg_popup->shown())
 	{
-
-		std::vector<Message*>handled_to_erase;
-		std::vector<Message*>unhandled_to_erase;
-		for (int i = 1; i <= browser->size(); i++)
+		if (browser->popped_msg && fl_choice("Are you sure you want to delete this message?", NULL, "Cancel", "OK") == 2)
 		{
-			if (browser->selected(i))
+			to_erase.push_back(browser->popped_msg);
+			browser->msg_popup->hide();
+			found_msgs_to_delete = true;
+		}
+	}
+	else
+	{
+		int n_selected = 0;
+		for (int i = 1; i <= browser->size(); n_selected += browser->selected(i++) ? 1 : 0)
+		{}
+
+		std::wstring prompt = L"Are you sure you want to delete " + tos(n_selected) + L" messages?";
+		if (n_selected > 0 && fl_choice(tos(prompt).c_str(), NULL, "Cancel", "OK") == 2)
+		{
+			for (int i = 1; i <= browser->size(); i++)
 			{
-				if (browser->type == MessageHandler::HANDLED)
-					handled_to_erase.push_back((Message*)browser->data(i));
-				else if(browser->type == MessageHandler::UNHANDLED)
-					unhandled_to_erase.push_back((Message*)browser->data(i));
+				if (browser->selected(i))
+				{
+					to_erase.push_back((Message*)browser->data(i));
+					found_msgs_to_delete = true;
+				}
 			}
 		}
-		for (size_t i = 0; i < handled_to_erase.size(); i++)
+	}
+	if (found_msgs_to_delete)
+	{
+		for (size_t i = 0; i < to_erase.size(); i++)
 		{
-			gui->msg_handler.erase_message(handled_to_erase[i], MessageHandler::HANDLED);
-		}
-		for (size_t i = 0; i < unhandled_to_erase.size(); i++)
-		{
-			gui->msg_handler.erase_message(unhandled_to_erase[i], MessageHandler::UNHANDLED);
+			gui->msg_handler.erase_message(to_erase[i], browser->type);
 		}
 		gui->update_msg_scroll();
 	}
@@ -338,9 +346,53 @@ void compose_message_cb(Fl_Widget* wg, void* ptr)
 	}
 }
 
-MessageBrowser::MessageBrowser(Gui* gui_in, MessageHandler::MessageStorageType message_storage_type_in, int x, int y, int w, int h, const char* label)
-	: Fl_Multi_Browser(x, y, w, h, label), gui(gui_in), type(message_storage_type_in)
+void close_window_cb(Fl_Widget* wg, void* ptr)
 {
+	Fl_Window* window = (Fl_Window*)ptr;
+	if (window)
+	{
+		window->hide();
+	}
+}
+
+MessageBrowser::MessageBrowser(Gui* gui_in, MessageHandler::MessageStorageType message_storage_type_in, int x, int y, int w, int h, const char* label)
+	: Fl_Multi_Browser(x, y, w, h, label), gui(gui_in), type(message_storage_type_in), popped_msg(NULL)
+{
+}
+
+void MessageBrowser::message_popup(Message* msg)
+{
+	if (msg)
+	{
+		popped_msg = msg;
+		std::wstring msg_text = msg->get_contents();
+		
+		msg_popup = new Fl_Window(640, 480);
+		Fl_Text_Display* disp = new Fl_Text_Display(0, 0, 640, 480 - SPACING * 2 - BAR_HEIGHT);
+		Fl_Text_Buffer* buff = new Fl_Text_Buffer();
+		Fl_Button* close = new Fl_Button(SPACING, 480 - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "Close");
+		{
+			close->box(FL_BORDER_BOX);
+			close->callback(close_window_cb, (void*)msg_popup);
+		}
+		Fl_Button* reply = new Fl_Button(SPACING * 2 + BUTTON_WIDTH, 480 - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "Reply");
+		{
+			reply->box(FL_BORDER_BOX);
+			reply->callback(compose_message_cb, (void*)gui);
+		}
+		Fl_Button* del = new Fl_Button(SPACING * 3 + BUTTON_WIDTH * 2, 480 - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "Delete");
+		{
+			del->box(FL_BORDER_BOX);
+			del->callback(delete_msg_cb, (void*)this);
+		}
+		buff->text(tos(msg_text).c_str());
+		disp->buffer(buff);
+		disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
+		msg_popup->copy_label(tos(L"Message from " + msg->get_sender_name()).c_str());
+		msg_popup->resizable(*disp);
+		msg_popup->end();
+		msg_popup->show();
+	}
 }
 
 int MessageBrowser::handle(int event)
@@ -361,17 +413,7 @@ int MessageBrowser::handle(int event)
 			Message* msg = value() ? (Message*)data(value()) : NULL;
 			if (msg)
 			{
-				std::wstring msg_text = msg->get_contents();
-				Fl_Window* msg_popup = new Fl_Window(640, 480);
-				msg_popup->copy_label(tos(L"Message from " + msg->get_sender_name()).c_str());
-				Fl_Text_Buffer* buff = new Fl_Text_Buffer();
-				Fl_Text_Display* disp = new Fl_Text_Display(0, 0, 640, 480-20);
-				disp->buffer(buff);
-				disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
-				msg_popup->resizable(*disp);
-				msg_popup->show();
-				buff->text(tos(msg_text).c_str());
-				
+				message_popup(msg);
 			}
 			handled = 1;
 		}
@@ -395,11 +437,7 @@ int MessageBrowser::handle(int event)
 	}
 	else if (event == FL_SHORTCUT)
 	{
-		if (Fl::event_key() == FL_CTRL + 'a')
-		{
-			for (int i = 1; i <= size(); i++)
-				select(i);
-		}
+		
 	}
 	else if (event == FL_KEYDOWN)
 	{
@@ -408,10 +446,18 @@ int MessageBrowser::handle(int event)
 			Message* msg = value() ? (Message*)data(value()): NULL;
 			if (msg)
 			{
-				std::wstring msg_text = msg->get_contents();
-				fl_message(tos(msg_text).c_str());
+				message_popup(msg);
 			}
 			handled = 1;
+		}
+		else if (Fl::event_key() == FL_Delete)
+		{
+			delete_msg_cb(this, (void*)this);
+		}
+		else if(Fl::event_key() == 'a' && Fl::event_ctrl())
+		{
+			for (int i = 1; i <= size(); i++)
+				select(i);
 		}
 	}
 	if(!handled)

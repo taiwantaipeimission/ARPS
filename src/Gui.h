@@ -56,8 +56,12 @@ class MessageBrowser : public Fl_Multi_Browser
 {
 public:
 	Gui* gui;
+	Fl_Window* msg_popup;
+	Message* popped_msg;
 	MessageHandler::MessageStorageType type;
 	MessageBrowser(Gui* gui_in, MessageHandler::MessageStorageType message_storage_type_in, int x, int y, int w, int h, const char* label = 0);
+
+	void message_popup(Message* msg);
 	int handle(int event);
 	int num_selected();
 
