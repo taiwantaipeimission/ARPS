@@ -111,7 +111,7 @@ void MessageHandler::parse_messages(std::wstring raw_str, Gui* gui)
 	return;
 }
 
-void MessageHandler::load(File* file, MessageStorageType type)
+void MessageHandler::load(File* file, MessageStorageType type, Gui* gui)
 {
 	Document document;
 	if (file->file.good() && !document.Parse<0>(tos(file->extract_contents()).c_str()).HasParseError())
@@ -121,7 +121,7 @@ void MessageHandler::load(File* file, MessageStorageType type)
 		{
 			const Value& m = document[i];
 			Message* msg = new Message();
-			msg->read(m);
+			msg->read(m, &gui->comp_list);
 			if (msg->is_concatenated())
 			{
 				msgs_fragment[msg->get_concat_refnum()].push_back(msg);
@@ -197,18 +197,18 @@ void MessageHandler::save(FileManager* file_manager)
 	changed = false;
 }
 
-void MessageHandler::load(FileManager* file_manager)
+void MessageHandler::load(FileManager* file_manager, Gui* gui)
 {
 	file_manager->files[FILE_MESSAGES_HANDLED].open(File::FILE_TYPE_INPUT);
-	load(&file_manager->files[FILE_MESSAGES_HANDLED], HANDLED);
+	load(&file_manager->files[FILE_MESSAGES_HANDLED], HANDLED, gui);
 	file_manager->files[FILE_MESSAGES_HANDLED].close();
 
 	file_manager->files[FILE_MESSAGES_UNHANDLED].open(File::FILE_TYPE_INPUT);
-	load(&file_manager->files[FILE_MESSAGES_UNHANDLED], UNHANDLED);
+	load(&file_manager->files[FILE_MESSAGES_UNHANDLED], UNHANDLED, gui);
 	file_manager->files[FILE_MESSAGES_UNHANDLED].close();
 
 	file_manager->files[FILE_MESSAGES_OUTBOX].open(File::FILE_TYPE_INPUT);
-	load(&file_manager->files[FILE_MESSAGES_OUTBOX], OUTBOX);
+	load(&file_manager->files[FILE_MESSAGES_OUTBOX], OUTBOX, gui);
 
 	changed = false;
 }

@@ -304,9 +304,22 @@ void auto_process_button_cb(Fl_Widget* wg, void* ptr)
 		Fl::remove_timeout(&timer_cb);
 }
 
-void send_message_cb(Fl_Widget* wg, void* ptr)
+void send_message(vector<wstring> ph_nums, Gui* gui)
 {
-	
+	if (ph_nums.size() > 0)
+	{
+		wstring output = L"Sending to ";
+		for (vector<wstring>::iterator it = ph_nums.begin(); it != ph_nums.end(); ++it)
+		{
+			if (it != ph_nums.begin())
+				output += L", ";
+			output += *it;
+		}
+		const char* contents = fl_input(tos(output + L"\nEnter contents:").c_str(), "");
+		if (contents != NULL)
+			for (vector<wstring>::iterator it = ph_nums.begin(); it != ph_nums.end(); ++it)
+				gui->send_message(*it, tow(contents));
+	}
 }
 
 void compose_message_cb(Fl_Widget* wg, void* ptr)
@@ -328,21 +341,19 @@ void compose_message_cb(Fl_Widget* wg, void* ptr)
 			else
 				fl_alert((tos(*it) + " not found!").c_str());
 		}
-		
-		if (ph_nums.size() > 0)
-		{
-			wstring output = L"Sending to ";
-			for (vector<wstring>::iterator it = ph_nums.begin(); it != ph_nums.end(); ++it)
-			{
-				if (it != ph_nums.begin())
-					output += L", ";
-				output += *it;
-			}
-			const char* contents = fl_input(tos(output + L"\nEnter contents:").c_str(), "");
-			if (contents != NULL)
-				for (vector<wstring>::iterator it = ph_nums.begin(); it != ph_nums.end(); ++it)
-					gui->send_message(*it, tow(contents));
-		}
+		send_message(ph_nums, gui);
+	}
+}
+
+void reply_message_cb(Fl_Widget* wg, void* ptr)
+{
+	MessageBrowser* browser = (MessageBrowser*)ptr;
+	
+	if (browser->popped_msg && browser->popped_msg->get_sender_number() != L"")
+	{
+		vector<wstring> ph_nums;
+		ph_nums.push_back(browser->popped_msg->get_sender_number());
+		send_message(ph_nums, browser->gui);
 	}
 }
 
@@ -371,20 +382,11 @@ void MessageBrowser::message_popup(Message* msg)
 		Fl_Text_Display* disp = new Fl_Text_Display(0, 0, 640, 480 - SPACING * 2 - BAR_HEIGHT);
 		Fl_Text_Buffer* buff = new Fl_Text_Buffer();
 		Fl_Button* close = new Fl_Button(SPACING, 480 - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "Close");
-		{
-			close->box(FL_BORDER_BOX);
-			close->callback(close_window_cb, (void*)msg_popup);
-		}
+		close->callback(close_window_cb, (void*)msg_popup);
 		Fl_Button* reply = new Fl_Button(SPACING * 2 + BUTTON_WIDTH, 480 - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "Reply");
-		{
-			reply->box(FL_BORDER_BOX);
-			reply->callback(compose_message_cb, (void*)gui);
-		}
+		reply->callback(reply_message_cb, (void*)this);
 		Fl_Button* del = new Fl_Button(SPACING * 3 + BUTTON_WIDTH * 2, 480 - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "Delete");
-		{
-			del->box(FL_BORDER_BOX);
-			del->callback(delete_msg_cb, (void*)this);
-		}
+		del->callback(delete_msg_cb, (void*)this);
 		buff->text(tos(msg_text).c_str());
 		disp->buffer(buff);
 		disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
@@ -661,7 +663,7 @@ void Gui::load()
 	comp_list.load(&file_manager);
 	report_collection.init(L"../data/");
 	report_collection.load();
-	msg_handler.load(&file_manager);
+	msg_handler.load(&file_manager, this);
 }
 
 void Gui::update_report_scrolls()
@@ -738,12 +740,16 @@ void Gui::send_reminder(Area* area)
 
 void Gui::poll_msgs()
 {
-	check_message_button->deactivate();
+	if (!checking_msgs)
+	{
+		check_message_button->deactivate();
+		checking_msgs = true;
 
-	Command cmd;
-	cmd.type = Command::TYPE_CHECK_MSG;
-	cmd.sub_cmds.push_back(SubCommand(L"AT+CMGL=4\r"));
-	modem_interface->push_command(cmd);
+		Command cmd;
+		cmd.type = Command::TYPE_CHECK_MSG;
+		cmd.sub_cmds.push_back(SubCommand(L"AT+CMGL=4\r"));
+		modem_interface->push_command(cmd);
+	}
 }
 
 void Gui::send_message(std::wstring dest_ph_number, std::wstring msg_contents)
@@ -793,7 +799,10 @@ bool Gui::completed_command_cb()
 	{
 		Command cmd = modem_interface->pop_result();
 		if (cmd.type == Command::TYPE_CHECK_MSG)
+		{
 			check_message_button->activate();
+			checking_msgs = false;
+		}
 		if (cmd.type == Command::TYPE_SEND_MSG && !cmd.success_all)
 			msg_handler.add_message(cmd.msg, MessageHandler::OUTBOX);
 		for (vector<SubCommand>::iterator it = cmd.sub_cmds.begin(); it != cmd.sub_cmds.end(); ++it)

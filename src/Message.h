@@ -88,7 +88,7 @@ public:
 
 	std::vector<std::wstring> encode();
 	void decode(std::wstring raw_input, CompList* comp_list);
-	void read(const rapidjson::Value& m_val);
+	void read(const rapidjson::Value& m_val, CompList* comp_list);
 	void write(rapidjson::Document* d);
 };
 

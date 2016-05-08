@@ -318,7 +318,7 @@ void Message::decode(std::wstring input, CompList* comp_list)
 	replace_chars(contents, L"\u0011", L"_");
 }
 
-void Message::read(const Value& m)
+void Message::read(const Value& m, CompList* comp_list)
 {
 	sender_name = tow(m[JK_SENDER_NAME].GetString());
 	sender_number = tow(m[JK_SENDER_NUMBER].GetString());
@@ -331,6 +331,11 @@ void Message::read(const Value& m)
 	concat_num_msgs = m[JK_CONCAT_NUM_MSG].GetInt();
 	concat_index = m[JK_CONCAT_INDEX].GetInt();
 	replace_chars(contents, L"\u0011", L"_");
+
+	if (sender_name == sender_number && comp_list->areas.count(sender_number) > 0)
+	{
+		sender_name = comp_list->areas[sender_number].area_name;
+	}
 }
 
 void Message::write(Document* d)

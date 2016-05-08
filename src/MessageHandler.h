@@ -53,9 +53,9 @@ public:
 
 	bool is_saved();
 	void save(File* file, MessageStorageType type);
-	void load(File* file, MessageStorageType type);
+	void load(File* file, MessageStorageType type, Gui* gui);
 	void save(FileManager* file_manager);
-	void load(FileManager* file_manager);
+	void load(FileManager* file_manager, Gui* gui);
 
 	void parse_messages(std::wstring raw_str, Gui* gui);
 
