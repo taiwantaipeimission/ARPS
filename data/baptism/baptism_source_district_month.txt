@@ -56,10 +56,13 @@
 2016:4:0:0:ZHUBEI	彭康睿	1		2			
 2016:4:0:0:ZHUDONG							
 2016:4:0:0:ZHUNAN	邱靖婷		1				
-2016:5:0:0:BEITOU	周博謙					1	
-2016:5:0:0:JIAN							
+2016:5:0:0:BEITOU	周博謙		1			1	
+2016:5:0:0:JIAN	0						
 2016:5:0:0:JINGXIN	黃永岡	1					
-2016:5:0:0:TAOYUAN_1_2	0						
+2016:5:0:0:SHUANGHE	 周會琳					1	
+2016:5:0:0:SONGSHAN	 Huang Xing Ying	1					
+2016:5:0:0:TAOYUAN_1_2	0				1		
 2016:5:0:0:TAOYUAN_3	林澤綸						
 2016:5:0:0:TOUFEN_MIAOLI	賴瑋晨	1					
+2016:5:0:0:ZHONGLI	俞明霞	1			1		
 2016:5:0:0:ZHUBEI	朱嘉偉	1					

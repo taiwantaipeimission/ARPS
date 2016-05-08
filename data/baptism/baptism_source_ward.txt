@@ -95,3 +95,11 @@
 2016:5:1:7:TAOYUAN_1							
 2016:5:1:7:TAOYUAN_3	林澤綸						
 2016:5:1:7:ZHUBEI_2	朱嘉偉	1					
+2016:5:2:7:BEITOU	章雯		1				
+2016:5:2:7:GUISHAN	游振嘉				1		
+2016:5:2:7:HUALIAN_2							
+2016:5:2:7:NEIHU	 Huang Xing Ying	1					
+2016:5:2:7:TAOYUAN_3	李珺珺						
+2016:5:2:7:ZHONGHE_2	 周會琳					1	
+2016:5:2:7:ZHONGLI_1	俞明霞				1		
+2016:5:2:7:ZHONGLI_2	施孟辰	1					

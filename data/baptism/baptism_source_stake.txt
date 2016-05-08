@@ -50,3 +50,8 @@
 2016:5:1:7:NORTH	周博謙					1	
 2016:5:1:7:SOUTH	黃永岡	1					
 2016:5:1:7:TAOYUAN	0						
+2016:5:2:7:EAST	 Huang Xing Ying	1					
+2016:5:2:7:HUALIEN							
+2016:5:2:7:NORTH	章雯		1				
+2016:5:2:7:SOUTH	 周會琳					1	
+2016:5:2:7:TAOYUAN	游振嘉	1			2		
