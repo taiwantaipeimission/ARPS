@@ -80,7 +80,7 @@
 2016:5:1:7:TOUFEN_MIAOLI	賴瑋晨	1					
 2016:5:1:7:ZHUBEI	朱嘉偉	1					
 2016:5:2:7:BEITOU	章雯		1				
-2016:5:2:7:JIAN							
+2016:5:2:7:JIAN	Beberley Recometa 	1					
 2016:5:2:7:SHUANGHE	 周會琳					1	
 2016:5:2:7:SONGSHAN	 Huang Xing Ying	1					
 2016:5:2:7:TAOYUAN_1_2	游振嘉				1		

@@ -1,0 +1,87 @@
+[
+	{
+        "SENDER_NAME": "TOUR_S",
+        "SENDER_NUMBER": ""
+		"CONTENTS": "TYPE:REFERRAL\nPLACE:LUODONG\nNAME:張楷\nNUMBER:0975953360\nINFO:25yrs old",
+        "DATA_CODING": 8
+		"SENT_DATE": "",
+        "MSG_LEN": 78,
+        "CONCAT": false,
+        "C_REFNUM": 0,
+        "C_NUM_MSG": 0,
+        "C_INDEX": 0
+    },
+	{
+        "SENDER_NAME": "TOUR_S",
+        "SENDER_NUMBER": ""
+		"CONTENTS": "TYPE:REFERRAL\nPLACE:WANHUA\nNAME:王忠一\nNUMBER:0982296671\nINFO:成員回條。44嵗.西門町成都路11號，曾是基督徒，軍訓教官",
+        "DATA_CODING": 8
+		"SENT_DATE": "",
+        "MSG_LEN": 78,
+        "CONCAT": false,
+        "C_REFNUM": 0,
+        "C_NUM_MSG": 0,
+        "C_INDEX": 0
+    },
+	{
+        "SENDER_NAME": "TOUR_S",
+        "CONTENTS": "TYPE:REFERRAL\nPLACE:LUODONG\nNAME:洪富龍\nNUMBER:0906965591\nINFO:55嵗",
+        "DATA_CODING": 8
+		"SENT_DATE": "",
+        "MSG_LEN": 78,
+        "CONCAT": false,
+        "C_REFNUM": 0,
+        "C_NUM_MSG": 0,
+        "C_INDEX": 0
+    },
+	{
+        "SENDER_NAME": "TOUR_S",
+        "SENDER_NUMBER": ""
+		"CONTENTS": "TYPE:REFERRAL\nPLACE:YILAN\nNAME:高陳秀娥\nNUMBER:03-9515592\nINFO:成員回條。28年次，70多嵗，女",
+        "DATA_CODING": 8
+		"SENT_DATE": "",
+        "DATA_CODING": 8,
+        "MSG_LEN": 78,
+        "CONCAT": false,
+        "C_REFNUM": 0,
+        "C_NUM_MSG": 0,
+        "C_INDEX": 0
+    },
+	{
+        "SENDER_NAME": "TOUR_S",
+        "SENDER_NUMBER": ""
+		"CONTENTS": "TYPE:REFERRAL\nPLACE:YILAN\nNAME:李珮芳\nNUMBER:0988028233\nINFO:The number is a member, 蔡儀璇, who the referral belongs to. Ask her for the referral's contact info.",
+        "DATA_CODING": 8
+		"SENT_DATE": "",
+        "DATA_CODING": 8,
+        "MSG_LEN": 78,
+        "CONCAT": false,
+        "C_REFNUM": 0,
+        "C_NUM_MSG": 0,
+        "C_INDEX": 0
+    },
+	{
+        "SENDER_NAME": "TOUR_S",
+        "SENDER_NUMBER": ""
+		"CONTENTS": "TYPE:REFERRAL\nPLACE:YILAN\nNAME:張崨丞\nNUMBER:0953283228\nINFO:34嵗，男。成員回條：張森賢，0918685656。",
+		"SENT_DATE": "",
+        "DATA_CODING": 8,
+        "MSG_LEN": 78,
+        "CONCAT": false,
+        "C_REFNUM": 0,
+        "C_NUM_MSG": 0,
+        "C_INDEX": 0
+    },
+	{
+        "SENDER_NAME": "TOUR_S",
+        "SENDER_NUMBER": ""
+		"CONTENTS": "TYPE:REFERRAL\nPLACE:WANHUA\nNAME:王忠一\nNUMBER:0982296671\nINFO:西門町成都路11號，曾是基督徒，軍訓教官",
+        "SENT_DATE": "",
+        "DATA_CODING": 8,
+        "MSG_LEN": 78,
+        "CONCAT": false,
+        "C_REFNUM": 0,
+        "C_NUM_MSG": 0,
+        "C_INDEX": 0
+    },
+]

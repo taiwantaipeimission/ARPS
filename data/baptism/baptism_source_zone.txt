@@ -60,7 +60,7 @@
 2016:5:1:7:XINZHU	朱嘉偉	1					
 2016:5:1:7:ZHUNAN	賴瑋晨	1					
 2016:5:2:7:EAST	 Huang Xing Ying	1					
-2016:5:2:7:HUALIAN							
+2016:5:2:7:HUALIAN	Beberley Recometa 	1					
 2016:5:2:7:NORTH	章雯		1				
 2016:5:2:7:SOUTH	 周會琳					1	
 2016:5:2:7:TAOYUAN	游振嘉	1			2		
