@@ -34,6 +34,7 @@ enum ReportType
 enum ReportOrder
 {
 	COMP,					//Data by companionship
+	COMP_MONTH,
 	DISTRICT,				//Data by district
 	DISTRICT_MONTH,			//Data by district (monthly totals)
 	ZONE,					//Data by zone

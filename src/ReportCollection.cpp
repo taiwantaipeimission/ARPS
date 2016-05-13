@@ -47,6 +47,7 @@ void ReportCollection::init(std::wstring global_prefix_in)
 	prefix[TYPE_REFERRAL] = L"referrals/referrals";
 
 	midfix[COMP] = L"";
+	midfix[COMP_MONTH] = L"_month";
 	midfix[DISTRICT] = L"_district";
 	midfix[DISTRICT_MONTH] = L"_district_month";
 	midfix[ZONE] = L"_zone";
@@ -112,13 +113,18 @@ Report ReportCollection::transform_report(Report rep, ReportType type, ReportOrd
 {
 	if (from == COMP)
 	{
-		if (to == DISTRICT)
+		if (to == COMP_MONTH)
+		{
+			rep.date_week = 0;
+			rep.date_wday = 0;
+		}
+		else if (to == DISTRICT)
 		{	if (comp_list->by_area_name.count(rep.sender_name) > 0)
 				rep.sender_name = comp_list->by_area_name[rep.sender_name][0].district_name;
 			else
 				rep.sender_name = L"UNKNOWN";
 		}
-		if (to == ZONE)
+		else if (to == ZONE)
 		{
 			if (comp_list->by_area_name.count(rep.sender_name) > 0)
 				rep.sender_name = type == TYPE_ENGLISH ? comp_list->by_area_name[rep.sender_name][0].english_unit_name : comp_list->by_area_name[rep.sender_name][0].zone_name;
@@ -267,6 +273,8 @@ void ReportCollection::total_type(ReportType type, CompList* comp_list, std::wst
 
 	if (count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), COMP) > 0)
 	{
+		if (count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), COMP_MONTH > 0))
+			total_reports(type, COMP, COMP_MONTH, comp_list, date);
 		if (count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), DISTRICT) > 0)
 			total_reports(type, COMP, DISTRICT, comp_list, date);
 		if (count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), ZONE) > 0)
