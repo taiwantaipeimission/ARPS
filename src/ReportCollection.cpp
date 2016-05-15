@@ -65,9 +65,9 @@ void ReportCollection::init(std::wstring global_prefix_in)
 	for (int i = 0; i < NUM_TYPES; i++)
 	{
 		ReportType type = (ReportType)i;
-		for (int j = 0; j < REPORTS_TO_STORE[type].size(); j++)
+		for (int j = 0; j < g_reports_to_store[type].size(); j++)
 		{
-			ReportOrder order = REPORTS_TO_STORE[type][j];
+			ReportOrder order = g_reports_to_store[type][j];
 			reports[type][order].set_report_type(type);
 			reports[type][order].set_report_order(order);
 			report_files[type][order].filepath = global_prefix + prefix[type] + midfix[order] + suffix;
@@ -223,7 +223,7 @@ void ReportCollection::create_baptism_source_reports(std::wstring report_date)
 	for (map<wstring, Report>::iterator it = report_map->begin(); it != report_map->end(); ++it)
 	{
 		Report bap_source = it->second;
-		bap_source.report_values[it->second.report_values[REP_KEY_BAP_SOURCE]] = L"1";
+		bap_source.report_values[it->second.report_values[g_rep_key_bap_source]] = L"1";
 		if (can_add_report(TYPE_BAPTISM_SOURCE, COMP, report_date, bap_source))
 		{
 			reports[TYPE_BAPTISM_SOURCE][COMP].insert_report(bap_source);
@@ -234,7 +234,7 @@ void ReportCollection::create_baptism_source_reports(std::wstring report_date)
 void ReportCollection::total_reports(ReportType type, ReportOrder from, ReportOrder to, CompList* comp_list, std::wstring date)
 {
 	//If we maintain a report sheet for this type and both orders to and from
-	if (count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), from) > 0 && count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), to) > 0)
+	if (count(g_reports_to_store[type].begin(), g_reports_to_store[type].end(), from) > 0 && count(g_reports_to_store[type].begin(), g_reports_to_store[type].end(), to) > 0)
 	{
 		std::map<std::wstring, Report> reports_to_add;
 		
@@ -271,44 +271,44 @@ void ReportCollection::total_type(ReportType type, CompList* comp_list, std::wst
 	if(type == TYPE_BAPTISM_SOURCE)
 		create_baptism_source_reports(date);
 
-	if (count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), COMP) > 0)
+	if (count(g_reports_to_store[type].begin(), g_reports_to_store[type].end(), COMP) > 0)
 	{
-		if (count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), COMP_MONTH > 0))
+		if (count(g_reports_to_store[type].begin(), g_reports_to_store[type].end(), COMP_MONTH > 0))
 			total_reports(type, COMP, COMP_MONTH, comp_list, date);
-		if (count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), DISTRICT) > 0)
+		if (count(g_reports_to_store[type].begin(), g_reports_to_store[type].end(), DISTRICT) > 0)
 			total_reports(type, COMP, DISTRICT, comp_list, date);
-		if (count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), ZONE) > 0)
+		if (count(g_reports_to_store[type].begin(), g_reports_to_store[type].end(), ZONE) > 0)
 			total_reports(type, COMP, ZONE, comp_list, date);
-		if (count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), WARD) > 0)
+		if (count(g_reports_to_store[type].begin(), g_reports_to_store[type].end(), WARD) > 0)
 			total_reports(type, COMP, WARD, comp_list, date);
-		if (count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), STAKE) > 0)
+		if (count(g_reports_to_store[type].begin(), g_reports_to_store[type].end(), STAKE) > 0)
 			total_reports(type, COMP, STAKE, comp_list, date);
 	}
-	if (count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), DISTRICT) > 0)
+	if (count(g_reports_to_store[type].begin(), g_reports_to_store[type].end(), DISTRICT) > 0)
 	{
-		if (count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), DISTRICT_MONTH) > 0)
+		if (count(g_reports_to_store[type].begin(), g_reports_to_store[type].end(), DISTRICT_MONTH) > 0)
 			total_reports(type, DISTRICT, DISTRICT_MONTH, comp_list, date);
 	}
-	if (count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), ZONE) > 0)
+	if (count(g_reports_to_store[type].begin(), g_reports_to_store[type].end(), ZONE) > 0)
 	{
-		if (count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), ZONE_MONTH) > 0)
+		if (count(g_reports_to_store[type].begin(), g_reports_to_store[type].end(), ZONE_MONTH) > 0)
 			total_reports(type, ZONE, ZONE_MONTH, comp_list, date);
-		if (count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), MISSION) > 0)
+		if (count(g_reports_to_store[type].begin(), g_reports_to_store[type].end(), MISSION) > 0)
 			total_reports(type, ZONE, MISSION, comp_list, date);
 	}
-	if (count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), WARD) > 0)
+	if (count(g_reports_to_store[type].begin(), g_reports_to_store[type].end(), WARD) > 0)
 	{
-		if (count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), WARD_MONTH) > 0)
+		if (count(g_reports_to_store[type].begin(), g_reports_to_store[type].end(), WARD_MONTH) > 0)
 			total_reports(type, WARD, WARD_MONTH, comp_list, date);
 	}
-	if (count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), STAKE) > 0)
+	if (count(g_reports_to_store[type].begin(), g_reports_to_store[type].end(), STAKE) > 0)
 	{
-		if (count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), STAKE_MONTH) > 0)
+		if (count(g_reports_to_store[type].begin(), g_reports_to_store[type].end(), STAKE_MONTH) > 0)
 			total_reports(type, STAKE, STAKE_MONTH, comp_list, date);
 	}
-	if (count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), MISSION) > 0)
+	if (count(g_reports_to_store[type].begin(), g_reports_to_store[type].end(), MISSION) > 0)
 	{
-		if (count(REPORTS_TO_STORE[type].begin(), REPORTS_TO_STORE[type].end(), MISSION_MONTH) > 0)
+		if (count(g_reports_to_store[type].begin(), g_reports_to_store[type].end(), MISSION_MONTH) > 0)
 			total_reports(type, MISSION, MISSION_MONTH, comp_list, date);
 	}
 }
@@ -320,9 +320,9 @@ bool ReportCollection::load()
 	for (int i = 0; i < NUM_TYPES; i++)
 	{
 		ReportType type = (ReportType)i;
-		for (int j = 0; j < REPORTS_TO_STORE[type].size(); j++)
+		for (int j = 0; j < g_reports_to_store[type].size(); j++)
 		{
-			ReportOrder order = REPORTS_TO_STORE[type][j];
+			ReportOrder order = g_reports_to_store[type][j];
 			if (report_files[type][order].open(File::FILE_TYPE_INPUT))
 			{
 				reports[type][order].load(report_files[type][order].file);
@@ -339,9 +339,9 @@ bool ReportCollection::is_saved()
 	for (int i = 0; i < NUM_TYPES && saved; i++)
 	{
 		ReportType type = (ReportType)i;
-		for (int j = 0; j < REPORTS_TO_STORE[type].size() && saved; j++)
+		for (int j = 0; j < g_reports_to_store[type].size() && saved; j++)
 		{
-			ReportOrder order = REPORTS_TO_STORE[type][j];
+			ReportOrder order = g_reports_to_store[type][j];
 			if (reports[type][order].is_loaded() && reports[type][order].is_changed())
 				saved = false;
 		}
@@ -354,9 +354,9 @@ bool ReportCollection::save()
 	for (int i = 0; i < NUM_TYPES; i++)
 	{
 		ReportType type = (ReportType)i;
-		for (int j = 0; j < REPORTS_TO_STORE[type].size(); j++)
+		for (int j = 0; j < g_reports_to_store[type].size(); j++)
 		{
-			ReportOrder order = REPORTS_TO_STORE[type][j];
+			ReportOrder order = g_reports_to_store[type][j];
 			if (reports[type][order].is_loaded() && reports[type][order].is_changed() && report_files[type][order].open(File::FILE_TYPE_OUTPUT))
 			{
 				reports[type][order].print(report_files[type][order].file);

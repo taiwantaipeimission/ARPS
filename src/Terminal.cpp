@@ -74,7 +74,7 @@ bool Terminal::update(double millis)
 
 		if (ms_until_timeout > 0)
 		{
-			ms_until_timeout = NO_RESPONSE_TIMEOUT_MS;
+			ms_until_timeout = g_no_response_timeout_ms;
 		}
 
 		ReadFile(modem.file, &modem_ch, 1, &read, NULL);
@@ -127,7 +127,7 @@ wstring Terminal::run_command_str(wstring command)
 			std::wstring str = L"";
 			str += narrowed[i];
 			written = 0;
-			for (int i = 0; i < MAX_NUM_TRIES && written == 0; i++)
+			for (int i = 0; i < g_max_num_tries && written == 0; i++)
 				WriteFile(modem.file, tos(str).c_str(), 1, &written, NULL);
 		}
 

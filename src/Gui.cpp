@@ -123,7 +123,7 @@ void user_terminal_cb(Fl_Widget* wg, void* ptr)
 	std::getline(std::wcin, cmd);
 	while (cmd != L"q")
 	{
-		replace_chars(cmd, L"$", COMMAND_ESCAPE_CHAR);
+		replace_chars(cmd, L"$", g_command_escape_char);
 		replace_chars(cmd, L"~", L"\u001B");
 		gui->modem_interface->push_command(cmd + L"\r");
 		std::getline(std::wcin, cmd);
@@ -291,7 +291,7 @@ void timer_cb(void* ptr)
 {
 	Gui* gui = (Gui*)ptr;
 	gui->poll_msgs();
-	Fl::repeat_timeout(AUTO_CHECK_S, &timer_cb, ptr);
+	Fl::repeat_timeout(g_auto_check_s, &timer_cb, ptr);
 }
 
 void auto_process_button_cb(Fl_Widget* wg, void* ptr)
@@ -299,7 +299,7 @@ void auto_process_button_cb(Fl_Widget* wg, void* ptr)
 	Gui* gui = (Gui*)ptr;
 	gui->auto_check = !gui->auto_check;
 	if (gui->auto_check)
-		Fl::add_timeout(AUTO_CHECK_S, &timer_cb, ptr);
+		Fl::add_timeout(g_auto_check_s, &timer_cb, ptr);
 	else
 		Fl::remove_timeout(&timer_cb);
 }
@@ -379,13 +379,13 @@ void MessageBrowser::message_popup(Message* msg)
 		std::wstring msg_text = msg->get_contents();
 		
 		msg_popup = new Fl_Window(640, 480);
-		Fl_Text_Display* disp = new Fl_Text_Display(0, 0, 640, 480 - SPACING * 2 - BAR_HEIGHT);
+		Fl_Text_Display* disp = new Fl_Text_Display(0, 0, 640, 480 - g_spacing * 2 - g_button_height);
 		Fl_Text_Buffer* buff = new Fl_Text_Buffer();
-		Fl_Button* close = new Fl_Button(SPACING, 480 - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "Close");
+		Fl_Button* close = new Fl_Button(g_spacing, 480 - g_button_height - g_spacing, g_button_width, g_button_height, "Close");
 		close->callback(close_window_cb, (void*)msg_popup);
-		Fl_Button* reply = new Fl_Button(SPACING * 2 + BUTTON_WIDTH, 480 - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "Reply");
+		Fl_Button* reply = new Fl_Button(g_spacing * 2 + g_button_width, 480 - g_button_height - g_spacing, g_button_width, g_button_height, "Reply");
 		reply->callback(reply_message_cb, (void*)this);
-		Fl_Button* del = new Fl_Button(SPACING * 3 + BUTTON_WIDTH * 2, 480 - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "Delete");
+		Fl_Button* del = new Fl_Button(g_spacing * 3 + g_button_width * 2, 480 - g_button_height - g_spacing, g_button_width, g_button_height, "Delete");
 		del->callback(delete_msg_cb, (void*)this);
 		buff->text(tos(msg_text).c_str());
 		disp->buffer(buff);
@@ -498,13 +498,13 @@ void Gui::init(ModemInterface* mod_int_in)
 	modem_interface = mod_int_in;
 	file_manager.files[FILE_OUTPUT].append = true;
 	file_manager.files[FILE_OUTPUT].open(File::FILE_TYPE_OUTPUT);
-	Fl::add_timeout(AUTO_CHECK_S, &timer_cb, this);
+	Fl::add_timeout(g_auto_check_s, &timer_cb, this);
 
 	Fl_PNG_Image* image = new Fl_PNG_Image("../res/logo.png");
-	window = new Fl_Window(WINDOW_WIDTH, WINDOW_HEIGHT, "ARPS");
+	window = new Fl_Window(g_window_width, g_window_height, "ARPS");
 	window->default_icon(image);
 	window->callback(window_cb, this);
-	Fl_Menu_Bar* menu = new Fl_Menu_Bar(0, 0, WINDOW_WIDTH, BAR_HEIGHT);
+	Fl_Menu_Bar* menu = new Fl_Menu_Bar(0, 0, g_window_width, g_button_height);
 	{
 		menu->add("File/Save", FL_CTRL + 's', save_cb, this);
 		menu->add("File/Quit", FL_CTRL + 'q', quit_cb, this);
@@ -517,77 +517,77 @@ void Gui::init(ModemInterface* mod_int_in)
 		menu->add("Tools/Configure modem", NULL, configure_modem_cb, this);
 		menu->add("About/About ARPS", NULL, about_cb, this);
 	}
-	Fl_Tabs* tabs = new Fl_Tabs(0, BAR_HEIGHT + SPACING, WINDOW_WIDTH, WINDOW_HEIGHT - BAR_HEIGHT - SPACING);
+	Fl_Tabs* tabs = new Fl_Tabs(0, g_button_height + g_spacing, g_window_width, g_window_height - g_button_height - g_spacing);
 	{
-		Fl_Group* inbox_tab = new Fl_Group(0, 2 * BAR_HEIGHT + SPACING, WINDOW_WIDTH, WINDOW_HEIGHT, "Messages");
+		Fl_Group* inbox_tab = new Fl_Group(0, 2 * g_button_height + g_spacing, g_window_width, g_window_height, "Messages");
 		{
-			unhandled = new MessageBrowser(this, MessageHandler::UNHANDLED, SPACING, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
+			unhandled = new MessageBrowser(this, MessageHandler::UNHANDLED, g_spacing, 2 * g_button_height + 2 * g_spacing, g_window_width / 2 - 2 * g_spacing, g_window_height - 3 * g_button_height - 4 * g_spacing);
 			{
 				unhandled->box(FL_BORDER_BOX);
 				unhandled->end();
 			}
-			handled = new MessageBrowser(this, MessageHandler::HANDLED, SPACING * 2 + WINDOW_WIDTH / 2, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
+			handled = new MessageBrowser(this, MessageHandler::HANDLED, g_spacing * 2 + g_window_width / 2, 2 * g_button_height + 2 * g_spacing, g_window_width / 2 - 2 * g_spacing, g_window_height - 3 * g_button_height - 4 * g_spacing);
 			{
 				handled->box(FL_BORDER_BOX);
 				handled->end();
 			}
-			check_message_button = new Fl_Button(SPACING, WINDOW_HEIGHT - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "Check msgs");
+			check_message_button = new Fl_Button(g_spacing, g_window_height - g_button_height - g_spacing, g_button_width, g_button_height, "Check msgs");
 			{
 				check_message_button->user_data((void*)this);
 				check_message_button->callback(poll_msg_cb);
 			}
-			Fl_Button* process_msg_button = new Fl_Button(BUTTON_WIDTH + 2 * SPACING, WINDOW_HEIGHT - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "Process");
+			Fl_Button* process_msg_button = new Fl_Button(g_button_width + 2 * g_spacing, g_window_height - g_button_height - g_spacing, g_button_width, g_button_height, "Process");
 			{
 				process_msg_button->user_data((void*)this);
 				process_msg_button->callback(process_msg_cb);
 			}
-			Fl_Button* unprocess_msg_button = new Fl_Button(2 * BUTTON_WIDTH + 3 * SPACING, WINDOW_HEIGHT - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "Un-process");
+			Fl_Button* unprocess_msg_button = new Fl_Button(2 * g_button_width + 3 * g_spacing, g_window_height - g_button_height - g_spacing, g_button_width, g_button_height, "Un-process");
 			{
 				unprocess_msg_button->user_data((void*)this);
 				unprocess_msg_button->callback(unprocess_msg_cb);
 			}
-			Fl_Button* user_terminal_button = new Fl_Button(3 * BUTTON_WIDTH + 4 * SPACING, WINDOW_HEIGHT - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "Terminal");
+			Fl_Button* user_terminal_button = new Fl_Button(3 * g_button_width + 4 * g_spacing, g_window_height - g_button_height - g_spacing, g_button_width, g_button_height, "Terminal");
 			{
 				user_terminal_button->user_data((void*)this);
 				user_terminal_button->callback(user_terminal_cb);
 			}
 		}
 		inbox_tab->end();
-		Fl_Group* outbox_tab = new Fl_Group(0, 2 * BAR_HEIGHT + SPACING, WINDOW_WIDTH, WINDOW_HEIGHT, "Outbox");
+		Fl_Group* outbox_tab = new Fl_Group(0, 2 * g_button_height + g_spacing, g_window_width, g_window_height, "Outbox");
 		{
-			outbox = new MessageBrowser(this, MessageHandler::OUTBOX, SPACING, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
+			outbox = new MessageBrowser(this, MessageHandler::OUTBOX, g_spacing, 2 * g_button_height + 2 * g_spacing, g_window_width / 2 - 2 * g_spacing, g_window_height - 3 * g_button_height - 4 * g_spacing);
 			{
 				outbox->box(FL_BORDER_BOX);
 				outbox->end();
 			}
 		}
 		outbox_tab->end();
-		Fl_Group* report_tab = new Fl_Group(0, 2 * BAR_HEIGHT + SPACING, WINDOW_WIDTH, WINDOW_HEIGHT, "Reports");
+		Fl_Group* report_tab = new Fl_Group(0, 2 * g_button_height + g_spacing, g_window_width, g_window_height, "Reports");
 		{
-			unreceived_reports = new Fl_Multi_Browser(SPACING, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
+			unreceived_reports = new Fl_Multi_Browser(g_spacing, 2 * g_button_height + 2 * g_spacing, g_window_width / 2 - 2 * g_spacing, g_window_height - 3 * g_button_height - 4 * g_spacing);
 			unreceived_reports->box(FL_BORDER_BOX);
 			unreceived_reports->end();
-			received_reports = new Fl_Multi_Browser(SPACING * 2 + WINDOW_WIDTH / 2, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
+			received_reports = new Fl_Multi_Browser(g_spacing * 2 + g_window_width / 2, 2 * g_button_height + 2 * g_spacing, g_window_width / 2 - 2 * g_spacing, g_window_height - 3 * g_button_height - 4 * g_spacing);
 			received_reports->box(FL_BORDER_BOX);
 			received_reports->end();
 
-			Fl_Button* reminder_button = new Fl_Button(SPACING, WINDOW_HEIGHT - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "Remind 'em");
+			Fl_Button* reminder_button = new Fl_Button(g_spacing, g_window_height - g_button_height - g_spacing, g_button_width, g_button_height, "Remind 'em");
 			{
 				reminder_button->user_data((void*)this);
 				reminder_button->callback(send_reminder_cb);
 			}
 		}
 		report_tab->end();
-		Fl_Group* english_tab = new Fl_Group(0, 2 * BAR_HEIGHT + SPACING, WINDOW_WIDTH, WINDOW_HEIGHT, "English");
+		Fl_Group* english_tab = new Fl_Group(0, 2 * g_button_height + g_spacing, g_window_width, g_window_height, "English");
 		{
-			unreceived_english = new Fl_Multi_Browser(SPACING, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
+			unreceived_english = new Fl_Multi_Browser(g_spacing, 2 * g_button_height + 2 * g_spacing, g_window_width / 2 - 2 * g_spacing, g_window_height - 3 * g_button_height - 4 * g_spacing);
 			unreceived_english->box(FL_BORDER_BOX);
 			unreceived_english->end();
-			received_english = new Fl_Multi_Browser(SPACING * 2 + WINDOW_WIDTH / 2, 2 * BAR_HEIGHT + 2 * SPACING, WINDOW_WIDTH / 2 - 2 * SPACING, WINDOW_HEIGHT - 3 * BAR_HEIGHT - 4 * SPACING);
+			received_english = new Fl_Multi_Browser(g_spacing * 2 + g_window_width / 2, 2 * g_button_height + 2 * g_spacing, g_window_width / 2 - 2 * g_spacing, g_window_height - 3 * g_button_height - 4 * g_spacing);
 			received_english->box(FL_BORDER_BOX);
 			received_english->end();
 
-			Fl_Button* reminder_button = new Fl_Button(SPACING, WINDOW_HEIGHT - BAR_HEIGHT - SPACING, BUTTON_WIDTH, BAR_HEIGHT, "Remind 'em");
+			Fl_Button* reminder_button = new Fl_Button(g_spacing, g_window_height - g_button_height - g_spacing, g_button_width, g_button_height, "Remind 'em");
 			{
 				reminder_button->user_data((void*)this);
 				reminder_button->callback(send_english_reminder_cb);
@@ -677,7 +677,7 @@ void Gui::update_report_scrolls()
 	map<wstring, Report>* english = report_collection.reports[TYPE_ENGLISH][COMP].get_reports();
 	for (std::map<std::wstring, Area>::iterator it = comp_list.areas.begin(); it != comp_list.areas.end(); ++it, i++)
 	{
-		std::wstring id_str = report_date + ID_STR_SEPARATOR + it->second.area_name;
+		std::wstring id_str = report_date + g_id_str_separator + it->second.area_name;
 		if (reports->count(id_str) > 0)
 		{
 			received_reports->add(tos(it->second.area_name).c_str(), (void*)&it->second);
@@ -687,7 +687,7 @@ void Gui::update_report_scrolls()
 			unreceived_reports->add(tos(it->second.area_name).c_str(), (void*)&it->second);
 		}
 
-		id_str = english_date + ID_STR_SEPARATOR + L"0" + ID_STR_SEPARATOR + it->second.area_name;
+		id_str = english_date + g_id_str_separator + L"0" + g_id_str_separator + it->second.area_name;
 		if (english->count(id_str) > 0)
 		{
 			received_english->add(tos(it->second.area_name).c_str(), (void*)&it->second);
@@ -713,19 +713,19 @@ void Gui::update_msg_scroll()
 	vector<Message*>* outbox_msg_vector = msg_handler.get_messages(MessageHandler::OUTBOX);
 	for (vector<Message*>::iterator it = unhandled_msg_vector->begin(); it != unhandled_msg_vector->end(); ++it)
 	{
-		std::wstring display_txt = get_browser_display_txt((*it)->get_sender_name() + DISPLAY_TEXT_SEPARATOR + (*it)->get_contents());
+		std::wstring display_txt = get_browser_display_txt((*it)->get_sender_name() + g_display_text_separator + (*it)->get_contents());
 		unhandled->add(tos(display_txt).c_str(), *it);
 	}
 
 	for (vector<Message*>::iterator it = handled_msg_vector->begin(); it != handled_msg_vector->end(); ++it)
 	{
-		std::wstring display_txt = get_browser_display_txt((*it)->get_sender_name() + DISPLAY_TEXT_SEPARATOR + (*it)->get_contents());
+		std::wstring display_txt = get_browser_display_txt((*it)->get_sender_name() + g_display_text_separator + (*it)->get_contents());
 		handled->add(tos(display_txt).c_str(), *it);
 	}
 
 	for (vector<Message*>::iterator it = outbox_msg_vector->begin(); it != outbox_msg_vector->end(); ++it)
 	{
-		std::wstring display_txt = get_browser_display_txt((*it)->get_sender_name() + DISPLAY_TEXT_SEPARATOR + (*it)->get_contents());
+		std::wstring display_txt = get_browser_display_txt((*it)->get_sender_name() + g_display_text_separator + (*it)->get_contents());
 		outbox->add(tos(display_txt).c_str(), *it);
 	}
 	unhandled->redraw();
@@ -771,7 +771,7 @@ void Gui::send_message(std::wstring dest_ph_number, std::wstring msg_contents)
 		cmd_ss.str(L"");
 		cmd_ss.clear();
 		cmd_ss << strings[i];
-		cmd_ss << COMMAND_ESCAPE_CHAR;
+		cmd_ss << g_command_escape_char;
 		cmd.sub_cmds.push_back(SubCommand(cmd_ss.str()));
 
 		cmd.n_times_to_try = 3;
@@ -827,8 +827,8 @@ void Gui::process_msg(Message* msg)
 {
 	if (msg && !msg->is_concatenated())
 	{
-		wstring msg_type = get_msg_key_val(msg->get_contents(), TYPE_KEY, ':', '\n');
-		if (msg_type == TYPE_REPORT_STR)
+		wstring msg_type = get_msg_key_val(msg->get_contents(), g_type_key, ':', '\n');
+		if (msg_type == g_type_report_str)
 		{
 			ReportSheet* sheet = &report_collection.reports[TYPE_REGULAR][COMP];
 			Report report;
@@ -838,8 +838,10 @@ void Gui::process_msg(Message* msg)
 			int baptisms = _wtoi(report.report_values[REP_KEY_BAP].c_str());
 			if (baptisms > 0)
 			{
-				send_message(msg->get_sender_number(), baptism_response_msg);
-				send_message(msg->get_sender_number(), baptism_report_template);
+				if(baptism_response_msg != L"")
+					send_message(msg->get_sender_number(), baptism_response_msg);
+				if(baptism_report_template != L"")
+					send_message(msg->get_sender_number(), baptism_report_template);
 
 				for (int i = 0; i < baptisms; i++)
 				{
@@ -851,21 +853,21 @@ void Gui::process_msg(Message* msg)
 				}
 			}
 		}
-		else if (msg_type == TYPE_ENGLISH_STR)
+		else if (msg_type == g_type_english_str)
 		{
 			ReportSheet* sheet = &report_collection.reports[TYPE_ENGLISH][COMP];
 			Report report;
 			report.read_message(msg, sheet->get_sheet_fields(), english_date);
 			sheet->insert_report(report);
 		}
-		else if (msg_type == TYPE_BAPTISM_STR)
+		else if (msg_type == g_type_baptism_str)
 		{
 			ReportSheet* sheet = &report_collection.reports[TYPE_BAPTISM_RECORD][COMP];
 			Report report;
 			report.read_message(msg, sheet->get_sheet_fields(), report_date);
 			sheet->insert_report(report);
 		}
-		else if (msg_type == TYPE_REFERRAL_STR)
+		else if (msg_type == g_type_referral_str)
 		{
 			ReportSheet* sheet = &report_collection.reports[TYPE_REFERRAL][COMP];
 			Referral referral;

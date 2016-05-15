@@ -34,7 +34,7 @@ public:
 	ModemData();
 	virtual ~ModemData();
 
-	void push_command(std::wstring cmd, std::wstring terminator = COMMAND_NEWLINE_CHAR);
+	void push_command(std::wstring cmd, std::wstring terminator = g_command_newline_char);
 	std::wstring pop_command_str();
 	size_t get_command_stream_size();
 	void clear_command_stream();

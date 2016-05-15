@@ -182,33 +182,34 @@ bool MessageHandler::is_saved()
 
 void MessageHandler::save(FileManager* file_manager)
 {
-	file_manager->files[FILE_MESSAGES_HANDLED].open(File::FILE_TYPE_OUTPUT);
-	save(&file_manager->files[FILE_MESSAGES_HANDLED], HANDLED);
-	file_manager->files[FILE_MESSAGES_HANDLED].close();
+	file_manager->files[g_file_messages_handled].open(File::FILE_TYPE_OUTPUT);
+	save(&file_manager->files[g_file_messages_handled], HANDLED);
+	file_manager->files[g_file_messages_handled].close();
 
-	file_manager->files[FILE_MESSAGES_UNHANDLED].open(File::FILE_TYPE_OUTPUT);
-	save(&file_manager->files[FILE_MESSAGES_UNHANDLED], UNHANDLED);
-	file_manager->files[FILE_MESSAGES_UNHANDLED].close();
+	file_manager->files[g_file_messages_unhandled].open(File::FILE_TYPE_OUTPUT);
+	save(&file_manager->files[g_file_messages_unhandled], UNHANDLED);
+	file_manager->files[g_file_messages_unhandled].close();
 
-	file_manager->files[FILE_MESSAGES_OUTBOX].open(File::FILE_TYPE_OUTPUT);
-	save(&file_manager->files[FILE_MESSAGES_OUTBOX], OUTBOX);
-	file_manager->files[FILE_MESSAGES_OUTBOX].close();
+	file_manager->files[g_file_messages_outbox].open(File::FILE_TYPE_OUTPUT);
+	save(&file_manager->files[g_file_messages_outbox], OUTBOX);
+	file_manager->files[g_file_messages_outbox].close();
 
 	changed = false;
 }
 
 void MessageHandler::load(FileManager* file_manager, Gui* gui)
 {
-	file_manager->files[FILE_MESSAGES_HANDLED].open(File::FILE_TYPE_INPUT);
-	load(&file_manager->files[FILE_MESSAGES_HANDLED], HANDLED, gui);
-	file_manager->files[FILE_MESSAGES_HANDLED].close();
+	file_manager->files[g_file_messages_handled].open(File::FILE_TYPE_INPUT);
+	load(&file_manager->files[g_file_messages_handled], HANDLED, gui);
+	file_manager->files[g_file_messages_handled].close();
 
-	file_manager->files[FILE_MESSAGES_UNHANDLED].open(File::FILE_TYPE_INPUT);
-	load(&file_manager->files[FILE_MESSAGES_UNHANDLED], UNHANDLED, gui);
-	file_manager->files[FILE_MESSAGES_UNHANDLED].close();
+	file_manager->files[g_file_messages_unhandled].open(File::FILE_TYPE_INPUT);
+	load(&file_manager->files[g_file_messages_unhandled], UNHANDLED, gui);
+	file_manager->files[g_file_messages_unhandled].close();
 
-	file_manager->files[FILE_MESSAGES_OUTBOX].open(File::FILE_TYPE_INPUT);
-	load(&file_manager->files[FILE_MESSAGES_OUTBOX], OUTBOX, gui);
+	file_manager->files[g_file_messages_outbox].open(File::FILE_TYPE_INPUT);
+	load(&file_manager->files[g_file_messages_outbox], OUTBOX, gui);
+	file_manager->files[g_file_messages_outbox].close();
 
 	changed = false;
 }

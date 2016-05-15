@@ -21,6 +21,8 @@
 #include <map>
 #include <vector>
 
+using namespace std;
+
 enum ReportType
 {
 	TYPE_REGULAR,
@@ -49,93 +51,87 @@ enum ReportOrder
 	NUM_DATA_ORDERS
 };
 
-using namespace std;
-
 //Version
-#define VERSION L"1.0"
-
-//Filepaths
-
-#define PATHS_FILEPATH L"paths.txt"
+extern wstring g_version;
 
 //Baptism source key strings
-#define REP_KEY_BAP L"BAP"
-#define REP_KEY_BAP_SOURCE L"BAP_SOURCE"
-#define REP_KEY_BAP_MISS_FIND L"BAP_MISS_FIND"
-#define REP_KEY_BAP_LA_REF L"BAP_LA_REF"
-#define REP_KEY_BAP_RC_REF L"BAP_RC_REF"
-#define REP_KEY_BAP_MEM_REF L"BAP_MEM_REF"
-#define REP_KEY_BAP_ENGLISH L"BAP_ENGLISH"
-#define REP_KEY_BAP_TOUR L"BAP_TOUR"
+extern wstring g_rep_key_bap;
+extern wstring g_rep_key_bap_source;
 
 //Orders to total
-extern map<ReportType, vector<ReportOrder>> REPORTS_TO_STORE;
+extern map<ReportType, vector<ReportOrder>> g_reports_to_store;
 
 //Phone numbers
-#define INT_PH_NUM_PREFIX L"+886"
+extern wstring g_int_ph_num_prefix;
+
+extern std::wstring stray_msg_handler;
+extern std::wstring baptism_response_msg;
+extern std::wstring baptism_report_template;
+
+extern int report_wday;
+extern int english_wday;
 
 //File paths
-#define PATH_PATH_FILE L"paths.txt"
+extern wstring g_path_file;
 
 //File ID strings (to match in paths file)
-#define FILE_OUTPUT L"OUTPUT"
-#define FILE_CONFIG L"CONFIG"
-#define FILE_PH_LIST L"PH_LIST"
-#define FILE_MESSAGES_HANDLED L"MESSAGES_HANDLED"
-#define FILE_MESSAGES_UNHANDLED L"MESSAGES_UNHANDLED"
-#define FILE_MESSAGES_OUTBOX L"MESSAGES_OUTBOX"
-#define FILE_REFERRALS L"REFERRALS"
+extern wstring g_file_output;
+extern wstring g_file_config;
+extern wstring g_file_ph_list;
+extern wstring g_file_messages_handled;
+extern wstring g_file_messages_unhandled;
+extern wstring g_file_messages_outbox;
+extern wstring g_file_referrals;
 
 //Config fields (to match in config file)
-#define CONFIG_FIELD_REPORT_WDAY L"REPORT_WDAY"
-#define CONFIG_FIELD_ENGLISH_WDAY L"ENGLISH_WDAY"
-#define CONFIG_FIELD_STRAY_MSG_HANDLER L"STRAY_MSG_HANDLER"
-#define CONFIG_FIELD_BAPTISM_RESPONSE L"BAPTISM_RESPONSE"
-#define CONFIG_FIELD_BAPTISM_REPORT L"BAPTISM_REPORT"
+extern wstring g_config_field_report_wday;
+extern wstring g_config_field_english_wday;
+extern wstring g_config_field_stray_msg_handler;
+extern wstring g_config_field_baptism_response;
+extern wstring g_config_field_baptism_report;
 
 //String constants
-#define PH_NUMBER_HEAD L"+"
-#define DISPLAY_TEXT_SEPARATOR L":"
-#define ID_STR_SEPARATOR L":"
-#define COMMAND_NEWLINE_CHAR L"\r"
-#define COMMAND_ESCAPE_CHAR L"\u001A"		//The CTRL-Z character used at the end of PDU payload data
+extern wstring g_ph_number_head;
+extern wstring g_display_text_separator;
+extern wstring g_id_str_separator;
+extern wstring g_command_newline_char;
+extern wstring g_command_escape_char;
 
 //Timeout values
-#define NO_RESPONSE_TIMEOUT_MS 5000
-#define MSG_NO_RESPONSE_TIMEOUT_MS 60000
-#define AUTO_CHECK_S 300.0f
+extern double g_no_response_timeout_ms;
+extern double g_msg_no_response_timeout_ms;
+extern double g_auto_check_s;
 
 //Message constants
-#define TYPE_KEY L"TYPE"
-#define KEY_END_CHAR L"\n"
-#define TYPE_REPORT_STR L"REPORT"
-#define TYPE_ENGLISH_STR L"ENGLISH"
-#define TYPE_BAPTISM_STR L"BAPTISM"
-#define TYPE_REFERRAL_STR L"REFERRAL"
-#define MAX_MSG_LEN 134 	//140 characters of message (for 8-bit encoding); take away 6 bits for possible UDH data
+extern wstring g_type_key;
+extern wstring g_key_end_char;
+extern wstring g_type_report_str;
+extern wstring g_type_english_str;
+extern wstring g_type_baptism_str;
+extern wstring g_type_referral_str;
+extern int g_max_msg_len;
 
 //JSON keys
-#define JK_SENDER_NAME "SENDER_NAME"
-#define JK_SENDER_NUMBER "SENDER_NUMBER"
-#define JK_CONTENTS "CONTENTS"
-#define JK_SENT_DATE "SENT_DATE"
-#define JK_DATA_CODING "DATA_CODING"
-#define JK_MSG_LEN "MSG_LEN"
-#define JK_CONCAT "CONCAT"
-#define JK_CONCAT_REFNUM "C_REFNUM"
-#define JK_CONCAT_NUM_MSG "C_NUM_MSG"
-#define JK_CONCAT_INDEX "C_INDEX"
+extern string g_jk_sender_name;
+extern string g_jk_sender_number;
+extern string g_jk_contents;
+extern string g_jk_sent_date;
+extern string g_jk_data_coding;
+extern string g_jk_msg_len;
+extern string g_jk_concat;
+extern string g_jk_concat_refnum;
+extern string g_jk_concat_num_msg;
+extern string g_jk_concat_index;
 
 //Serial constants
-#define MAX_NUM_TRIES 64		//Try this many times to get a character across the serial cable before quitting
+extern int g_max_num_tries;
 
 //Graphics options
-#define WINDOW_WIDTH 800
-#define WINDOW_HEIGHT 600
-#define BAR_HEIGHT 25
-#define BUTTON_WIDTH 100
-#define CHECKBOX_WIDTH 25
-#define SPACING 5
+extern int g_window_width;
+extern int g_window_height;
+extern int g_button_height;
+extern int g_button_width;
+extern int g_spacing;
 
 //Console colors
 enum

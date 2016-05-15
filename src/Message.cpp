@@ -80,7 +80,7 @@ std::wstring encode_phone_number(std::wstring ph_num_str)
 
 std::wstring extract_phone_number(std::wstringstream& ss, int ph_num_length)
 {
-	std::wstring number = PH_NUMBER_HEAD;
+	std::wstring number = g_ph_number_head;
 	int ph_num_octets = (ph_num_length + 1) / 2;
 
 	{
@@ -148,14 +148,14 @@ std::vector<std::wstring> Message::encode()
 	std::wstring dest_number_encoded = encode_phone_number(dest_number);
 	int num_length = dest_number_encoded.length();
 
-	int num_concat_msgs = (contents.length() * 2) / MAX_MSG_LEN + 1;
+	int num_concat_msgs = (contents.length() * 2) / g_max_msg_len + 1;
 	std::wstring remaining_contents(contents);
 	std::vector<std::wstring> strings;
 
 	int msg_id = rand() % 256;
 	for (int i = 0; i < num_concat_msgs; i++)
 	{
-		int this_msg_length = (std::min)(remaining_contents.length(), (size_t)(MAX_MSG_LEN / 2));
+		int this_msg_length = (std::min)(remaining_contents.length(), (size_t)(g_max_msg_len / 2));
 		int all_msg_data_length = this_msg_length * 2 + (num_concat_msgs > 1 ? 6 : 0);
 		std::wstring msg_chars = remaining_contents.substr((size_t)0, (size_t)this_msg_length);
 		remaining_contents = remaining_contents.substr(this_msg_length, remaining_contents.length() - this_msg_length);
@@ -320,16 +320,16 @@ void Message::decode(std::wstring input, CompList* comp_list)
 
 void Message::read(const Value& m, CompList* comp_list)
 {
-	sender_name = tow(m[JK_SENDER_NAME].GetString());
-	sender_number = tow(m[JK_SENDER_NUMBER].GetString());
-	contents = tow(m[JK_CONTENTS].GetString());
-	sent_date = tow(m[JK_SENT_DATE].GetString());
-	data_coding = m[JK_DATA_CODING].GetInt();
-	msg_length = m[JK_MSG_LEN].GetInt();
-	concatenated = m[JK_CONCAT].GetBool();
-	concat_refnum = m[JK_CONCAT_REFNUM].GetInt();
-	concat_num_msgs = m[JK_CONCAT_NUM_MSG].GetInt();
-	concat_index = m[JK_CONCAT_INDEX].GetInt();
+	sender_name = tow(m[g_jk_sender_name.c_str()].GetString());
+	sender_number = tow(m[g_jk_sender_number.c_str()].GetString());
+	contents = tow(m[g_jk_contents.c_str()].GetString());
+	sent_date = tow(m[g_jk_sent_date.c_str()].GetString());
+	data_coding = m[g_jk_data_coding.c_str()].GetInt();
+	msg_length = m[g_jk_msg_len.c_str()].GetInt();
+	concatenated = m[g_jk_concat.c_str()].GetBool();
+	concat_refnum = m[g_jk_concat_refnum.c_str()].GetInt();
+	concat_num_msgs = m[g_jk_concat_num_msg.c_str()].GetInt();
+	concat_index = m[g_jk_concat_index.c_str()].GetInt();
 	replace_chars(contents, L"\u0011", L"_");
 
 	if (sender_name == sender_number && comp_list->areas.count(sender_number) > 0)
@@ -344,16 +344,16 @@ void Message::write(Document* d)
 		v.SetObject();
 		Document::AllocatorType& a = d->GetAllocator();
 		
-		v.AddMember(JK_SENDER_NAME, Value(tos(sender_name).c_str(), a), a);
-		v.AddMember(JK_SENDER_NUMBER, Value(tos(sender_number).c_str(), a), a);
-		v.AddMember(JK_CONTENTS, Value(tos(contents).c_str(), a), a);
-		v.AddMember(JK_SENT_DATE, Value(tos(sent_date).c_str(), a), a);
-		v.AddMember(JK_DATA_CODING, data_coding, a);
-		v.AddMember(JK_MSG_LEN, msg_length, a);
-		v.AddMember(JK_CONCAT, concatenated, a);
-		v.AddMember(JK_CONCAT_REFNUM, concat_refnum, a);
-		v.AddMember(JK_CONCAT_NUM_MSG, concat_num_msgs, a);
-		v.AddMember(JK_CONCAT_INDEX, concat_index, a);
+		v.AddMember("SENDER_NAME", Value(tos(sender_name).c_str(), a), a);
+		v.AddMember(g_jk_sender_number.c_str(), Value(tos(sender_number).c_str(), a), a);
+		v.AddMember(g_jk_contents.c_str(), Value(tos(contents).c_str(), a), a);
+		v.AddMember(g_jk_sent_date.c_str(), Value(tos(sent_date).c_str(), a), a);
+		v.AddMember(g_jk_data_coding.c_str(), data_coding, a);
+		v.AddMember(g_jk_msg_len, msg_length, a);
+		v.AddMember(g_jk_concat, concatenated, a);
+		v.AddMember(g_jk_concat_refnum, concat_refnum, a);
+		v.AddMember(g_jk_concat_num_msg, concat_num_msgs, a);
+		v.AddMember(g_jk_concat_index, concat_index, a);
 
 		d->PushBack(v, a);
 }

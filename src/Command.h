@@ -27,10 +27,10 @@ class SubCommand
 {
 public:
 	SubCommand(wstring cmd_str)
-		: cmd(cmd_str), result(L""), ran(false), success(false), timeout_ms(NO_RESPONSE_TIMEOUT_MS)
+		: cmd(cmd_str), result(L""), ran(false), success(false), timeout_ms(g_no_response_timeout_ms)
 	{
-		if (cmd.find(COMMAND_ESCAPE_CHAR) != wstring::npos)
-			timeout_ms = MSG_NO_RESPONSE_TIMEOUT_MS;
+		if (cmd.find(g_command_escape_char) != wstring::npos)
+			timeout_ms = g_msg_no_response_timeout_ms;
 	}
 	SubCommand()
 		: SubCommand(L"")

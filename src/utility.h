@@ -145,9 +145,9 @@ static const inline int positive_modulo(int i, int n) {
 static const std::wstring get_date_str(tm time_struct)
 {
 	return tos(1900 + time_struct.tm_year)
-		+ ID_STR_SEPARATOR + tos(time_struct.tm_mon + 1)
-		+ ID_STR_SEPARATOR + tos((time_struct.tm_mday + 7) / 7)
-		+ ID_STR_SEPARATOR + tos(time_struct.tm_wday == 0 ? 7 : time_struct.tm_wday);
+		+ g_id_str_separator + tos(time_struct.tm_mon + 1)
+		+ g_id_str_separator + tos((time_struct.tm_mday + 7) / 7)
+		+ g_id_str_separator + tos(time_struct.tm_wday == 0 ? 7 : time_struct.tm_wday);
 }
 
 static const std::wstring get_cur_date_str()
