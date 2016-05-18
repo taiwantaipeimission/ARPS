@@ -65,7 +65,7 @@ void ReportCollection::init(std::wstring global_prefix_in)
 	for (int i = 0; i < NUM_TYPES; i++)
 	{
 		ReportType type = (ReportType)i;
-		for (int j = 0; j < g_reports_to_store[type].size(); j++)
+		for (size_t j = 0; j < g_reports_to_store[type].size(); j++)
 		{
 			ReportOrder order = g_reports_to_store[type][j];
 			reports[type][order].set_report_type(type);
@@ -146,7 +146,13 @@ Report ReportCollection::transform_report(Report rep, ReportType type, ReportOrd
 				rep.sender_name = L"UNKNOWN";
 		}
 		else if (to == MISSION)
+		{
 			rep.sender_name = L"MISSION";
+		}
+		if (to != COMP_MONTH)
+		{
+			rep.report_values.insert(pair<wstring, wstring>(g_rep_key_num_reports, L"1"));
+		}
 	}
 	else if (from == DISTRICT)
 	{
@@ -212,7 +218,7 @@ bool ReportCollection::can_add_report(ReportType type, ReportOrder order, wstrin
 	map<wstring, Report>* destination_report_map = reports[type][order].get_reports();
 	int date_month = _wtoi(tokenize(date, L':')[1].c_str());
 
-	return ((report.sender_name != L"UNKNOWN" && destination_report_map->count(report.get_id_str(reports[type][order].uses_sub_ids())) <= 0)						//Conditions for writing/overwriting a new report: no existing report
+	return ((report.sender_name != L"UNKNOWN" && destination_report_map->count(report.get_id_str(reports[type][order].uses_sub_ids())) <= 0)					//Conditions for writing/overwriting a new report: no existing report
 		|| report.get_date() == date														//Still receiving reports for today and updating sums
 		|| (report.date_month == date_month && report.date_wday == 0));				//We're adding a monthly report for the current month
 }
@@ -273,7 +279,7 @@ void ReportCollection::total_type(ReportType type, CompList* comp_list, std::wst
 
 	if (count(g_reports_to_store[type].begin(), g_reports_to_store[type].end(), COMP) > 0)
 	{
-		if (count(g_reports_to_store[type].begin(), g_reports_to_store[type].end(), COMP_MONTH > 0))
+		if (count(g_reports_to_store[type].begin(), g_reports_to_store[type].end(), COMP_MONTH) > 0)
 			total_reports(type, COMP, COMP_MONTH, comp_list, date);
 		if (count(g_reports_to_store[type].begin(), g_reports_to_store[type].end(), DISTRICT) > 0)
 			total_reports(type, COMP, DISTRICT, comp_list, date);
@@ -320,7 +326,7 @@ bool ReportCollection::load()
 	for (int i = 0; i < NUM_TYPES; i++)
 	{
 		ReportType type = (ReportType)i;
-		for (int j = 0; j < g_reports_to_store[type].size(); j++)
+		for (size_t j = 0; j < g_reports_to_store[type].size(); j++)
 		{
 			ReportOrder order = g_reports_to_store[type][j];
 			if (report_files[type][order].open(File::FILE_TYPE_INPUT))
@@ -339,7 +345,7 @@ bool ReportCollection::is_saved()
 	for (int i = 0; i < NUM_TYPES && saved; i++)
 	{
 		ReportType type = (ReportType)i;
-		for (int j = 0; j < g_reports_to_store[type].size() && saved; j++)
+		for (size_t j = 0; j < g_reports_to_store[type].size() && saved; j++)
 		{
 			ReportOrder order = g_reports_to_store[type][j];
 			if (reports[type][order].is_loaded() && reports[type][order].is_changed())
@@ -354,7 +360,7 @@ bool ReportCollection::save()
 	for (int i = 0; i < NUM_TYPES; i++)
 	{
 		ReportType type = (ReportType)i;
-		for (int j = 0; j < g_reports_to_store[type].size(); j++)
+		for (size_t j = 0; j < g_reports_to_store[type].size(); j++)
 		{
 			ReportOrder order = g_reports_to_store[type][j];
 			if (reports[type][order].is_loaded() && reports[type][order].is_changed() && report_files[type][order].open(File::FILE_TYPE_OUTPUT))

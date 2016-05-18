@@ -24,6 +24,7 @@ wstring g_version = L"1.0";
 //Baptism source key strings
 wstring g_rep_key_bap = L"BAP";
 wstring g_rep_key_bap_source = L"BAP_SOURCE";
+wstring g_rep_key_num_reports = L"N_REPORTS";
 
 //Orders to total
 map<ReportType, vector<ReportOrder>> g_reports_to_store {

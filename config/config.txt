@@ -4,6 +4,6 @@
 	"STRAY_MSG_HANDLER":"+886972576566",
 	"BAPTISM_RESPONSE":"Congratulations on your baptism[s]! Please send in one copy of this template per baptism.",
 	"BAPTISM_REPORT":"TYPE:BAPTISM\nCONV_NAME:\nBAP_SOURCE:\n1=Missionary contacting\n2=LA referral\n3=RC referral\n4=Active member referral\n5=English class\n6=Temple tour",
-	"REMINDER_MSG":"Please remember to send in your key indicators!"
+	"REMINDER_MSG":"Please remember to send in your key indicators!",
 	"ENGLISH_REMINDER_MSG":"Please remember to send in your English indicators!"
 }

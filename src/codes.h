@@ -60,6 +60,7 @@ extern wstring g_version;
 //Baptism source key strings
 extern wstring g_rep_key_bap;
 extern wstring g_rep_key_bap_source;
+extern wstring g_rep_key_num_reports;
 
 //Orders to total
 extern map<ReportType, vector<ReportOrder>> g_reports_to_store;

@@ -42,7 +42,7 @@ public:
 	wstring result;
 	bool ran;
 	bool success;
-	int timeout_ms;
+	double timeout_ms;
 };
 
 class Command
