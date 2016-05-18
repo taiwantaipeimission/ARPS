@@ -80,15 +80,20 @@
 2016:4:0:0:ZHUDONG_E							
 2016:4:0:0:ZHUNAN_S							
 2016:5:0:0:BEITOU_E	章雯		1				
+2016:5:0:0:BEITOU_S	李季軒	1					
 2016:5:0:0:DANSHUI_A_E	周博謙					1	
-2016:5:0:0:GUISHAN_E					1		
+2016:5:0:0:GUISHAN_E		0	0	0	1	0	0
 2016:5:0:0:HUALIAN_1_S							
 2016:5:0:0:HUALIAN_2_E	Beberley Recometa 	1					
 2016:5:0:0:JINGXIN_ZL	黃永岡	1	0	0	0	0	0
 2016:5:0:0:MIAOLI_E	賴瑋晨	1					
 2016:5:0:0:NEIHU_S	 Huang Xing Ying	1					
+2016:5:0:0:TAIDONG_2_ZL							
 2016:5:0:0:TAO_1_A							
-2016:5:0:0:TAO_3_E	林澤綸						
+2016:5:0:0:TAO_3_E	林澤綸	0	0	0	0	0	0
+2016:5:0:0:XINZHU_1_E							
+2016:5:0:0:XINZHU_3_S							
+2016:5:0:0:ZHONGHE_2_E	楊浩玄				1		
 2016:5:0:0:ZHONGHE_2_S	 周會琳					1	
 2016:5:0:0:ZHONGLI_1_E	俞明霞				1		
 2016:5:0:0:ZHONGLI_2_E	施孟辰	1					
