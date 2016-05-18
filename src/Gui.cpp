@@ -146,7 +146,7 @@ void send_reminder_cb(Fl_Widget* wg, void* ptr)
 	for (int i = 1; i <= gui->unreceived_reports->size(); i++)
 	{
 		if(gui->unreceived_reports->selected(i))
-			gui->send_reminder((Area*)gui->unreceived_reports->data(i));
+			gui->send_reminder((Area*)gui->unreceived_reports->data(i), false);
 	}
 }
 
@@ -156,7 +156,7 @@ void send_english_reminder_cb(Fl_Widget* wg, void*ptr)
 	for (int i = 1; i <= gui->unreceived_english->size(); i++)
 	{
 		if(gui->unreceived_english->selected(i))
-			gui->send_reminder((Area*)gui->unreceived_english->data(i));
+			gui->send_reminder((Area*)gui->unreceived_english->data(i), true);
 	}
 }
 
@@ -276,7 +276,7 @@ void select_all_cb(Fl_Widget* wg, void* ptr)
 
 void about_cb(Fl_Widget* wg, void* ptr)
 {
-	fl_message(tos((wstring)L"Automatic Reporting System v." + VERSION +
+	fl_message(tos((wstring)L"Automatic Reporting System v." + g_version +
 		L"\nCopyright 2016 David B. Elliott\nelliott.david.ballantyne@@gmail.com"
 		L"\nTaiwan Taipei Mission"
 		L"\nMade and distributed under the GNU General Public License V3").c_str());
@@ -496,8 +496,8 @@ void Gui::init(ModemInterface* mod_int_in)
 	checking_msgs = false;
 	auto_check = true;
 	modem_interface = mod_int_in;
-	file_manager.files[FILE_OUTPUT].append = true;
-	file_manager.files[FILE_OUTPUT].open(File::FILE_TYPE_OUTPUT);
+	file_manager.files[g_file_output].append = true;
+	file_manager.files[g_file_output].open(File::FILE_TYPE_OUTPUT);
 	Fl::add_timeout(g_auto_check_s, &timer_cb, this);
 
 	Fl_PNG_Image* image = new Fl_PNG_Image("../res/logo.png");
@@ -636,17 +636,12 @@ void Gui::save()
 
 void Gui::load()
 {
-	file_manager.load(PATH_PATH_FILE);
+	file_manager.load(g_path_file);
 
 	File* config_file = &file_manager.files[L"CONFIG"];
 	if (config_file && config_file->open(File::FILE_TYPE_INPUT) && !config.Parse<0>(tos(config_file->extract_contents()).c_str()).HasParseError())
 	{
-		report_wday = config[tos(CONFIG_FIELD_REPORT_WDAY).c_str()].GetInt();
-		english_wday = config[tos(CONFIG_FIELD_ENGLISH_WDAY).c_str()].GetInt();
-		stray_msg_handler = tow(config[tos(CONFIG_FIELD_STRAY_MSG_HANDLER).c_str()].GetString());
-		baptism_response_msg = tow(config[tos(CONFIG_FIELD_BAPTISM_RESPONSE).c_str()].GetString());
-		baptism_report_template = tow(config[tos(CONFIG_FIELD_BAPTISM_REPORT).c_str()].GetString());
-
+		load_config(&config);
 		config_file->close();
 	}
 	else
@@ -733,9 +728,12 @@ void Gui::update_msg_scroll()
 	outbox->redraw();
 }
 
-void Gui::send_reminder(Area* area)
+void Gui::send_reminder(Area* area, bool english)
 {
-	send_message(area->ph_number, L"Please remember to send in your key indicators.");
+	if (english)
+		send_message(area->ph_number, g_english_reminder_msg);
+	else
+		send_message(area->ph_number, g_reminder_msg);
 }
 
 void Gui::poll_msgs()
@@ -754,29 +752,32 @@ void Gui::poll_msgs()
 
 void Gui::send_message(std::wstring dest_ph_number, std::wstring msg_contents)
 {
-	Message msg;
-	msg.set_contents(msg_contents);
-	msg.set_dest_number(dest_ph_number);
-	std::vector<std::wstring> strings = msg.encode();
-	
-	for (size_t i = 0; i < strings.size(); i++)
+	if (msg_contents != L"")
 	{
-		Command cmd;
-		std::wstringstream cmd_ss;
-		cmd_ss << L"AT+CMGS=";
-		cmd_ss << std::dec << (int)(strings[i].length() / 2 - 1);
-		cmd_ss << L"\r";
-		cmd.sub_cmds.push_back(SubCommand(cmd_ss.str()));
+		Message msg;
+		msg.set_contents(msg_contents);
+		msg.set_dest_number(dest_ph_number);
+		std::vector<std::wstring> strings = msg.encode();
 
-		cmd_ss.str(L"");
-		cmd_ss.clear();
-		cmd_ss << strings[i];
-		cmd_ss << g_command_escape_char;
-		cmd.sub_cmds.push_back(SubCommand(cmd_ss.str()));
+		for (size_t i = 0; i < strings.size(); i++)
+		{
+			Command cmd;
+			std::wstringstream cmd_ss;
+			cmd_ss << L"AT+CMGS=";
+			cmd_ss << std::dec << (int)(strings[i].length() / 2 - 1);
+			cmd_ss << L"\r";
+			cmd.sub_cmds.push_back(SubCommand(cmd_ss.str()));
 
-		cmd.n_times_to_try = 3;
+			cmd_ss.str(L"");
+			cmd_ss.clear();
+			cmd_ss << strings[i];
+			cmd_ss << g_command_escape_char;
+			cmd.sub_cmds.push_back(SubCommand(cmd_ss.str()));
 
-		modem_interface->push_command(cmd);
+			cmd.n_times_to_try = 3;
+
+			modem_interface->push_command(cmd);
+		}
 	}
 }
 
@@ -835,13 +836,13 @@ void Gui::process_msg(Message* msg)
 			report.read_message(msg, sheet->get_sheet_fields(), report_date);
 			sheet->insert_report(report);
 
-			int baptisms = _wtoi(report.report_values[REP_KEY_BAP].c_str());
+			int baptisms = _wtoi(report.report_values[g_rep_key_bap].c_str());
 			if (baptisms > 0)
 			{
-				if(baptism_response_msg != L"")
-					send_message(msg->get_sender_number(), baptism_response_msg);
-				if(baptism_report_template != L"")
-					send_message(msg->get_sender_number(), baptism_report_template);
+				if(g_baptism_response_msg != L"")
+					send_message(msg->get_sender_number(), g_baptism_response_msg);
+				if(g_baptism_report_template != L"")
+					send_message(msg->get_sender_number(), g_baptism_report_template);
 
 				for (int i = 0; i < baptisms; i++)
 				{
@@ -874,7 +875,7 @@ void Gui::process_msg(Message* msg)
 			referral.read_message(msg, sheet->get_sheet_fields(), current_date);
 			referral.locate(&comp_list);
 			if (!referral.found_dest())
-				referral.report_values[L"DEST_NUMBER"] = stray_msg_handler;	//Send it to the recorder!
+				referral.report_values[L"DEST_NUMBER"] = g_stray_msg_handler;	//Send it to the recorder!
 			send_message(referral.report_values[L"DEST_NUMBER"], msg->get_contents());
 			sheet->insert_report(referral);
 		}
@@ -897,7 +898,7 @@ void Gui::process_msg(Message* msg)
 				}
 			}
 			if(!found)
-				send_message(stray_msg_handler, msg->get_contents());	//Send it to the recorder!
+				send_message(g_stray_msg_handler, msg->get_contents());	//Send it to the recorder!
 		}
 	}
 	msg_handler.move_message(msg, MessageHandler::UNHANDLED, MessageHandler::HANDLED);

@@ -17,6 +17,9 @@
 
 #pragma once
 
+#include <rapidjson/document.h>
+#include <rapidjson/rapidjson.h>
+
 #include <string>
 #include <map>
 #include <vector>
@@ -64,9 +67,11 @@ extern map<ReportType, vector<ReportOrder>> g_reports_to_store;
 //Phone numbers
 extern wstring g_int_ph_num_prefix;
 
-extern std::wstring stray_msg_handler;
-extern std::wstring baptism_response_msg;
-extern std::wstring baptism_report_template;
+extern std::wstring g_stray_msg_handler;
+extern std::wstring g_baptism_response_msg;
+extern std::wstring g_baptism_report_template;
+extern std::wstring g_reminder_msg;
+extern std::wstring g_english_reminder_msg;
 
 extern int report_wday;
 extern int english_wday;
@@ -89,6 +94,8 @@ extern wstring g_config_field_english_wday;
 extern wstring g_config_field_stray_msg_handler;
 extern wstring g_config_field_baptism_response;
 extern wstring g_config_field_baptism_report;
+extern wstring g_config_field_reminder_msg;
+extern wstring g_config_field_english_reminder_msg;
 
 //String constants
 extern wstring g_ph_number_head;
@@ -153,3 +160,5 @@ enum
 	CC_YELLOW = 14,
 	CC_WHITE = 15
 };
+
+void load_config(rapidjson::Document* config);

@@ -344,16 +344,16 @@ void Message::write(Document* d)
 		v.SetObject();
 		Document::AllocatorType& a = d->GetAllocator();
 		
-		v.AddMember("SENDER_NAME", Value(tos(sender_name).c_str(), a), a);
-		v.AddMember(g_jk_sender_number.c_str(), Value(tos(sender_number).c_str(), a), a);
-		v.AddMember(g_jk_contents.c_str(), Value(tos(contents).c_str(), a), a);
-		v.AddMember(g_jk_sent_date.c_str(), Value(tos(sent_date).c_str(), a), a);
-		v.AddMember(g_jk_data_coding.c_str(), data_coding, a);
-		v.AddMember(g_jk_msg_len, msg_length, a);
-		v.AddMember(g_jk_concat, concatenated, a);
-		v.AddMember(g_jk_concat_refnum, concat_refnum, a);
-		v.AddMember(g_jk_concat_num_msg, concat_num_msgs, a);
-		v.AddMember(g_jk_concat_index, concat_index, a);
+		v.AddMember(Value(g_jk_sender_name.c_str(), a), Value(tos(sender_name).c_str(), a), a);
+		v.AddMember(Value(g_jk_sender_number.c_str(), a), Value(tos(sender_number).c_str(), a), a);
+		v.AddMember(Value(g_jk_contents.c_str(), a), Value(tos(contents).c_str(), a), a);
+		v.AddMember(Value(g_jk_sent_date.c_str(), a), Value(tos(sent_date).c_str(), a), a);
+		v.AddMember(Value(g_jk_data_coding.c_str(), a), data_coding, a);
+		v.AddMember(Value(g_jk_msg_len.c_str(), a), msg_length, a);
+		v.AddMember(Value(g_jk_concat.c_str(), a), concatenated, a);
+		v.AddMember(Value(g_jk_concat_refnum.c_str(), a), concat_refnum, a);
+		v.AddMember(Value(g_jk_concat_num_msg.c_str(), a), concat_num_msgs, a);
+		v.AddMember(Value(g_jk_concat_index.c_str(), a), concat_index, a);
 
 		d->PushBack(v, a);
 }

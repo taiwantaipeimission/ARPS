@@ -107,7 +107,7 @@ public:
 	void load();
 	
 	void send_message(std::wstring ph_num, std::wstring contents);
-	void send_reminder(Area* area);
+	void send_reminder(Area* area, bool english);
 
 	void delete_message_from_sim(int msg_cmg_id);
 

@@ -47,14 +47,14 @@ CompList::~CompList()
 
 void CompList::load(FileManager* file_manager)
 {
-	file_manager->files[FILE_PH_LIST].open(File::FILE_TYPE_INPUT);
+	file_manager->files[g_file_ph_list].open(File::FILE_TYPE_INPUT);
 	std::wstring line = L"";
-	std::getline(file_manager->files[FILE_PH_LIST].file, line);
+	std::getline(file_manager->files[g_file_ph_list].file, line);
 	std::vector<std::wstring> header = tokenize(line, '\t');
 
-	while (file_manager->files[FILE_PH_LIST].file.good())
+	while (file_manager->files[g_file_ph_list].file.good())
 	{
-		std::getline(file_manager->files[FILE_PH_LIST].file, line);
+		std::getline(file_manager->files[g_file_ph_list].file, line);
 		std::vector<std::wstring> results = tokenize(line, '\t');
 		std::vector<std::wstring>::iterator results_i = results.begin();
 		std::vector<std::wstring>::iterator header_i = header.begin();
@@ -65,7 +65,7 @@ void CompList::load(FileManager* file_manager)
 			if (*header_i == ph_number_header)
 			{
 				if (results_i->length() > 0)
-					area_to_add.ph_number = INT_PH_NUM_PREFIX + results_i->substr(1, results_i->length() - 1);
+					area_to_add.ph_number = g_int_ph_num_prefix + results_i->substr(1, results_i->length() - 1);
 				else
 					area_to_add.ph_number = L"";
 			}
@@ -118,7 +118,7 @@ void CompList::load(FileManager* file_manager)
 			add_area(area_to_add);
 		}
 	}
-	file_manager->files[FILE_PH_LIST].close();
+	file_manager->files[g_file_ph_list].close();
 }
 
 void CompList::add_area(Area area)
