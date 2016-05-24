@@ -118,3 +118,33 @@
 2016:5:3:7:0:XINZHU_3_S							
 2016:5:3:7:0:ZHONGHE_2_E	楊浩玄				1		
 2016:5:3:7:1:BEITOU_S							
+2016:5:4:7:0:BEITOU_E	吳緗尹	1					
+2016:5:4:7:0:BEITOU_S	陳炯瑋					1	
+2016:5:4:7:0:HUALIAN_1_S	Chen Yi Ming 	1					
+2016:5:4:7:0:HUALIAN_3_E	邱耘萱		1				
+2016:5:4:7:0:JINGXIN_S	陳亭君					1	
+2016:5:4:7:0:JINHUA_ZL	黃彥凱		1				
+2016:5:4:7:0:LUODONG_B_E	陳嘉仁	1					
+2016:5:4:7:0:LUZHOU_B_E							
+2016:5:4:7:0:MUZHA_E	高坤盛	1					
+2016:5:4:7:0:NEIHU_E	簡陳正					1	
+2016:5:4:7:0:SANXIA_B_E							
+2016:5:4:7:0:SONGSHAN_ZL	李佳鈺				1		
+2016:5:4:7:0:TAIDONG_1_E	郭雅文	1					
+2016:5:4:7:0:TAIDONG_3_E	張淑貞	1					
+2016:5:4:7:0:WANDA_E	杜陳婷					1	
+2016:5:4:7:0:XINAN_S	 Lai Yi Gao						
+2016:5:4:7:0:XINBAN_E	曾穎之				1		
+2016:5:4:7:0:XIZHI_B_E	游偉豪				1		
+2016:5:4:7:0:ZHUDONG_E							
+2016:5:4:7:0:ZHUNAN_S							
+2016:5:4:7:0:ZHUNAN_ZL							
+2016:5:4:7:1:JINHUA_ZL	舒苡瑄	1					
+2016:5:4:7:1:LUZHOU_B_E							
+2016:5:4:7:1:NEIHU_E	陳雅研				1		
+2016:5:4:7:1:XINAN_S	 Chen Jian Jun						
+2016:5:4:7:1:ZHUNAN_S							
+2016:5:4:7:1:ZHUNAN_ZL							
+2016:5:4:7:2:NEIHU_E	陳瑋哲				1		
+2016:5:4:7:2:ZHUNAN_S							
+2016:5:4:7:2:ZHUNAN_ZL							

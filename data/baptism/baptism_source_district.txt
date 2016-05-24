@@ -90,3 +90,18 @@
 2016:5:3:7:SHUANGHE	楊浩玄				1		
 2016:5:3:7:TAIDONG_2							
 2016:5:3:7:XINZHU	0						
+2016:5:4:7:BANQIAO	曾穎之				1		
+2016:5:4:7:BEITOU	吳緗尹	1				1	
+2016:5:4:7:HUALIAN	邱耘萱		1				
+2016:5:4:7:JIAN	Chen Yi Ming 	1					
+2016:5:4:7:JINGXIN	陳亭君	1				1	
+2016:5:4:7:JINHUA	黃彥凱	1	1				
+2016:5:4:7:SANCHONG	0						
+2016:5:4:7:SONGSHAN	簡陳正				3	1	
+2016:5:4:7:TAIDONG_1_3	郭雅文	2					
+2016:5:4:7:TUCHENG							
+2016:5:4:7:XINAN	杜陳婷					1	
+2016:5:4:7:XIZHI	游偉豪				1		
+2016:5:4:7:YILAN	陳嘉仁	1					
+2016:5:4:7:ZHUDONG							
+2016:5:4:7:ZHUNAN	0						
