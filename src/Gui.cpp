@@ -553,15 +553,6 @@ void Gui::init(ModemInterface* mod_int_in)
 			}
 		}
 		inbox_tab->end();
-		Fl_Group* outbox_tab = new Fl_Group(0, 2 * g_button_height + g_spacing, g_window_width, g_window_height, "Outbox");
-		{
-			outbox = new MessageBrowser(this, MessageHandler::OUTBOX, g_spacing, 2 * g_button_height + 2 * g_spacing, g_window_width / 2 - 2 * g_spacing, g_window_height - 3 * g_button_height - 4 * g_spacing);
-			{
-				outbox->box(FL_BORDER_BOX);
-				outbox->end();
-			}
-		}
-		outbox_tab->end();
 		Fl_Group* report_tab = new Fl_Group(0, 2 * g_button_height + g_spacing, g_window_width, g_window_height, "Reports");
 		{
 			unreceived_reports = new Fl_Multi_Browser(g_spacing, 2 * g_button_height + 2 * g_spacing, g_window_width / 2 - 2 * g_spacing, g_window_height - 3 * g_button_height - 4 * g_spacing);
@@ -715,15 +706,8 @@ void Gui::update_msg_scroll()
 		std::wstring display_txt = get_browser_display_txt((*it)->get_sender_name() + g_display_text_separator + (*it)->get_contents());
 		handled->add(tos(display_txt).c_str(), *it);
 	}
-
-	for (vector<Message*>::iterator it = outbox_msg_vector->begin(); it != outbox_msg_vector->end(); ++it)
-	{
-		std::wstring display_txt = get_browser_display_txt((*it)->get_sender_name() + g_display_text_separator + (*it)->get_contents());
-		outbox->add(tos(display_txt).c_str(), *it);
-	}
 	unhandled->redraw();
 	handled->redraw();
-	outbox->redraw();
 }
 
 void Gui::send_reminder(Area* area, bool english)
@@ -876,6 +860,13 @@ void Gui::process_msg(Message* msg)
 				referral.report_values[L"DEST_NUMBER"] = g_stray_msg_handler;	//Send it to the recorder!
 			send_message(referral.report_values[L"DEST_NUMBER"], msg->get_contents());
 			sheet->insert_report(referral);
+		}
+		else if (msg_type == g_type_english_reg_str)
+		{
+			ReportSheet* sheet = &report_collection.reports[TYPE_ENGLISH_REG][COMP];
+			Report report;
+			report.read_message(msg, sheet->get_sheet_fields(), current_date);
+			sheet->insert_report(report);
 		}
 		else
 		{

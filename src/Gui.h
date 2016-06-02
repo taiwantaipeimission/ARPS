@@ -81,7 +81,6 @@ public:
 	Fl_Window* window;
 	MessageBrowser* unhandled;
 	MessageBrowser* handled;
-	MessageBrowser* outbox;
 	Fl_Multi_Browser* unreceived_reports;
 	Fl_Multi_Browser* received_reports;
 	Fl_Multi_Browser* unreceived_english;

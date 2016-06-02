@@ -45,6 +45,7 @@ void ReportCollection::init(std::wstring global_prefix_in)
 	prefix[TYPE_BAPTISM_RECORD] = L"baptism/baptism_record";
 	prefix[TYPE_BAPTISM_SOURCE] = L"baptism/baptism_source";
 	prefix[TYPE_REFERRAL] = L"referrals/referrals";
+	prefix[TYPE_ENGLISH_REG] = L"english_reg/english_reg";
 
 	midfix[COMP] = L"";
 	midfix[COMP_MONTH] = L"_month";

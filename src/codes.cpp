@@ -29,10 +29,11 @@ wstring g_rep_key_num_reports = L"N_REPORTS";
 //Orders to total
 map<ReportType, vector<ReportOrder>> g_reports_to_store {
 	{ TYPE_REGULAR, { COMP, COMP_MONTH, DISTRICT, DISTRICT_MONTH, ZONE, ZONE_MONTH, WARD, WARD_MONTH, STAKE, STAKE_MONTH, MISSION, MISSION_MONTH } },
-	{ TYPE_ENGLISH, { COMP, ZONE, ZONE_WEEK, ZONE_MONTH, MISSION, MISSION_WEEK} },
+	{ TYPE_ENGLISH, { COMP, ZONE, ZONE_WEEK, MISSION, MISSION_WEEK} },
 	{ TYPE_BAPTISM_RECORD, { COMP } },
 	{ TYPE_BAPTISM_SOURCE, { COMP, COMP_MONTH, DISTRICT, DISTRICT_MONTH, ZONE, ZONE_MONTH, WARD, WARD_MONTH, STAKE, STAKE_MONTH, MISSION, MISSION_MONTH } },
-	{ TYPE_REFERRAL, { COMP } }
+	{ TYPE_REFERRAL, { COMP } },
+	{ TYPE_ENGLISH_REG, { COMP, ZONE}}
 };
 
 //Phone numbers
@@ -84,6 +85,7 @@ wstring g_type_report_str = L"REPORT";
 wstring g_type_english_str = L"ENGLISH";
 wstring g_type_baptism_str = L"BAPTISM";
 wstring g_type_referral_str = L"REFERRAL";
+wstring g_type_english_reg_str = L"ENGLISH_REG";
 int g_max_msg_len = 134;	//140 characters of message (for 8-bit encoding); take away 6 bits for possible UDH data
 
 //JSON keys

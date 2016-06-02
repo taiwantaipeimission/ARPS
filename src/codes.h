@@ -33,6 +33,7 @@ enum ReportType
 	TYPE_BAPTISM_RECORD,
 	TYPE_BAPTISM_SOURCE,
 	TYPE_REFERRAL,
+	TYPE_ENGLISH_REG,
 	NUM_TYPES
 };
 
@@ -116,6 +117,7 @@ extern wstring g_type_report_str;
 extern wstring g_type_english_str;
 extern wstring g_type_baptism_str;
 extern wstring g_type_referral_str;
+extern wstring g_type_english_reg_str;
 extern int g_max_msg_len;
 
 //JSON keys
