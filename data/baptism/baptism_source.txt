@@ -118,6 +118,12 @@
 2016:5:3:7:0:XINZHU_3_S							
 2016:5:3:7:0:ZHONGHE_2_E	楊浩玄				1		
 2016:5:3:7:1:BEITOU_S							
+2016:5:4:3:0:LUZHOU_B_E	楊雨珊		1				
+2016:5:4:3:0:ZHUNAN_S	 shen ping wei						
+2016:5:4:3:0:ZHUNAN_ZL	高嘉廷	1					
+2016:5:4:3:1:LUZHOU_B_E	楊明倫	1					
+2016:5:4:3:1:ZHUNAN_ZL	郭英淇	1					
+2016:5:4:3:2:ZHUNAN_ZL	郭靜雲	1					
 2016:5:4:7:0:BEITOU_E	吳緗尹	1					
 2016:5:4:7:0:BEITOU_S	陳炯瑋					1	
 2016:5:4:7:0:HUALIAN_1_S	Chen Yi Ming 	1					
@@ -148,3 +154,20 @@
 2016:5:4:7:2:NEIHU_E	陳瑋哲				1		
 2016:5:4:7:2:ZHUNAN_S							
 2016:5:4:7:2:ZHUNAN_ZL							
+2016:5:5:7:0:ANKANG_E	黃姿筑	1					
+2016:5:5:7:0:GUISHAN_E	江孟臻				1		
+2016:5:5:7:0:HUALIAN_2_E	徐揚凱			1			
+2016:5:5:7:0:HUALIAN_2_ZL	陳媛英	1					
+2016:5:5:7:0:JINGXIN_S							
+2016:5:5:7:0:JINGXIN_ZL	蘇振祥弟兄	1					
+2016:5:5:7:0:JINHUA_ZL	范禮達	1					
+2016:5:5:7:0:LUZHOU_A_E	林甫修						
+2016:5:5:7:0:SANCHONG_E							
+2016:5:5:7:0:SANXIA_A_E							
+2016:5:5:7:0:TAIDONG_2_S	CHEN HUA LING	1					
+2016:5:5:7:0:TAIDONG_2_ZL							
+2016:5:5:7:0:TAO_2_E							
+2016:5:5:7:0:TAO_4_S	呂威	1					
+2016:5:5:7:0:XINZHU_3_S	張元澤		1				
+2016:5:5:7:0:ZHONGHE_2_E	陳昭吟	1					
+2016:5:5:7:1:GUISHAN_E	洪鈺婷	1					

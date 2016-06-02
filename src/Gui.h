@@ -88,8 +88,6 @@ public:
 	Fl_Multi_Browser* received_english;
 	Fl_Button* check_message_button;
 
-	std::wstring report_date;
-	std::wstring english_date;
 	std::wstring current_date;
 	
 

@@ -612,7 +612,7 @@ void Gui::run()
 void Gui::total_reports(ReportType type)
 {
 	window->cursor(FL_CURSOR_WAIT);
-	report_collection.total_type(type, &comp_list, type == TYPE_ENGLISH ? english_date : report_date);
+	report_collection.total_type(type, &comp_list, current_date);
 	window->cursor(FL_CURSOR_DEFAULT);
 }
 
@@ -651,8 +651,6 @@ void Gui::load()
 		set_color(CC_WHITE, CC_BLACK);
 	}
 
-	report_date = get_report_date_str(report_wday);
-	english_date = get_report_date_str(english_wday);
 	current_date = get_cur_date_str();
 
 	comp_list.load(&file_manager);
@@ -672,7 +670,7 @@ void Gui::update_report_scrolls()
 	map<wstring, Report>* english = report_collection.reports[TYPE_ENGLISH][COMP].get_reports();
 	for (std::map<std::wstring, Area>::iterator it = comp_list.areas.begin(); it != comp_list.areas.end(); ++it, i++)
 	{
-		std::wstring id_str = report_date + g_id_str_separator + it->second.area_name;
+		std::wstring id_str = current_date + g_id_str_separator + it->second.area_name;
 		if (reports->count(id_str) > 0)
 		{
 			received_reports->add(tos(it->second.area_name).c_str(), (void*)&it->second);
@@ -682,7 +680,7 @@ void Gui::update_report_scrolls()
 			unreceived_reports->add(tos(it->second.area_name).c_str(), (void*)&it->second);
 		}
 
-		id_str = english_date + g_id_str_separator + L"0" + g_id_str_separator + it->second.area_name;
+		id_str = current_date + g_id_str_separator + L"0" + g_id_str_separator + it->second.area_name;
 		if (english->count(id_str) > 0)
 		{
 			received_english->add(tos(it->second.area_name).c_str(), (void*)&it->second);
@@ -833,7 +831,7 @@ void Gui::process_msg(Message* msg)
 		{
 			ReportSheet* sheet = &report_collection.reports[TYPE_REGULAR][COMP];
 			Report report;
-			report.read_message(msg, sheet->get_sheet_fields(), report_date);
+			report.read_message(msg, sheet->get_sheet_fields(), current_date);
 			sheet->insert_report(report);
 
 			int baptisms = _wtoi(report.report_values[g_rep_key_bap].c_str());
@@ -858,14 +856,14 @@ void Gui::process_msg(Message* msg)
 		{
 			ReportSheet* sheet = &report_collection.reports[TYPE_ENGLISH][COMP];
 			Report report;
-			report.read_message(msg, sheet->get_sheet_fields(), english_date);
+			report.read_message(msg, sheet->get_sheet_fields(), current_date);
 			sheet->insert_report(report);
 		}
 		else if (msg_type == g_type_baptism_str)
 		{
 			ReportSheet* sheet = &report_collection.reports[TYPE_BAPTISM_RECORD][COMP];
 			Report report;
-			report.read_message(msg, sheet->get_sheet_fields(), report_date);
+			report.read_message(msg, sheet->get_sheet_fields(), current_date);
 			sheet->insert_report(report);
 		}
 		else if (msg_type == g_type_referral_str)

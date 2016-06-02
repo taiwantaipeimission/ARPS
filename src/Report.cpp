@@ -27,6 +27,8 @@ using namespace std;
 
 Report::Report()
 {
+	order = COMP;
+	type = TYPE_REGULAR;
 }
 
 void Report::read_message(Message* msg, vector<pair<wstring, bool>> to_read, std::wstring date)

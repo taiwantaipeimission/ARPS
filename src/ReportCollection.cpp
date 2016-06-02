@@ -51,12 +51,14 @@ void ReportCollection::init(std::wstring global_prefix_in)
 	midfix[DISTRICT] = L"_district";
 	midfix[DISTRICT_MONTH] = L"_district_month";
 	midfix[ZONE] = L"_zone";
+	midfix[ZONE_WEEK] = L"_zone_week";
 	midfix[ZONE_MONTH] = L"_zone_month";
 	midfix[WARD] = L"_ward";
 	midfix[WARD_MONTH] = L"_ward_month";
 	midfix[STAKE] = L"_stake";
 	midfix[STAKE_MONTH] = L"_stake_month";
 	midfix[MISSION] = L"_mission";
+	midfix[MISSION_WEEK] = L"_mission_week";
 	midfix[MISSION_MONTH] = L"_mission_month";
 	midfix[INDIV] = L"_indiv";
 
@@ -122,37 +124,34 @@ Report ReportCollection::transform_report(Report rep, ReportType type, ReportOrd
 		{	if (comp_list->by_area_name.count(rep.sender_name) > 0)
 				rep.sender_name = comp_list->by_area_name[rep.sender_name][0].district_name;
 			else
-				rep.sender_name = L"UNKNOWN";
+				rep.sender_name = L"";
 		}
 		else if (to == ZONE)
 		{
 			if (comp_list->by_area_name.count(rep.sender_name) > 0)
 				rep.sender_name = type == TYPE_ENGLISH ? comp_list->by_area_name[rep.sender_name][0].english_unit_name : comp_list->by_area_name[rep.sender_name][0].zone_name;
 			else
-				rep.sender_name = L"UNKNOWN";
+				rep.sender_name = L"";
 		}
 		else if (to == WARD)
 		{
 			if (comp_list->by_area_name.count(rep.sender_name) > 0)
 				rep.sender_name = comp_list->by_area_name[rep.sender_name][0].ward_name;
 			else
-				rep.sender_name = L"UNKNOWN";
+				rep.sender_name = L"";
 		}
 		else if (to == STAKE)
 		{
 			if (comp_list->by_area_name.count(rep.sender_name) > 0)
 				rep.sender_name = comp_list->by_area_name[rep.sender_name][0].stake_name;
 			else
-				rep.sender_name = L"UNKNOWN";
+				rep.sender_name = L"";
 		}
 		else if (to == MISSION)
 		{
 			rep.sender_name = L"MISSION";
 		}
-		if (to != COMP_MONTH)
-		{
-			rep.report_values.insert(pair<wstring, wstring>(g_rep_key_num_reports, L"1"));
-		}
+		(*rep.report_values.insert(pair<wstring, wstring>(g_rep_key_num_reports, L"1")).first).second = L"1";
 	}
 	else if (from == DISTRICT)
 	{
@@ -168,7 +167,11 @@ Report ReportCollection::transform_report(Report rep, ReportType type, ReportOrd
 	}
 	else if (from == ZONE)
 	{
-		if (to == ZONE_MONTH)
+		if (to == ZONE_WEEK)
+		{
+			rep.date_wday = 0;
+		}
+		else if (to == ZONE_MONTH)
 		{
 			rep.date_week = 0;
 			rep.date_wday = 0;
@@ -204,7 +207,11 @@ Report ReportCollection::transform_report(Report rep, ReportType type, ReportOrd
 	}
 	else if (from == MISSION)
 	{
-		if (to == MISSION_MONTH)
+		if (to == MISSION_WEEK)
+		{
+			rep.date_wday = 0;
+		}
+		else if (to == MISSION_MONTH)
 		{
 			rep.date_week = 0;
 			rep.date_wday = 0;
@@ -217,20 +224,26 @@ bool ReportCollection::can_add_report(ReportType type, ReportOrder order, wstrin
 {
 	map<wstring, Report>* destination_report_map = reports[type][order].get_reports();
 	int date_month = _wtoi(tokenize(date, L':')[1].c_str());
+	int date_week = _wtoi(tokenize(date, L':')[2].c_str());
 
-	return ((report.sender_name != L"UNKNOWN" && destination_report_map->count(report.get_id_str(reports[type][order].uses_sub_ids())) <= 0)					//Conditions for writing/overwriting a new report: no existing report
-		|| report.get_date() == date														//Still receiving reports for today and updating sums
+	if (report.sender_name == L"")
+		int x = 0;
+
+	return (report.sender_name != L"" && report.sender_name != L"UNKNOWN") && (
+		   (destination_report_map->count(report.get_id_str(reports[type][order].uses_sub_ids())) <= 0)					//Conditions for writing/overwriting a new report: no existing report
+		|| (report.get_date() == date)														//Still receiving reports for today and updating sums
+		|| (report.date_week == date_week && report.date_wday == 0)
 		|| (report.date_month == date_month && report.date_wday == 0));				//We're adding a monthly report for the current month
 }
 
-void ReportCollection::create_baptism_source_reports(std::wstring report_date)
+void ReportCollection::create_baptism_source_reports(std::wstring date)
 {
 	map<wstring, Report>* report_map = reports[TYPE_BAPTISM_RECORD][COMP].get_reports();
 	for (map<wstring, Report>::iterator it = report_map->begin(); it != report_map->end(); ++it)
 	{
 		Report bap_source = it->second;
 		bap_source.report_values[it->second.report_values[g_rep_key_bap_source]] = L"1";
-		if (can_add_report(TYPE_BAPTISM_SOURCE, COMP, report_date, bap_source))
+		if (can_add_report(TYPE_BAPTISM_SOURCE, COMP, date, bap_source))
 		{
 			reports[TYPE_BAPTISM_SOURCE][COMP].insert_report(bap_source);
 		}
@@ -239,6 +252,9 @@ void ReportCollection::create_baptism_source_reports(std::wstring report_date)
 
 void ReportCollection::total_reports(ReportType type, ReportOrder from, ReportOrder to, CompList* comp_list, std::wstring date)
 {
+	if (type == TYPE_ENGLISH && from == ZONE && to == MISSION)
+		int x = 0;
+
 	//If we maintain a report sheet for this type and both orders to and from
 	if (count(g_reports_to_store[type].begin(), g_reports_to_store[type].end(), from) > 0 && count(g_reports_to_store[type].begin(), g_reports_to_store[type].end(), to) > 0)
 	{
@@ -274,6 +290,8 @@ void ReportCollection::total_reports(ReportType type, ReportOrder from, ReportOr
 
 void ReportCollection::total_type(ReportType type, CompList* comp_list, std::wstring date)
 {
+
+
 	if(type == TYPE_BAPTISM_SOURCE)
 		create_baptism_source_reports(date);
 
@@ -297,6 +315,8 @@ void ReportCollection::total_type(ReportType type, CompList* comp_list, std::wst
 	}
 	if (count(g_reports_to_store[type].begin(), g_reports_to_store[type].end(), ZONE) > 0)
 	{
+		if (count(g_reports_to_store[type].begin(), g_reports_to_store[type].end(), ZONE_WEEK) > 0)
+			total_reports(type, ZONE, ZONE_WEEK, comp_list, date);
 		if (count(g_reports_to_store[type].begin(), g_reports_to_store[type].end(), ZONE_MONTH) > 0)
 			total_reports(type, ZONE, ZONE_MONTH, comp_list, date);
 		if (count(g_reports_to_store[type].begin(), g_reports_to_store[type].end(), MISSION) > 0)
@@ -314,6 +334,8 @@ void ReportCollection::total_type(ReportType type, CompList* comp_list, std::wst
 	}
 	if (count(g_reports_to_store[type].begin(), g_reports_to_store[type].end(), MISSION) > 0)
 	{
+		if (count(g_reports_to_store[type].begin(), g_reports_to_store[type].end(), MISSION_WEEK) > 0)
+			total_reports(type, MISSION, MISSION_WEEK, comp_list, date);
 		if (count(g_reports_to_store[type].begin(), g_reports_to_store[type].end(), MISSION_MONTH) > 0)
 			total_reports(type, MISSION, MISSION_MONTH, comp_list, date);
 	}

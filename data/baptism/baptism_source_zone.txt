@@ -68,6 +68,8 @@
 2016:5:3:7:SOUTH	楊浩玄				1		
 2016:5:3:7:TAIDONG							
 2016:5:3:7:XINZHU	0						
+2016:5:4:3:CENTRAL	楊雨珊	1	1				
+2016:5:4:3:ZHUNAN	 shen ping wei	3					
 2016:5:4:7:CENTRAL	黃彥凱	1	1			1	
 2016:5:4:7:EAST	陳嘉仁	1			4	1	
 2016:5:4:7:HUALIAN	Chen Yi Ming 	1	1				
@@ -77,3 +79,10 @@
 2016:5:4:7:WEST					1		
 2016:5:4:7:XINZHU							
 2016:5:4:7:ZHUNAN	0						
+2016:5:5:7:CENTRAL	范禮達	1					
+2016:5:5:7:HUALIAN	徐揚凱	1		1			
+2016:5:5:7:SOUTH	黃姿筑	3					
+2016:5:5:7:TAIDONG	CHEN HUA LING	1					
+2016:5:5:7:TAOYUAN	江孟臻	2			1		
+2016:5:5:7:WEST							
+2016:5:5:7:XINZHU	張元澤		1				

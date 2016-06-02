@@ -43,12 +43,14 @@ enum ReportOrder
 	DISTRICT,				//Data by district
 	DISTRICT_MONTH,			//Data by district (monthly totals)
 	ZONE,					//Data by zone
+	ZONE_WEEK,
 	ZONE_MONTH,				//Data by zone (monthly totals)
 	WARD,					//Ward
 	WARD_MONTH,
 	STAKE,
 	STAKE_MONTH,
 	MISSION,
+	MISSION_WEEK,
 	MISSION_MONTH,
 	INDIV,					//Data by individual
 	NUM_DATA_ORDERS
@@ -73,9 +75,6 @@ extern std::wstring g_baptism_response_msg;
 extern std::wstring g_baptism_report_template;
 extern std::wstring g_reminder_msg;
 extern std::wstring g_english_reminder_msg;
-
-extern int report_wday;
-extern int english_wday;
 
 //File paths
 extern wstring g_path_file;

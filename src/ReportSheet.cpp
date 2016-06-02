@@ -56,6 +56,8 @@ void ReportSheet::insert_report(Report report)
 					report.sub_id++;
 			}
 		}
+		report.type = report_type;
+		report.order = report_order;
 		reports[report.get_id_str(use_sub_ids)] = report;
 		changed = true;
 	}

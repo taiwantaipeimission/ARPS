@@ -28,11 +28,11 @@ wstring g_rep_key_num_reports = L"N_REPORTS";
 
 //Orders to total
 map<ReportType, vector<ReportOrder>> g_reports_to_store {
-	{ TYPE_REGULAR,{ COMP, COMP_MONTH, DISTRICT, DISTRICT_MONTH, ZONE, ZONE_MONTH, WARD, WARD_MONTH, STAKE, STAKE_MONTH, MISSION, MISSION_MONTH } },
-	{ TYPE_ENGLISH,{ COMP, ZONE, ZONE_MONTH, MISSION } },
-	{ TYPE_BAPTISM_RECORD,{ COMP } },
-	{ TYPE_BAPTISM_SOURCE,{ COMP, COMP_MONTH, DISTRICT, DISTRICT_MONTH, ZONE, ZONE_MONTH, WARD, WARD_MONTH, STAKE, STAKE_MONTH, MISSION, MISSION_MONTH } },
-	{ TYPE_REFERRAL,{ COMP } }
+	{ TYPE_REGULAR, { COMP, COMP_MONTH, DISTRICT, DISTRICT_MONTH, ZONE, ZONE_MONTH, WARD, WARD_MONTH, STAKE, STAKE_MONTH, MISSION, MISSION_MONTH } },
+	{ TYPE_ENGLISH, { COMP, ZONE, ZONE_WEEK, ZONE_MONTH, MISSION, MISSION_WEEK} },
+	{ TYPE_BAPTISM_RECORD, { COMP } },
+	{ TYPE_BAPTISM_SOURCE, { COMP, COMP_MONTH, DISTRICT, DISTRICT_MONTH, ZONE, ZONE_MONTH, WARD, WARD_MONTH, STAKE, STAKE_MONTH, MISSION, MISSION_MONTH } },
+	{ TYPE_REFERRAL, { COMP } }
 };
 
 //Phone numbers
@@ -43,9 +43,6 @@ std::wstring g_baptism_response_msg = L"";
 std::wstring g_baptism_report_template = L"";
 std::wstring g_reminder_msg = L"Please remember to send in your key indicators!";
 std::wstring g_english_reminder_msg = L"Please remember to send in your English key indicators!";
-
-int report_wday = 0;
-int english_wday = 0;
 
 //File paths
 wstring g_path_file = L"paths.txt";
@@ -113,8 +110,6 @@ int g_spacing = 5;
 
 void load_config(rapidjson::Document* config)
 {
-	report_wday = (*config)[tos(g_config_field_report_wday).c_str()].GetInt();
-	english_wday = (*config)[tos(g_config_field_english_wday).c_str()].GetInt();
 	g_stray_msg_handler = tow((*config)[tos(g_config_field_stray_msg_handler).c_str()].GetString());
 	g_baptism_response_msg = tow((*config)[tos(g_config_field_baptism_response).c_str()].GetString());
 	g_baptism_report_template = tow((*config)[tos(g_config_field_baptism_report).c_str()].GetString());

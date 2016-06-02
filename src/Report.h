@@ -31,6 +31,9 @@ class Report
 {
 public:
 	
+	ReportOrder order;
+	ReportType type;
+
 	int date_year;
 	int date_month;
 	int date_week;

@@ -12,4 +12,6 @@
 2016:5:1:7:MISSION	0	3				1	
 2016:5:2:7:MISSION	 Huang Xing Ying	3	1		2	1	
 2016:5:3:7:MISSION	李季軒	1			1		
+2016:5:4:3:MISSION	楊雨珊	4	1				
 2016:5:4:7:MISSION	黃彥凱	7	2		5	4	
+2016:5:5:7:MISSION	范禮達	8	1	1	1		

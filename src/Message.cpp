@@ -53,7 +53,7 @@ int extract_hex_value(std::wstringstream& ss, int num_rep_chars)
 std::wstring encode_hex_value(std::wstring chars, int num_rep_chars)
 {
 	std::wstringstream ss;
-	for (int i = 0; i < chars.size(); i++)
+	for (size_t i = 0; i < chars.size(); i++)
 	{
 		ss << std::setw(num_rep_chars) << std::setfill(L'0') << std::hex << (int)chars[i];
 	}

@@ -72,35 +72,39 @@
 2016:4:0:0:ZHUBEI_1	彭康睿	1		2			
 2016:4:0:0:ZHUDONG							
 2016:4:0:0:ZHUNAN							
+2016:5:0:0:ANKANG	黃姿筑	1					
 2016:5:0:0:BEITOU	章雯	2	1	0	0	1	0
 2016:5:0:0:DANSHUI	周博謙					1	
-2016:5:0:0:GUISHAN		0	0	0	1	0	0
-2016:5:0:0:HUALIAN_1		1					
-2016:5:0:0:HUALIAN_2	Beberley Recometa 	1					
+2016:5:0:0:GUISHAN		1	0	0	2	0	0
+2016:5:0:0:HUALIAN_1		1	0	0	0	0	0
+2016:5:0:0:HUALIAN_2	Beberley Recometa 	2		1			
 2016:5:0:0:HUALIAN_3	邱耘萱		1				
-2016:5:0:0:JINGXIN	黃永岡	1				1	
-2016:5:0:0:JINHUA	黃彥凱	1	1				
-2016:5:0:0:LUZHOU	0						
+2016:5:0:0:JINGXIN	黃永岡	2	0	0	0	1	0
+2016:5:0:0:JINHUA	黃彥凱	2	1				
+2016:5:0:0:LUZHOU	楊雨珊	1	1	0	0	0	0
 2016:5:0:0:MIAOLI	賴瑋晨	1					
 2016:5:0:0:MUZHA	高坤盛	1					
-2016:5:0:0:NEIHU	 Huang Xing Ying	1			2	1	
-2016:5:0:0:SANXIA							
+2016:5:0:0:NEIHU	 Huang Xing Ying	1	0	0	2	1	0
+2016:5:0:0:SANCHONG							
+2016:5:0:0:SANXIA	0						
 2016:5:0:0:SONGSHAN	李佳鈺				1		
 2016:5:0:0:TAIDONG_1	郭雅文	1					
-2016:5:0:0:TAIDONG_2							
+2016:5:0:0:TAIDONG_2		1					
 2016:5:0:0:TAIDONG_3	張淑貞	1					
 2016:5:0:0:TAOYUAN_1							
+2016:5:0:0:TAOYUAN_2							
 2016:5:0:0:TAOYUAN_3	林澤綸	0	0	0	0	0	0
+2016:5:0:0:TAOYUAN_4	呂威	1					
 2016:5:0:0:WANDA	杜陳婷					1	
 2016:5:0:0:XINAN	 Lai Yi Gao						
 2016:5:0:0:XINBAN	曾穎之				1		
 2016:5:0:0:XINZHU_1							
-2016:5:0:0:XINZHU_3							
+2016:5:0:0:XINZHU_3			1				
 2016:5:0:0:XIZHI	游偉豪				1		
 2016:5:0:0:YILAN	陳嘉仁	1					
-2016:5:0:0:ZHONGHE_2	 周會琳	0	0	0	1	1	0
+2016:5:0:0:ZHONGHE_2	 周會琳	1	0	0	1	1	0
 2016:5:0:0:ZHONGLI_1	俞明霞				1		
 2016:5:0:0:ZHONGLI_2	施孟辰	1					
 2016:5:0:0:ZHUBEI_2	朱嘉偉	1					
 2016:5:0:0:ZHUDONG							
-2016:5:0:0:ZHUNAN	0						
+2016:5:0:0:ZHUNAN	 shen ping wei	3	0	0	0	0	0
