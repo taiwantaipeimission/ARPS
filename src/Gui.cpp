@@ -869,6 +869,7 @@ void Gui::process_msg(Message* msg)
 			ReportSheet* sheet = &report_collection.reports[TYPE_ENGLISH_REG][COMP];
 			Report report;
 			report.read_message(msg, sheet->get_sheet_fields(), english_date);
+			report.sender_name = comp_list.areas.count(msg->get_sender_number()) > 0 ? comp_list.areas[msg->get_sender_number()].english_unit_name : L"";
 			sheet->insert_report(report);
 		}
 		else
