@@ -44,14 +44,12 @@ enum ReportOrder
 	DISTRICT,				//Data by district
 	DISTRICT_MONTH,			//Data by district (monthly totals)
 	ZONE,					//Data by zone
-	ZONE_WEEK,
 	ZONE_MONTH,				//Data by zone (monthly totals)
 	WARD,					//Ward
 	WARD_MONTH,
 	STAKE,
 	STAKE_MONTH,
 	MISSION,
-	MISSION_WEEK,
 	MISSION_MONTH,
 	INDIV,					//Data by individual
 	NUM_DATA_ORDERS
@@ -70,6 +68,9 @@ extern map<ReportType, vector<ReportOrder>> g_reports_to_store;
 
 //Phone numbers
 extern wstring g_int_ph_num_prefix;
+
+extern int g_report_wday;
+extern int g_english_wday;
 
 extern std::wstring g_stray_msg_handler;
 extern std::wstring g_baptism_response_msg;

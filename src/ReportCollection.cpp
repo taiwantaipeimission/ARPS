@@ -52,14 +52,12 @@ void ReportCollection::init(std::wstring global_prefix_in)
 	midfix[DISTRICT] = L"_district";
 	midfix[DISTRICT_MONTH] = L"_district_month";
 	midfix[ZONE] = L"_zone";
-	midfix[ZONE_WEEK] = L"_zone_week";
 	midfix[ZONE_MONTH] = L"_zone_month";
 	midfix[WARD] = L"_ward";
 	midfix[WARD_MONTH] = L"_ward_month";
 	midfix[STAKE] = L"_stake";
 	midfix[STAKE_MONTH] = L"_stake_month";
 	midfix[MISSION] = L"_mission";
-	midfix[MISSION_WEEK] = L"_mission_week";
 	midfix[MISSION_MONTH] = L"_mission_month";
 	midfix[INDIV] = L"_indiv";
 
@@ -168,11 +166,7 @@ Report ReportCollection::transform_report(Report rep, ReportType type, ReportOrd
 	}
 	else if (from == ZONE)
 	{
-		if (to == ZONE_WEEK)
-		{
-			rep.date_wday = 0;
-		}
-		else if (to == ZONE_MONTH)
+		if (to == ZONE_MONTH)
 		{
 			rep.date_week = 0;
 			rep.date_wday = 0;
@@ -208,11 +202,7 @@ Report ReportCollection::transform_report(Report rep, ReportType type, ReportOrd
 	}
 	else if (from == MISSION)
 	{
-		if (to == MISSION_WEEK)
-		{
-			rep.date_wday = 0;
-		}
-		else if (to == MISSION_MONTH)
+		if (to == MISSION_MONTH)
 		{
 			rep.date_week = 0;
 			rep.date_wday = 0;
@@ -253,9 +243,6 @@ void ReportCollection::create_baptism_source_reports(std::wstring date)
 
 void ReportCollection::total_reports(ReportType type, ReportOrder from, ReportOrder to, CompList* comp_list, std::wstring date)
 {
-	if (type == TYPE_ENGLISH && from == ZONE && to == MISSION)
-		int x = 0;
-
 	//If we maintain a report sheet for this type and both orders to and from
 	if (count(g_reports_to_store[type].begin(), g_reports_to_store[type].end(), from) > 0 && count(g_reports_to_store[type].begin(), g_reports_to_store[type].end(), to) > 0)
 	{
@@ -291,8 +278,6 @@ void ReportCollection::total_reports(ReportType type, ReportOrder from, ReportOr
 
 void ReportCollection::total_type(ReportType type, CompList* comp_list, std::wstring date)
 {
-
-
 	if(type == TYPE_BAPTISM_SOURCE)
 		create_baptism_source_reports(date);
 
@@ -316,8 +301,6 @@ void ReportCollection::total_type(ReportType type, CompList* comp_list, std::wst
 	}
 	if (count(g_reports_to_store[type].begin(), g_reports_to_store[type].end(), ZONE) > 0)
 	{
-		if (count(g_reports_to_store[type].begin(), g_reports_to_store[type].end(), ZONE_WEEK) > 0)
-			total_reports(type, ZONE, ZONE_WEEK, comp_list, date);
 		if (count(g_reports_to_store[type].begin(), g_reports_to_store[type].end(), ZONE_MONTH) > 0)
 			total_reports(type, ZONE, ZONE_MONTH, comp_list, date);
 		if (count(g_reports_to_store[type].begin(), g_reports_to_store[type].end(), MISSION) > 0)
@@ -335,8 +318,6 @@ void ReportCollection::total_type(ReportType type, CompList* comp_list, std::wst
 	}
 	if (count(g_reports_to_store[type].begin(), g_reports_to_store[type].end(), MISSION) > 0)
 	{
-		if (count(g_reports_to_store[type].begin(), g_reports_to_store[type].end(), MISSION_WEEK) > 0)
-			total_reports(type, MISSION, MISSION_WEEK, comp_list, date);
 		if (count(g_reports_to_store[type].begin(), g_reports_to_store[type].end(), MISSION_MONTH) > 0)
 			total_reports(type, MISSION, MISSION_MONTH, comp_list, date);
 	}

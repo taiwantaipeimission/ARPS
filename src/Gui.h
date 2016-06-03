@@ -88,7 +88,8 @@ public:
 	Fl_Button* check_message_button;
 
 	std::wstring current_date;
-	
+	std::wstring english_date;
+	std::wstring report_date;
 
 	bool auto_check;
 	bool checking_msgs;

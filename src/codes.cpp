@@ -29,15 +29,18 @@ wstring g_rep_key_num_reports = L"N_REPORTS";
 //Orders to total
 map<ReportType, vector<ReportOrder>> g_reports_to_store {
 	{ TYPE_REGULAR, { COMP, COMP_MONTH, DISTRICT, DISTRICT_MONTH, ZONE, ZONE_MONTH, WARD, WARD_MONTH, STAKE, STAKE_MONTH, MISSION, MISSION_MONTH } },
-	{ TYPE_ENGLISH, { COMP, ZONE, ZONE_WEEK, MISSION, MISSION_WEEK} },
+	{ TYPE_ENGLISH, { COMP, ZONE, MISSION} },
 	{ TYPE_BAPTISM_RECORD, { COMP } },
 	{ TYPE_BAPTISM_SOURCE, { COMP, COMP_MONTH, DISTRICT, DISTRICT_MONTH, ZONE, ZONE_MONTH, WARD, WARD_MONTH, STAKE, STAKE_MONTH, MISSION, MISSION_MONTH } },
 	{ TYPE_REFERRAL, { COMP } },
-	{ TYPE_ENGLISH_REG, { COMP, ZONE}}
+	{ TYPE_ENGLISH_REG, { COMP, ZONE} }
 };
 
 //Phone numbers
 wstring g_int_ph_num_prefix = L"+886";
+
+int g_report_wday = 0;
+int g_english_wday = 0;
 
 std::wstring g_stray_msg_handler = L"";
 std::wstring g_baptism_response_msg = L"";
@@ -117,4 +120,6 @@ void load_config(rapidjson::Document* config)
 	g_baptism_report_template = tow((*config)[tos(g_config_field_baptism_report).c_str()].GetString());
 	g_reminder_msg = tow((*config)[tos(g_config_field_reminder_msg).c_str()].GetString());
 	g_english_reminder_msg = tow((*config)[tos(g_config_field_english_reminder_msg).c_str()].GetString());
+	g_report_wday = (*config)[tos(g_config_field_report_wday).c_str()].GetInt();
+	g_english_wday = (*config)[tos(g_config_field_english_wday).c_str()].GetInt();
 }

@@ -160,6 +160,35 @@ static const std::wstring get_cur_date_str()
 	return get_date_str(curtime_st);
 }
 
+/* Create the date stamp for a reporting period, based on the current time and the weekday of reporting.
++* All days up to the day of reporting return back to the previous reporting period (e.g. Thursday-Tuesday will be counted as reports
++* for English reporting session which began on the Wednesday previous).
++*/
+static const std::wstring get_report_date_str(int report_wday)
+{
+	std::wstring report_date;
+	time_t curtime;
+	tm curtime_st;
+	time(&curtime);
+	localtime_s(&curtime_st, &curtime);
+
+	int cur_wday = (curtime_st.tm_wday == 0 ? 7 : curtime_st.tm_wday);
+
+	if (cur_wday == report_wday)
+	{
+		return get_date_str(curtime_st);
+	}
+	else
+	{
+		int days_since_last_report = positive_modulo(cur_wday - report_wday, 7);
+		tm last_week_tm_st = curtime_st;
+		last_week_tm_st.tm_mday -= days_since_last_report;
+		time_t last_week_tm = mktime(&last_week_tm_st);
+		localtime_s(&last_week_tm_st, &last_week_tm);
+		return get_date_str(last_week_tm_st);
+	}
+}
+
 static const bool is_final_line(std::wstring line)
 {
 	return line.find(L"OK\r\n") != std::wstring::npos || line.find(L"> ") != std::wstring::npos || line.find(L"ERROR\r\n") != std::wstring::npos;
