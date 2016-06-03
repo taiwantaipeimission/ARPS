@@ -65,6 +65,7 @@ void total_english_cb(Fl_Widget* wg, void* ptr)
 {
 	Gui* gui = (Gui*)ptr;
 	gui->total_reports(TYPE_ENGLISH);
+	gui->total_reports(TYPE_ENGLISH_REG);
 }
 
 void total_baptism_source_cb(Fl_Widget* wg, void* ptr)

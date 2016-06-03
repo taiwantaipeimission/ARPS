@@ -1502,3 +1502,25 @@
 2016:6:1:3:3:XINDIAN_E	NORTH		TIANMU_A_E	TIANMU	Jeff	0935265293	 this dude is super sick. Has lived in Arizona, and is going back this october. His Girlfriend works in our area, both have great english and are willing to meet for church and english class	
 2016:6:1:3:4:OFFICE_E	CENTRAL		TOUR_S	中正區	周弟兄	0954154013	they were excited to talk with us and we gave him a temple tour.	
 2016:6:1:3:4:TAO_4_S	TAOYUAN		TAO_3_E	 DAYUAN	 Orlie	0987458345	  he asked for a Book of Mormon, he even was willing to take a Chinese one.  He said he thinks our message is true.  He is Filipino and Christian.  Call him!	
+2016:6:1:4:0:ANKANG_E	WEST		DANFENG_E	xinzhuang	陳權霈chen quan2 pei4 	0931292931	 Super cool guy, about 30, really likes missionaries and is interested to know more about how we are different than other churches. Also feels a little stressed at work and is looking for a girlfriend. Had a lesson with him! 加油！	
+2016:6:1:4:0:JINGXIN_ZL	CENTRAL		SANCHONG_S	三重區	陳逸安	0925275920	just met nice dude. Interested in family and how gospel can bless them.	
+2016:6:1:4:0:NEIHU_E	WEST		TUCHENG_ZL	土城區	林彥堂	0922607689	very polite see what if says besides really busy	
+2016:6:1:4:0:OFFICE_E	XINZHU		XINZHU_3_ZL	XINZHU	張小姐	0903360723	 Address is 新竹市明湖路650巷103號. met missionaries in NYC and was super interested. back in Taiwan in June!	
+2016:6:1:4:0:SANCHONG_E	WEST		DANFENG_E	新莊	sharon 	 0978350313	cool girl	
+2016:6:1:4:0:SHILIN_ZL	CENTRAL		LUZHOU_B_E	蘆洲	賴lai4先生	0928813043	 already set up for this Saturday at 7pm! Very cool dad headed for the Shilin night market with his family this past week. Call him today :-)	
+2016:6:1:4:0:TAO_3_E_ZL	WEST		DANFENG_E	林口區	葉小姐	0939659319	nice girl in her 20's about to work out	
+2016:6:1:4:0:TAO_4_S	EAST		NEIHU_E	NEIHU	 MR. CHEN	0928128179	 he is very wise and asks good questions.  He and his wife came for a temple tour.  He is  Sister Sylvester's relative.  He is 63 years old.  He has interest.  His tour was a couple of months ago and this referral might have been sent before. 	
+2016:6:1:4:0:TIANMU_A_E	EAST		SONGSHAN_S	SONGSHAN	jenyu	0975489501	super talkative lady. Wants to come to church and if it helps get baptized. She might be crazy but give it a shot. She can meet tomorrow afternoon.   	
+2016:6:1:4:0:TOUR_S	TAIZHONG_SOUTH		TAIZHONG_OFFICE_E	 taizhong_east	 huang dong mei	 0911311995	 referral from temple tour, LA	
+2016:6:1:4:0:XINZHU_3_ZL	TAOYUAN		ZHONGLI_1_B_E	中壢	林 dennis	0973983749	cool guy we called up and found if lived in your area he's down to meet and talk of Jesus	
+2016:6:1:4:0:XIZHI_B_E	SOUTH		ZHONGHE_1_E	中和區	林先生	0920553509	cool, family member in hospital. Not sure on when he has time.5/31 contacted	
+2016:6:1:4:0:YONGHE_S	CENTRAL		WANDA_S	WANDA	陳弟兄	0936157653	 he is a less active son.環河南路三段325號6F we are sending this again because we sent the wrong address.	
+2016:6:1:4:0:ZHONGLI_1_A_E	TAIZHONG_SOUTH		TAIZHONG_OFFICE_E	西屯區	周小姐	0933145541	extremely nice!:)	
+2016:6:1:4:1:ANKANG_E	WEST		DANFENG_E	linkou	戴先生dai4	0956121775	Nice guy, christian, around thirty, give him a call	
+2016:6:1:4:1:SHILIN_ZL	CENTRAL		SANCHONG_S	三重	郭小姐	0973783112	 super nice gal we've just taught the 2nd lesson to! Current investigator. Just moved over from shilin. bad relationship with dad.	
+2016:6:1:4:1:TAO_4_S	SOUTH		XINDIAN_E	XINDIAN	 MS. LIU	0981018071	 she is Vietnamese.  She is forty four.  We talked about the Book of Mormon.  Met her a long time ago.	
+2016:6:1:4:1:TOUR_S	CENTRAL		SANCHONG_S	sanchong	yang	22819594	 referral from temple tour, has net with missionaries previously. Has a bad relationship with her mom. Divorced parents. 33. Loved the feeling of the chapel and stayed after the tour for a few hours and went with us to dinner. Call her and tell her kong jm says she has a lovely voice. :) liked the holy ghost and agency.	
+2016:6:1:4:1:XIZHI_B_E	WEST		SIYUAN_E	XinZhuang	liu Jm(xiao wei)	0909059706	Super crazy cool, a christian. She's had tons of problems. She's 16, you won't believe it though! Had red eyes. Super cool!	
+2016:6:1:4:1:ZHONGLI_1_A_E				MANILA PHILLIPINES	Jay	0973430863	christian. Sees missionaries a lot but never talked to them. Often out of country. Has interest	
+2016:6:1:4:2:ANKANG_E	TAIZHONG_SOUTH		TAIZHONG_OFFICE_E	lingya	 Flow 陳	0978651019	going to 高雄, professional soldier. She just graduated high school. Really cool	
+2016:6:1:4:2:TOUR_S	WEST		DANFENG_E	 xinzhuang	 wang xin kai	 0938706372	 referral from temple tour, referred by Wu Ting Xuan (0931960970). Wu JM said her favorite thing about this person is that she is very happy and positive.	

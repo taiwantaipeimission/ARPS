@@ -130,7 +130,7 @@ Report ReportCollection::transform_report(Report rep, ReportType type, ReportOrd
 		else if (to == ZONE)
 		{
 			if (comp_list->by_area_name.count(rep.sender_name) > 0)
-				rep.sender_name = type == TYPE_ENGLISH ? comp_list->by_area_name[rep.sender_name][0].english_unit_name : comp_list->by_area_name[rep.sender_name][0].zone_name;
+				rep.sender_name = (type == TYPE_ENGLISH || type == TYPE_ENGLISH_REG) ? comp_list->by_area_name[rep.sender_name][0].english_unit_name : comp_list->by_area_name[rep.sender_name][0].zone_name;
 			else
 				rep.sender_name = L"";
 		}
