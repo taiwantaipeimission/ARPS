@@ -108,3 +108,11 @@
 2016:5:0:0:ZHUBEI_2	朱嘉偉	1					
 2016:5:0:0:ZHUDONG							
 2016:5:0:0:ZHUNAN	 shen ping wei	3	0	0	0	0	0
+2016:6:0:0:DANSHUI							
+2016:6:0:0:MUZHA	葉家宏	1					
+2016:6:0:0:SANXIA	曾柏	1					
+2016:6:0:0:TAIDONG_2	王思婷	1					
+2016:6:0:0:XIANGSHAN							
+2016:6:0:0:XINZHU_3	黃得剴	1					
+2016:6:0:0:YILAN		1					
+2016:6:0:0:YULI	李que英	1					
