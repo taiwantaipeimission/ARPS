@@ -68,6 +68,9 @@ wstring g_config_field_baptism_response = L"BAPTISM_RESPONSE";
 wstring g_config_field_baptism_report = L"BAPTISM_REPORT";
 wstring g_config_field_reminder_msg = L"REMINDER_MSG";
 wstring g_config_field_english_reminder_msg = L"ENGLISH_REMINDER_MSG";
+wstring g_config_field_port_name = L"PORT_NAME";
+wstring g_config_field_port_freq = L"PORT_FREQ";
+wstring g_config_field_int_ph_num_prefix = L"COUNTRY_CODE";
 
 //String constants
 wstring g_ph_number_head = L"+";
@@ -104,6 +107,8 @@ string g_jk_concat_num_msg = "C_NUM_MSG";
 string g_jk_concat_index = "C_INDEX";
 
 //Serial constants
+wstring g_port_name = L"\\\\.\\COM1";
+int g_port_freq = 9600;
 int g_max_num_tries = 64;	//Try this many times to get a character across the serial cable before quitting
 
 //Graphics options
@@ -122,4 +127,7 @@ void load_config(rapidjson::Document* config)
 	g_english_reminder_msg = tow((*config)[tos(g_config_field_english_reminder_msg).c_str()].GetString());
 	g_report_wday = (*config)[tos(g_config_field_report_wday).c_str()].GetInt();
 	g_english_wday = (*config)[tos(g_config_field_english_wday).c_str()].GetInt();
+	g_port_name = tow((*config)[tos(g_config_field_port_name).c_str()].GetString());
+	g_port_freq = (*config)[tos(g_config_field_port_freq).c_str()].GetInt();
+	g_int_ph_num_prefix = tow((*config)[tos(g_config_field_int_ph_num_prefix).c_str()].GetString());
 }

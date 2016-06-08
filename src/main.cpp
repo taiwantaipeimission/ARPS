@@ -122,10 +122,6 @@ int main(int argc, char **argv)
 	ModemInterface modem_interface;
 	bool quit = false;
 
-	wcout << L"-Initializing terminal\n";
-	terminal.init(&gui.file_manager.files[L"OUTPUT"]);
-	std::thread terminal_thread(run_terminal_func, &terminal, &gui, &modem_interface, &quit);
-
 	wcout << L"-Loading data files\n";
 	gui.load();
 	wcout << L"-Initializing GUI\n";
@@ -133,6 +129,12 @@ int main(int argc, char **argv)
 	set_color(CC_GREEN, CC_BLACK);
 	wcout << L"Done\n";
 	set_color(CC_WHITE, CC_BLACK);
+
+	wcout << L"-Initializing terminal\n";
+	terminal.init(&gui.file_manager.files[L"OUTPUT"]);
+	std::thread terminal_thread(run_terminal_func, &terminal, &gui, &modem_interface, &quit);
+
+	
 	gui.run();
 		
 	quit = true;

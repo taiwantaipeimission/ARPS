@@ -22,6 +22,8 @@
 #include <windows.h>
 
 #include "Modem.h"
+#include "utility.h"
+#include "codes.h"
 
 void Modem::system_error(char *name) {
 	// Retrieve, format, and print out a message from the last error.  The 
@@ -60,7 +62,7 @@ void Modem::init()
 	initialized = true;
 	// open the comm port.
 	file = CreateFile(
-		L"\\\\.\\COM1",     // address of name of the communications device
+		g_port_name.c_str(),     // address of name of the communications device
 		GENERIC_READ | GENERIC_WRITE,         // access (read-write) mode
 		0,                  // share mode
 		NULL,               // address of security descriptor
@@ -80,7 +82,7 @@ void Modem::init()
 	port.fDtrControl = DTR_CONTROL_HANDSHAKE;
 	if (!GetCommState(file, &port))
 		system_error("getting comm state");
-	if (!BuildCommDCB(L"baud=9600 parity=n data=8 stop=1", &port))
+	if (!BuildCommDCB((L"baud=" + tos(g_port_freq) + L" parity=n data=8 stop=1").c_str(), &port))
 		system_error("building comm DCB");
 	if (!SetCommState(file, &port))
 		system_error("adjusting port settings");

@@ -98,6 +98,8 @@ extern wstring g_config_field_baptism_response;
 extern wstring g_config_field_baptism_report;
 extern wstring g_config_field_reminder_msg;
 extern wstring g_config_field_english_reminder_msg;
+extern wstring g_config_field_port_name;
+extern wstring g_config_field_port_freq;
 
 //String constants
 extern wstring g_ph_number_head;
@@ -134,6 +136,8 @@ extern string g_jk_concat_num_msg;
 extern string g_jk_concat_index;
 
 //Serial constants
+extern wstring g_port_name;
+extern int g_port_freq;
 extern int g_max_num_tries;
 
 //Graphics options
