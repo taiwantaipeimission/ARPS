@@ -124,13 +124,13 @@
 2016:5:0:0:ZHUDONG_E							
 2016:5:0:0:ZHUNAN_S	 shen ping wei	0	0	0	0	0	0
 2016:5:0:0:ZHUNAN_ZL	高嘉廷	3	0	0	0	0	0
-2016:6:0:0:DANSHUI_B_E							
+2016:6:0:0:DANSHUI_B_E	Revelina Pagulayon Ulep	1					
 2016:6:0:0:LUODONG_A_E							
 2016:6:0:0:MUZHA_E	葉家宏	1					
 2016:6:0:0:SANXIA_A_E	曾柏	1					
 2016:6:0:0:TAIDONG_2_ZL	王思婷	1					
-2016:6:0:0:XIANGSHAN_E							
+2016:6:0:0:XIANGSHAN_E	鄭安安				1		
 2016:6:0:0:XINZHU_3_S	黃得剴	1					
-2016:6:0:0:XINZHU_3_ZL							
+2016:6:0:0:XINZHU_3_ZL	林瑞英				1		
 2016:6:0:0:YILAN_E	 江明璟	1					
 2016:6:0:0:YULI_S	李que英	1					

@@ -32,8 +32,8 @@
 2016:5:0:0:TAOYUAN	0	3	0	0	3	0	0
 2016:5:0:0:WEST	0				1		
 2016:6:0:0:EAST		1					
-2016:6:0:0:HSINCHU	黃得剴	1					
+2016:6:0:0:HSINCHU	黃得剴	1			2		
 2016:6:0:0:HUALIEN	王思婷	2					
-2016:6:0:0:NORTH							
+2016:6:0:0:NORTH	Revelina Pagulayon Ulep	1					
 2016:6:0:0:SOUTH	葉家宏	1					
 2016:6:0:0:WEST	曾柏	1					
