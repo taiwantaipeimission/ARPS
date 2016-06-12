@@ -47,6 +47,7 @@ public:
 
 	void insert_report(Report report);
 	void remove_report(std::wstring id_str);
+	void clear_all_reports();
 	void set_sheet_fields(std::vector<std::pair<std::wstring, bool>> sheet_fields_in) { sheet_fields = sheet_fields_in; changed = true; }
 	void set_report_type(ReportType report_type_in) { report_type = report_type_in; changed = true; }
 	void set_report_order(ReportOrder report_order_in) { report_order = report_order_in; changed = true; }

@@ -32,6 +32,7 @@ enum ReportType
 	TYPE_ENGLISH,
 	TYPE_BAPTISM_RECORD,
 	TYPE_BAPTISM_SOURCE,
+	TYPE_BAPTISM_HISTORY,
 	TYPE_REFERRAL,
 	TYPE_ENGLISH_REG,
 	NUM_TYPES
@@ -62,6 +63,8 @@ extern wstring g_version;
 extern wstring g_rep_key_bap;
 extern wstring g_rep_key_bap_source;
 extern wstring g_rep_key_num_reports;
+extern wstring g_rep_key_last_year_baptisms;
+extern wstring g_rep_key_last_baptism_date;
 
 //Orders to total
 extern map<ReportType, vector<ReportOrder>> g_reports_to_store;

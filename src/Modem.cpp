@@ -72,7 +72,7 @@ void Modem::init()
 		);
 
 	if (INVALID_HANDLE_VALUE == file) {
-		system_error("opening file");
+		system_error("opening serial port");
 		return;
 	}
 

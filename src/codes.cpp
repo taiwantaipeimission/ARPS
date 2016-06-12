@@ -25,6 +25,8 @@ wstring g_version = L"1.0";
 wstring g_rep_key_bap = L"BAP";
 wstring g_rep_key_bap_source = L"BAP_SOURCE";
 wstring g_rep_key_num_reports = L"N_REPORTS";
+wstring g_rep_key_last_year_baptisms = L"LAST_YEAR_BAPTISMS";
+wstring g_rep_key_last_baptism_date = L"LAST_BAPTISM_DATE";
 
 //Orders to total
 map<ReportType, vector<ReportOrder>> g_reports_to_store {
@@ -32,6 +34,7 @@ map<ReportType, vector<ReportOrder>> g_reports_to_store {
 	{ TYPE_ENGLISH, { COMP, ZONE, MISSION} },
 	{ TYPE_BAPTISM_RECORD, { COMP } },
 	{ TYPE_BAPTISM_SOURCE, { COMP, COMP_MONTH, DISTRICT, DISTRICT_MONTH, ZONE, ZONE_MONTH, WARD, WARD_MONTH, STAKE, STAKE_MONTH, MISSION, MISSION_MONTH } },
+	{ TYPE_BAPTISM_HISTORY, { COMP } },
 	{ TYPE_REFERRAL, { COMP } },
 	{ TYPE_ENGLISH_REG, { COMP } }
 };
