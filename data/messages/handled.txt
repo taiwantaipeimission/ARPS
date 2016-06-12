@@ -25030,5 +25030,101 @@
         "C_REFNUM": 239,
         "C_NUM_MSG": 2,
         "C_INDEX": 1
+    },
+    {
+        "SENDER_NAME": "TAO_2_S",
+        "SENDER_NUMBER": "+886963719073",
+        "CONTENTS": "TYPE:REFERRAL\nPLACE:大安\nNAME:廖德融\nNUMBER:0939152569\nINFO:大學生",
+        "SENT_DATE": "",
+        "DATA_CODING": 8,
+        "MSG_LEN": 116,
+        "CONCAT": false,
+        "C_REFNUM": 0,
+        "C_NUM_MSG": 0,
+        "C_INDEX": 0
+    },
+    {
+        "SENDER_NAME": "TOUR_S",
+        "SENDER_NUMBER": "+886972576577",
+        "CONTENTS": "TYPE:REFERRAL\nPLACE:new_taipei\nNAME: zheng li zhen\nNUMBER: 0918513189\nINFO: referral from temple tour, lives in hong kong",
+        "SENT_DATE": "",
+        "DATA_CODING": 0,
+        "MSG_LEN": 121,
+        "CONCAT": false,
+        "C_REFNUM": 0,
+        "C_NUM_MSG": 0,
+        "C_INDEX": 0
+    },
+    {
+        "SENDER_NAME": "OFFICE_E",
+        "SENDER_NUMBER": "+886972576566",
+        "CONTENTS": "林桓羽: no interest",
+        "SENT_DATE": "",
+        "DATA_CODING": 8,
+        "MSG_LEN": 32,
+        "CONCAT": false,
+        "C_REFNUM": 0,
+        "C_NUM_MSG": 0,
+        "C_INDEX": 0
+    },
+    {
+        "SENDER_NAME": "OFFICE_E",
+        "SENDER_NUMBER": "+886972576566",
+        "CONTENTS": "TYPE:REFERRAL\nPLACE:台南\nNAME:邱勝彥\nNUMBER:0977167652\nINFO:臺南市北區大興街132巷34號, member referral from 土城, he's really interested in the gospel and he wants to attend church this week. His member friend 叫 沈士元 0985055170",
+        "SENT_DATE": "",
+        "DATA_CODING": 8,
+        "MSG_LEN": 140,
+        "CONCAT": false,
+        "C_REFNUM": 181,
+        "C_NUM_MSG": 4,
+        "C_INDEX": 1
+    },
+    {
+        "SENDER_NAME": "OFFICE_E",
+        "SENDER_NUMBER": "+886972576566",
+        "CONTENTS": "TYPE:REFERRAL\nPLACE:TAIZHONG\nNAME:Mina 李\nNUMBER:0986590013\nINFO:Was pretty busy talking on the phone but was willing to give her phone number. May be interested in english. ",
+        "SENT_DATE": "",
+        "DATA_CODING": 8,
+        "MSG_LEN": 140,
+        "CONCAT": false,
+        "C_REFNUM": 182,
+        "C_NUM_MSG": 3,
+        "C_INDEX": 1
+    },
+    {
+        "SENDER_NAME": "TOUR_S",
+        "SENDER_NUMBER": "+886972576577",
+        "CONTENTS": "TYPE:REFERRAL\nPLACE: tainan_east\nNAME: lu zheng da\nNUMBER: 0939963982\nINFO: referral from temple tour, dad married wife with a 6 month old daughter. Are moving to hong kong soon. Had a tour about temple and eternal families. No current religion. Call and set up. So cool. ",
+        "SENT_DATE": "",
+        "DATA_CODING": 0,
+        "MSG_LEN": 160,
+        "CONCAT": false,
+        "C_REFNUM": 214,
+        "C_NUM_MSG": 2,
+        "C_INDEX": 1
+    },
+    {
+        "SENDER_NAME": "DANFENG_E",
+        "SENDER_NUMBER": "+886972576517",
+        "CONTENTS": "TYPE:REFERRAL\nPLACE:JIAYI\nNAME:林子榮\nNUMBER:0960638587\nINFO:came to church in 親莊 with his dad (our investigator) 大二 student.",
+        "SENT_DATE": "",
+        "DATA_CODING": 8,
+        "MSG_LEN": 140,
+        "CONCAT": false,
+        "C_REFNUM": 240,
+        "C_NUM_MSG": 2,
+        "C_INDEX": 1
+    },
+    {
+        "SENDER_NAME": "XINZHU_3_ZL",
+        "SENDER_NUMBER": "+886972576563",
+        "CONTENTS": "TYPE:REFERRAL\nPLACE:桃園\nNAME:江珮綺\nNUMBER:033781388\nINFO:MEMBER REFERRAL! From a guy named 曾弟兄 in 香山 it's his mom. Call him if you've got questions... Elder clawson sucks;)",
+        "SENT_DATE": "",
+        "DATA_CODING": 8,
+        "MSG_LEN": 140,
+        "CONCAT": false,
+        "C_REFNUM": 153,
+        "C_NUM_MSG": 3,
+        "C_INDEX": 1
     }
 ]

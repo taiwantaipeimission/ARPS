@@ -1713,7 +1713,7 @@
 2016:6:2:6:0:JINGXIN_ZL				JAPAN TOKYO OTAKU	Sean 林	07010682793	taiwanese. English is good. Lives in japan. Super cool guy who was pretty willing to meet. 	
 2016:6:2:6:0:JINHUA_ZL				中正	徐雅蓮	0936324591	they were excited to talk with us	
 2016:6:2:6:0:LONGTAN_E	EAST		JILONG_B_E	Jilong	You2	0975774856	 A former investigator. He seems a little so-so but give it a try! His wife checks his phone history because she doesn't like the Church.	
-2016:6:2:6:0:MUZHA_E	CENTRAL		OFFICE_E	中山區	林桓羽	0972253838	contacted by a missionary in 臺中, who gave his business card to our member and asked him to give it to a taipei missionary. Good luck!	
+2016:6:2:6:0:MUZHA_E	CENTRAL		OFFICE_E	中山區	林桓羽	0972253838	contacted by a missionary in 臺中, who gave his business card to our member and asked him to give it to a taipei missionary. Good luck!	 no interest
 2016:6:2:6:0:OFFICE_E	CENTRAL		WANDA_E	中正區	于姐妹	0910100744	6/12maybe可以見*部分文字流失*	
 2016:6:2:6:0:SANCHONG_E	NORTH		DANSHUI_A_E	 DANSHUI 	yen angela 	0988188573	 she wants to meet up ! She wants us to convert her son	
 2016:6:2:6:0:SHILIN_ZL				花蓮師	joe lee	0910017611	text him at night nice guy	
@@ -1736,7 +1736,7 @@
 2016:6:2:6:0:ZHUBEI_3_S	TAIZHONG_SOUTH		TAIZHONG_OFFICE_E	台中	林子恆	0963456141	found on a former potential sheet, said "had lesson and has a book of mormon taught 1st lesson" he lives in fengjia in his 3rd year of college. Said july will have more time	
 2016:6:2:6:1:ANKANG_E	SOUTH		YONGHE_S	yonghe	盧Lu先生	0932006652	帥哥	
 2016:6:2:6:1:ASSISTANTS	CENTRAL		TOUR_S	 DAAN	Guo Ken	0987430567	 wants to do a temple tour. Lives by the bu.	
-2016:6:2:6:1:JILONG_B_E	CENTRAL		LUZHOU_A_E	LUZHOU	Eva Lai	0988346443	She is likely in her thirties. Married and has 1 or two children.  Had a cool lesson. Said you could contact her.  	
+2016:6:2:6:1:JILONG_B_E	CENTRAL		LUZHOU_A_E	LUZHOU	Eva Lai	0988346443	She is likely in her thirties. Married and has 1 or two children.  Had a cool lesson. Said you could contact her. 	
 2016:6:2:6:1:JINGXIN_S	EAST		XIZHI_B_E	xizhi	葉小姐	0913333690		
 2016:6:2:6:1:JINGXIN_ZL	NORTH		BEITOU_E	北投區	張庭	0982602143	great guy. Had a lesson with him. Then found out he lives in beitou. He quit that whippin and is now just a super chill guy trying to find his way in life.  	
 2016:6:2:6:1:JINHUA_ZL	EAST		NEIHU_S	內湖	Jill	0921762411	they were excited to talk with us	
@@ -1764,7 +1764,7 @@
 2016:6:2:6:3:JINHUA_ZL				LONGJIN	 pony	0921281970	super nice guy open tonight to meet. English 很強。	
 2016:6:2:6:3:OFFICE_E	HUALIAN		HUALIAN_1_E	花蓮市	joe lee	0910017611	text him at night nice guy	
 2016:6:2:6:3:SANCHONG_E	WEST		XINPU_E	BANQIAO	柯xs	0911860198	he wants to go get something to eat with you guys	
-2016:6:2:6:3:XINAN_S	SOUTH		ZHONGHE_2_S	 ZHONGHE	 Wang Si Han (Karen)	 0929790611	 She is a friend and old co worker of a member here in our ward. Here is the member's phone number 0932921104. The member's name is Zoe. Karen came to a ward activity last week.  	
+2016:6:2:6:3:XINAN_S	SOUTH		ZHONGHE_2_S	 ZHONGHE	 Wang Si Han (Karen)	 0929790611	 She is a friend and old co worker of a member here in our ward. Here is the member's phone number 0932921104. The member's name is Zoe. Karen came to a ward activity last week. 	
 2016:6:2:6:3:XINZHU_3_ZL				 perf australia 	 paul 陳	0478076976	met in taiwan nice guy he's a chef	
 2016:6:2:6:4:ASSISTANTS	TAOYUAN		TAO_4_E	LUZHU	Lai4 Wen2 Bing	0920448158	way cool guy who lives in DaYuan	
 2016:6:2:6:4:JILONG_B_E				TAIZHONG FENG JIA	Mina 李	0986590013	Was pretty busy talking on the phone but was willing to give her phone number. May be interested in english. 	
@@ -1778,3 +1778,10 @@
 2016:6:2:6:7:OFFICE_E	CENTRAL		JINHUA_ZL	 台北市	 Huang xiao jie (Emily)	0938168980	 met in Tao Yuan city. Single.	
 2016:6:2:6:8:OFFICE_E	TAIZHONG_SOUTH		TAIZHONG_OFFICE_E	龍井區	 pony	0921281970	super nice guy open tonight to meet. English 很強。	
 2016:6:2:6:9:OFFICE_E	CENTRAL		WANDA_E	中正區	于姐妹	0910100744	6/12maybe可以見	
+2016:6:2:7:0:DANFENG_E	TAIZHONG_SOUTH		TAIZHONG_OFFICE_E	JIAYI	林子榮	0960638587	came to church in 親莊 with his dad (our investigator) 大二 student.	
+2016:6:2:7:0:OFFICE_E	TAIZHONG_SOUTH		TAIZHONG_OFFICE_E	台南	邱勝彥	0977167652	臺南市北區大興街132巷34號, member referral from 土城, he's really interested in the gospel and he wants to attend church this week. His member friend 叫 沈士元 0985055170	
+2016:6:2:7:0:TAO_2_S	CENTRAL		ASSISTANTS	大安	廖德融	0939152569	大學生	
+2016:6:2:7:0:TOUR_S	CENTRAL		ASSISTANTS	new_taipei	 zheng li zhen	 0918513189	 referral from temple tour, lives in hong kong	
+2016:6:2:7:0:XINZHU_3_ZL	TAOYUAN		TAO_3_E_ZL	桃園	江珮綺	033781388	MEMBER REFERRAL! From a guy named 曾弟兄 in 香山 it's his mom. Call him if you've got questions... Elder clawson sucks;)	
+2016:6:2:7:1:OFFICE_E	TAIZHONG_SOUTH		TAIZHONG_OFFICE_E	TAIZHONG	Mina 李	0986590013	Was pretty busy talking on the phone but was willing to give her phone number. May be interested in english. 	
+2016:6:2:7:1:TOUR_S	TAIZHONG_SOUTH		TAIZHONG_OFFICE_E	 tainan_east	 lu zheng da	 0939963982	 referral from temple tour, dad married wife with a 6 month old daughter. Are moving to hong kong soon. Had a tour about temple and eternal families. No current religion. Call and set up. So cool. 	
