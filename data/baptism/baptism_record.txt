@@ -173,3 +173,19 @@
 2016:6:1:7:0:XINZHU_3_ZL	林瑞英						4
 2016:6:1:7:0:YILAN_E	 江明璟						1
 2016:6:1:7:0:YULI_S	李que英						1
+2016:6:2:7:0:BADE_A_E	Ken (劉寶銘）						5
+2016:6:2:7:0:HUALIAN_1_S							
+2016:6:2:7:0:HUALIAN_2_E	蔡亞芝						1
+2016:6:2:7:0:LUODONG_A_E	 林曉筠						 2
+2016:6:2:7:0:MIAOLI_E	林佳妮						2
+2016:6:2:7:0:MUZHA_S	 Melvin 王						1
+2016:6:2:7:0:NEIHU_S	 ying de ming						4
+2016:6:2:7:0:SHILIN_ZL	劉韋傑						1
+2016:6:2:7:0:TAO_1_A	王明聖						1
+2016:6:2:7:0:TAO_3_E_ZL	蔡宗甫						2
+2016:6:2:7:0:TIANMU_B_E	CAROL						1
+2016:6:2:7:0:TUCHENG_S	SHEN沈 QIAN芊 TONG彤						4
+2016:6:2:7:0:XINDIAN_E	劉宛蓉						1
+2016:6:2:7:0:YULI_E	李偉倫						1
+2016:6:2:7:0:ZHONGHE_2_E	周經偉						4
+2016:6:2:7:0:ZHUBEI_1_E	柳宗皜						1

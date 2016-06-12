@@ -95,3 +95,12 @@
 2016:6:1:7:WEST	曾柏	1					
 2016:6:1:7:XINZHU	林瑞英				1		
 2016:6:1:7:ZHUNAN	鄭安安				1		
+2016:6:2:7:EAST	 林曉筠				1		
+2016:6:2:7:HUALIAN		1					
+2016:6:2:7:NORTH	劉韋傑	2					
+2016:6:2:7:SOUTH	 Melvin 王	2			1		
+2016:6:2:7:TAIDONG	李偉倫	1					
+2016:6:2:7:TAOYUAN	Ken (劉寶銘）	1	1			1	
+2016:6:2:7:WEST	SHEN沈 QIAN芊 TONG彤				1		
+2016:6:2:7:XINZHU	柳宗皜	1					
+2016:6:2:7:ZHUNAN	林佳妮		1				

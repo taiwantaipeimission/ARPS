@@ -50,10 +50,12 @@
 2016:5:0:0:WEST	0				1		
 2016:5:0:0:XINZHU	朱嘉偉	1	1	0	0	0	0
 2016:5:0:0:ZHUNAN	賴瑋晨	4	0	0	0	0	0
-2016:6:0:0:EAST		1					
-2016:6:0:0:NORTH	Revelina Pagulayon Ulep	1					
-2016:6:0:0:SOUTH	葉家宏	1					
-2016:6:0:0:TAIDONG	王思婷	2	0	0	0	0	0
-2016:6:0:0:WEST	曾柏	1					
-2016:6:0:0:XINZHU	黃得剴	1	0	0	1	0	0
-2016:6:0:0:ZHUNAN	鄭安安				1		
+2016:6:0:0:EAST		1			1		
+2016:6:0:0:HUALIAN		1					
+2016:6:0:0:NORTH	Revelina Pagulayon Ulep	3					
+2016:6:0:0:SOUTH	葉家宏	3			1		
+2016:6:0:0:TAIDONG	王思婷	3	0	0	0	0	0
+2016:6:0:0:TAOYUAN	Ken (劉寶銘）	1	1			1	
+2016:6:0:0:WEST	曾柏	1			1		
+2016:6:0:0:XINZHU	黃得剴	2	0	0	1	0	0
+2016:6:0:0:ZHUNAN	鄭安安		1		1		

@@ -80,11 +80,21 @@
 2016:5:0:0:ZHUBEI	朱嘉偉	1					
 2016:5:0:0:ZHUDONG							
 2016:5:0:0:ZHUNAN	 shen ping wei	3	0	0	0	0	0
+2016:6:0:0:BADE	Ken (劉寶銘）					1	
 2016:6:0:0:BEITOU	Revelina Pagulayon Ulep	1					
-2016:6:0:0:JINGXIN	葉家宏	1					
+2016:6:0:0:JIAN		1					
+2016:6:0:0:JINGXIN	葉家宏	2					
+2016:6:0:0:SHILIN	劉韋傑	2					
+2016:6:0:0:SHUANGHE	周經偉				1		
+2016:6:0:0:SONGSHAN	 ying de ming				1		
 2016:6:0:0:TAIDONG_2	王思婷	1					
-2016:6:0:0:TUCHENG	曾柏	1					
+2016:6:0:0:TAOYUAN_1_2	王明聖	1					
+2016:6:0:0:TAOYUAN_3	蔡宗甫		1				
+2016:6:0:0:TOUFEN_MIAOLI	林佳妮		1				
+2016:6:0:0:TUCHENG	曾柏	1			1		
+2016:6:0:0:XINDIAN	劉宛蓉	1					
 2016:6:0:0:XINZHU	黃得剴	1	0	0	1	0	0
 2016:6:0:0:YILAN		1					
-2016:6:0:0:YULI	李que英	1					
+2016:6:0:0:YULI	李que英	2					
+2016:6:0:0:ZHUBEI	柳宗皜	1					
 2016:6:0:0:ZHUNAN	鄭安安				1		

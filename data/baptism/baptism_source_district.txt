@@ -127,3 +127,17 @@
 2016:6:1:7:YILAN		1					
 2016:6:1:7:YULI	李que英	1					
 2016:6:1:7:ZHUNAN	鄭安安				1		
+2016:6:2:7:BADE	Ken (劉寶銘）					1	
+2016:6:2:7:JIAN		1					
+2016:6:2:7:JINGXIN	 Melvin 王	1					
+2016:6:2:7:SHILIN	劉韋傑	2					
+2016:6:2:7:SHUANGHE	周經偉				1		
+2016:6:2:7:SONGSHAN	 ying de ming				1		
+2016:6:2:7:TAOYUAN_1_2	王明聖	1					
+2016:6:2:7:TAOYUAN_3	蔡宗甫		1				
+2016:6:2:7:TOUFEN_MIAOLI	林佳妮		1				
+2016:6:2:7:TUCHENG	SHEN沈 QIAN芊 TONG彤				1		
+2016:6:2:7:XINDIAN	劉宛蓉	1					
+2016:6:2:7:YILAN	 林曉筠						
+2016:6:2:7:YULI	李偉倫	1					
+2016:6:2:7:ZHUBEI	柳宗皜	1					

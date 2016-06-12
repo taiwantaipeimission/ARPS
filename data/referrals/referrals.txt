@@ -1779,9 +1779,14 @@
 2016:6:2:6:8:OFFICE_E	TAIZHONG_SOUTH		TAIZHONG_OFFICE_E	龍井區	 pony	0921281970	super nice guy open tonight to meet. English 很強。	
 2016:6:2:6:9:OFFICE_E	CENTRAL		WANDA_E	中正區	于姐妹	0910100744	6/12maybe可以見	
 2016:6:2:7:0:DANFENG_E	TAIZHONG_SOUTH		TAIZHONG_OFFICE_E	JIAYI	林子榮	0960638587	came to church in 親莊 with his dad (our investigator) 大二 student.	
+2016:6:2:7:0:JINGXIN_S	TAIZHONG_SOUTH		TAIZHONG_OFFICE_E	xiaogang	wang	0911840563		
+2016:6:2:7:0:MUZHA_S	TAOYUAN		TAO_2_S	taoyuan	yo jm	0918355100	cute lady willing to meet with missionaries:-)	
 2016:6:2:7:0:OFFICE_E	TAIZHONG_SOUTH		TAIZHONG_OFFICE_E	台南	邱勝彥	0977167652	臺南市北區大興街132巷34號, member referral from 土城, he's really interested in the gospel and he wants to attend church this week. His member friend 叫 沈士元 0985055170	
 2016:6:2:7:0:TAO_2_S	CENTRAL		ASSISTANTS	大安	廖德融	0939152569	大學生	
 2016:6:2:7:0:TOUR_S	CENTRAL		ASSISTANTS	new_taipei	 zheng li zhen	 0918513189	 referral from temple tour, lives in hong kong	
+2016:6:2:7:0:XINAN_S	EAST		NEIHU_S	 NEIHU	 Jia Wang Huang	 0931150418	 She is a member referral from a temple tour. She has known the member in our since high school. Very kind. Is 63 years old. Here is the information of the member. Her name is Lin Pei Chun. Her phone number is 0932154459	
+2016:6:2:7:0:XINBAN_E	EAST		SONGSHAN_S	松山區	吳小姐	0918337747	college student at 臺北科技, Christian	
 2016:6:2:7:0:XINZHU_3_ZL	TAOYUAN		TAO_3_E_ZL	桃園	江珮綺	033781388	MEMBER REFERRAL! From a guy named 曾弟兄 in 香山 it's his mom. Call him if you've got questions... Elder clawson sucks;)	
 2016:6:2:7:1:OFFICE_E	TAIZHONG_SOUTH		TAIZHONG_OFFICE_E	TAIZHONG	Mina 李	0986590013	Was pretty busy talking on the phone but was willing to give her phone number. May be interested in english. 	
 2016:6:2:7:1:TOUR_S	TAIZHONG_SOUTH		TAIZHONG_OFFICE_E	 tainan_east	 lu zheng da	 0939963982	 referral from temple tour, dad married wife with a 6 month old daughter. Are moving to hong kong soon. Had a tour about temple and eternal families. No current religion. Call and set up. So cool. 	
+2016:6:2:7:1:XINBAN_E	NORTH		DANSHUI_A_E	淡水區	莊秉翰	0911913112	super nice guy, seems to be interested in Christianity	
