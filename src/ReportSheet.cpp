@@ -72,6 +72,12 @@ void ReportSheet::remove_report(std::wstring id_str)
 	}
 }
 
+void ReportSheet::clear_all_reports()
+{
+	reports.clear();
+	changed = true;
+}
+
 void ReportSheet::load(std::wistream& input)
 {
 	input.clear();

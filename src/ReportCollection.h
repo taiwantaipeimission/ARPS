@@ -46,6 +46,7 @@ public:
 	bool load();
 	bool save();
 	void create_baptism_source_reports(std::wstring date);
+	void create_baptism_history_reports(std::wstring date);
 	void total_type(ReportType type, CompList* comp_list, std::wstring date);
 
 	bool can_add_report(ReportType type, ReportOrder order, std::wstring date, Report report);

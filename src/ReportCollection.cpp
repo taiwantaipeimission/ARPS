@@ -44,6 +44,7 @@ void ReportCollection::init(std::wstring global_prefix_in)
 	prefix[TYPE_ENGLISH] = L"english/english";
 	prefix[TYPE_BAPTISM_RECORD] = L"baptism/baptism_record";
 	prefix[TYPE_BAPTISM_SOURCE] = L"baptism/baptism_source";
+	prefix[TYPE_BAPTISM_HISTORY] = L"baptism/baptism_history";
 	prefix[TYPE_REFERRAL] = L"referrals/referrals";
 	prefix[TYPE_ENGLISH_REG] = L"english_reg/english_reg";
 
@@ -241,6 +242,85 @@ void ReportCollection::create_baptism_source_reports(std::wstring date)
 	}
 }
 
+void ReportCollection::create_baptism_history_reports(std::wstring date)
+{
+	struct ymw { int y, m, w; };
+	map<wstring, int> last_year_baptisms;
+	map<wstring, ymw> last_baptism_dates;
+
+	std::vector<std::wstring> date_strs = tokenize(date, ':');
+	int date_year = _wtoi(date_strs[0].c_str());
+	int date_month = _wtoi(date_strs[1].c_str());
+	int date_week = _wtoi(date_strs[2].c_str());
+	int date_wday = _wtoi(date_strs[3].c_str());
+
+	map<wstring, Report>* month_reports = reports[TYPE_REGULAR][COMP_MONTH].get_reports();
+	map<wstring, Report>* week_reports = reports[TYPE_REGULAR][COMP].get_reports();
+
+	for (map<wstring, Report>::iterator it = month_reports->begin(); it != month_reports->end(); ++it)
+	{
+		int report_date_year = it->second.date_year;
+		int report_date_month = it->second.date_month;
+		int report_date_week = it->second.date_week;
+		int report_date_wday = it->second.date_wday;
+		int n_bap = _wtoi(it->second.report_values[g_rep_key_bap].c_str());
+		
+		
+
+		if (report_date_year == date_year || (report_date_year == date_year - 1 && (report_date_month > date_month || (report_date_month == date_month && report_date_week > date_week))))
+		{
+			if (last_year_baptisms.count(it->second.sender_name) == 0)
+				last_year_baptisms.insert(pair<wstring, int>(it->second.sender_name, n_bap));
+			else
+				last_year_baptisms[it->second.sender_name] += n_bap;
+		}
+
+		if (n_bap > 0)
+		{
+			int year = it->second.date_year;
+			int month = it->second.date_month;
+			int wday = g_report_wday;
+			wstring date_str = L"";
+			wstring id_str = L"";
+			for (int week = 5; week > 0; week--)
+			{
+				date_str = tos(year) + g_id_str_separator + tos(month) + g_id_str_separator + tos(week) + g_id_str_separator + tos(wday);
+				id_str = date_str + g_id_str_separator + it->second.get_sender_name();
+				if (week_reports->count(id_str) > 0 && _wtoi((*week_reports)[id_str].report_values[g_rep_key_bap].c_str()) > 0)
+				{
+					if (last_baptism_dates.count(it->second.sender_name) == 0)
+						last_baptism_dates.insert(pair<wstring, ymw>(it->second.sender_name, { year, month, week }));
+					else
+					{
+						int last_baptism_year = last_baptism_dates[it->second.sender_name].y;
+						int last_baptism_month = last_baptism_dates[it->second.sender_name].m;
+						int last_baptism_week = last_baptism_dates[it->second.sender_name].w;
+
+						if ((year - last_baptism_year) * 53 + (month - last_baptism_month) * 5 + (week - last_baptism_week) > 0)
+							last_baptism_dates[it->second.sender_name] = { year, month, week };
+					}
+				}
+			}
+		}
+	}
+	reports[TYPE_BAPTISM_HISTORY][COMP].clear_all_reports();
+	for (map<wstring, int>::iterator it = last_year_baptisms.begin(); it != last_year_baptisms.end(); ++it)
+	{
+		Report history_report;
+		history_report.sender_name = it->first;
+		history_report.date_year = date_year;
+		history_report.date_month = date_month;
+		history_report.date_week = date_week;
+		history_report.date_wday = date_wday;
+		history_report.report_values[g_rep_key_last_year_baptisms] = tos(it->second);
+		history_report.report_values[g_rep_key_last_baptism_date] = (last_baptism_dates.count(it->first) == 0 ? L"" : (tos(last_baptism_dates[it->first].y) + g_id_str_separator
+			+ tos(last_baptism_dates[it->first].m) + g_id_str_separator
+			+ tos(last_baptism_dates[it->first].w)));
+
+		reports[TYPE_BAPTISM_HISTORY][COMP].insert_report(history_report);
+	}
+}
+
 void ReportCollection::total_reports(ReportType type, ReportOrder from, ReportOrder to, CompList* comp_list, std::wstring date)
 {
 	//If we maintain a report sheet for this type and both orders to and from
@@ -278,8 +358,11 @@ void ReportCollection::total_reports(ReportType type, ReportOrder from, ReportOr
 
 void ReportCollection::total_type(ReportType type, CompList* comp_list, std::wstring date)
 {
-	if(type == TYPE_BAPTISM_SOURCE)
+	if (type == TYPE_BAPTISM_SOURCE)
+	{
 		create_baptism_source_reports(date);
+		create_baptism_history_reports(date);
+	}
 
 	if (count(g_reports_to_store[type].begin(), g_reports_to_store[type].end(), COMP) > 0)
 	{
