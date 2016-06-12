@@ -308,10 +308,10 @@ void ReportCollection::create_baptism_history_reports(std::wstring date)
 	{
 		Report history_report;
 		history_report.sender_name = it->first;
-		history_report.date_year = date_year;
-		history_report.date_month = date_month;
-		history_report.date_week = date_week;
-		history_report.date_wday = date_wday;
+		history_report.date_year = 0;
+		history_report.date_month = 0;
+		history_report.date_week = 0;
+		history_report.date_wday = 0;
 		history_report.report_values[g_rep_key_last_year_baptisms] = tos(it->second);
 		history_report.report_values[g_rep_key_last_baptism_date] = (last_baptism_dates.count(it->first) == 0 ? L"" : (tos(last_baptism_dates[it->first].y) + g_id_str_separator
 			+ tos(last_baptism_dates[it->first].m) + g_id_str_separator
