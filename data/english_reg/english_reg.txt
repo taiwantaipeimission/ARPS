@@ -27,11 +27,45 @@
 2016:6:2:3:4:XIZHI	何明珠	Elaine	內湖路二段179巷48弄39號3樓	0926372619	Beginning	Yes
 2016:6:2:3:5:LONGTAN	LIU	LU	LONGTAN AI GUO LU 25 XIANG 21 HAO PH_NUM:0912034628	0912034628	BEGINNER	NONE
 2016:6:2:3:5:SANXIA	陳姐妹	Flora		0987249965	beginners	yes
+2016:6:2:3:5:XIZHI	陳志豪	Mr. Chen	基隆市七堵區東新街73巷62弄2-3號	090952223?	Beginning	Yes
 2016:6:2:3:6:LONGTAN	LI	LI	LONGTAN AI GUO LU 25 XIANG 21 HAO	0912034628	BEGINNER	
 2016:6:2:3:6:SANXIA	曾柏	Patty	三峽區大觀路16-1號2樓	0952071907	advanced	member
+2016:6:2:3:6:XIZHI	陳志豪	Mr. Chen	基隆市七堵區東新街73巷62弄2-3號	090952223	Beginning	Yes
 2016:6:2:3:7:LONGTAN	XU3	CARINA		0983243093	BEGINNER	
 2016:6:2:3:7:SANXIA	趙寬	thomas		0932351583	advanced	no
 2016:6:2:3:8:LONGTAN	LIN	JOAN		0963585620	BEGINNER	YES
 2016:6:2:3:8:SANXIA	林蔚齡	curtis	三峽	0917275789	intermediate	yes
 2016:6:2:3:9:LONGTAN	ZHANG			0982318740	BEGINNER	
 2016:6:2:3:9:SANXIA	李葉陽	Quincy	三峽	0932228812	advanced	no
+2016:6:3:3:0:	古若穎	chole	新店區中央路139巷2弄3號3樓	0916709667	child	no
+2016:6:3:3:0:SHUANGHE	鄭	Crystal	YONGHE	0912420087	CHILDRENS	
+2016:6:3:3:0:SONGSHAN	 	 Jolin	 台北市南京東路五段345號	 0932877396	 intermediate	 no
+2016:6:3:3:0:TUCHENG	饒山昀	Angel	新北市土城區延吉街319號9樓	22646177	高級	YES
+2016:6:3:3:0:WANDA	呂欣瑜	Nana	台北市西園路2段320巷55弄32號3樓	0933026558	1-2	yes
+2016:6:3:3:0:XINZHUANG	游	Tins	新莊區西盛街39巷32號4F	0936660976	1-2級	yes
+2016:6:3:3:10:	嚴軍瀚		新店區建興街15號4樓	0958566727	child	yes
+2016:6:3:3:1:	凡芸	claudia	新店區	0922856799	child	no
+2016:6:3:3:1:SHUANGHE	 陳煜登	 Kerwin	 永和中正路242巷2弄8號4樓	0918722837	中	
+2016:6:3:3:1:SONGSHAN		 Sega	台北市信義區虎林街50巷21號4樓	 0977165326	 Beginner	 yes
+2016:6:3:3:1:TUCHENG	沈欣全	Shen	新北市土城區延吉街319號9樓	22646177	1-2級	YES
+2016:6:3:3:1:WANDA	孟憲汶	melody	782-1 11	0919928884	advanced	no
+2016:6:3:3:1:XINZHUANG	周	nina	新莊區建安街101巷1弄	0961574192	beginner	yes
+2016:6:3:3:2:	李仕梵	gina	新店區中興路3段219號9樓	0936290123	1-2	yes
+2016:6:3:3:2:SHUANGHE	蔡婉令	Alice	 永和竹林路75巷25弄14號4樓	0956796275	中	
+2016:6:3:3:2:WANDA	紀定岓	dEan	中正區丁州路3段24巷5弄23號1樓	0978330791	child	no
+2016:6:3:3:3:		suzan kuan	文山區景興路42巷6弄2號4樓		child	yes
+2016:6:3:3:3:SHUANGHE	龔美英	 May	 永和竹林路1段135巷22號7樓	0229209586	中	yes
+2016:6:3:3:3:WANDA	劉冠伶	Ella	台北市大安區120巷23號	0989561369	1-2	no
+2016:6:3:3:4:	王典揆	george. Wang	新店區中興路3段231號23樓之3	89119194	advanced	yes
+2016:6:3:3:4:SHUANGHE	江瑤芝	 Charleen	 永和立人街14巷7弄32號	029468021	中	
+2016:6:3:3:4:WANDA		rujira hsieh	 xinlong road, wenshan district taipei lane 36, floor 2 no.2  	0916675790	3-4	no
+2016:6:3:3:5:	顏林藏	john	臺北市汀州路3段160巷2號2樓	02-23671741	3-4	yes
+2016:6:3:3:5:SHUANGHE	孫	 FIFI	 永和福和路189號12樓	0978707710	中	
+2016:6:3:3:5:WANDA	蘇秋蘭	katie		23218753 	advanced	no
+2016:6:3:3:6:	胡于如	judy	新店區大豐路10號2樓	0987240072（媽媽）	child	yes
+2016:6:3:3:6:SHUANGHE	何翔華	 Jessica	 永和保順路41號4樓	0983877396	中	
+2016:6:3:3:6:WANDA	鄭育倫		台北市丁州路3段24巷5弄23號1樓	0977366053	1-2	no
+2016:6:3:3:7:	王沛涵		新店區建興街15號4樓	0958566727	child	yes 
+2016:6:3:3:7:SHUANGHE	梁宗齊	 Jack	 中和永貞路360巷1號7樓	0978810381	中	
+2016:6:3:3:8:	李奇峰	alex	新店區中興路3段219號9樓	0936190123	child	yes
+2016:6:3:3:9:	吳旻璋	john	新店區中央路	093758463		yes
